@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+<defs>
+  <linearGradient id="gpio" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3d2b1c"/><stop offset="1" stop-color="#8a6a45"/></linearGradient>
+  <radialGradient id="rpio"><stop stop-color="#f3d9b0" stop-opacity=".55"/><stop offset="1" stop-color="#f3d9b0" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="900" height="600" rx="38" fill="url(#gpio)"/>
+<circle cx="690" cy="150" r="170" fill="url(#rpio)"/>
+<!-- hooded Capuchin silhouette -->
+<path d="M690 60 q-95 0 -95 115 q0 70 40 110 h110 q40 -40 40 -110 q0 -115 -95 -115Z" fill="#5a3f28" opacity=".85"/>
+<circle cx="690" cy="150" r="46" fill="#e9c9a0"/>
+<!-- knotted cord belt motif -->
+<rect x="600" y="300" width="180" height="10" rx="5" fill="#3d2b1c"/>
+<circle cx="690" cy="305" r="16" fill="none" stroke="#e9c9a0" stroke-width="3"/>
+<!-- stigmata mark on open palm -->
+<circle cx="775" cy="360" r="34" fill="#e9c9a0"/>
+<circle cx="775" cy="360" r="7" fill="#7c1f2e"/>
+<path d="M0 510 Q180 420 330 495 T650 470 T900 510 V600 H0Z" fill="#1a110a" opacity=".22"/>
+<text x="72" y="318" fill="#fff2df" font-family="Georgia,serif" font-size="52" font-weight="700">Padre Pio</text>
+<text x="76" y="367" fill="#fff2df" opacity=".88" font-family="Arial,sans-serif" font-size="22">San Giovanni Rotondo, capucin</text>
+<rect x="74" y="400" width="96" height="4" rx="2" fill="#e9c9a0"/>
+<text x="76" y="455" fill="#fff2df" opacity=".76" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">LUMEN</text>
+</svg>

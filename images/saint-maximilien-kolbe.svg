@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+<defs>
+  <linearGradient id="gkol" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2b2b2b"/><stop offset="1" stop-color="#5a4530"/></linearGradient>
+  <radialGradient id="rkol"><stop stop-color="#e6d4b8" stop-opacity=".5"/><stop offset="1" stop-color="#e6d4b8" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="900" height="600" rx="38" fill="url(#gkol)"/>
+<circle cx="690" cy="150" r="170" fill="url(#rkol)"/>
+<!-- round glasses, distinctive feature -->
+<circle cx="655" cy="150" r="34" fill="none" stroke="#e6d4b8" stroke-width="6"/>
+<circle cx="725" cy="150" r="34" fill="none" stroke="#e6d4b8" stroke-width="6"/>
+<line x1="689" y1="150" x2="691" y2="150" stroke="#e6d4b8" stroke-width="6"/>
+<!-- friar habit silhouette -->
+<path d="M600 210 q90 -40 180 0 l10 140 h-200 Z" fill="#4a3620" opacity=".85"/>
+<!-- thin striped band, evoking the camp uniform he chose to share -->
+<rect x="600" y="330" width="180" height="10" fill="#8a8a8a" opacity=".7"/>
+<rect x="600" y="346" width="180" height="6" fill="#8a8a8a" opacity=".5"/>
+<!-- small flame, offered life -->
+<path d="M690 235 c-10 14 -16 22 -16 32 a16 16 0 0 0 32 0c0 -10 -6 -18 -16 -32Z" fill="#e6a24a"/>
+<path d="M0 510 Q180 420 330 495 T650 470 T900 510 V600 H0Z" fill="#100c08" opacity=".22"/>
+<text x="72" y="318" fill="#f3ead6" font-family="Georgia,serif" font-size="46" font-weight="700">Maximilien Kolbe</text>
+<text x="76" y="367" fill="#f3ead6" opacity=".88" font-family="Arial,sans-serif" font-size="22">Auschwitz, franciscain</text>
+<rect x="74" y="400" width="96" height="4" rx="2" fill="#e6d4b8"/>
+<text x="76" y="455" fill="#f3ead6" opacity=".76" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">LUMEN</text>
+</svg>
