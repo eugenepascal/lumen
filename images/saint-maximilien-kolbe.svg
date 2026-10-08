@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1e2a4a"/><stop offset="1" stop-color="#5c7bb8"/></linearGradient>
+  <radialGradient id="r"><stop stop-color="#eaf2ff" stop-opacity=".72"/><stop offset="1" stop-color="#eaf2ff" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="900" height="600" rx="38" fill="url(#g)"/>
+<circle cx="690" cy="135" r="180" fill="url(#r)"/>
+<circle cx="692" cy="136" r="120" fill="none" stroke="#eaf2ff" stroke-opacity=".38" stroke-width="3"/>
+<circle cx="692" cy="136" r="86" fill="none" stroke="#eaf2ff" stroke-opacity=".22" stroke-width="2"/>
+<path d="M0 510 Q180 420 330 495 T650 470 T900 510 V600 H0Z" fill="#10172b" opacity=".20"/>
+<path d="M0 545 Q190 475 360 525 T700 520 T900 535 V600 H0Z" fill="#eaf2ff" opacity=".10"/>
+<text x="690" y="185" text-anchor="middle" font-size="104" fill="#eaf2ff" font-family="Georgia,serif">✝</text>
+<text x="72" y="300" fill="#f4f8ff" font-family="Georgia,serif" font-size="44" font-weight="700">Maximilien</text>
+<text x="72" y="345" fill="#f4f8ff" font-family="Georgia,serif" font-size="44" font-weight="700">Kolbe</text>
+<text x="76" y="385" fill="#f4f8ff" opacity=".88" font-family="Arial,sans-serif" font-size="22">don de soi &amp; liberté</text>
+<rect x="74" y="415" width="96" height="4" rx="2" fill="#cfe0ff"/>
+<text x="76" y="465" fill="#f4f8ff" opacity=".76" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">LUMEN</text>
+</svg>
