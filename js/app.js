@@ -4238,6 +4238,24 @@ function lumenNovenaDedicatedArt(entry){
   return hit ? LUMEN_NOVENA_IMAGE_MAP[hit[1]] : null;
 }
 
+/* Boîtes de texte façon "le saviez-vous" : remplace l'ancien fond à lignes de
+   cahier (qui se désalignait dès que la taille du texte changeait — A-/A+,
+   police dyslexie...) par des cartes indépendantes de la mise en page, chacune
+   surmontée d'un badge-icône. Un texte à plusieurs paragraphes (séparés par un
+   saut de ligne double) devient plusieurs boîtes, chacune avec sa propre icône —
+   un style plus robuste et plus vivant qu'un simple bloc de texte continu. */
+const TEXT_BOX_ICONS = { prayer:['🙏','🕯️','✨'], reading:['📖','✨','💭','🕊️'] };
+function carnetBoxesHTML(text, kind){
+  if(!text) return '';
+  const icons = TEXT_BOX_ICONS[kind] || TEXT_BOX_ICONS.reading;
+  const paragraphs = String(text).split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);
+  const parts = paragraphs.length ? paragraphs : [String(text)];
+  const boxClass = kind==='prayer' ? 'text-box text-box--prayer' : 'text-box text-box--reading';
+  return `<div class="text-box-group">` + parts.map((p,i)=>
+    `<div class="${boxClass}"><span class="text-box-icon">${icons[i % icons.length]}</span><p class="text-box-text">${p}</p></div>`
+  ).join('') + `</div>`;
+}
+
 function novenaPrayerCount(n){
   let h = 0; for(const c of n.id) h = (h*31 + c.charCodeAt(0)) % 99999;
   return 300 + (h % 28000);
@@ -4513,7 +4531,7 @@ function renderNovenaDetail(id){
     html += `<div class="card">
       <p class="day-title">Jour ${dayIdx} — ${dayData.title}</p>
       <p class="day-medit">${dayData.medit}</p>
-      <div class="day-prayer">${dayData.prayer}</div>
+      ${carnetBoxesHTML(dayData.prayer, 'prayer')}
       <div class="candle-wrap">
         ${candleHTML(alreadyDoneToday, 'day-candle')}
         <button class="btn ${alreadyDoneToday? 'btn-ghost':'btn-primary'} btn-sm" id="pray-day-btn" ${alreadyDoneToday? 'disabled':''}>
@@ -4605,7 +4623,7 @@ function renderNovenaDayPage(n, info, dayIndex){
 
     <div class="card" style="margin-top:10px; border-left:4px solid ${n.color};">
       <p class="eyebrow" style="color:${n.color};">🙏 Prière</p>
-      <div class="day-prayer">${d.prayer}</div>
+      ${carnetBoxesHTML(d.prayer, 'prayer')}
     </div>
 
     ${simpleBeadCounterHTML(counterId, d.prayer)}
@@ -5017,7 +5035,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
       ${fav ? favStarHTML(fav) : ''}
     </div>
     ${entry.ref ? `<p class="saint-prayer" style="margin-bottom:12px;">${entry.ref}</p>` : ''}
-    <p class="entry-detail-text">${entry.summary}</p>
+    ${carnetBoxesHTML(entry.summary, 'reading')}
     ${speakShareRowHTML(entry.name, entry.summary)}
     <div class="entry-link-row" style="gap:8px; flex-wrap:wrap;">
       <button class="btn btn-ghost btn-sm" id="copy-prayer-btn">📋 Copier le texte</button>
@@ -8920,7 +8938,7 @@ function renderCheminDeCroix(){
       <p class="eyebrow" style="color:var(--gold);">${CROIX_STATE+1}ᵉ station / ${CHEMIN_DE_CROIX.length}</p>
       <p class="day-title">${station.title}</p>
       <p class="entry-detail-text">${station.text}</p>
-      <p class="day-prayer">${station.prayer}</p>
+      ${carnetBoxesHTML(station.prayer, 'prayer')}
       <div style="text-align:center; margin-top:8px;">
         <button class="btn btn-primary btn-sm" id="croix-next">${CROIX_STATE<CHEMIN_DE_CROIX.length-1?'Station suivante →':'Terminer'}</button>
       </div>
@@ -8946,7 +8964,7 @@ function renderAngelus(){
       <p class="entry-detail-text">Voici la servante du Seigneur, qu'il me soit fait selon votre parole.<br><i>Je vous salue Marie...</i></p>
       <p class="entry-detail-text">Et le Verbe s'est fait chair, et il a habité parmi nous.<br><i>Je vous salue Marie...</i></p>
       <p class="entry-detail-text">Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ.</p>
-      <p class="day-prayer">Que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Amen.</p>
+      ${carnetBoxesHTML("Que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Amen.", 'prayer')}
       ${speakShareRowHTML("L'Angélus", "L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit.")}
     </div>
     <div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="angelus-reminder-link">🔔 Réglez un rappel à midi</button></div>`;

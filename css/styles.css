@@ -888,10 +888,10 @@
   body.recueillement .card{ box-shadow:none; border:1px solid var(--hairline); }
   body.recueillement .home-divider{ opacity:0.6; }
   body.recueillement #app::before{ opacity:0.4; }
-  body.recueillement .verset-text, body.recueillement .saint-prayer, body.recueillement .entry-detail-text{ font-size:15.5px; line-height:1.85; }
+  body.recueillement .verset-text, body.recueillement .saint-prayer, body.recueillement .entry-detail-text, body.recueillement .text-box-text{ font-size:15.5px; line-height:1.85; }
   @media (prefers-reduced-motion: reduce){
     body[data-section="accueil"] #screen > *,
-    .dropcap, .verset-text, .saint-prayer, .entry-detail-text, .bead-bump, .bead-fly-plus,
+    .dropcap, .verset-text, .saint-prayer, .entry-detail-text, .text-box, .bead-bump, .bead-fly-plus,
     .home-today-dot, .lumen-flame{ animation:none !important; }
   }
   @keyframes ctaGlow{ 0%,100%{ box-shadow:0 4px 14px rgba(94,20,32,0.35); } 50%{ box-shadow:0 4px 22px rgba(184,134,59,0.55); } }
@@ -1123,29 +1123,35 @@
   .day-title{ font-family:'Fraunces',serif; font-size:20px; font-weight:600; margin:0 0 10px; color:var(--wine-dark);}
   .day-medit{ font-size:15px; line-height:1.65; margin-bottom:14px; }
 
-  /* ===== Boîtes "carnet" — pages de texte façon carnet de prière, avec filet rouge et lignes ===== */
-  .day-prayer,
-  .reading-card .entry-detail-text{
+  /* ===== Boîtes de texte façon "le saviez-vous" — une carte indépendante par
+     paragraphe, chacune surmontée d'un badge-icône. Remplace l'ancien fond à
+     lignes de cahier, qui se désalignait dès que la taille du texte changeait. ===== */
+  .text-box-group{ display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }
+  .text-box{
     position:relative;
-    background: repeating-linear-gradient(var(--vellum-light) 0px, var(--vellum-light) 26px, var(--hairline) 26px 27px);
-    border:1px solid var(--hairline); border-radius:4px 14px 14px 4px;
-    padding:15px 18px 15px 24px;
+    background: var(--vellum-light);
+    border:1px solid var(--hairline); border-radius:16px;
+    padding:18px 18px 16px 52px;
     box-shadow: var(--shadow);
-    margin-bottom:16px;
+    animation: textReveal 0.55s ease backwards;
   }
-  .day-prayer{ font-style:italic; font-size:14px; line-height:1.6; color:var(--wine-dark); }
-  .day-prayer::before,
-  .reading-card .entry-detail-text::before{
-    content:""; position:absolute; left:13px; top:8px; bottom:8px; width:1.5px;
-    background:linear-gradient(180deg, transparent, rgba(180,50,60,0.4) 12%, rgba(180,50,60,0.4) 88%, transparent);
+  .text-box-icon{
+    position:absolute; left:-4px; top:-4px; width:40px; height:40px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+    background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 75%);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,0.35);
   }
-  .reading-card .entry-detail-text{ animation: textReveal 0.55s ease backwards; }
-  .reading-card .entry-detail-text::first-letter{
+  .text-box-text{ font-size:15px; line-height:1.68; margin:0; }
+  .text-box-group .text-box:first-child .text-box-text::first-letter{
     font-family:'Fraunces',serif; font-size:2.3em; font-weight:700; float:left; line-height:0.78;
     padding:4px 6px 0 0; color:var(--wine);
   }
-  .day-prayer b, .day-prayer strong,
-  .reading-card .entry-detail-text b, .reading-card .entry-detail-text strong,
+  .text-box--prayer{ border-left:3px solid var(--wine); }
+  .text-box--prayer .text-box-text{ font-style:italic; color:var(--wine-dark); }
+  .text-box--prayer .text-box-icon{
+    background: radial-gradient(circle at 35% 30%, var(--wine), var(--wine-dark) 75%);
+  }
+  .text-box-text b, .text-box-text strong,
   .saint-prayer b, .saint-prayer strong{
     background:linear-gradient(180deg, transparent 58%, var(--gold-pale) 58%);
     padding:0 2px; border-radius:2px; font-weight:700; color:var(--wine-dark);
@@ -1995,10 +2001,10 @@
   /* ===== adjustable font size ===== */
   #app.font-sm .entry-detail-text, #app.font-sm .saint-bio, #app.font-sm .day-medit,
   #app.font-sm .guide-text, #app.font-sm .journal-text, #app.font-sm .entry-summary,
-  #app.font-sm .day-prayer, #app.font-sm .saint-prayer { font-size: 12.5px !important; }
+  #app.font-sm .text-box-text, #app.font-sm .saint-prayer { font-size: 12.5px !important; }
   #app.font-lg .entry-detail-text, #app.font-lg .saint-bio, #app.font-lg .day-medit,
   #app.font-lg .guide-text, #app.font-lg .journal-text, #app.font-lg .entry-summary,
-  #app.font-lg .day-prayer, #app.font-lg .saint-prayer { font-size: 17px !important; line-height:1.7 !important; }
+  #app.font-lg .text-box-text, #app.font-lg .saint-prayer { font-size: 17px !important; line-height:1.7 !important; }
 
   /* ===== choix de police de titre ===== */
   #app.title-lora .ambiance-hero-title, #app.title-lora .badge-title, #app.title-lora .bead-num,
@@ -2024,7 +2030,7 @@
   /* ===== dyslexia-friendly reading mode ===== */
   #app.dyslexic-font, #app.dyslexic-font .entry-detail-text, #app.dyslexic-font .saint-bio,
   #app.dyslexic-font .day-medit, #app.dyslexic-font .guide-text, #app.dyslexic-font .journal-text,
-  #app.dyslexic-font .entry-summary, #app.dyslexic-font .day-prayer, #app.dyslexic-font .saint-prayer,
+  #app.dyslexic-font .entry-summary, #app.dyslexic-font .text-box-text, #app.dyslexic-font .saint-prayer,
   #app.dyslexic-font .entry-name, #app.dyslexic-font p, #app.dyslexic-font li {
     font-family: 'Comic Sans MS', 'Comic Sans', Verdana, Tahoma, sans-serif !important;
     letter-spacing: 0.4px !important;
