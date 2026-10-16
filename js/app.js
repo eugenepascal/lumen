@@ -3871,8 +3871,9 @@ function renderHome(){
   let html = `
     <figure class="home-hero" id="home-hero-wrap">
       <img id="home-hero-img" src="${['https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden_Eagle_soaring_overhead.jpg?width=1200'][dayOfYear()%3]}" alt="" onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200';">
+      <div class="home-hero-duotone"></div>
       <div class="home-hero-scrim"></div>
-      <img class="home-hero-walker" src="./images/walking-to-light.svg" alt="" onerror="this.style.display='none'">
+      <div class="home-hero-walker" aria-hidden="true"><span>🕯️</span></div>
       <figcaption>
         <p class="home-hero-kicker"><span class="home-hero-kicker-pill">${saluTime}${USER_NAME ? ', '+USER_NAME : ''}</span></p>
         <p class="home-hero-line">${STREAK.count>0 ? `${STREAK.count} jour${STREAK.count>1?'s':''} de suite — continuez ainsi.` : "Un moment pour vous poser, respirer, et vous tourner vers Dieu."}</p>
@@ -3885,11 +3886,9 @@ function renderHome(){
       </div>`}
 
     <div class="home-today-strip">
-      <span class="home-today-dot" style="background:${color.hex};" title="${color.label}"></span>
-      <span class="home-today-label">${color.label}</span>
-      <span class="home-today-sep">·</span>
-      <span class="home-today-label">${frenchDate()}</span>
-      ${STREAK.count>0 ? `<span class="home-today-sep">·</span><span class="home-today-label">🔥 ${STREAK.count}</span>` : ''}
+      <span class="home-today-chip"><span class="home-today-dot" style="background:${color.hex};"></span>${color.label}</span>
+      <span class="home-today-chip">📅 ${frenchDate()}</span>
+      ${STREAK.count>0 ? `<span class="home-today-chip home-today-chip--streak">🔥 ${STREAK.count}</span>` : ''}
     </div>
 
     ${showInactivityBanner ? `
@@ -3903,7 +3902,7 @@ function renderHome(){
     ${homeTitleHTML('✦','Aujourd’hui','linear-gradient(160deg, var(--gold-light), var(--gold))')}
     <div class="home-2col">
       <button class="home-moment-panel home-grid-cell" data-goto-primary="${moment.primary}" data-goto-sub="${moment.sub}">
-        <span class="home-moment-icon">${moment.icon}</span>
+        <span class="home-moment-icon-badge"><span class="home-moment-icon">${moment.icon}</span></span>
         <span class="home-moment-label">${moment.label}</span>
         <span class="home-moment-text">${moment.text}</span>
       </button>
@@ -3926,7 +3925,7 @@ function renderHome(){
           <button class="btn btn-ghost btn-sm" id="shuffle-verset-btn" style="margin-top:8px;">🔄 Un autre verset</button>
         </div>` : ''}
         ${isHomeSectionEnabled('saint') ? `
-        <div class="card saint-card home-grid-cell">
+        <div class="card saint-card home-grid-cell home-card-ribbon home-card--saint">
           <div class="saint-emblem">${initial}</div>
           <div>
             <p class="saint-name">${saint.name}</p>
@@ -3936,7 +3935,7 @@ function renderHome(){
           </div>
         </div>` : ''}
         ${isHomeSectionEnabled('streak') ? `
-        <div class="card home-grid-cell" style="text-align:center;">
+        <div class="card home-grid-cell home-card-ribbon home-card--streak" style="text-align:center;">
           <div class="lumen-flame lumen-flame-${tier} ${STREAK.count>0?'lit':''}" style="margin:0 auto; transform:scale(${flameScale}); transition:transform 0.6s cubic-bezier(.34,1.56,.64,1);">
             <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
           </div>
@@ -4196,9 +4195,30 @@ function lumenSacredArtFor(entry){
   return best;
 }
 
+/* Pour les neuvaines dédiées à un saint ou une figure représentés par une vraie
+   œuvre/photo dans LUMEN_SACRED_ART, on préfère cette image réelle à l'illustration
+   dessinée — "de vraies images" plutôt que des pictogrammes, quand une correspondance
+   fiable existe. Les neuvaines plus symboliques (Esprit Saint, étoile...) gardent
+   leur illustration dédiée, faute de photographie pertinente. */
+const NOVENA_REAL_ART_KEY = {
+  'joseph': 'joseph',
+  'joseph-neuvaine-familiale': 'joseph',
+  'sacre-coeur': 'sacré-cœur',
+  'marie-confiance': 'marie',
+  'marie-confiance-abandon': 'marie',
+  'therese': 'thérèse',
+  'michel': 'michel'
+};
+function findSacredArtByKey(key){
+  return LUMEN_SACRED_ART.find(item => item.keys.includes(key)) || null;
+}
 function lumenNovenaDedicatedArt(entry){
   if(!entry) return null;
   const id=(entry.id||entry.key||'').toLowerCase();
+  if(id && NOVENA_REAL_ART_KEY[id]){
+    const real = findSacredArtByKey(NOVENA_REAL_ART_KEY[id]);
+    if(real) return real;
+  }
   if(id && LUMEN_NOVENA_IMAGE_MAP[id]) return LUMEN_NOVENA_IMAGE_MAP[id];
   const title=(entry.title||entry.name||'').toLowerCase();
   const aliases=[

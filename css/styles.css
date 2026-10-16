@@ -971,10 +971,11 @@
 
   /* ===== Accueil — cartes "signature" (bandeau couleur + médaillon, selon le thème) ===== */
   .home-card{ position:relative; overflow:hidden; padding-top:38px !important; }
-  .home-card::before{
+  .home-card::before, .home-card-ribbon::before{
     content:""; position:absolute; top:0; left:0; right:0; height:7px;
     border-radius:16px 16px 0 0;
   }
+  .home-card-ribbon{ position:relative; overflow:hidden; }
   .home-card-badge{
     position:absolute; top:12px; left:14px;
     width:36px; height:36px; border-radius:50%;
@@ -1121,10 +1122,33 @@
   .day-dot.current{ border-color:var(--wine); color:var(--wine); box-shadow:0 0 0 3px rgba(124,31,46,0.12); }
   .day-title{ font-family:'Fraunces',serif; font-size:20px; font-weight:600; margin:0 0 10px; color:var(--wine-dark);}
   .day-medit{ font-size:15px; line-height:1.65; margin-bottom:14px; }
-  .day-prayer{
-    background: linear-gradient(135deg, rgba(184,134,59,0.08), rgba(124,31,46,0.05));
-    border:1px solid var(--hairline); border-radius:12px; padding:14px 16px;
-    font-style:italic; font-size:14px; line-height:1.6; color:var(--wine-dark); margin-bottom:16px;
+
+  /* ===== Boîtes "carnet" — pages de texte façon carnet de prière, avec filet rouge et lignes ===== */
+  .day-prayer,
+  .reading-card .entry-detail-text{
+    position:relative;
+    background: repeating-linear-gradient(var(--vellum-light) 0px, var(--vellum-light) 26px, var(--hairline) 26px 27px);
+    border:1px solid var(--hairline); border-radius:4px 14px 14px 4px;
+    padding:15px 18px 15px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom:16px;
+  }
+  .day-prayer{ font-style:italic; font-size:14px; line-height:1.6; color:var(--wine-dark); }
+  .day-prayer::before,
+  .reading-card .entry-detail-text::before{
+    content:""; position:absolute; left:13px; top:8px; bottom:8px; width:1.5px;
+    background:linear-gradient(180deg, transparent, rgba(180,50,60,0.4) 12%, rgba(180,50,60,0.4) 88%, transparent);
+  }
+  .reading-card .entry-detail-text{ animation: textReveal 0.55s ease backwards; }
+  .reading-card .entry-detail-text::first-letter{
+    font-family:'Fraunces',serif; font-size:2.3em; font-weight:700; float:left; line-height:0.78;
+    padding:4px 6px 0 0; color:var(--wine);
+  }
+  .day-prayer b, .day-prayer strong,
+  .reading-card .entry-detail-text b, .reading-card .entry-detail-text strong,
+  .saint-prayer b, .saint-prayer strong{
+    background:linear-gradient(180deg, transparent 58%, var(--gold-pale) 58%);
+    padding:0 2px; border-radius:2px; font-weight:700; color:var(--wine-dark);
   }
 
   /* intentions */
@@ -1316,9 +1340,17 @@
     border-radius:0 0 26px 26px;
   }
   .home-hero img{ width:100%; height:100%; object-fit:cover; display:block; }
+  /* lavis doré/vineux pour unifier n'importe quelle photo avec la palette de l'app */
+  .home-hero-duotone{
+    position:absolute; inset:0;
+    background: linear-gradient(155deg, rgba(192,138,62,0.32) 0%, rgba(107,37,69,0.42) 100%);
+    mix-blend-mode: color;
+  }
   .home-hero-scrim{
     position:absolute; inset:0;
-    background: linear-gradient(0deg, rgba(20,10,10,0.82) 0%, rgba(20,10,10,0.28) 55%, rgba(20,10,10,0.05) 100%);
+    background:
+      radial-gradient(120% 90% at 50% 100%, rgba(15,8,10,0.2) 0%, transparent 55%),
+      linear-gradient(0deg, rgba(20,10,10,0.86) 0%, rgba(20,10,10,0.3) 58%, rgba(20,10,10,0.12) 100%);
   }
   .home-hero::after{
     content:""; position:absolute; left:0; right:0; bottom:0; height:4px;
@@ -1326,8 +1358,13 @@
     opacity:0.85;
   }
   .home-hero figcaption{ position:absolute; left:22px; right:22px; bottom:20px; }
-  .home-hero-walker{ position:absolute; right:14px; top:14px; width:72px; height:72px; opacity:0.92; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35)); }
-  @media (min-width:760px){ .home-hero-walker{ width:92px; height:92px; right:24px; top:20px; } }
+  .home-hero-walker{
+    position:absolute; right:14px; top:14px; width:42px; height:42px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:19px;
+    background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 70%);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3), inset 0 0 0 2px rgba(255,255,255,0.3);
+  }
+  @media (min-width:760px){ .home-hero-walker{ width:50px; height:50px; font-size:22px; right:24px; top:20px; } }
   .home-hero-kicker{ margin:0 0 8px; }
   .home-hero-kicker-pill{
     display:inline-flex; align-items:center; gap:6px;
@@ -1388,19 +1425,28 @@
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
   }
   .home-today-strip{
-    display:flex; align-items:center; gap:7px; padding:10px 4px 0;
-    font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft);
+    display:flex; align-items:center; gap:7px; padding:12px 2px 0; flex-wrap:wrap;
   }
-  .home-today-dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 2px rgba(255,255,255,0.4); animation: todayDotPulse 2.6s ease-in-out infinite; }
+  .home-today-chip{
+    display:inline-flex; align-items:center; gap:5px;
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--ink-soft);
+    background:var(--vellum-light); border:1px solid var(--hairline); border-radius:20px;
+    padding:5px 11px; box-shadow:0 2px 6px rgba(60,30,50,0.06);
+  }
+  .home-today-chip--streak{ color:#B5531E; border-color:rgba(232,117,44,0.35); }
+  .home-today-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 2px rgba(255,255,255,0.6); animation: todayDotPulse 2.6s ease-in-out infinite; }
   @keyframes todayDotPulse{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(1.25); opacity:0.75; } }
-  .home-today-sep{ opacity:0.5; }
   .home-pair{ display:grid; grid-template-columns:1.3fr 1fr; gap:10px; margin-top:16px; align-items:stretch; }
   .home-moment-panel{
     text-align:left; cursor:pointer; border:none; border-radius:16px; padding:16px;
     background: linear-gradient(155deg, var(--wine) 0%, var(--wine-dark) 100%); color:#fff;
     display:flex; flex-direction:column; gap:3px;
   }
-  .home-moment-icon{ font-size:22px; }
+  .home-moment-icon-badge{
+    width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.16); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.3); margin-bottom:4px;
+  }
+  .home-moment-icon{ font-size:19px; }
   .home-moment-label{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; margin-top:4px; }
   .home-moment-text{ font-family:'Inter',sans-serif; font-size:11.5px; opacity:0.82; line-height:1.35; }
   .home-saint-panel{
