@@ -6638,6 +6638,40 @@ function renderStudio(){
     card.onclick = ()=>{ playBgYoutube(card.dataset.playVideo, card.dataset.playTitle); };
   });
 }
+/* ================= favoris (étoile) ================= */
+function favKey(f){
+  if(!f) return '';
+  if(f.type === 'novena') return 'novena|' + f.id;
+  return 'entry|' + (f.compKey||'') + '|' + (f.groupId||'') + '|' + (f.idx!=null?f.idx:'');
+}
+function isFavorited(f){
+  const key = favKey(f);
+  return FAVORITES.some(x=>favKey(x)===key);
+}
+function favStarHTML(f){
+  const active = isFavorited(f);
+  return `<button type="button" class="fav-star ${active?'active':''}" data-fav='${JSON.stringify(f).replace(/'/g,"&apos;")}' title="${active?'Retirer des favoris':'Ajouter aux favoris'}">${active?'★':'☆'}</button>`;
+}
+function wireFavStars(){
+  document.querySelectorAll('.fav-star').forEach(btn=>{
+    btn.onclick = async (e)=>{
+      e.stopPropagation();
+      let f;
+      try{ f = JSON.parse(btn.dataset.fav.replace(/&apos;/g,"'")); }catch(err){ return; }
+      const key = favKey(f);
+      const idx = FAVORITES.findIndex(x=>favKey(x)===key);
+      if(idx >= 0){
+        FAVORITES.splice(idx,1);
+        btn.classList.remove('active'); btn.textContent = '☆'; btn.title = 'Ajouter aux favoris';
+      } else {
+        FAVORITES.unshift(f);
+        btn.classList.add('active'); btn.textContent = '★'; btn.title = 'Retirer des favoris';
+      }
+      await savePrefs();
+      if(PRIMARY === 'espace' && SUBTAB.espace === 'favoris') render();
+    };
+  });
+}
 function renderFavoris(){
   let html = `<h2 class="section-title">⭐ Mes favoris</h2>`;
   if(FAVORITES.length === 0){
