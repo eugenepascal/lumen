@@ -969,6 +969,43 @@
     border-left: 3px solid var(--gold); padding-left: 10px; margin-top:8px;
   }
 
+  /* ===== Accueil — cartes "signature" (bandeau couleur + médaillon, selon le thème) ===== */
+  .home-card{ position:relative; overflow:hidden; padding-top:38px !important; }
+  .home-card::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:7px;
+    border-radius:16px 16px 0 0;
+  }
+  .home-card-badge{
+    position:absolute; top:12px; left:14px;
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px; line-height:1;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2), inset 0 0 0 2px rgba(255,255,255,0.35);
+    z-index:1;
+  }
+  .home-card-eyebrow{
+    font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:1.4px;
+    text-transform:uppercase; margin:0 0 6px 46px !important; opacity:0.78; color:var(--ink-soft);
+  }
+  .home-card--verset::before{ background:linear-gradient(90deg, var(--gold) 0%, var(--wine) 100%); }
+  .home-card--verset .home-card-badge{ background:linear-gradient(160deg, var(--gold-light), var(--gold)); color:var(--wine-dark); }
+  .home-card--continue::before{ background:linear-gradient(90deg, #4E7AA7 0%, var(--wine-dark) 100%); }
+  .home-card--continue .home-card-badge{ background:linear-gradient(160deg, #7FAFD6, #4E7AA7); color:#fff; }
+  .home-card--citation::before{ background:linear-gradient(90deg, var(--wine-dark) 0%, var(--gold) 100%); }
+  .home-card--citation .home-card-badge{ background:linear-gradient(160deg, var(--wine), var(--wine-dark)); color:var(--vellum-light); }
+  .home-card--saint::before{ background:linear-gradient(90deg, var(--sage,#5C6E58) 0%, var(--gold) 100%); }
+  .home-card--streak::before{ background:linear-gradient(90deg, #E8752C 0%, var(--gold) 100%); }
+  .home-card--pensee::before{ background:linear-gradient(90deg, var(--gold) 0%, var(--sage,#5C6E58) 100%); }
+  .home-card--pensee .home-card-badge{ background:linear-gradient(160deg, var(--gold-light), var(--sage,#8FA13F)); color:var(--wine-dark); }
+  /* grand guillemet décoratif, en fond, pour les boîtes de citation / verset */
+  .home-card-quotemark{
+    position:absolute; top:-18px; right:6px; font-family:'Fraunces',serif; font-size:76px;
+    color:var(--gold); opacity:0.14; line-height:1; pointer-events:none; user-select:none;
+  }
+  /* bandeau de la section "Aujourd'hui" etc. — capsule plus originale */
+  .home-sec-title{ gap:0; }
+  .home-sec-title .home-sec-emblem{ margin-right:10px; box-shadow: 0 3px 8px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(255,255,255,0.4); }
+
   /* ===== Text display utilities ===== */
   .text-highlight{ background:linear-gradient(180deg, transparent 58%, var(--gold-pale) 58%); padding:0 1px; font-weight:600; }
   .text-underline-gold{ text-decoration:none; background-image:linear-gradient(var(--gold), var(--gold)); background-size:100% 2px; background-repeat:no-repeat; background-position:0 100%; padding-bottom:2px; }
@@ -1223,6 +1260,8 @@
   .hub-hero-banner img:not(.hub-hero-banner-img){ width:52px; height:52px; filter:brightness(0) invert(1); opacity:0.9; }
   .hub-hero-banner-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 22%; }
   .hub-hero-scrim{ position:absolute; inset:0; background:linear-gradient(160deg, rgba(20,10,10,0.52) 0%, rgba(20,10,10,0.18) 60%); }
+  /* En mode "fond plein écran par page", le bandeau fait doublon avec le fond — on le retire. */
+  body[data-theme-mode="page"] .hub-hero-banner{ display:none; }
   .hub-hero-emoji{ position:relative; z-index:1; font-size:44px; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35)); }
   .prier-hub-card-emoji{ font-size:30px; }
   .novena-card-img{ position:relative; height:120px; background:var(--gold-pale); display:flex; align-items:center; justify-content:center; }
@@ -1281,15 +1320,24 @@
     position:absolute; inset:0;
     background: linear-gradient(0deg, rgba(20,10,10,0.82) 0%, rgba(20,10,10,0.28) 55%, rgba(20,10,10,0.05) 100%);
   }
+  .home-hero::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:4px;
+    background:linear-gradient(90deg, var(--gold) 0%, var(--wine) 50%, var(--gold) 100%);
+    opacity:0.85;
+  }
   .home-hero figcaption{ position:absolute; left:22px; right:22px; bottom:20px; }
   .home-hero-walker{ position:absolute; right:14px; top:14px; width:72px; height:72px; opacity:0.92; filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35)); }
   @media (min-width:760px){ .home-hero-walker{ width:92px; height:92px; right:24px; top:20px; } }
-  .home-hero-kicker{
-    font-family:'Inter',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.3px;
-    color:rgba(255,255,255,0.78); margin:0 0 4px;
+  .home-hero-kicker{ margin:0 0 8px; }
+  .home-hero-kicker-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.4px;
+    color:#fff; background:linear-gradient(120deg, rgba(192,138,62,0.55), rgba(107,37,69,0.55));
+    padding:5px 12px; border-radius:20px; backdrop-filter:blur(3px);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25);
   }
   .home-hero-line{
-    font-family:'Fraunces',serif; font-weight:500; font-size:24px; line-height:1.25;
+    font-family:'Fraunces',serif; font-weight:500; font-size:25px; line-height:1.25;
     color:#fff; margin:0; text-shadow:0 2px 12px rgba(0,0,0,0.3); max-width:92%;
   }
   .home-divider{ display:flex; align-items:center; gap:10px; margin:22px 0 4px; }

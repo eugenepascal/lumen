@@ -334,10 +334,6 @@ function showAuthResetOption(){
 function renderCompte(){
   let html = `<h2 class="section-title">👤 Mon compte</h2>
     <div class="card">
-      <label style="font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); display:block; margin-bottom:8px;">Choisissez votre avatar, selon ce qui vous ressemble</label>
-      ${avatarPickerGridHTML(USER_AVATAR, 'avatar')}
-    </div>
-    <div class="card">
       <label style="font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); display:block; margin-bottom:4px;">Comment souhaitez-vous qu'on vous appelle ?</label>
       <div style="display:flex; gap:8px;">
         <input type="text" id="compte-name-input" value="${USER_NAME||''}" placeholder="Votre prénom">
@@ -358,13 +354,6 @@ function renderCompte(){
     </div>`;
   }
   document.getElementById('screen').innerHTML = html;
-  document.querySelectorAll('.avatar-opt-btn').forEach(btn=>{
-    btn.onclick = async ()=>{
-      USER_AVATAR = btn.dataset.avatar;
-      await savePrefs();
-      renderCompte();
-    };
-  });
   document.getElementById('compte-name-save').onclick = async ()=>{
     const val = document.getElementById('compte-name-input').value.trim();
     USER_NAME = val.slice(0, 30);
@@ -2444,6 +2433,7 @@ const JESUS = [
       {name:"La foi", dates:"", tag:"Thème", avatar:"🙏", ref:"D'après Marc 5, 25-34 — la femme hémorroïsse", summary:"Une femme malade depuis douze ans, ayant tout tenté sans succès, touche simplement le vêtement de Jésus dans la foule, certaine que cela suffira. Elle est guérie sur-le-champ. Jésus ne dit pas « ma puissance t'a guérie », mais « ta foi t'a sauvée » — la foi n'est pas une certitude intellectuelle, mais une confiance qui ose tendre la main même dans la foule et le doute."},
       {name:"L'espérance", dates:"", tag:"Thème", avatar:"🌅", ref:"D'après le Livre de Job", summary:"Job perd tout — ses biens, ses enfants, sa santé — sans qu'aucune faute ne le justifie, et pourtant il continue d'espérer en Dieu au milieu de l'incompréhension totale. L'espérance chrétienne n'est pas l'optimisme qui nie la souffrance, mais la conviction que la dernière parole n'appartient pas au malheur."},
       {name:"La charité", dates:"", tag:"Thème", avatar:"❤️", ref:"D'après la parabole du Bon Samaritain, Luc 10, 25-37", summary:"Un homme est laissé pour mort au bord d'une route ; un prêtre et un lévite passent sans s'arrêter, mais un Samaritain — étranger méprisé à l'époque — s'arrête, soigne ses blessures et paie pour ses soins. Jésus renverse la question « qui est mon prochain ? » en « de qui te rends-tu proche ? » — l'amour véritable se mesure aux actes, pas aux appartenances."},
+      {name:"Le pardon", dates:"", tag:"Thème", avatar:"🕊️", ref:"D'après Luc 23, 34 — Jésus en croix", summary:"Cloué sur la croix, au moment le plus injuste et le plus douloureux de sa vie, Jésus prie pour ceux qui le font souffrir : « Père, pardonne-leur, car ils ne savent pas ce qu'ils font. » Il ne nie pas la faute, ni la souffrance causée ; il refuse simplement de laisser la haine avoir le dernier mot. Pardonner n'est pas oublier, mais cesser de laisser une blessure décider qui l'on devient. — D'autres méditations et des mises en situation concrètes sur ce thème sont réunies juste à côté, dans « Le pardon »."},
       {name:"L'humilité", dates:"", tag:"Thème", avatar:"🧺", ref:"D'après Jean 13, 1-17 — le lavement des pieds", summary:"La veille de sa mort, Jésus, le Maître, s'agenouille pour laver les pieds de ses disciples — une tâche réservée aux esclaves. Il leur montre ainsi que la grandeur véritable ne se mesure pas à ce qu'on domine, mais à ce qu'on est prêt à servir, même dans les gestes les plus humbles."},
       {name:"La patience dans l'épreuve", dates:"", tag:"Thème", avatar:"⏳", ref:"D'après l'histoire de Joseph, Genèse 37-45", summary:"Vendu par ses frères, accusé injustement, oublié en prison pendant des années, Joseph aurait eu toutes les raisons de perdre patience et de se durcir. Il attend, sans savoir combien de temps encore, et finit par voir sa situation transformée d'une manière qu'il n'aurait jamais pu deviner."},
       {name:"La prière persévérante", dates:"", tag:"Thème", avatar:"🕯️", ref:"D'après la parabole de la veuve insistante, Luc 18, 1-8", summary:"Une veuve réclame justice sans relâche à un juge qui ne veut d'abord pas l'écouter, jusqu'à ce qu'il cède simplement pour ne plus être importuné. Jésus raconte cette histoire pour encourager à prier sans se décourager — non parce que Dieu serait comme ce juge indifférent, mais parce que la persévérance dans la prière garde le cœur tourné vers lui."},
@@ -3599,22 +3589,6 @@ let SEEN_MILESTONES = [];
 let NOVENA_COMPANIONS = {};
 let LAST_SUMMARY_SEEN = '';
 let USER_NAME = '';
-const AVATAR_CATEGORIES = [
-  {label:'🙏 Prier', items:['🙏','🕯️','🪔','📿']},
-  {label:'📿 Dévotions', items:['✝️','⛓️','🛡️','🩸']},
-  {label:'📖 Écritures', items:['📖','📜','🕎','✒️']},
-  {label:'✝️ Jésus', items:['✝️','👑','🐑','❤️']},
-  {label:'⛪ Église', items:['⛪','🔔','🕊️','🗝️']},
-  {label:'🌿 Sagesse', items:['💡','🦉','🌿','🧭']},
-  {label:'👤 Mon espace', items:['⭐','🌙','☀️','🌹']}
-];
-const AVATAR_OPTIONS = [...new Set(AVATAR_CATEGORIES.flatMap(c=>c.items))];
-function avatarPickerGridHTML(selected, dataAttr){
-  return AVATAR_CATEGORIES.map(cat=>`
-    <p class="avatar-cat-label">${cat.label}</p>
-    <div class="avatar-picker-grid">${cat.items.map(a=>`<button class="avatar-opt-btn ${selected===a?'selected':''}" data-${dataAttr}="${a}">${a}</button>`).join('')}</div>
-  `).join('');
-}
 let USER_AVATAR = '🕯️';
 let TITLE_FONT = 'fraunces';
 let TAB_SLIDE_DIR = '';
@@ -3900,7 +3874,7 @@ function renderHome(){
       <div class="home-hero-scrim"></div>
       <img class="home-hero-walker" src="./images/walking-to-light.svg" alt="" onerror="this.style.display='none'">
       <figcaption>
-        <p class="home-hero-kicker">${saluTime}${USER_NAME ? ', '+USER_NAME : ''}</p>
+        <p class="home-hero-kicker"><span class="home-hero-kicker-pill">${saluTime}${USER_NAME ? ', '+USER_NAME : ''}</span></p>
         <p class="home-hero-line">${STREAK.count>0 ? `${STREAK.count} jour${STREAK.count>1?'s':''} de suite — continuez ainsi.` : "Un moment pour vous poser, respirer, et vous tourner vers Dieu."}</p>
       </figcaption>
     </figure>
@@ -3926,7 +3900,7 @@ function renderHome(){
 
     ${seasonCard ? `<div style="margin-top:14px;">${seasonCard}</div>` : ''}
 
-    ${homeTitleHTML('✦','Aujourd’hui','#EAD9C4')}
+    ${homeTitleHTML('✦','Aujourd’hui','linear-gradient(160deg, var(--gold-light), var(--gold))')}
     <div class="home-2col">
       <button class="home-moment-panel home-grid-cell" data-goto-primary="${moment.primary}" data-goto-sub="${moment.sub}">
         <span class="home-moment-icon">${moment.icon}</span>
@@ -3943,8 +3917,10 @@ function renderHome(){
         const flameScale = Math.min(1.6, 1 + STREAK.count * 0.025);
         return `
         ${isHomeSectionEnabled('verset') ? `
-        <div class="card home-grid-cell" style="background:linear-gradient(155deg, var(--vellum-light) 0%, var(--gold-pale) 150%);">
-          <p class="eyebrow" style="color:var(--gold);">📖 Verset du jour</p>
+        <div class="card home-grid-cell home-card home-card--verset" style="background:linear-gradient(155deg, var(--vellum-light) 0%, var(--gold-pale) 150%);">
+          <span class="home-card-quotemark">”</span>
+          <span class="home-card-badge">📖</span>
+          <p class="home-card-eyebrow">Verset du jour</p>
           <p class="verset-text" style="text-align:left;">« ${v.text} »</p>
           <p class="verset-ref" style="text-align:left;">${v.ref}</p>
           <button class="btn btn-ghost btn-sm" id="shuffle-verset-btn" style="margin-top:8px;">🔄 Un autre verset</button>
@@ -3971,8 +3947,9 @@ function renderHome(){
           <div style="margin-top:6px;"><button class="btn btn-ghost btn-sm" id="random-prayer-btn">🎲 Prière surprise</button></div>
         </div>` : ''}
         ${((lastVisited && isHomeSectionEnabled('continue')) || RECENT.length > 1) ? `
-        <div class="card home-grid-cell">
-          <p class="eyebrow" style="color:var(--ink-soft);">↩️ Reprendre le fil</p>
+        <div class="card home-grid-cell home-card home-card--continue">
+          <span class="home-card-badge">↩️</span>
+          <p class="home-card-eyebrow">Reprendre le fil</p>
           ${(lastVisited && isHomeSectionEnabled('continue')) ? `
           <div class="entry-card" id="continue-card" style="cursor:pointer;">
             <div class="entry-avatar">${lastVisited.avatar||'📖'}</div>
@@ -3985,7 +3962,8 @@ function renderHome(){
             </button>`).join('')}</div>` : ''}
         </div>` : ''}
         ${isHomeSectionEnabled('citation') ? `
-        <div class="card home-grid-cell" style="text-align:center;">
+        <div class="card home-grid-cell home-card home-card--citation" style="text-align:center; padding-top:16px !important;">
+          <span class="home-card-quotemark" style="right:auto; left:50%; transform:translateX(-50%); top:-14px;">”</span>
           ${qArt ? `<div class="home-quote-img" style="margin:0 auto;"><img src="${qArt.url}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : '<span style="font-size:22px;">💬</span>'}
           <p class="entry-detail-text" style="font-style:italic; font-size:12.5px; margin:6px 0 2px;">« ${q.text} »</p>
           <p class="studio-note" style="margin:0;">— ${q.author}</p>
@@ -3999,10 +3977,11 @@ function renderHome(){
 
     ${isHomeSectionEnabled('pensee') ? `
     <div class="flourish-divider">✦ ❦ ✦</div>
-    <h2 class="section-title">✦ Pensée du jour</h2>
-    <div class="card">
-      <p class="saint-name" style="margin-bottom:6px;">${medit.title}</p>
-      <p class="entry-summary" style="-webkit-line-clamp:unset;">${medit.text}</p>
+    ${homeTitleHTML('💭','Pensée du jour','linear-gradient(160deg, var(--gold-light), var(--sage,#8FA13F))')}
+    <div class="card home-card home-card--pensee">
+      <span class="home-card-badge">💭</span>
+      <p class="saint-name" style="margin:0 0 6px 46px;">${medit.title}</p>
+      <p class="entry-summary" style="-webkit-line-clamp:unset; margin-left:0;">${medit.text}</p>
     </div>` : ''}
   `;
 
@@ -9943,6 +9922,7 @@ function applyThemeAndFont(){
   else if(THEME_MODE === 'page') THEME = computePageTheme();
   document.body.setAttribute('data-theme', THEME);
   document.body.setAttribute('data-pattern', BG_PATTERN);
+  document.body.setAttribute('data-theme-mode', THEME_MODE);
   const current = THEMES_LIST.find(t=>t.key===THEME) || THEMES_LIST[0];
   const btn = document.getElementById('theme-btn');
   if(btn){ const iconEl = btn.querySelector('.tool-btn-icon'); if(iconEl) iconEl.textContent = THEME_MODE === 'auto' ? '🔄' : (THEME_MODE === 'page' ? '📖' : current.icon); }
@@ -10128,27 +10108,16 @@ function renderOnboarding(){
       <p class="onboard-title">${slide.icon} ${slide.title}</p>
       <p class="entry-detail-text" style="margin-bottom:10px;">Comment souhaitez-vous qu'on vous appelle ?</p>
       <input type="text" id="onboard-name-input" value="${USER_NAME||''}" placeholder="Votre prénom (facultatif)" style="margin-bottom:12px;">
-      <p class="entry-detail-text" style="margin-bottom:8px;">Choisissez un avatar, selon ce qui vous ressemble</p>
-      <div style="margin-bottom:12px;">${avatarPickerGridHTML(USER_AVATAR, 'onboard-avatar')}</div>
       <div class="onboard-dots">${ONBOARDING_SLIDES.map((_,i)=>`<span class="${i===ONBOARD_IDX?'active':''}"></span>`).join('')}</div>
       <div style="display:flex; justify-content:space-between;">
         <button class="btn btn-ghost btn-sm" id="onboard-skip">Passer</button>
         <button class="btn btn-primary btn-sm" id="onboard-next">Suivant →</button>
       </div>
     `;
-    let pickedAvatar = USER_AVATAR;
-    document.querySelectorAll('[data-onboard-avatar]').forEach(btn=>{
-      btn.onclick = ()=>{
-        pickedAvatar = btn.dataset.onboardAvatar;
-        document.querySelectorAll('[data-onboard-avatar]').forEach(b=> b.classList.remove('selected'));
-        btn.classList.add('selected');
-      };
-    });
     document.getElementById('onboard-skip').onclick = closeOnboarding;
     document.getElementById('onboard-next').onclick = async ()=>{
       const nameVal = document.getElementById('onboard-name-input').value.trim();
       USER_NAME = nameVal.slice(0,30);
-      USER_AVATAR = pickedAvatar;
       await savePrefs();
       ONBOARD_IDX++; renderOnboarding();
     };
@@ -10441,8 +10410,6 @@ function render(){
     LAST_PAGE_THEME_SECTION = PRIMARY;
     applyThemeAndFont();
   }
-  const avBadge = document.getElementById('user-avatar-badge');
-  if(avBadge) avBadge.textContent = USER_AVATAR;
   document.getElementById('date-line').textContent = frenchDate();
   renderTabbar();
   renderScreen();
@@ -10563,8 +10530,6 @@ async function startApp(){
   if(recBtn) recBtn.onclick = toggleRecueillement;
   const guideBtn = document.getElementById('guide-btn');
   if(guideBtn) guideBtn.onclick = openGuide;
-  const avBadgeBtn = document.getElementById('user-avatar-badge');
-  if(avBadgeBtn) avBadgeBtn.onclick = ()=> goTo('espace','compte');
   const narrateBtn = document.getElementById('auto-narrate-btn');
   if(narrateBtn){
     narrateBtn.onclick = ()=>{
