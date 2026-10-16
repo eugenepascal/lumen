@@ -6789,11 +6789,7 @@ function playBgYoutube(videoId, label){
   const holder = document.getElementById('bg-youtube-holder');
   holder.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=1" allow="autoplay; encrypted-media" allowfullscreen frameborder="0"></iframe>`;
   const widget = document.getElementById('bg-youtube-widget');
-  if(widget){
-    widget.classList.remove('hidden');
-    const labelEl = widget.querySelector('.bg-yt-label');
-    if(labelEl) labelEl.textContent = '🎵 ' + label;
-  }
+  if(widget) widget.classList.remove('hidden');
   lumenPlayerShow('🎵 ' + label, 'yt');
   syncBgAmbianceIcon();
   showToast('🎵 ' + label + ' — si une pub apparaît, cliquez sur « Passer » dans le petit lecteur en bas.');
@@ -6805,11 +6801,7 @@ function playBgSpotify(spotifyArtistId, label){
   const holder = document.getElementById('bg-youtube-holder');
   holder.innerHTML = `<iframe src="https://open.spotify.com/embed/artist/${spotifyArtistId}?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" frameborder="0"></iframe>`;
   const widget = document.getElementById('bg-youtube-widget');
-  if(widget){
-    widget.classList.remove('hidden');
-    const labelEl = widget.querySelector('.bg-yt-label');
-    if(labelEl) labelEl.textContent = '🟢 ' + label;
-  }
+  if(widget) widget.classList.remove('hidden');
   lumenPlayerShow('🟢 ' + label, 'yt');
   syncBgAmbianceIcon();
   showToast('🟢 ' + label + ' — choisissez un titre à jouer dans le lecteur Spotify.');

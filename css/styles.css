@@ -2183,27 +2183,18 @@
   @keyframes spin{ to{ transform:rotate(360deg); } }
   #account-info{ text-align:center; }
 
-  /* ===== floating background YouTube mini-player ===== */
+  /* ===== background YouTube/Spotify host (audio keeps playing, but no longer shown as its
+     own floating card — the single "lumen-player-bar" mini-player at the bottom is now the
+     one visible control for any ambiance sound, to avoid two overlapping players on screen). */
   #bg-youtube-widget{
-    position:fixed; bottom:18px; right:18px; z-index:90;
-    width:200px; background:var(--vellum-light, #FBF7EC); border-radius:14px;
-    box-shadow:0 12px 32px rgba(0,0,0,0.3); overflow:hidden;
-    border:1px solid rgba(0,0,0,0.08);
+    position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;
+    overflow:hidden; opacity:0; pointer-events:none;
   }
   #bg-youtube-widget.hidden{ display:none; }
-  .bg-yt-header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:6px 10px; background:linear-gradient(155deg, var(--wine,#7C1F2E), var(--wine-dark,#4E1420));
-    color:#fff; font-family:'Inter',sans-serif; font-size:11.5px; font-weight:700;
-  }
-  .bg-yt-header .icon-btn{ color:#fff; font-size:14px; padding:0 2px; }
+  .bg-yt-header{ display:none; }
   .mini-flame{ display:inline-block; animation: flicker 1.4s ease-in-out infinite; }
   #bg-youtube-holder{ width:200px; height:113px; }
   #bg-youtube-holder iframe{ width:100%; height:100%; display:block; border:none; }
-  @media (min-width:760px){
-    #bg-youtube-widget{ width:260px; }
-    #bg-youtube-holder{ width:260px; height:146px; }
-  }
 
   /* ===== ambiance picker: artist groups ===== */
   .ambiance-search-wrap{ margin-bottom:10px; }
