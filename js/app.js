@@ -3999,22 +3999,24 @@ function renderHome(){
   }
 
   const HOME_TILE_CATEGORIES = [
-    {label:'📖 Écritures', keys:["L'armure de Dieu",'Psaumes par thème','Bible & Histoire','Jésus']},
-    {label:'⛪ Église', keys:['Saints','Calendrier des saints',"Vie de l'Église"]},
-    {label:'🌿 Sagesse & Espace', keys:['Vie spirituelle','Mon journal','Studio']}
+    {label:'Écritures', emoji:'📖', accent:'ecritures', img:HUB_HERO_IMAGES.jesus, keys:["L'armure de Dieu",'Psaumes par thème','Bible & Histoire','Jésus']},
+    {label:'Église', emoji:'⛪', accent:'eglise', img:HUB_HERO_IMAGES.eglise, keys:['Saints','Calendrier des saints',"Vie de l'Église"]},
+    {label:'Sagesse & Espace', emoji:'🌿', accent:'sagesse', img:HUB_HERO_IMAGES.sagesse, keys:['Vie spirituelle','Mon journal','Studio']}
   ];
-  html += `<div class="home-divider"><span>✦</span></div>` + homeTitleHTML('🧭','Explorer','#D6E0E8');
+  html += `<div class="home-divider"><span>✦</span></div>` + homeTitleHTML('🧭','Explorer','linear-gradient(160deg, #AFC2D6, #6E8FAE)');
   HOME_TILE_CATEGORIES.forEach(cat=>{
     const tiles = HOME_TILES.filter(t=>cat.keys.includes(t.label));
     if(!tiles.length) return;
-    html += `<p class="home-tile-cat-label">${cat.label}</p><div class="home-tile-grid">`;
+    html += `<div class="home-tile-category home-tile-category--${cat.accent}" style="${cat.img ? `background-image:linear-gradient(100deg, var(--vellum-light) 32%, rgba(245,239,228,0.4)), url('${cat.img}');` : ''}">
+      <p class="home-tile-cat-label"><span class="home-tile-cat-emoji">${cat.emoji}</span>${cat.label}</p>
+      <div class="home-tile-grid">`;
     tiles.forEach(t=>{
       html += `<div class="home-tile-big" data-primary="${t.primary}" data-sub="${t.sub}">
         <span class="home-tile-big-icon">${t.icon}</span>
         <span class="home-tile-big-label">${t.label}</span>
       </div>`;
     });
-    html += `</div>`;
+    html += `</div></div>`;
   });
 
   document.getElementById('screen').innerHTML = html;
