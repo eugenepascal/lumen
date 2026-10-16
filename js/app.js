@@ -2641,7 +2641,11 @@ const LOUANGES_VIDEOS = [
   {title:"Une heure avec Jésus", artist:"Loïc & Rachel", videoId:"SA3GvYog_wo", tag:"Instrumental / Recueillement"},
   {title:"Yeshua (1 Hour Worship Instrumental)", artist:"Vessels For God Worship", videoId:"A03sE1nH0Cg", tag:"Instrumental / Recueillement"},
   {title:"Spirit of Wisdom (Prophetic Worship Instrumental)", artist:"Worship Piano Music", videoId:"w3eRLlTeV1o", tag:"Instrumental / Recueillement"},
-  {title:"Still, My Soul (Soaking Worship)", artist:"Soaking in God's Presence", videoId:"FEZZQrwyWtk", tag:"Instrumental / Recueillement"}
+  {title:"Still, My Soul (Soaking Worship)", artist:"Soaking in God's Presence", videoId:"FEZZQrwyWtk", tag:"Instrumental / Recueillement"},
+  {title:"Congratulations (feat. Buchi)", artist:"Ada Ehi", videoId:"LjpGilXJOuY", tag:"Louange nigériane"},
+  {title:"Gold (feat. Ada Ehi)", artist:"Limoblaze", videoId:"IPCid2aQAno", tag:"Louange nigériane"},
+  {title:"Congratulations (feat. Buchi)", artist:"Ada Ehi", videoId:"LjpGilXJOuY", tag:"Louange nigériane"},
+  {title:"Gold (feat. Ada Ehi)", artist:"Limoblaze", videoId:"IPCid2aQAno", tag:"Louange nigériane"}
 ];
 
 const SECTION_ICONS = {
@@ -9844,6 +9848,9 @@ const THEMES_LIST = [
   {key:'aigle-royal', label:'Aigle Royal', icon:'🦅', swatches:['#141814','#5A6E3A','#C9B87E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Golden_Eagle_soaring_overhead.jpg?width=300'},
   {key:'agneau', label:'Agneau de Dieu', icon:'🐑', swatches:['#181614','#7A6A4E','#E8DCC4'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Agnus_Dei_(The_Lamb_of_God)_by_Zurbar%C3%A1n,_San_Diego_Museum_of_Art.JPG?width=300'},
   {key:'misericorde-divine', label:'Miséricorde Divine', icon:'🌅', swatches:['#141018','#7A4A6E','#E8A85C'], photo:"https://commons.wikimedia.org/wiki/Special:FilePath/Kazimirowski_Eugeniusz,_Divine_Mercy,_1934.jpg?width=300"},
+  {key:'archange-michel', label:'Archange Michel', icon:'⚔️', swatches:['#14100C','#6E5A2E','#D9BE6E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/SAINT%20MICHAEL%20THE%20ARCHANGEL.PNG?width=300'},
+  {key:'archange-gabriel', label:'Archange Gabriel', icon:'📯', swatches:['#140E18','#6E4E8A','#D9A8E8'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Archangel%20Gabriel%20from%20an%20Annunciation%20-%20Google%20Art%20Project.jpg?width=300'},
+  {key:'archange-raphael', label:'Archange Raphaël', icon:'🐟', swatches:['#0E1410','#3D7A5A','#A8D9BE'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt%20De%20aartsengel%20verlaat%20Tobias%20en%20zijn%20gezin.%201637.jpg?width=300'},
   {key:'madone-sixtine', label:'Madone Sixtine', icon:'👑', swatches:['#10141C','#4A5A7A','#D4C9A8'], photo:"https://commons.wikimedia.org/wiki/Special:FilePath/'The_Sistine_Madonna'_by_Raphael,_1512.jpg?width=300"},
   {key:'cosmos', label:'Céleste', icon:'🌌', swatches:['#1A1420','#D4823C','#F2B75E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Messier51.jpg?width=300'},
   {key:'nebuleuse', label:'Nébuleuse', icon:'✨', swatches:['#160C10','#C06A4E','#E8A87C'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Carina_Nebula.jpg?width=300'},
@@ -9891,7 +9898,7 @@ const PAGE_THEME_MAP = {
   devotions: 'marie',
   jesus: 'christ',
   sagesse: 'aigle-royal',
-  combat: 'misericorde-divine',
+  combat: 'archange-michel',
   espace: 'agneau'
 };
 function computePageTheme(){
