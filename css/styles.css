@@ -1165,9 +1165,11 @@
   .prier-hub-card-title{ font-family:'Fraunces',serif; font-weight:600; font-size:16px; color:var(--ink); margin:0 0 3px; }
   .prier-hub-card-desc{ font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); margin:0; }
   .prier-hub-card-cta{ display:inline-block; margin-top:8px; font-family:'Inter',sans-serif; font-size:11.5px; font-weight:700; color:var(--wine); }
-  .hub-hero-banner{ height:110px; border-radius:16px; overflow:hidden; margin-bottom:14px; display:flex; align-items:center; justify-content:center; }
-  .hub-hero-banner img{ width:52px; height:52px; filter:brightness(0) invert(1); opacity:0.9; }
-  .hub-hero-emoji{ font-size:44px; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25)); }
+  .hub-hero-banner{ position:relative; height:110px; border-radius:16px; overflow:hidden; margin-bottom:14px; display:flex; align-items:center; justify-content:center; }
+  .hub-hero-banner img:not(.hub-hero-banner-img){ width:52px; height:52px; filter:brightness(0) invert(1); opacity:0.9; }
+  .hub-hero-banner-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 22%; }
+  .hub-hero-scrim{ position:absolute; inset:0; background:linear-gradient(160deg, rgba(20,10,10,0.52) 0%, rgba(20,10,10,0.18) 60%); }
+  .hub-hero-emoji{ position:relative; z-index:1; font-size:44px; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35)); }
   .prier-hub-card-emoji{ font-size:30px; }
   .novena-card-img{ position:relative; height:120px; background:var(--gold-pale); display:flex; align-items:center; justify-content:center; }
   .novena-card-img img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; }

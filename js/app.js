@@ -3517,6 +3517,12 @@ async function loadSouvenirs(){
 async function saveSouvenirs(list){
   try{ await window.storage.set('mes-souvenirs', JSON.stringify(list), false); }catch(e){}
 }
+async function loadPrayerImages(){
+  try{ const r = await window.storage.get('my-prayer-images', false); return r ? JSON.parse(r.value) : []; }catch(e){ return []; }
+}
+async function savePrayerImages(list){
+  try{ await window.storage.set('my-prayer-images', JSON.stringify(list), false); }catch(e){}
+}
 async function loadGratitude(){
   try{ const r = await window.storage.get('gratitude-entries', false); return r ? JSON.parse(r.value) : []; }catch(e){ return []; }
 }
@@ -3614,6 +3620,7 @@ let HISTOIRE_ENTRIES = [];
 let MES_PRIERES = [];
 let PRAYER_USAGE = {};
 let SOUVENIRS = [];
+let MY_PRAYER_IMAGES = [];
 let LAST_CONFESSION = '';
 let PRAYED_DATES = [];
 let HOME_LAYOUT = null;
@@ -3641,7 +3648,7 @@ const SUBNAV = {
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
   sagesse: [ {key:'spiritualite', label:'💡 Vie spirituelle'}, {key:'enseignements', label:'🎓 Enseignements'}, {key:'sacrements', label:'✨ Sacrements'}, {key:'lexique', label:'🔤 Lexique'}, {key:'quiz', label:'❓ Quiz'} ],
   combat: [],
-  espace: [ {key:'compte', label:'👤 Mon compte'}, {key:'parcours', label:'🗺️ Parcours 7 jours'}, {key:'journal', label:'✍️ Journal'}, {key:'histoire', label:'📖 Mon histoire'}, {key:'gratitude', label:'✨ Carnet de grâces'}, {key:'souvenirs', label:'📸 Mes souvenirs'}, {key:'reconfort', label:'🕊️ Réconfort guidé'}, {key:'anniversaires', label:'🎂 Anniversaires spirituels'}, {key:'objectifs', label:'🎯 Objectifs'}, {key:'memorial', label:'🕯️ Mémorial'}, {key:'favoris', label:'⭐ Favoris'}, {key:'studio', label:'🎶 Louanges'}, {key:'reglages', label:'🔔 Rappels'}, {key:'stats', label:'📊 Statistiques'}, {key:'apropos', label:'ℹ️ À propos'}, {key:'faq', label:'❓ FAQ'} ]
+  espace: [ {key:'compte', label:'👤 Mon compte'}, {key:'parcours', label:'🗺️ Parcours 7 jours'}, {key:'journal', label:'✍️ Journal'}, {key:'histoire', label:'📖 Mon histoire'}, {key:'gratitude', label:'✨ Carnet de grâces'}, {key:'souvenirs', label:'📸 Mes souvenirs'}, {key:'images-priere', label:'🖼️ Images de prière'}, {key:'reconfort', label:'🕊️ Réconfort guidé'}, {key:'anniversaires', label:'🎂 Anniversaires spirituels'}, {key:'objectifs', label:'🎯 Objectifs'}, {key:'memorial', label:'🕯️ Mémorial'}, {key:'favoris', label:'⭐ Favoris'}, {key:'studio', label:'🎶 Louanges'}, {key:'reglages', label:'🔔 Rappels'}, {key:'stats', label:'📊 Statistiques'}, {key:'apropos', label:'ℹ️ À propos'}, {key:'faq', label:'❓ FAQ'} ]
 };
 
 const PRIMARY_TABS = [
@@ -4263,20 +4270,32 @@ let NOVENA_FULLTEXT = true;
 let NOVENA_OPEN_DAY = null;
 let NOVENA_DAY_AUDIO_PLAYING = null;
 const ORDINAL_DAYS = ['Premier','Deuxième','Troisième','Quatrième','Cinquième','Sixième','Septième','Huitième','Neuvième'];
+const HUB_HERO_IMAGES = {
+  prier: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=900',
+  eglise: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bernadette%20Soubirous%20en%201863%2C%20photo%20Billard-Perrin.jpg?width=900',
+  devotions: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20The-Madonna-and-Child-128.jpg?width=900',
+  jesus: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900',
+  sagesse: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Thomas%20Aquinas%20by%20Sandro%20Botticelli.jpg?width=900',
+  espace: null
+};
 const PRIER_HUB_CATEGORIES = [
   {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Compline...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B'},
+  {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545'},
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E'},
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
   {label:'Pour moi et les autres', desc:'Intentions, groupe de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B'},
-  {label:'Carnet familial', desc:'Un carnet d\u2019intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58'}
+  {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58'}
 ];
 function renderPrierHub(){
   const html = `
-    <div class="hub-hero-banner" style="background:${PRIER_HUB_CATEGORIES[0].color};"><span class="hub-hero-emoji">🙏</span></div>
+    <div class="hub-hero-banner" style="background:${PRIER_HUB_CATEGORIES[0].color};">
+      ${HUB_HERO_IMAGES.prier ? `<img class="hub-hero-banner-img" src="${HUB_HERO_IMAGES.prier}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
+      <span class="hub-hero-emoji">🙏</span>
+    </div>
     <h2 class="section-title">🙏 Prier</h2>
     <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui.</p>
-    <div class="prier-hub-grid">${PRIER_HUB_CATEGORIES.map(c=>`
-      <div class="prier-hub-card" data-hub-goto="${c.goto}">
+    <div class="prier-hub-grid">${PRIER_HUB_CATEGORIES.map((c,i)=>`
+      <div class="prier-hub-card" data-hub-goto="${c.goto}" data-hub-index="${i}">
         <div class="prier-hub-card-img" style="background:${c.color};"><span class="prier-hub-card-emoji">${c.icon}</span></div>
         <div class="prier-hub-card-body">
           <p class="prier-hub-card-title">${c.label}</p>
@@ -4286,13 +4305,20 @@ function renderPrierHub(){
       </div>`).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('[data-hub-goto]').forEach(card=>{
-    card.onclick = ()=>{ SUBTAB.prier = card.dataset.hubGoto; render(); };
+    card.onclick = ()=>{
+      const cat = PRIER_HUB_CATEGORIES[parseInt(card.dataset.hubIndex,10)];
+      if(cat && cat.cross){ goTo(cat.cross.primary, cat.cross.sub); }
+      else { SUBTAB.prier = card.dataset.hubGoto; render(); }
+    };
   });
 }
 
-function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji){
+function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, heroImgUrl){
   const html = `
-    ${heroEmoji ? `<div class="hub-hero-banner" style="background:${categories[0].color};"><span class="hub-hero-emoji">${heroEmoji}</span></div>` : ''}
+    ${heroEmoji ? `<div class="hub-hero-banner" style="background:${categories[0].color};">
+      ${heroImgUrl ? `<img class="hub-hero-banner-img" src="${heroImgUrl}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
+      <span class="hub-hero-emoji">${heroEmoji}</span>
+    </div>` : ''}
     <h2 class="section-title">${title}</h2>
     <p class="section-desc">${desc}</p>
     <div class="prier-hub-grid">${categories.map(c=>`
@@ -4316,14 +4342,14 @@ const EGLISE_HUB_CATEGORIES = [
   {label:'Pèlerinages virtuels', desc:'Lourdes, Fatima — un parcours guidé', icon:'🧳', goto:'pelerinages-virtuels', color:'#8A4A1F'}
 ];
 function renderEgliseHub(){
-  renderCategoryHubGeneric('⛪ Église', 'Explorez la vie de l\u2019Église, les saints et le calendrier liturgique.', EGLISE_HUB_CATEGORIES, (goto)=>{ SUBTAB.eglise = goto; render(); }, '⛪');
+  renderCategoryHubGeneric('⛪ Église', 'Explorez la vie de l\u2019Église, les saints et le calendrier liturgique.', EGLISE_HUB_CATEGORIES, (goto)=>{ SUBTAB.eglise = goto; render(); }, '⛪', HUB_HERO_IMAGES.eglise);
 }
 const DEVOTIONS_HUB_CATEGORIES = [
   {label:'Prières & dévotions', desc:'Chapelet, Miséricorde, chemin de croix, Lectio Divina...', icon:'📿', goto:'prieres', color:'#7C1F2E'},
   {label:'Combat spirituel', desc:"L'armure de Dieu, prières et témoins de force", icon:'🛡️', goto:'armure', color:'#4A3D6B'}
 ];
 function renderDevotionsHub(){
-  renderCategoryHubGeneric('📿 Dévotions', 'Des prières et dévotions pour nourrir votre foi au quotidien.', DEVOTIONS_HUB_CATEGORIES, (goto)=>{ SUBTAB.devotions = goto; render(); }, '📿');
+  renderCategoryHubGeneric('📿 Dévotions', 'Des prières et dévotions pour nourrir votre foi au quotidien.', DEVOTIONS_HUB_CATEGORIES, (goto)=>{ SUBTAB.devotions = goto; render(); }, '📿', HUB_HERO_IMAGES.devotions);
 }
 const JESUS_HUB_CATEGORIES = [
   {label:'Vie de Jésus', desc:"Sa naissance, son ministère, sa passion", icon:'✝️', goto:'vie-de-jesus', color:'#7C1F2E'},
@@ -4331,7 +4357,7 @@ const JESUS_HUB_CATEGORIES = [
   {label:'Méditations', desc:'Sur la Sainte Famille, le pardon, les grands thèmes', icon:'💭', goto:'meditations-sainte-famille', color:'#B8863B'}
 ];
 function renderJesusHub(){
-  renderCategoryHubGeneric('✝️ Jésus', 'La vie de Jésus, de Marie, et des méditations pour approfondir votre foi.', JESUS_HUB_CATEGORIES, (goto)=>{ GROUP_SEL['jesus:main'] = goto; render(); }, '✝️');
+  renderCategoryHubGeneric('✝️ Jésus', 'La vie de Jésus, de Marie, et des méditations pour approfondir votre foi.', JESUS_HUB_CATEGORIES, (goto)=>{ GROUP_SEL['jesus:main'] = goto; render(); }, '✝️', HUB_HERO_IMAGES.jesus);
 }
 
 const ESPACE_HUB_CATEGORIES = [
@@ -4354,7 +4380,7 @@ const SAGESSE_HUB_CATEGORIES = [
   {label:'Méditations audio', desc:'À écouter, les yeux fermés', icon:'🎧', goto:'meditations-audio', color:'#8A4A1F'}
 ];
 function renderSagesseHub(){
-  renderCategoryHubGeneric('🌿 Sagesse', 'Approfondir sa foi, comprendre, et grandir spirituellement.', SAGESSE_HUB_CATEGORIES, (goto)=>{ SUBTAB.sagesse = goto; render(); }, '🌿');
+  renderCategoryHubGeneric('🌿 Sagesse', 'Approfondir sa foi, comprendre, et grandir spirituellement.', SAGESSE_HUB_CATEGORIES, (goto)=>{ SUBTAB.sagesse = goto; render(); }, '🌿', HUB_HERO_IMAGES.sagesse);
 }
 
 function wireNovenaAudioPlayer(dayData){
@@ -5354,6 +5380,13 @@ function renderGenericSection(groups, compKey, sectionLabel){
   }
   html += `<p class="section-desc">${group.desc||''}</p>`;
 
+  if(group.id === 'meditations-pardon'){
+    html += `<div class="hub-hero-banner" style="background:#180C0C; height:170px;">
+      <img class="hub-hero-banner-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=900" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>
+      <span class="hub-hero-emoji">✝️</span>
+    </div>`;
+  }
+
   if(group.special === 'genealogy'){
     html += renderGenealogyTimeline();
     document.getElementById('screen').innerHTML = html;
@@ -6151,6 +6184,189 @@ function compressImageFile(file, maxSize, quality){
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+/* ================= Mes images de prière (création & galerie) ================= */
+function wrapPrayerCardText(ctx, text, maxWidth){
+  const words = (text||'').split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+  for(const word of words){
+    const test = line ? line + ' ' + word : word;
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if(line) lines.push(line);
+  return lines;
+}
+function drawPrayerCardCanvas(canvas, img, data){
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  if(img){
+    const ir = img.width / img.height, cr = W / H;
+    let dw, dh, dx, dy;
+    if(ir > cr){ dh = H; dw = H*ir; dx = (W-dw)/2; dy = 0; }
+    else { dw = W; dh = W/ir; dx = 0; dy = (H-dh)/2; }
+    ctx.drawImage(img, dx, dy, dw, dh);
+  } else {
+    const g = ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,'#6f1830'); g.addColorStop(1,'#1c1014');
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  }
+  const gTop = ctx.createLinearGradient(0,0,0,H*0.34);
+  gTop.addColorStop(0,'rgba(10,6,8,0.58)'); gTop.addColorStop(1,'rgba(10,6,8,0)');
+  ctx.fillStyle = gTop; ctx.fillRect(0,0,W,H*0.34);
+  const gBot = ctx.createLinearGradient(0,H*0.40,0,H);
+  gBot.addColorStop(0,'rgba(10,6,8,0)'); gBot.addColorStop(1,'rgba(8,5,6,0.90)');
+  ctx.fillStyle = gBot; ctx.fillRect(0,H*0.40,W,H*0.60);
+
+  const pad = Math.round(W*0.08);
+  const maxW = W - pad*2;
+
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = 'rgba(0,0,0,0.55)'; ctx.shadowBlur = 10;
+  ctx.font = `700 ${Math.round(W*0.072)}px Georgia, serif`;
+  let y = Math.round(H*0.06);
+  wrapPrayerCardText(ctx, data.title || '', maxW).slice(0,3).forEach(line=>{
+    ctx.fillText(line, pad, y);
+    y += Math.round(W*0.088);
+  });
+
+  ctx.shadowBlur = 4;
+  let by = Math.round(H*0.47);
+  if(data.verse){
+    ctx.font = `italic 600 ${Math.round(W*0.042)}px Georgia, serif`;
+    ctx.fillStyle = '#f1d493';
+    wrapPrayerCardText(ctx, '« ' + data.verse + ' »', maxW).forEach(line=>{
+      ctx.fillText(line, pad, by); by += Math.round(W*0.056);
+    });
+    by += Math.round(W*0.03);
+  }
+
+  ctx.font = `400 ${Math.round(W*0.042)}px Georgia, serif`;
+  ctx.fillStyle = '#fdfaf2';
+  wrapPrayerCardText(ctx, data.body || '', maxW).forEach(line=>{
+    if(by < H*0.90){ ctx.fillText(line, pad, by); by += Math.round(W*0.058); }
+  });
+
+  if(data.signature){
+    ctx.font = `italic 700 ${Math.round(W*0.054)}px Georgia, serif`;
+    ctx.fillStyle = '#f1d493';
+    ctx.fillText(data.signature, pad, Math.min(by + W*0.02, H*0.935));
+  }
+
+  ctx.shadowBlur = 0;
+  ctx.font = `600 ${Math.round(W*0.026)}px Inter, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.68)';
+  ctx.textAlign = 'center';
+  ctx.fillText('LUMEN', W/2, H*0.965);
+  ctx.textAlign = 'left';
+}
+function renderPrayerImages(){
+  let html = `<h2 class="section-title">🖼️ Mes images de prière</h2>
+    <p class="section-desc">Créez vos propres images de prière — votre photo en fond, votre texte par-dessus — dans un format proche de ce qu'on voit sur les réseaux sociaux. Elles restent privées, enregistrées sur votre compte.</p>
+    <div style="text-align:right; margin-bottom:10px;">
+      <button class="btn btn-primary btn-sm" id="new-prayer-image-btn">+ Créer une image de prière</button>
+    </div>`;
+  if(MY_PRAYER_IMAGES.length === 0){
+    html += `<div class="card empty-state">Aucune image créée pour l'instant.</div>`;
+  } else {
+    html += `<div class="souvenirs-grid">${MY_PRAYER_IMAGES.slice().sort((a,b)=>b.createdAt-a.createdAt).map(p=>`
+      <div class="souvenir-card">
+        <img src="${p.dataUrl}" alt="${(p.title||'').replace(/"/g,'&quot;')}">
+        ${p.title ? `<p class="souvenir-caption">${p.title}</p>` : ''}
+        <div style="display:flex; gap:6px; justify-content:center; padding:0 6px 8px;">
+          <a class="btn btn-ghost btn-sm" href="${p.dataUrl}" download="lumen-priere-${p.id}.jpg">⬇️ Télécharger</a>
+          <button class="btn btn-ghost btn-sm" data-del-prayer-image="${p.id}">🗑</button>
+        </div>
+      </div>`).join('')}</div>`;
+  }
+  document.getElementById('screen').innerHTML = html;
+  document.getElementById('new-prayer-image-btn').onclick = ()=>{ SUBTAB.espace = 'images-priere-creer'; render(); };
+  document.querySelectorAll('[data-del-prayer-image]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      MY_PRAYER_IMAGES = MY_PRAYER_IMAGES.filter(p=>p.id!==btn.dataset.delPrayerImage);
+      await savePrayerImages(MY_PRAYER_IMAGES);
+      renderPrayerImages();
+    };
+  });
+}
+function renderPrayerImageEditor(){
+  const html = `<div class="detail-wrap">
+    <button class="back-link" id="back-to-gallery-btn">← Mes images de prière</button>
+    <h2 class="section-title" style="margin-top:8px;">Créer une image de prière</h2>
+    <p class="section-desc">Ajoutez une photo (facultatif — sinon un fond uni est utilisé), puis votre texte. L'aperçu se met à jour automatiquement.</p>
+    <div class="card add-intention-box">
+      <input type="file" id="pi-file-input" accept="image/*" style="margin-bottom:10px;">
+      <input type="text" id="pi-title" placeholder="Titre (ex. Quand ton cœur est triste)" maxlength="80">
+      <input type="text" id="pi-verse" placeholder="Verset ou citation (optionnel)" maxlength="140" style="margin-top:8px;">
+      <textarea id="pi-body" placeholder="Texte de la prière" rows="6" style="margin-top:8px; width:100%; font-family:inherit; padding:10px; border-radius:10px; border:1px solid var(--hairline);"></textarea>
+      <input type="text" id="pi-signature" placeholder="Signature (ex. Amen.)" maxlength="40" value="Amen." style="margin-top:8px;">
+      <p class="studio-note" id="pi-status" style="margin-top:6px;"></p>
+    </div>
+    <div style="display:flex; justify-content:center; margin:14px 0;">
+      <canvas id="pi-canvas" width="900" height="1600" style="width:min(100%,280px); height:auto; border-radius:16px; box-shadow:var(--shadow); background:#1c1014;"></canvas>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn btn-primary" id="pi-save-btn">💾 Enregistrer dans mes images</button>
+    </div>
+  </div>`;
+  document.getElementById('screen').innerHTML = html;
+  document.getElementById('back-to-gallery-btn').onclick = ()=>{ SUBTAB.espace = 'images-priere'; render(); };
+
+  const canvas = document.getElementById('pi-canvas');
+  const fileInput = document.getElementById('pi-file-input');
+  const titleEl = document.getElementById('pi-title');
+  const verseEl = document.getElementById('pi-verse');
+  const bodyEl = document.getElementById('pi-body');
+  const sigEl = document.getElementById('pi-signature');
+  const statusEl = document.getElementById('pi-status');
+  let currentImg = null;
+
+  function redraw(){
+    drawPrayerCardCanvas(canvas, currentImg, {
+      title: titleEl.value, verse: verseEl.value, body: bodyEl.value, signature: sigEl.value
+    });
+  }
+  [titleEl, verseEl, bodyEl, sigEl].forEach(el=> el.addEventListener('input', redraw));
+  fileInput.addEventListener('change', ()=>{
+    const file = fileInput.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const img = new Image();
+      img.onload = ()=>{ currentImg = img; redraw(); };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  redraw();
+
+  document.getElementById('pi-save-btn').onclick = async ()=>{
+    if(!titleEl.value.trim() && !bodyEl.value.trim()){
+      statusEl.textContent = 'Ajoutez au moins un titre ou un texte de prière.';
+      return;
+    }
+    statusEl.textContent = 'Enregistrement…';
+    redraw();
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+    if(dataUrl.length > 950000){
+      statusEl.textContent = "L'image reste trop volumineuse — essayez une photo plus simple ou un texte plus court.";
+      return;
+    }
+    MY_PRAYER_IMAGES.unshift({id:'pi-'+Date.now(), dataUrl, title:titleEl.value.trim(), createdAt:Date.now()});
+    await savePrayerImages(MY_PRAYER_IMAGES);
+    showToast('Image de prière enregistrée 🖼️');
+    SUBTAB.espace = 'images-priere';
+    render();
+  };
 }
 
 function renderGratitude(){
@@ -9456,7 +9672,7 @@ const BG_PATTERN_LIST = [
   {key:'ancre', label:'Ancre (espérance)', icon:'⚓'}
 ];
 let BG_PATTERN = 'croix';
-let THEME_MODE = 'auto';
+let THEME_MODE = 'page';
 let BRIGHTNESS = 100;
 let CUSTOM_ACCENT = '';
 function computeAutoTheme(){
@@ -9467,13 +9683,28 @@ function computeAutoTheme(){
   if(h>=20 && h<23) return 'dark';
   return 'minuit';
 }
+const PAGE_THEME_MAP = {
+  accueil: 'light',
+  prier: 'sacrecoeur',
+  ecritures: 'annonciation',
+  eglise: 'vitrail',
+  devotions: 'marie',
+  jesus: 'christ',
+  sagesse: 'aigle-royal',
+  combat: 'misericorde-divine',
+  espace: 'agneau'
+};
+function computePageTheme(){
+  return PAGE_THEME_MAP[PRIMARY] || 'light';
+}
 function applyThemeAndFont(){
   if(THEME_MODE === 'auto') THEME = computeAutoTheme();
+  else if(THEME_MODE === 'page') THEME = computePageTheme();
   document.body.setAttribute('data-theme', THEME);
   document.body.setAttribute('data-pattern', BG_PATTERN);
   const current = THEMES_LIST.find(t=>t.key===THEME) || THEMES_LIST[0];
   const btn = document.getElementById('theme-btn');
-  if(btn){ const iconEl = btn.querySelector('.tool-btn-icon'); if(iconEl) iconEl.textContent = THEME_MODE === 'auto' ? '🔄' : current.icon; }
+  if(btn){ const iconEl = btn.querySelector('.tool-btn-icon'); if(iconEl) iconEl.textContent = THEME_MODE === 'auto' ? '🔄' : (THEME_MODE === 'page' ? '📖' : current.icon); }
   const app = document.getElementById('app');
   app.classList.remove('font-sm','font-md','font-lg');
   app.classList.add('font-'+FONT_SIZE);
@@ -9503,6 +9734,7 @@ function shadeColor(hex, percent){
   return '#' + (0x1000000 + r*0x10000 + g*0x100 + b).toString(16).slice(1);
 }
 setInterval(()=>{ if(THEME_MODE === 'auto') applyThemeAndFont(); }, 5*60*1000);
+let LAST_PAGE_THEME_SECTION = null;
 function toggleTheme(){
   openThemePicker();
 }
@@ -9533,11 +9765,18 @@ function openThemePicker(){
   }
 
   list.innerHTML = `
-    <button class="card theme-swatch-btn ${THEME_MODE==='auto'?'theme-active':''}" id="theme-auto-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:14px;">
+    <button class="card theme-swatch-btn ${THEME_MODE==='auto'?'theme-active':''}" id="theme-auto-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:10px;">
       <span style="font-size:22px;">🔄</span>
       <span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Automatique — recommandé</p>
+        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Automatique</p>
         <p class="section-desc" style="margin:2px 0 0;">Change seule selon l'heure : Aurore le matin, Ambre le jour, Marée au crépuscule, Nocturne le soir, Éclipse la nuit.</p>
+      </span>
+    </button>
+    <button class="card theme-swatch-btn ${THEME_MODE==='page'?'theme-active':''}" id="theme-page-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:14px;">
+      <span style="font-size:22px;">📖</span>
+      <span>
+        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Par page — recommandé</p>
+        <p class="section-desc" style="margin:2px 0 0;">Une image de fond différente selon la section visitée (Prier, Jésus, Église...), en plein écran derrière le contenu.</p>
       </span>
     </button>
 
@@ -9578,6 +9817,13 @@ function openThemePicker(){
     await savePrefs();
     closeAmbiancePicker();
     showToast('🔄 Thème automatique activé');
+  };
+  document.getElementById('theme-page-btn').onclick = async ()=>{
+    THEME_MODE = 'page';
+    applyThemeAndFont();
+    await savePrefs();
+    closeAmbiancePicker();
+    showToast('📖 Image de fond par page activée');
   };
   list.querySelectorAll('[data-theme-key]').forEach(btn=>{
     btn.onclick = async ()=>{
@@ -9918,6 +10164,8 @@ function renderScreen(){
     if(sub === 'histoire') return renderHistoire();
     if(sub === 'gratitude') return renderGratitude();
     if(sub === 'souvenirs') return renderSouvenirs();
+    if(sub === 'images-priere') return renderPrayerImages();
+    if(sub === 'images-priere-creer') return renderPrayerImageEditor();
     if(sub === 'reconfort') return renderReconfort();
     if(sub === 'anniversaires') return renderAnniversaires();
     if(sub === 'objectifs') return renderObjectifs();
@@ -9948,6 +10196,10 @@ function maybeAutoNarrate(){
 }
 function render(){
   document.body.dataset.section = PRIMARY;
+  if(THEME_MODE === 'page' && LAST_PAGE_THEME_SECTION !== PRIMARY){
+    LAST_PAGE_THEME_SECTION = PRIMARY;
+    applyThemeAndFont();
+  }
   const avBadge = document.getElementById('user-avatar-badge');
   if(avBadge) avBadge.textContent = USER_AVATAR;
   document.getElementById('date-line').textContent = frenchDate();
@@ -10002,7 +10254,7 @@ function render(){
 /* ---------- init ---------- */
 async function startApp(){
   document.getElementById('screen').innerHTML = '<div class="loading"><svg class="loading-emblem" viewBox="0 0 24 24"><defs><linearGradient id="flameGrad3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#7C1F2E"/><stop offset="55%" stop-color="#B8863B"/><stop offset="100%" stop-color="#FFF3C4"/></linearGradient></defs><path fill="url(#flameGrad3)" d="M12 2c-2.2 4-6 6.2-6 11a6 6 0 0 0 12 0c0-2.1-1-3.4-2-4.4.4 2-1 3-1 3 .6-3.2-1.1-5.4-3-9.6z"/></svg>Un instant, on allume les lumières…</div>';
-  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres()]);
+  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages()]);
   PROGRESS = p;
   INTENTIONS = ints;
   JOURNAL = jour;
@@ -10018,6 +10270,7 @@ async function startApp(){
   GRATITUDE_ENTRIES = gratitude || [];
   HISTOIRE_ENTRIES = histoire || [];
   SOUVENIRS = souvenirs || [];
+  MY_PRAYER_IMAGES = prayerImages || [];
   PRAYER_USAGE = prayerUsage || {};
   ANNIVERSAIRES = anniversaires || [];
   MES_PRIERES = mesPrieres || [];
@@ -10037,7 +10290,7 @@ async function startApp(){
   RECENT = prefs.recent || [];
   STREAK = prefs.streak || {count:0,lastDate:null};
   THEME = prefs.theme || 'light';
-  THEME_MODE = prefs.themeMode || 'auto';
+  THEME_MODE = prefs.themeMode || 'page';
   BG_PATTERN = prefs.bgPattern || 'croix';
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);
