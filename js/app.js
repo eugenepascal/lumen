@@ -4020,6 +4020,9 @@ function renderHome(){
 
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('.novena-card').forEach(c=> c.onclick = ()=> goTo('prier','neuvaines'));
+  document.querySelectorAll('.upcoming-item[data-novena-id]').forEach(c=>{
+    c.onclick = ()=>{ goTo('prier','neuvaines'); OPEN_NOVENA = c.dataset.novenaId; NOVENA_OPEN_DAY = null; render(); };
+  });
   wireIntentionButtons();
   const gotoBtn = document.querySelector('[data-goto="intentions"]');
   if(gotoBtn) gotoBtn.onclick = ()=> goTo('prier','intentions');
@@ -7801,11 +7804,21 @@ function upcomingNovenasHTML(){
     return {nov, daysToFeast, startIn};
   }).filter(Boolean).sort((a,b)=>a.daysToFeast-b.daysToFeast).slice(0,3);
   if(items.length===0) return '';
-  return `<h2 class="section-title">📅 Neuvaines à venir</h2><div class="card">` +
-    items.map(it => `<div class="upcoming-item">
-      <span>${it.nov.title}</span>
-      <span class="upcoming-days">${it.startIn > 0 ? `dans ${it.startIn} j.` : 'à commencer maintenant'}</span>
-    </div>`).join('') + `</div>`;
+  return `<h2 class="section-title">📅 Neuvaines à venir</h2><div class="card" style="padding:6px 14px;">` +
+    items.map(it => {
+      const art = lumenNovenaDedicatedArt(it.nov);
+      const emoji = (NOVENA_ICONS[it.nov.id] || '🕯️').replace(/'/g,"\\'");
+      const thumbHTML = art ? `<img src="${art.url}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${emoji}'">` : emoji;
+      const startingNow = it.startIn <= 0;
+      return `<div class="upcoming-item" data-novena-id="${it.nov.id}">
+        <div class="upcoming-thumb">${thumbHTML}</div>
+        <div class="upcoming-info">
+          <span class="upcoming-title">${it.nov.title}</span>
+          ${it.nov.sub ? `<span class="upcoming-sub">${it.nov.sub}</span>` : ''}
+        </div>
+        <span class="upcoming-days${startingNow ? ' upcoming-days--now' : ''}">${startingNow ? 'À commencer' : `dans ${it.startIn} j.`}</span>
+      </div>`;
+    }).join('') + `</div>`;
 }
 let VERSET_SHUFFLE_IDX = null;
 const MESSE_ETAPES = [
