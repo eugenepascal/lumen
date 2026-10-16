@@ -2636,7 +2636,12 @@ const LOUANGES_VIDEOS = [
   {title:"Choix de Dieu (Live, Zénith de Paris)", artist:"Jonathan C. Gambela", videoId:"wHFbbKDQcok", tag:"Louange congolaise"},
   {title:"Témoignage", artist:"Jonathan C. Gambela", videoId:"GOZDjtvE_wY", tag:"Louange congolaise"},
   {title:"Un jour nouveau", artist:"Jonathan C. Gambela", videoId:"JSJ1I67vz2o", tag:"Louange congolaise"},
-  {title:"Jésus mon tout", artist:"Jonathan C. Gambela", videoId:"twYbhJJtpCM", tag:"Louange congolaise"}
+  {title:"Jésus mon tout", artist:"Jonathan C. Gambela", videoId:"twYbhJJtpCM", tag:"Louange congolaise"},
+  {title:"Sabaoth", artist:"Jonathan C. Gambela", videoId:"_iA52WcFQJc", tag:"Louange congolaise"},
+  {title:"Une heure avec Jésus", artist:"Loïc & Rachel", videoId:"SA3GvYog_wo", tag:"Instrumental / Recueillement"},
+  {title:"Yeshua (1 Hour Worship Instrumental)", artist:"Vessels For God Worship", videoId:"A03sE1nH0Cg", tag:"Instrumental / Recueillement"},
+  {title:"Spirit of Wisdom (Prophetic Worship Instrumental)", artist:"Worship Piano Music", videoId:"w3eRLlTeV1o", tag:"Instrumental / Recueillement"},
+  {title:"Still, My Soul (Soaking Worship)", artist:"Soaking in God's Presence", videoId:"FEZZQrwyWtk", tag:"Instrumental / Recueillement"}
 ];
 
 const SECTION_ICONS = {
@@ -5321,6 +5326,65 @@ function wirePrieresSearch(){
   };
 }
 
+/* ===== Neuvaines par mois (fenêtre de 9 jours avant la fête, quand la fête est fixe) ===== */
+const NEUVAINE_FEAST_INFO = {
+  "Neuvaine à sainte Rita de Cascia": {feast:[5,22]},
+  "Neuvaine à sainte Thérèse de l'Enfant-Jésus": {feast:[10,1]},
+  "Neuvaine à saint Joseph": {feast:[3,19]},
+  "Neuvaine à saint Antoine de Padoue": {feast:[6,13]},
+  "Neuvaine à saint Michel Archange": {feast:[9,29]},
+  "Neuvaine à l'Immaculée Conception": {start:[11,30], end:[12,8]},
+  "Neuvaine de l'Assomption": {start:[8,6], end:[8,14]},
+  "Neuvaine à saint Charbel": {feast:[7,24]},
+  "Neuvaine à Notre-Dame de Fatima": {feast:[5,13]},
+  "Neuvaine à saint Jude Thaddée": {feast:[10,28]},
+  "Neuvaine à saint Christophe": {feast:[7,25]},
+  "Neuvaine à saint Expédit": {feast:[4,19]},
+  "Neuvaine à saint Benoît": {feast:[7,11]},
+  "Neuvaine à sainte Bernadette Soubirous": {feast:[4,16]},
+  "Neuvaine à saint Pio de Pietrelcina (Padre Pio)": {feast:[9,23]},
+  "Neuvaine de l'Avent (neuvaine de Noël)": {start:[11,30], end:[12,24]}
+};
+function novenaWindowForYear(info, year){
+  function mk(m,d){ return new Date(year, m-1, d); }
+  if(info.start && info.end){
+    const start = mk(info.start[0], info.start[1]);
+    let end = mk(info.end[0], info.end[1]);
+    if(end < start) end = new Date(year+1, info.end[0]-1, info.end[1]);
+    return {start, end};
+  }
+  if(info.feast){
+    const feast = mk(info.feast[0], info.feast[1]);
+    const end = new Date(feast); end.setDate(end.getDate()-1);
+    const start = new Date(feast); start.setDate(start.getDate()-9);
+    return {start, end};
+  }
+  return null;
+}
+function frenchDayMonth(d){
+  return d.getDate() + ' ' + MONTH_NAMES_FR[d.getMonth()];
+}
+function novenasForMonth(monthIndex, year, group){
+  const results = [];
+  group.entries.forEach((e,idx)=>{
+    const info = NEUVAINE_FEAST_INFO[e.name];
+    if(!info) return;
+    [year-1, year, year+1].forEach(y=>{
+      const w = novenaWindowForYear(info, y);
+      if(!w) return;
+      const matchesStart = w.start.getFullYear()===year && w.start.getMonth()===monthIndex;
+      const matchesEnd = w.end.getFullYear()===year && w.end.getMonth()===monthIndex;
+      if(matchesStart || matchesEnd) results.push({entry:e, idx, start:w.start, end:w.end});
+    });
+  });
+  const seen = new Set();
+  const uniq = results.filter(r=>{ const k = r.entry.name+'|'+r.start.getTime(); if(seen.has(k)) return false; seen.add(k); return true; });
+  uniq.sort((a,b)=> a.start - b.start);
+  return uniq;
+}
+let NEUVAINE_MONTH_VIEW = false;
+let NEUVAINE_VIEW_DATE = new Date();
+
 function renderGenericSection(groups, compKey, sectionLabel){
   const halo = compKey === 'eglise:saints';
   if(ENTRY_OPEN && ENTRY_OPEN.compKey === compKey){
@@ -5389,6 +5453,49 @@ function renderGenericSection(groups, compKey, sectionLabel){
     </div>`;
   }
 
+  if(group.id === 'neuvaines' && NEUVAINE_MONTH_VIEW){
+    const viewYear = NEUVAINE_VIEW_DATE.getFullYear();
+    const viewMonth = NEUVAINE_VIEW_DATE.getMonth();
+    const monthEntries = novenasForMonth(viewMonth, viewYear, group);
+    html += `<div style="text-align:center; margin:4px 0 14px;"><button class="btn btn-ghost btn-sm" id="neuvaine-month-toggle">☰ Voir la liste complète</button></div>`;
+    html += `<div class="card" style="background:linear-gradient(135deg, var(--wine,#7C1F2E), var(--wine-dark,#4E1420)); text-align:center; padding:18px 10px; margin-bottom:14px;">
+      <p style="font-family:'Inter',sans-serif; color:rgba(255,255,255,0.75); font-size:11px; letter-spacing:2px; margin:0;">LES NEUVAINES DU MOIS DE</p>
+      <p style="font-family:'Fraunces',serif; color:#fff; font-size:26px; font-weight:700; margin:4px 0 0; text-transform:capitalize;">${MONTH_NAMES_FR[viewMonth]} ${viewYear}</p>
+      <div style="display:flex; justify-content:center; gap:10px; margin-top:12px;">
+        <button class="icon-btn" id="neuvaine-month-prev" style="background:rgba(255,255,255,0.15); color:#fff;">◀</button>
+        <button class="icon-btn" id="neuvaine-month-next" style="background:rgba(255,255,255,0.15); color:#fff;">▶</button>
+      </div>
+    </div>`;
+    if(!monthEntries.length){
+      html += `<p class="section-desc" style="text-align:center;">Aucune neuvaine à date fixe ce mois-ci parmi celles disponibles dans l'application. Les neuvaines perpétuelles ou à fête mobile restent dans la liste complète.</p>`;
+    } else {
+      html += `<div class="grid">${monthEntries.map(m=>`
+        <div class="card entry-card" data-idx="${m.idx}">
+          <div class="entry-avatar entry-avatar-photo">${m.entry.avatar||'🕯️'}</div>
+          <div class="entry-body">
+            <p class="entry-name">${m.entry.name}</p>
+            <p class="entry-dates" style="font-weight:700; color:var(--gold);">${frenchDayMonth(m.start)} au ${frenchDayMonth(m.end)}</p>
+            <p class="entry-summary">${m.entry.ref||''}</p>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+    document.getElementById('screen').innerHTML = html;
+    wireGroupChips(compKey);
+    const monthToggle = document.getElementById('neuvaine-month-toggle');
+    if(monthToggle) monthToggle.onclick = ()=>{ NEUVAINE_MONTH_VIEW = false; render(); };
+    const prevBtn = document.getElementById('neuvaine-month-prev');
+    const nextBtn = document.getElementById('neuvaine-month-next');
+    if(prevBtn) prevBtn.onclick = ()=>{ NEUVAINE_VIEW_DATE = new Date(viewYear, viewMonth-1, 1); render(); };
+    if(nextBtn) nextBtn.onclick = ()=>{ NEUVAINE_VIEW_DATE = new Date(viewYear, viewMonth+1, 1); render(); };
+    document.querySelectorAll('#screen .entry-card').forEach(c=>{
+      c.onclick = ()=>{ ENTRY_OPEN = {compKey, groupId:group.id, idx:parseInt(c.dataset.idx,10)}; render(); };
+    });
+    return;
+  }
+  if(group.id === 'neuvaines' && !NEUVAINE_MONTH_VIEW){
+    html += `<div style="text-align:center; margin:4px 0 14px;"><button class="btn btn-ghost btn-sm" id="neuvaine-month-toggle">📅 Voir par mois</button></div>`;
+  }
+
   if(group.special === 'genealogy'){
     html += renderGenealogyTimeline();
     document.getElementById('screen').innerHTML = html;
@@ -5409,6 +5516,8 @@ function renderGenericSection(groups, compKey, sectionLabel){
   html += `<div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   wireGroupChips(compKey);
+  const monthToggle = document.getElementById('neuvaine-month-toggle');
+  if(monthToggle) monthToggle.onclick = ()=>{ NEUVAINE_MONTH_VIEW = true; render(); };
   document.querySelectorAll('.entry-card').forEach(c=>{
     c.onclick = ()=>{ ENTRY_OPEN = {compKey, groupId:group.id, idx:parseInt(c.dataset.idx,10)}; render(); };
   });
@@ -6685,6 +6794,50 @@ function toggleReadPage(){
 /* ================= ambiance sonore de fond, persistante pendant la navigation ================= */
 let BG_YT_VIDEO_ID = null;
 let BG_SPOTIFY_ACTIVE = false;
+let AMBIANCE_SHUFFLE_MODE = false;
+let AMBIANCE_SHUFFLE_LAST = null;
+let YT_PLAYER = null;
+let YT_API_QUEUE = [];
+function ensureYouTubeAPI(cb){
+  if(window.YT && window.YT.Player){ cb(); return; }
+  YT_API_QUEUE.push(cb);
+  if(document.getElementById('yt-iframe-api-script')) return;
+  const tag = document.createElement('script');
+  tag.id = 'yt-iframe-api-script';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+  window.onYouTubeIframeAPIReady = function(){
+    const queue = YT_API_QUEUE; YT_API_QUEUE = [];
+    queue.forEach(fn=>fn());
+  };
+}
+function destroyYtPlayer(){
+  if(YT_PLAYER && YT_PLAYER.destroy){ try{ YT_PLAYER.destroy(); }catch(e){} }
+  YT_PLAYER = null;
+  const holder = document.getElementById('bg-youtube-holder');
+  if(holder) holder.innerHTML = '';
+}
+function onYtPlayerStateChange(e){
+  if(e.data === 0){ // ENDED
+    if(AMBIANCE_SHUFFLE_MODE){ playRandomAmbiance(true); }
+  }
+}
+function createYtPlayer(videoId, loopSingle){
+  destroyYtPlayer();
+  const holder = document.getElementById('bg-youtube-holder');
+  if(!holder) return;
+  const mount = document.createElement('div');
+  mount.id = 'bg-youtube-mount';
+  holder.appendChild(mount);
+  ensureYouTubeAPI(()=>{
+    if(!document.getElementById('bg-youtube-mount')) return; // navigation cancelled it meanwhile
+    YT_PLAYER = new YT.Player('bg-youtube-mount', {
+      videoId,
+      playerVars: Object.assign({autoplay:1, playsinline:1, controls:1}, loopSingle ? {loop:1, playlist:videoId} : {}),
+      events: { onStateChange: onYtPlayerStateChange }
+    });
+  });
+}
 function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID; }
 function syncBgAmbianceIcon(){
   const btn = document.getElementById('bg-ambiance-btn');
@@ -6693,8 +6846,8 @@ function syncBgAmbianceIcon(){
 function stopBgYoutube(){
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = false;
-  const holder = document.getElementById('bg-youtube-holder');
-  if(holder) holder.innerHTML = '';
+  AMBIANCE_SHUFFLE_MODE = false;
+  destroyYtPlayer();
   const widget = document.getElementById('bg-youtube-widget');
   if(widget) widget.classList.add('hidden');
 }
@@ -6712,10 +6865,21 @@ function lumenPlayerHide(){
   LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, expanded:false, paused:false};
   renderLumenPlayer();
 }
+function placeYtHolder(expanded){
+  const holder = document.getElementById('bg-youtube-holder');
+  if(!holder) return;
+  if(expanded){
+    const slot = document.getElementById('lumen-player-expanded-embed');
+    if(slot && holder.parentElement !== slot) slot.appendChild(holder);
+  } else {
+    const widget = document.getElementById('bg-youtube-widget');
+    if(widget && holder.parentElement !== widget) widget.appendChild(holder);
+  }
+}
 function renderLumenPlayer(){
   const bar = document.getElementById('lumen-player-bar');
   if(!bar) return;
-  if(!LUMEN_PLAYER_STATE.active){ bar.classList.add('hidden'); return; }
+  if(!LUMEN_PLAYER_STATE.active){ bar.classList.add('hidden'); placeYtHolder(false); return; }
   bar.classList.remove('hidden');
   bar.classList.toggle('expanded', LUMEN_PLAYER_STATE.expanded);
   bar.innerHTML = `
@@ -6733,6 +6897,7 @@ function renderLumenPlayer(){
     </div>` : ''}
   `;
   wireLumenPlayer();
+  placeYtHolder(LUMEN_PLAYER_STATE.expanded && LUMEN_PLAYER_STATE.kind !== 'loop');
 }
 function wireLumenPlayer(){
   const toggleBtn = document.getElementById('lumen-player-toggle');
@@ -6741,6 +6906,9 @@ function wireLumenPlayer(){
     if(LUMEN_PLAYER_STATE.kind === 'loop'){
       if(LUMEN_PLAYER_STATE.paused && LOOP_TIMER){ clearInterval(LOOP_TIMER); LOOP_TIMER = null; }
       else if(!LUMEN_PLAYER_STATE.paused && CURRENT_LOOP){ startLoop(CURRENT_LOOP); LUMEN_PLAYER_STATE.paused=false; }
+    } else if(LUMEN_PLAYER_STATE.kind === 'yt' && YT_PLAYER){
+      if(LUMEN_PLAYER_STATE.paused && YT_PLAYER.pauseVideo) YT_PLAYER.pauseVideo();
+      else if(!LUMEN_PLAYER_STATE.paused && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
     }
     renderLumenPlayer();
   };
@@ -6748,14 +6916,9 @@ function wireLumenPlayer(){
   if(expandBtn) expandBtn.onclick = ()=>{
     LUMEN_PLAYER_STATE.expanded = !LUMEN_PLAYER_STATE.expanded;
     renderLumenPlayer();
-    if(LUMEN_PLAYER_STATE.expanded && LUMEN_PLAYER_STATE.kind!=='loop'){
-      const embedSlot = document.getElementById('lumen-player-expanded-embed');
-      const sourceHolder = document.getElementById('bg-youtube-holder');
-      if(embedSlot && sourceHolder) embedSlot.innerHTML = sourceHolder.innerHTML;
-    }
   };
   const closeBtn = document.getElementById('lumen-player-close');
-  if(closeBtn) closeBtn.onclick = ()=>{ stopLoop(); stopBgYoutube(); lumenPlayerHide(); syncBgAmbianceIcon(); };
+  if(closeBtn) closeBtn.onclick = ()=>{ stopAllAmbiance(); lumenPlayerHide(); };
   const handle = document.getElementById('lumen-player-handle');
   const bar = document.getElementById('lumen-player-bar');
   if(handle && bar){
@@ -6782,22 +6945,51 @@ function wireLumenPlayer(){
     window.addEventListener('touchend', onUp);
   }
 }
-function playBgYoutube(videoId, label){
+function playBgYoutube(videoId, label, opts){
+  opts = opts || {};
   stopLoop();
+  AMBIANCE_SHUFFLE_MODE = false;
   BG_YT_VIDEO_ID = videoId;
   BG_SPOTIFY_ACTIVE = false;
-  const holder = document.getElementById('bg-youtube-holder');
-  holder.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=1" allow="autoplay; encrypted-media" allowfullscreen frameborder="0"></iframe>`;
+  createYtPlayer(videoId, true);
   const widget = document.getElementById('bg-youtube-widget');
   if(widget) widget.classList.remove('hidden');
   lumenPlayerShow('🎵 ' + label, 'yt');
   syncBgAmbianceIcon();
-  showToast('🎵 ' + label + ' — si une pub apparaît, cliquez sur « Passer » dans le petit lecteur en bas.');
+  if(!opts.silent) showToast('🎵 ' + label + ' — si une pub apparaît, cliquez sur « Passer » dans le petit lecteur en bas.');
+}
+function pickRandomAmbianceTrack(){
+  if(!LOUANGES_VIDEOS.length) return null;
+  if(LOUANGES_VIDEOS.length === 1) return LOUANGES_VIDEOS[0];
+  let pick;
+  do { pick = LOUANGES_VIDEOS[Math.floor(Math.random()*LOUANGES_VIDEOS.length)]; }
+  while(AMBIANCE_SHUFFLE_LAST && pick.videoId === AMBIANCE_SHUFFLE_LAST.videoId);
+  return pick;
+}
+function playRandomAmbiance(isAutoAdvance){
+  const pick = pickRandomAmbianceTrack();
+  if(!pick) return;
+  AMBIANCE_SHUFFLE_LAST = pick;
+  stopLoop();
+  BG_SPOTIFY_ACTIVE = false;
+  BG_YT_VIDEO_ID = pick.videoId;
+  createYtPlayer(pick.videoId, false);
+  const widget = document.getElementById('bg-youtube-widget');
+  if(widget) widget.classList.remove('hidden');
+  lumenPlayerShow('🔀 ' + pick.title + ' — ' + pick.artist, 'yt');
+  syncBgAmbianceIcon();
+  if(!isAutoAdvance) showToast('🔀 Lecture aléatoire activée — la musique enchaîne toute seule. Arrêtez à tout moment avec ✕.');
+}
+function startAmbianceShuffle(){
+  AMBIANCE_SHUFFLE_MODE = true;
+  playRandomAmbiance(false);
 }
 function playBgSpotify(spotifyArtistId, label){
   stopLoop();
+  AMBIANCE_SHUFFLE_MODE = false;
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = true;
+  destroyYtPlayer();
   const holder = document.getElementById('bg-youtube-holder');
   holder.innerHTML = `<iframe src="https://open.spotify.com/embed/artist/${spotifyArtistId}?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" frameborder="0"></iframe>`;
   const widget = document.getElementById('bg-youtube-widget');
@@ -6895,10 +7087,11 @@ function renderAmbianceList(){
     ).join('')}</div>
   </details>`;
 
-  const stopHTML = `<div style="display:flex; gap:8px; justify-content:center; margin-top:14px;">
-    <button class="btn btn-gold btn-sm" id="ambiance-shuffle-btn">🔀 Surprise</button>
+  const stopHTML = `<div style="display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap;">
+    <button class="btn btn-gold btn-sm" id="ambiance-shuffle-btn">${AMBIANCE_SHUFFLE_MODE ? '🔀 Aléatoire en cours…' : '🔀 Lecture aléatoire'}</button>
     <button class="btn btn-ghost btn-sm" id="ambiance-stop-all-btn">⏹ Tout arrêter</button>
-  </div>`;
+  </div>
+  ${AMBIANCE_SHUFFLE_MODE ? `<p class="studio-note" style="text-align:center; margin-top:6px;">La musique enchaîne toute seule un morceau au hasard après l'autre. Arrêtez à tout moment avec ✕ dans le petit lecteur.</p>` : ''}`;
 
   list.innerHTML = `
     <div class="ambiance-search-wrap">
@@ -6935,8 +7128,8 @@ function renderAmbianceList(){
     el.onclick = ()=>{ playBgYoutube(el.dataset.ytId, el.dataset.ytLabel); closeAmbiancePicker(); };
   });
   document.getElementById('ambiance-shuffle-btn').onclick = ()=>{
-    const pick = LOUANGES_VIDEOS[Math.floor(Math.random()*LOUANGES_VIDEOS.length)];
-    playBgYoutube(pick.videoId, pick.title + ' — ' + pick.artist);
+    if(AMBIANCE_SHUFFLE_MODE){ stopAllAmbiance(); lumenPlayerHide(); showToast('Lecture aléatoire arrêtée'); renderAmbianceList(); return; }
+    startAmbianceShuffle();
     closeAmbiancePicker();
   };
   document.getElementById('ambiance-stop-all-btn').onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); closeAmbiancePicker(); };
@@ -9319,11 +9512,24 @@ function applyRecueillement(){
     btn.title = RECUEILLEMENT_MODE ? 'Quitter le mode Recueillement' : 'Mode Recueillement — un cadre plus calme';
   }
 }
+const RECUEILLEMENT_TRACKS = [
+  {videoId:'SA3GvYog_wo', title:'Une heure avec Jésus', artist:'Loïc & Rachel'},
+  {videoId:'A03sE1nH0Cg', title:'Yeshua — 1 Hour Worship Instrumental', artist:'Vessels For God Worship'},
+  {videoId:'w3eRLlTeV1o', title:'Spirit of Wisdom — Prophetic Worship Instrumental', artist:'Worship Piano Music'},
+  {videoId:'FEZZQrwyWtk', title:'Still, My Soul — Soaking Worship', artist:"Soaking in God's Presence"}
+];
 async function toggleRecueillement(){
   RECUEILLEMENT_MODE = !RECUEILLEMENT_MODE;
   applyRecueillement();
   await savePrefs();
   showToast(RECUEILLEMENT_MODE ? '🕊️ Mode Recueillement activé — un cadre plus calme' : 'Retour à l\u2019affichage habituel');
+  if(RECUEILLEMENT_MODE){
+    const pick = RECUEILLEMENT_TRACKS[Math.floor(Math.random()*RECUEILLEMENT_TRACKS.length)];
+    playBgYoutube(pick.videoId, '🕊️ ' + pick.title + ' — ' + pick.artist, {silent:true});
+  } else if(RECUEILLEMENT_TRACKS.some(t=>t.videoId===BG_YT_VIDEO_ID)){
+    stopAllAmbiance();
+    lumenPlayerHide();
+  }
 }
 function openRefuge(){
   REFUGE_VERSE_IDX = Math.floor(Math.random()*REFUGE_VERSES.length);
