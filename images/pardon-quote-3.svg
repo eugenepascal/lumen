@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="#3a1420"/><stop offset="1" stop-color="#1b0e12"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="50%" cy="30%" r="45%">
+    <stop stop-color="#D9A85C" stop-opacity="0.55"/><stop offset="1" stop-color="#D9A85C" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="1080" height="1350" fill="url(#bg)"/>
+<circle cx="540" cy="400" r="380" fill="url(#glow)"/>
+<g opacity="0.92">
+  <line x1="540" y1="180" x2="540" y2="430" stroke="#D9A85C" stroke-width="14" stroke-linecap="round"/>
+  <line x1="450" y1="265" x2="630" y2="265" stroke="#D9A85C" stroke-width="14" stroke-linecap="round"/>
+  <line x1="540" y1="150" x2="540" y2="150" stroke="#D9A85C" stroke-width="2"/>
+  <g stroke="#D9A85C" stroke-width="3" opacity="0.5">
+    <line x1="540" y1="90" x2="540" y2="140"/>
+    <line x1="420" y1="140" x2="460" y2="170"/>
+    <line x1="660" y1="140" x2="620" y2="170"/>
+    <line x1="360" y1="300" x2="415" y2="300"/>
+    <line x1="720" y1="300" x2="665" y2="300"/>
+  </g>
+</g>
+<line x1="440" y1="560" x2="640" y2="560" stroke="#D9A85C" stroke-width="3" opacity="0.7"/>
+<text x="540" y="677" text-anchor="middle" font-family="Georgia,serif" font-size="52" font-weight="700" fill="#fdf6e8">Combien de fois</text>
+<text x="540" y="741" text-anchor="middle" font-family="Georgia,serif" font-size="52" font-weight="700" fill="#fdf6e8">pardonner ? Jusqu&#x27;à</text>
+<text x="540" y="805" text-anchor="middle" font-family="Georgia,serif" font-size="52" font-weight="700" fill="#fdf6e8">soixante-dix fois sept</text>
+<text x="540" y="869" text-anchor="middle" font-family="Georgia,serif" font-size="52" font-weight="700" fill="#fdf6e8">fois.</text>
+
+<text x="540" y="993" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-style="italic" fill="#D9A85C" opacity="0.92">Matthieu 18, 22</text>
+<text x="540" y="1290" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" letter-spacing="4" fill="#fdf6e8" opacity="0.55">LUMEN</text>
+</svg>
