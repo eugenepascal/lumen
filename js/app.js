@@ -3748,6 +3748,7 @@ function renderTabbar(){
          après la première visite. */
       if(PRIMARY === 'prier') SUBTAB.prier = 'accueil-prier';
       if(PRIMARY === 'ecritures') SUBTAB.ecritures = 'accueil-ecritures';
+      if(PRIMARY === 'espace') SUBTAB.espace = 'accueil-espace';
       ENTRY_OPEN = null; OPEN_NOVENA = null; NOVENA_OPEN_DAY = null;
       render();
     };
@@ -3784,7 +3785,7 @@ const EGLISE_SUBNAV_GROUPS = [
   {label:'📰 Vie de l\u2019Église', keys:['vie-eglise','actualites','pelerinages']}
 ];
 const SUBNAV_GROUPED_SECTIONS = { prier: PRIER_SUBNAV_GROUPS, devotions: DEVOTIONS_SUBNAV_GROUPS, espace: ESPACE_SUBNAV_GROUPS, eglise: EGLISE_SUBNAV_GROUPS };
-const HUB_SUBTAB_KEYS = {prier:'accueil-prier', ecritures:'accueil-ecritures'};
+const HUB_SUBTAB_KEYS = {prier:'accueil-prier', ecritures:'accueil-ecritures', devotions:'accueil-devotions', eglise:'accueil-eglise', sagesse:'accueil-sagesse', espace:'accueil-espace'};
 let SUBNAV_GROUP_EXPANDED = {};
 function renderSubnavHTML(){
   const subs = SUBNAV[PRIMARY];
@@ -4392,7 +4393,7 @@ const PRIER_HUB_CATEGORIES = [
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
   {label:'Pour moi et les autres', desc:'Intentions, groupe de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B'},
   {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58'},
-  {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions'}, color:'#4A3D6B'}
+  {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions', sub:'accueil-devotions'}, color:'#4A3D6B'}
 ];
 function renderPrierHub(){
   const html = `
@@ -4442,7 +4443,10 @@ function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, he
   document.querySelectorAll('[data-hub-goto]').forEach(card=>{
     card.onclick = ()=>{
       const cat = categories[parseInt(card.dataset.hubIndex,10)];
-      if(cat && cat.cross){ goTo(cat.cross.primary, cat.cross.sub); }
+      if(cat && cat.cross){
+        if(cat.cross.resetJesusHub) GROUP_SEL['jesus:main'] = null;
+        goTo(cat.cross.primary, cat.cross.sub);
+      }
       else { onGoto(card.dataset.hubGoto); }
     };
   });
@@ -4500,9 +4504,9 @@ function renderSagesseHub(){
    liens internes existants) ; cette page est juste le nouveau point d'entrée
    unique depuis la barre d'onglets. */
 const EXPLORER_HUB_CATEGORIES = [
-  {label:'Jésus & Marie', desc:'Vie de Jésus, vie de Marie, grands thèmes de méditation', icon:'✝️', cross:{primary:'jesus'}, color:'#7C1F2E'},
-  {label:'Église', desc:'Saints, vie liturgique, calendrier, pèlerinages', icon:'⛪', cross:{primary:'eglise'}, color:'#4A3D6B'},
-  {label:'Sagesse & enseignements', desc:'Vie spirituelle, sacrements, enseignements, lexique', icon:'🌿', cross:{primary:'sagesse'}, color:'#5C6E58'}
+  {label:'Jésus & Marie', desc:'Vie de Jésus, vie de Marie, grands thèmes de méditation', icon:'✝️', cross:{primary:'jesus', resetJesusHub:true}, color:'#7C1F2E'},
+  {label:'Église', desc:'Saints, vie liturgique, calendrier, pèlerinages', icon:'⛪', cross:{primary:'eglise', sub:'accueil-eglise'}, color:'#4A3D6B'},
+  {label:'Sagesse & enseignements', desc:'Vie spirituelle, sacrements, enseignements, lexique', icon:'🌿', cross:{primary:'sagesse', sub:'accueil-sagesse'}, color:'#5C6E58'}
 ];
 function renderExplorerHub(){
   renderCategoryHubGeneric('🧭 Explorer', 'Jésus, Marie, les saints, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse);
