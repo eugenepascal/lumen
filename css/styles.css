@@ -840,9 +840,26 @@
   .guide-eyebrow{ font-family:'Inter',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--gold); margin:0; }
   .guide-title{ font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--ink); margin:4px 0 4px; }
   .guide-desc{ font-family:'Inter',sans-serif; font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
-  .guide-options{ display:flex; flex-direction:column; gap:8px; }
+  .guide-options{ display:flex; flex-direction:column; gap:8px; max-height:38vh; overflow-y:auto; }
   .guide-opt{ text-align:left; padding:13px 16px; border-radius:14px; border:1px solid var(--hairline); background:var(--vellum); color:var(--ink); font-family:'Inter',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
   .guide-opt:hover{ background:var(--gold-pale); }
+  .guide-avatar{
+    width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:24px; margin-bottom:10px;
+    background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 75%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,0.35);
+  }
+  .guide-ask-row{ display:flex; gap:8px; margin:14px 0 6px; }
+  .guide-ask-input{
+    flex:1; padding:12px 14px; border-radius:14px; border:1px solid var(--hairline);
+    background:var(--vellum); color:var(--ink); font-family:'Inter',sans-serif; font-size:13.5px;
+  }
+  .guide-ask-input:focus{ outline:none; border-color:var(--gold); }
+  .guide-ask-send{
+    width:44px; height:44px; flex:none; border-radius:14px; border:none; cursor:pointer;
+    background:linear-gradient(165deg, var(--gold-light), var(--gold)); color:#fff; font-size:16px;
+  }
+  .guide-ask-hint{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); opacity:0.75; margin:0 0 16px; line-height:1.4; }
 
   /* ===== Mode Bande Dessinée : plus fun, pour toucher un public plus jeune ===== */
   body.comic-mode .card, body.comic-mode .entry-avatar, body.comic-mode .home-moment-panel,

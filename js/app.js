@@ -9710,22 +9710,32 @@ function copyForSocial(title, text){
 
 /* ================= refuge : un lieu sûr ================= */
 let REFUGE_VERSE_IDX = 0;
+function guideGreeting(){
+  const h = new Date().getHours();
+  if(h < 5) return 'Douce nuit ✨';
+  if(h < 12) return 'Bonjour ✨';
+  if(h < 18) return 'Bon après-midi ✨';
+  return 'Bonsoir ✨';
+}
 const GUIDE_TREE = {
   root: {
-    title: 'Qu\u2019aimeriez-vous faire ?',
-    desc: 'Dites-moi ce qui vous amène aujourd\u2019hui, je vous y emmène.',
+    eyebrow: '✨ Lumen Guide',
+    title: null,
+    desc: 'Comment puis-je vous accompagner aujourd’hui ?',
     options: [
+      {label:'💔 Je traverse une période difficile', action:()=>goTo('prier','selon-etat')},
+      {label:'📖 Explique-moi l’Évangile du jour', action:()=>goTo('prier','textes-du-jour')},
+      {label:'🕯️ Aide-moi à commencer une neuvaine', action:()=>goTo('prier','neuvaines')},
+      {label:'🌙 Propose-moi une prière du soir', action:()=>goTo('prier','compline')},
       {label:'🙏 Prier maintenant', next:'prier'},
-      {label:'📖 Lire la Bible ou un psaume', action:()=>goTo('ecritures')},
       {label:'✝️ Découvrir un saint', action:()=>goTo('eglise','saints')},
-      {label:'🕯️ Suivre une neuvaine', action:()=>goTo('prier','neuvaines')},
       {label:'🕊️ Me recueillir, un moment calme', action:()=>{ if(!RECUEILLEMENT_MODE) toggleRecueillement(); }},
       {label:'✍️ Écrire une prière personnelle', action:()=>goTo('prier','mes-prieres')},
-      {label:'⚙️ Mon compte', next:'compte'},
-      {label:'🧭 Je ne sais pas trop, montrez-moi l\u2019application', action:()=>goTo('espace','guide-complet')}
+      {label:'⚙️ Mon compte', next:'compte'}
     ]
   },
   prier: {
+    eyebrow: '✨ Lumen Guide',
     title: 'Pour prier, plutôt...',
     desc: 'Choisissez ce qui vous correspond le mieux maintenant.',
     options: [
@@ -9736,6 +9746,7 @@ const GUIDE_TREE = {
     ]
   },
   compte: {
+    eyebrow: '✨ Lumen Guide',
     title: 'Votre compte',
     desc: '',
     options: [
@@ -9746,6 +9757,46 @@ const GUIDE_TREE = {
   }
 };
 let GUIDE_STACK = ['root'];
+const GUIDE_INTENTS = [
+  {kw:['difficile','triste','peur','anxi','seul','mal','souffr','stress','angoiss','fatigu','découra','decourag'], action:()=>goTo('prier','selon-etat')},
+  {kw:['évangile','evangile','lecture du jour','messe du jour'], action:()=>goTo('prier','textes-du-jour')},
+  {kw:['neuvaine'], action:()=>goTo('prier','neuvaines')},
+  {kw:['soir','compline','dormir','coucher'], action:()=>goTo('prier','compline')},
+  {kw:['matin','lever','réveil','reveil','laudes'], action:()=>goTo('prier','laudes')},
+  {kw:['examen','conscience'], action:()=>goTo('prier','examen')},
+  {kw:['sacrement','baptême','bapteme','confirmation','eucharistie','onction'], action:()=>goTo('sagesse','sacrements')},
+  {kw:['saint patron','patron','sainte ','saint '], action:()=>goTo('eglise','saints')},
+  {kw:['psaume'], action:()=>goTo('ecritures','psaumes')},
+  {kw:['chapelet','rosaire'], action:()=>goTo('devotions','chapelet')},
+  {kw:['confession','péché','peche','pardon'], action:()=>goTo('devotions','confession')},
+  {kw:['intention'], action:()=>goTo('prier','intentions')},
+  {kw:['angélus','angelus'], action:()=>goTo('prier','angelus')},
+  {kw:['carême','careme','jeûne','jeune'], action:()=>goTo('prier','careme40')}
+];
+function matchGuideIntent(textRaw){
+  const text = (textRaw||'').toLowerCase();
+  if(!text.trim()) return null;
+  for(const intent of GUIDE_INTENTS){
+    if(intent.kw.some(k=>text.includes(k))) return intent.action;
+  }
+  return null;
+}
+function openSearchWithQuery(q){
+  document.getElementById('search-overlay').classList.remove('hidden');
+  const input = document.getElementById('search-input');
+  if(input){ input.value = q; }
+  renderSearchResults(q);
+}
+async function submitGuideQuestion(text){
+  const action = matchGuideIntent(text);
+  closeGuide();
+  if(action){
+    await action();
+    render();
+  } else {
+    openSearchWithQuery(text);
+  }
+}
 function openGuide(){
   GUIDE_STACK = ['root'];
   renderGuideStep();
@@ -9754,16 +9805,30 @@ function openGuide(){
 function closeGuide(){ document.getElementById('guide-overlay').classList.add('hidden'); }
 function renderGuideStep(){
   const step = GUIDE_TREE[GUIDE_STACK[GUIDE_STACK.length-1]];
+  const isRoot = GUIDE_STACK.length === 1;
   const overlay = document.getElementById('guide-overlay');
   overlay.innerHTML = `<div class="guide-panel">
     <button class="guide-close" id="guide-close-btn">✕</button>
-    <p class="guide-eyebrow">🧭 Votre guide</p>
-    <p class="guide-title">${step.title}</p>
+    <div class="guide-avatar">✨</div>
+    <p class="guide-eyebrow">${step.eyebrow || '🧭 Votre guide'}</p>
+    <p class="guide-title">${step.title || guideGreeting()}</p>
     ${step.desc ? `<p class="guide-desc">${step.desc}</p>` : ''}
+    ${isRoot ? `<div class="guide-ask-row">
+      <input type="text" id="guide-ask-input" class="guide-ask-input" placeholder="Décrivez ce qui vous amène, ou posez une question…" />
+      <button class="guide-ask-send" id="guide-ask-send" aria-label="Envoyer">➤</button>
+    </div>
+    <p class="guide-ask-hint">Un compagnon sans IA externe : il repère quelques mots-clés et vous mène vers le contenu de Lumen.</p>` : ''}
     <div class="guide-options">${step.options.map((o,i)=>`<button class="guide-opt" data-guide-idx="${i}">${o.label}</button>`).join('')}</div>
   </div>`;
   document.getElementById('guide-close-btn').onclick = closeGuide;
   overlay.onclick = (e)=>{ if(e.target === overlay) closeGuide(); };
+  if(isRoot){
+    const askInput = document.getElementById('guide-ask-input');
+    const askSend = document.getElementById('guide-ask-send');
+    const doSubmit = ()=>{ if(askInput.value.trim()) submitGuideQuestion(askInput.value); };
+    if(askSend) askSend.onclick = doSubmit;
+    if(askInput) askInput.onkeydown = (e)=>{ if(e.key === 'Enter') doSubmit(); };
+  }
   step.options.forEach((o,i)=>{
     document.querySelector(`[data-guide-idx="${i}"]`).onclick = async ()=>{
       if(o.back){ GUIDE_STACK.pop(); renderGuideStep(); return; }
