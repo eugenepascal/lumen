@@ -4645,7 +4645,6 @@ function renderNovenaDetail(id){
         </button>
         <button class="btn btn-gold btn-sm" id="listen-day-btn">🎙️ Prier ce jour (écouté)</button>
       </div>
-      ${simpleBeadCounterHTML(n.id+'-guided-day'+dayIdx, dayData.prayer)}
       <div class="companions-row">
         <span class="companions-count" id="companions-count">🤝 ${NOVENA_COMPANIONS[n.id]||0} personne(s) prient cette neuvaine avec vous</span>
       </div>
@@ -4662,7 +4661,6 @@ function renderNovenaDetail(id){
   document.getElementById('toggle-fulltext-btn').onclick = ()=>{ NOVENA_FULLTEXT = true; render(); };
   wireNovenaAudioPlayer(dayData);
   wireNovenaBeadSequences();
-  wireSimpleBeadCounters();
 
   const joinBtn = document.getElementById('join-companions-btn');
   if(joinBtn){
@@ -4732,8 +4730,6 @@ function renderNovenaDayPage(n, info, dayIndex){
       ${carnetBoxesHTML(d.prayer, 'prayer')}
     </div>
 
-    ${simpleBeadCounterHTML(counterId, d.prayer)}
-
     <div style="text-align:center; margin:16px 0;">
       <button class="btn ${dayDone?'btn-ghost':'btn-primary'}" id="day-mark-prayed-btn" ${dayDone?'disabled':''}>
         ${dayDone ? "Prié ce jour ✓" : "J'ai prié ce jour"}
@@ -4743,7 +4739,6 @@ function renderNovenaDayPage(n, info, dayIndex){
 
   document.getElementById('screen').innerHTML = html;
   document.getElementById('back-to-timeline-btn').onclick = ()=>{ NOVENA_OPEN_DAY = null; render(); };
-  wireSimpleBeadCounters();
 
   const playBtn = document.getElementById('hoz-podcast-play');
   if(playBtn){
@@ -5122,6 +5117,7 @@ function entryCardHTML(entry, idx, halo){
   </div>`;
 }
 
+const REPEATABLE_PRAYER_COMPKEYS = ['prier:prieres', 'prier:famille', 'combat:prieres'];
 function entryDetailHTML(entry, idx, total, halo, favMeta){
   const fav = favMeta ? {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey:favMeta.compKey, groupId:favMeta.groupId, idx, name:entry.name, avatar:entry.avatar, summary:(entry.summary||'').slice(0,90)} : null;
   const usageKey = favMeta ? `${favMeta.compKey}:${favMeta.groupId}:${idx}` : null;
@@ -5164,6 +5160,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
         <button class="btn btn-gold btn-sm" id="recite-mode-btn">🎙️ Prier (mode écouté)</button>
       </div>
     </div>
+    ${favMeta && REPEATABLE_PRAYER_COMPKEYS.includes(favMeta.compKey) ? `
     <div class="card" style="margin-top:10px;">
       <p class="eyebrow" style="color:var(--gold);">📿 Chapelet de répétitions</p>
       <p class="entry-detail-text" style="font-style:italic; margin-bottom:8px;">« ${entry.summary} »</p>
@@ -5174,7 +5171,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
         <span id="repeat-counter-display" style="font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--wine-dark); min-width:30px; text-align:center;">0</span>
         <button class="btn btn-gold btn-sm" id="counter-add-btn">+ 1</button>
       </div>
-    </div>` : ''}
+    </div>` : ''}` : ''}
     <div class="entry-nav-row">
       <button class="btn btn-ghost btn-sm" id="entry-prev" ${idx<=0?'disabled':''}>← Précédent</button>
       <button class="btn btn-ghost btn-sm" id="entry-next" ${idx>=total-1?'disabled':''}>Suivant →</button>
