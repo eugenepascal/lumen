@@ -3324,7 +3324,11 @@ const ETATS_PRIERE = [
   {key:"deuil", label:"En deuil", emoji:"🖤", themeId:"deuil", prieres:["Prière pour les défunts (Éternel repos)","Neuvaine à l'Esprit Saint"]},
   {key:"protection", label:"Besoin de protection", emoji:"🛡️", themeId:"protection", prieres:["Prière à saint Michel Archange","Neuvaine à saint Benoît"]},
   {key:"benediction", label:"Besoin d'une bénédiction", emoji:"✨", themeId:"benediction", prieres:["L'Angélus","Neuvaine à l'Immaculée Conception"]},
-  {key:"espoir", label:"À la recherche d'espérance", emoji:"🌅", themeId:"espoir", prieres:["Neuvaine à Notre-Dame de Fatima","Salve Regina"]}
+  {key:"espoir", label:"À la recherche d'espérance", emoji:"🌅", themeId:"espoir", prieres:["Neuvaine à Notre-Dame de Fatima","Salve Regina"]},
+  {key:"discernement", label:"Face à une décision, un choix", emoji:"🧭", prieres:["Avant une décision difficile","Prière à saint Gabriel — Clarté et vérité"]},
+  {key:"famille", label:"Pour ma famille", emoji:"👨‍👩‍👧", prieres:["Prière à saint Eugène de Mazenod pour les familles blessées","Prière à sainte Anne"]},
+  {key:"travail", label:"Pour mon travail, mes études", emoji:"💼", prieres:["Avant un entretien d'embauche","Avant un examen"]},
+  {key:"maladie", label:"Malade, ou pour un proche malade", emoji:"🩹", prieres:["Prière à Notre-Dame de Fatima pour une guérison","Prière à saint Raphaël — Guérison profonde"]}
 ];
 
 const COMFORT_MESSAGES = {
@@ -3338,7 +3342,11 @@ const COMFORT_MESSAGES = {
   deuil: "Il n'y a pas de bonne façon de vivre un deuil, ni de calendrier à respecter. Prenez ce moment simplement pour vous, sans vous presser.",
   protection: "Se sentir vulnérable est épuisant. Ce moment est un abri, même bref — un endroit où vous n'avez rien à défendre.",
   benediction: "Demander une bénédiction, c'est reconnaître qu'on ne porte pas tout seul. C'est une force, pas une faiblesse.",
-  espoir: "L'espérance ne nie pas la difficulté présente — elle dit simplement que ce n'est pas fini. Restez un instant avec cette idée."
+  espoir: "L'espérance ne nie pas la difficulté présente — elle dit simplement que ce n'est pas fini. Restez un instant avec cette idée.",
+  discernement: "Ne pas savoir encore ce qu'il faut choisir n'est pas une faiblesse. Prenez le temps qu'il faut — une vraie décision n'a pas besoin d'être prise dans l'urgence.",
+  famille: "Les liens familiaux portent souvent autant de tendresse que de tension. Confier les vôtres, tels qu'ils sont réellement, est déjà un geste d'amour.",
+  travail: "Le travail et les études pèsent parfois lourd sur l'estime de soi. Votre valeur ne se résume pas à un résultat ou une réussite.",
+  maladie: "La maladie, la vôtre ou celle d'un proche, peut faire sentir très seul(e) face à l'incertitude. Ce moment de prière est un endroit où déposer cette inquiétude."
 };
 
 
@@ -3739,6 +3747,7 @@ function renderTabbar(){
          sous-onglet visité — sans quoi Dévotions deviendrait introuvable
          après la première visite. */
       if(PRIMARY === 'prier') SUBTAB.prier = 'accueil-prier';
+      if(PRIMARY === 'ecritures') SUBTAB.ecritures = 'accueil-ecritures';
       ENTRY_OPEN = null; OPEN_NOVENA = null; NOVENA_OPEN_DAY = null;
       render();
     };
@@ -4348,6 +4357,7 @@ const HUB_HERO_IMAGES = {
   devotions: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20The-Madonna-and-Child-128.jpg?width=900',
   jesus: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900',
   sagesse: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Thomas%20Aquinas%20by%20Sandro%20Botticelli.jpg?width=900',
+  ecritures: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900',
   espace: null
 };
 const PRIER_HUB_CATEGORIES = [
@@ -4471,6 +4481,18 @@ const EXPLORER_HUB_CATEGORIES = [
 ];
 function renderExplorerHub(){
   renderCategoryHubGeneric('🧭 Explorer', 'Jésus, Marie, les saints, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse);
+}
+
+const ECRITURES_HUB_CATEGORIES = [
+  {label:'Psaumes par thème', desc:'Les psaumes classés selon ce que vous traversez', icon:'📜', goto:'psaumes', color:'#7C1F2E'},
+  {label:'Bible & Histoire', desc:"Les grands récits, dans l'ordre de l'histoire sainte", icon:'👑', goto:'bible', color:'#B8863B'},
+  {label:'Lire la Bible', desc:'Le texte biblique complet, livre par livre', icon:'📗', goto:'bible-lecture', color:'#4A3D6B'},
+  {label:'Récits fondateurs', desc:'La Création, l’Exode, et d’autres grands récits', icon:'🌍', goto:'recits', color:'#5C6E58'},
+  {label:'Repères', desc:'Pour se situer dans les grandes lignes de la Bible', icon:'📋', goto:'reperes', color:'#8A4A1F'},
+  {label:'Mémoriser', desc:'Des versets à apprendre par cœur', icon:'🧠', goto:'memoriser', color:'#3B7A3B'}
+];
+function renderEcrituresHub(){
+  renderCategoryHubGeneric('📖 Bible', 'La Parole de Dieu à lire, méditer et mémoriser, à votre rythme.', ECRITURES_HUB_CATEGORIES, (goto)=>{ SUBTAB.ecritures = goto; render(); }, '📖', HUB_HERO_IMAGES.ecritures);
 }
 
 function wireNovenaAudioPlayer(dayData){
@@ -7424,8 +7446,10 @@ function renderRosary(){
     ROSARY_STATE = { setKey: todaysRosarySet(), phase:'intro', mysteryIdx:0, beadCount:0 };
   }
   const set = ROSARY_SETS[ROSARY_STATE.setKey];
-  let html = `<h2 class="section-title">🔗 Chapelet</h2>
-`;
+  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+    <h2 class="section-title" style="margin-bottom:0;">🔗 Chapelet</h2>
+    <button class="btn btn-ghost btn-sm" id="rosary-immersive-btn">🕯️ Mode immersif</button>
+  </div>`;
   html += `<div class="chip-row">${Object.keys(ROSARY_SETS).map(k=>
     `<button class="chip ${ROSARY_STATE.setKey===k?'active':''}" data-set="${k}">${ROSARY_SETS[k].label}</button>`
   ).join('')}</div>`;
@@ -7469,6 +7493,8 @@ function renderRosary(){
     </div>`;
   }
   document.getElementById('screen').innerHTML = html;
+  const immersiveBtn = document.getElementById('rosary-immersive-btn');
+  if(immersiveBtn) immersiveBtn.onclick = enableReadingMode;
   document.querySelectorAll('.chip').forEach(c=> c.onclick = ()=>{ ROSARY_STATE.setKey = c.dataset.set; render(); });
   const startBtn = document.getElementById('rosary-start');
   if(startBtn) startBtn.onclick = ()=>{ ROSARY_STATE.phase='mystery'; render(); };
@@ -10560,7 +10586,8 @@ function renderScreen(){
     if(sub === 'versets-armure') return renderVersetsArmure();
   }
   if(PRIMARY === 'ecritures'){
-    const sub = SUBTAB.ecritures || 'psaumes';
+    const sub = SUBTAB.ecritures || 'accueil-ecritures';
+    if(sub === 'accueil-ecritures') return renderEcrituresHub();
     if(sub === 'psaumes') return renderGenericSection(PSALM_GROUPS, 'ecritures:psaumes', 'Psaumes par thème');
     if(sub === 'bible') return renderGenericSection(HISTORY, 'ecritures:bible', 'Bible & Histoire');
     if(sub === 'bible-lecture') return renderBibleReader();
