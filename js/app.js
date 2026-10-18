@@ -10391,7 +10391,11 @@ function renderBreadcrumb(){
 /* ================= main dispatcher ================= */
 function renderScreen(){
   if(PRIMARY === 'accueil'){
-    if(!WELCOME_SEEN_THIS_SESSION) return renderWelcomeSplash();
+    /* Deux écrans distincts : "Bienvenue" (courte présentation, uniquement pour
+       les nouveaux utilisateurs pas encore passés par l'accueil guidé) et
+       "Lumen Aujourd'hui" (accès direct au contenu spirituel du jour, pour
+       tous les utilisateurs réguliers — sans écran intermédiaire à traverser). */
+    if(!ONBOARDING_SEEN && !WELCOME_SEEN_THIS_SESSION) return renderWelcomeSplash();
     return renderHome();
   }
 
