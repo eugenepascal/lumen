@@ -17,6 +17,25 @@ try{
   FIREBASE_READY = true;
 }catch(e){ console.warn('Firebase indisponible :', e); }
 
+/* Petit message discret en bas de l'écran (confirmation d'une action : "Texte copié",
+   "Amen.", etc.). Appelé partout dans l'app — jusqu'ici jamais défini, ce qui faisait
+   planter silencieusement (ReferenceError) toute action qui s'en servait. */
+let TOAST_HIDE_TIMER = null;
+function showToast(message){
+  const host = document.getElementById('app') || document.body;
+  let el = document.getElementById('lumen-toast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'lumen-toast';
+    el.className = 'toast';
+    host.appendChild(el);
+  }
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(TOAST_HIDE_TIMER);
+  TOAST_HIDE_TIMER = setTimeout(()=> el.classList.remove('show'), 2200);
+}
+
 /* window.storage only exists inside Claude.ai artifacts. Once deployed standalone
    (e.g. GitHub Pages), it's undefined — this polyfill makes "guest mode" (sans compte)
    actually work by using the browser's own localStorage instead. */
