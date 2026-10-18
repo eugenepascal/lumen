@@ -7996,7 +7996,7 @@ async function fetchAelfOffice(officeKey, date){
   const cacheKey = officeKey+'|'+date;
   if(AELF_OFFICE_CACHE[cacheKey] !== undefined) return AELF_OFFICE_CACHE[cacheKey];
   try{
-    const res = await fetch(`https://api.aelf.org/v1/offices/${date}/${officeKey}/france`);
+    const res = await fetch(`https://api.aelf.org/v1/${officeKey}/${date}/france`);
     if(!res.ok) throw new Error('aelf http '+res.status);
     const json = await res.json();
     AELF_OFFICE_CACHE[cacheKey] = json;
@@ -8005,6 +8005,130 @@ async function fetchAelfOffice(officeKey, date){
     AELF_OFFICE_CACHE[cacheKey] = null;
     return null;
   }
+}
+const AELF_OFFICE_FIELDS = {
+  laudes: [
+    ['antienne_invitatoire','Antienne'], ['psaume_invitatoire','Psaume d’invitation'],
+    ['hymne','Hymne'],
+    ['antienne_1','Antienne'], ['psaume_1','Psaume I'],
+    ['antienne_2','Antienne'], ['psaume_2','Psaume II'],
+    ['antienne_3','Antienne'], ['psaume_3','Cantique'],
+    ['pericope','Parole de Dieu'],
+    ['repons','Répons bref'],
+    ['antienne_zacharie','Antienne'], ['cantique_zacharie','Cantique de Zacharie'],
+    ['intercession','Intercessions'],
+    ['notre_pere','Notre Père'],
+    ['oraison','Oraison']
+  ],
+  vepres: [
+    ['hymne','Hymne'],
+    ['antienne_1','Antienne'], ['psaume_1','Psaume I'],
+    ['antienne_2','Antienne'], ['psaume_2','Psaume II'],
+    ['antienne_3','Antienne'], ['psaume_3','Cantique'],
+    ['pericope','Parole de Dieu'],
+    ['repons','Répons bref'],
+    ['antienne_magnificat','Antienne'], ['cantique_mariale','Cantique de Marie (Magnificat)'],
+    ['intercession','Intercessions'],
+    ['notre_pere','Notre Père'],
+    ['oraison','Oraison']
+  ],
+  complies: [
+    ['hymne','Hymne'],
+    ['antienne_1','Antienne'], ['psaume_1','Psaume'],
+    ['antienne_2','Antienne'], ['psaume_2','Psaume'],
+    ['pericope','Parole de Dieu'],
+    ['repons','Répons bref'],
+    ['antienne_symeon','Antienne'], ['cantique_symeon','Cantique de Siméon'],
+    ['oraison','Oraison'],
+    ['benediction','Bénédiction'],
+    ['hymne_mariale','Hymne à Marie']
+  ],
+  tierce: [
+    ['hymne','Hymne'],
+    ['antienne_1','Antienne'], ['psaume_1','Psaume I'],
+    ['antienne_2','Antienne'], ['psaume_2','Psaume II'],
+    ['antienne_3','Antienne'], ['psaume_3','Psaume III'],
+    ['pericope','Parole de Dieu'], ['repons','Répons bref'], ['oraison','Oraison']
+  ],
+  sexte: [
+    ['hymne','Hymne'],
+    ['antienne_1','Antienne'], ['psaume_1','Psaume I'],
+    ['antienne_2','Antienne'], ['psaume_2','Psaume II'],
+    ['antienne_3','Antienne'], ['psaume_3','Psaume III'],
+    ['pericope','Parole de Dieu'], ['repons','Répons bref'], ['oraison','Oraison']
+  ],
+  none: [
+    ['hymne','Hymne'],
+    ['antienne_1','Antienne'], ['psaume_1','Psaume I'],
+    ['antienne_2','Antienne'], ['psaume_2','Psaume II'],
+    ['antienne_3','Antienne'], ['psaume_3','Psaume III'],
+    ['pericope','Parole de Dieu'], ['repons','Répons bref'], ['oraison','Oraison']
+  ],
+  lectures: [
+    ['hymne','Hymne'],
+    ['antienne_1','Antienne'], ['psaume_1','Psaume I'],
+    ['antienne_2','Antienne'], ['psaume_2','Psaume II'],
+    ['antienne_3','Antienne'], ['psaume_3','Psaume III'],
+    ['verset_psaume','Verset'],
+    ['lecture','Première lecture'],
+    ['repons_lecture','Répons'],
+    ['texte_patristique','Deuxième lecture'],
+    ['repons_patristique','Répons'],
+    ['te_deum','Te Deum'],
+    ['oraison','Oraison']
+  ]
+};
+function aelfOfficeFieldHTML(label, value){
+  if(value === null || value === undefined) return '';
+  let body;
+  if(Array.isArray(value)){
+    body = value.filter(Boolean).join('\n');
+  } else if(typeof value === 'object'){
+    const titre = value.titre || value.reference || '';
+    body = (value.texte || '').toString();
+    if(!body.trim()) return '';
+    return `<div class="aelf-office-section">
+      <p class="aelf-office-heading">${label}</p>
+      ${titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${titre} »</p>` : ''}
+      <div class="aelf-office-text">${body.replace(/<[^>]+>/g,'')}</div>
+    </div>`;
+  } else {
+    body = (value || '').toString();
+  }
+  if(!body.trim()) return '';
+  return `<div class="aelf-office-section">
+    <p class="aelf-office-heading">${label}</p>
+    <div class="aelf-office-text">${body.replace(/<[^>]+>/g,'')}</div>
+  </div>`;
+}
+function aelfOfficeHTML(officeKey, json){
+  if(!json || !json[officeKey]) return null;
+  const data = json[officeKey];
+  const info = json.informations || {};
+  const fields = AELF_OFFICE_FIELDS[officeKey] || [];
+  let html = '';
+  if(info.fete || info.ligne1){
+    html += `<p class="studio-note" style="text-align:center; margin:0 0 14px;">${[info.fete, info.ligne1, info.ligne2].filter(Boolean).join(' — ')}</p>`;
+  }
+  if(data.introduction){
+    html += `<p class="entry-detail-text" style="text-align:center; font-style:italic; margin-bottom:14px;">${(data.introduction||'').replace(/<[^>]+>/g,'')}</p>`;
+  }
+  let patristiqueTitre = '';
+  fields.forEach(([key, label])=>{
+    if(key === 'texte_patristique'){
+      patristiqueTitre = data.titre_patristique || '';
+      if(data.texte_patristique){
+        html += `<div class="aelf-office-section">
+          <p class="aelf-office-heading">${label}</p>
+          ${patristiqueTitre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${patristiqueTitre} »</p>` : ''}
+          <div class="aelf-office-text">${(data.texte_patristique||'').replace(/<[^>]+>/g,'')}</div>
+        </div>`;
+      }
+      return;
+    }
+    html += aelfOfficeFieldHTML(label, data[key]);
+  });
+  return html || null;
 }
 let VATICAN_NEWS_CACHE = undefined;
 async function fetchVaticanNews(){
@@ -8260,13 +8384,27 @@ function renderAelfOfficeViewer(){
     <h2 class="section-title">📖 ${office.label} — texte officiel AELF</h2>
     <p class="section-desc">Le texte complet de l'office, tel que publié par l'AELF, fournisseur officiel des textes liturgiques en français.</p>
     <div class="chip-row" id="aelf-office-tabs">${AELF_OFFICES.map(o=>`<button class="chip ${o.key===office.key?'active':''}" data-aelf-office="${o.key}">${o.label}</button>`).join('')}</div>
-    <p style="text-align:center; margin:10px 0;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-gold btn-sm">Ouvrir sur AELF.org ↗</a></p>
-    <div class="aelf-embed-wrap"><iframe src="${aelfUrl}" title="Office AELF" loading="lazy"></iframe></div>
-    <p class="studio-note" style="text-align:center; margin-top:8px;">Si le texte ne s'affiche pas ci-dessus, utilisez le bouton au-dessus.</p>
+    <div id="aelf-office-body"><p class="studio-note" style="text-align:center;">Chargement du texte…</p></div>
+    <p style="text-align:center; margin:14px 0 0;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ouvrir sur AELF.org ↗</a></p>
   `;
   document.getElementById('aelf-office-back').onclick = ()=> goTo('prier','office');
   document.querySelectorAll('[data-aelf-office]').forEach(btn=>{
     btn.onclick = ()=>{ AELF_OFFICE_VIEW = btn.dataset.aelfOffice; renderAelfOfficeViewer(); };
+  });
+  const requestedOffice = office.key;
+  fetchAelfOffice(office.key, date).then(json=>{
+    if(AELF_OFFICE_VIEW !== requestedOffice) return; // user switched office while loading
+    const body = document.getElementById('aelf-office-body');
+    if(!body) return;
+    const html = aelfOfficeHTML(office.key, json);
+    if(!html){
+      body.innerHTML = `<div class="card empty-state" style="text-align:left;">
+        Ce texte n'a pas pu être chargé ici pour le moment.
+        <br><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px;">Le lire sur AELF.org ↗</a>
+      </div>`;
+      return;
+    }
+    body.innerHTML = html + `<p class="studio-note" style="text-align:center; margin-top:8px;">Source : <a href="${aelfUrl}" target="_blank" rel="noopener">AELF</a>, fournisseur officiel des textes liturgiques.</p>`;
   });
 }
 let AELF_CACHE = {date:null, data:null, failed:false};
@@ -8290,6 +8428,14 @@ function aelfClosingFormula(type){
   if(t.includes('lecture')) return '– Parole du Seigneur.';
   return '';
 }
+const AELF_LECTURE_TYPE_LABELS = {
+  lecture_1: 'Première lecture', lecture_2: 'Deuxième lecture', lecture: 'Lecture',
+  psaume: 'Psaume', evangile: 'Évangile', verset_evangile: 'Acclamation de l’Évangile'
+};
+function aelfLectureTypeLabel(type){
+  const key = (type||'').toLowerCase();
+  return AELF_LECTURE_TYPE_LABELS[key] || (type ? type.charAt(0).toUpperCase()+type.slice(1).replace(/_/g,' ') : '');
+}
 function aelfReadingCardHTML(json){
   if(!json || !json.messes || !json.messes[0]) return null;
   const messe = json.messes[0];
@@ -8302,7 +8448,7 @@ function aelfReadingCardHTML(json){
       const body = (l.contenu||l.texte||'').replace(/<[^>]+>/g,'\n').replace(/\n{2,}/g,'\n').trim();
       const closing = aelfClosingFormula(l.type);
       return `<div class="aelf-office-section">
-        <p class="aelf-office-heading">${l.type||''}</p>
+        <p class="aelf-office-heading">${aelfLectureTypeLabel(l.type)}</p>
         ${l.titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:2px;">« ${l.titre} »${l.ref?' ('+l.ref+')':''}</p>` : (l.ref ? `<p class="studio-note">${l.ref}</p>` : '')}
         ${l.intro_lue ? `<p class="studio-note" style="margin-bottom:8px;">${l.intro_lue}</p>` : ''}
         <div class="aelf-office-text">${body}</div>
@@ -8330,9 +8476,7 @@ function renderTextesDuJour(){
     </div>
 
     <p class="eyebrow" style="color:var(--wine-dark); text-align:center; margin-top:16px;">⛪ Lectures officielles de la messe</p>
-    <p style="text-align:center; margin:8px 0;"><a href="https://www.aelf.org/${todayISO()}/romain/messe" target="_blank" rel="noopener" class="btn btn-gold btn-sm">Ouvrir sur AELF.org ↗</a></p>
-    <div class="aelf-embed-wrap"><iframe src="https://www.aelf.org/${todayISO()}/romain/messe" title="Messe AELF" loading="lazy"></iframe></div>
-    <p class="studio-note" style="text-align:center; margin-top:8px;">Si le texte ne s'affiche pas ci-dessus, utilisez le bouton au-dessus.</p>
+    <div id="textes-jour-messe-body"><p class="studio-note" style="text-align:center;">Chargement des lectures…</p></div>
 
     <div class="card" style="border-left:4px solid var(--wine); margin-top:12px;">
       <p class="eyebrow" style="color:var(--wine);">📜 Psaume du jour</p>
@@ -8356,6 +8500,20 @@ function renderTextesDuJour(){
     showToast('📖 Amen.');
     fireCelebration();
   };
+  const messeUrl = `https://www.aelf.org/${todayISO()}/romain/messe`;
+  fetchAelfDuJour().then(json=>{
+    const body = document.getElementById('textes-jour-messe-body');
+    if(!body) return;
+    const cardHtml = aelfReadingCardHTML(json);
+    if(!cardHtml){
+      body.innerHTML = `<div class="card empty-state" style="text-align:left;">
+        Les lectures du jour n'ont pas pu être chargées ici.
+        <br><a href="${messeUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px;">Les lire sur AELF.org ↗</a>
+      </div>`;
+      return;
+    }
+    body.innerHTML = cardHtml;
+  });
 }
 function versetDuJourHTML(){
   const v = VERSET_SHUFFLE_IDX !== null ? VERSETS_DU_JOUR[VERSET_SHUFFLE_IDX] : VERSETS_DU_JOUR[dayOfYear() % VERSETS_DU_JOUR.length];
