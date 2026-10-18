@@ -3653,16 +3653,28 @@ const SUBNAV = {
   espace: [ {key:'compte', label:'👤 Mon compte'}, {key:'parcours', label:'🗺️ Parcours 7 jours'}, {key:'journal', label:'✍️ Journal'}, {key:'histoire', label:'📖 Mon histoire'}, {key:'gratitude', label:'✨ Carnet de grâces'}, {key:'souvenirs', label:'📸 Mes souvenirs'}, {key:'images-priere', label:'🖼️ Images de prière'}, {key:'reconfort', label:'🕊️ Réconfort guidé'}, {key:'anniversaires', label:'🎂 Anniversaires spirituels'}, {key:'objectifs', label:'🎯 Objectifs'}, {key:'memorial', label:'🕯️ Mémorial'}, {key:'favoris', label:'⭐ Favoris'}, {key:'studio', label:'🎶 Louanges'}, {key:'reglages', label:'🔔 Rappels'}, {key:'stats', label:'📊 Statistiques'}, {key:'apropos', label:'ℹ️ À propos'}, {key:'faq', label:'❓ FAQ'} ]
 };
 
+/* 5 onglets visibles : les anciennes rubriques (Dévotions, Jésus, Église,
+   Sagesse) ne disparaissent pas, elles sont simplement regroupées — Dévotions
+   est accessible depuis Prier, et Jésus/Église/Sagesse depuis Explorer. Voir
+   TAB_GROUP_MEMBERS plus bas pour l'état "actif" de chaque onglet. */
 const PRIMARY_TABS = [
   {key:'accueil', label:'Accueil'},
+  {key:'ecritures', label:'Bible'},
   {key:'prier', label:'Prier'},
-  {key:'devotions', label:'Dévotions'},
-  {key:'ecritures', label:'Écritures'},
-  {key:'jesus', label:'Jésus'},
-  {key:'eglise', label:'Église'},
-  {key:'sagesse', label:'Sagesse'},
-  {key:'espace', label:'Mon espace'}
+  {key:'explorer', label:'Explorer'},
+  {key:'espace', label:'Moi'}
 ];
+/* quelles anciennes rubriques comptent comme "actives" pour chaque onglet visible */
+const TAB_GROUP_MEMBERS = {
+  prier: ['prier','devotions'],
+  explorer: ['explorer','jesus','eglise','sagesse']
+};
+function primaryToTabKey(primary){
+  for(const [tabKey, members] of Object.entries(TAB_GROUP_MEMBERS)){
+    if(members.includes(primary)) return tabKey;
+  }
+  return primary;
+}
 
 const ICONS = {
   accueil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>',
@@ -3673,7 +3685,8 @@ const ICONS = {
   eglise: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v4M9 5h6M6 21V11l6-5 6 5v10"/><path d="M10 21v-5h4v5"/></svg>',
   sagesse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.5.4.8 1 .8 1.7v.5h5.6v-.5c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></svg>',
   combat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3Z"/><path d="M9.5 12l1.7 1.7L15 10"/></svg>',
-  espace: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"/></svg>'
+  espace: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"/></svg>',
+  explorer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="m14.5 9.5-1.8 5-5 1.8 1.8-5 5-1.8Z"/></svg>'
 };
 
 function todayKey(){
@@ -3709,17 +3722,23 @@ function getOrderedTabs(){
 }
 function renderTabbar(){
   const tabs = getOrderedTabs();
+  const activeTabKey = primaryToTabKey(PRIMARY);
   document.getElementById('tabbar').innerHTML =
     `<div class="tabbar-brand"><span class="tabbar-brand-flame">🕯️</span><span class="tabbar-brand-name">Lumen</span></div>` +
     tabs.map(t =>
-      `<button class="tab-btn ${PRIMARY===t.key?'active':''}" data-tab="${t.key}">${ICONS[t.key]||''}<span>${t.label}</span></button>`
+      `<button class="tab-btn ${activeTabKey===t.key?'active':''}" data-tab="${t.key}">${ICONS[t.key]||''}<span>${t.label}</span></button>`
     ).join('');
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.onclick = ()=>{
-      const oldIdx = tabs.findIndex(t=>t.key===PRIMARY);
+      const oldIdx = tabs.findIndex(t=>t.key===activeTabKey);
       const newIdx = tabs.findIndex(t=>t.key===btn.dataset.tab);
       TAB_SLIDE_DIR = newIdx > oldIdx ? 'left' : 'right';
       PRIMARY = btn.dataset.tab;
+      /* Toucher l'onglet "Prier" ramène toujours à son accueil (où se trouve
+         le lien vers Dévotions), plutôt que de rester bloqué sur le dernier
+         sous-onglet visité — sans quoi Dévotions deviendrait introuvable
+         après la première visite. */
+      if(PRIMARY === 'prier') SUBTAB.prier = 'accueil-prier';
       ENTRY_OPEN = null; OPEN_NOVENA = null; NOVENA_OPEN_DAY = null;
       render();
     };
@@ -4334,7 +4353,8 @@ const PRIER_HUB_CATEGORIES = [
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E'},
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
   {label:'Pour moi et les autres', desc:'Intentions, groupe de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B'},
-  {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58'}
+  {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58'},
+  {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions'}, color:'#4A3D6B'}
 ];
 function renderPrierHub(){
   const html = `
@@ -4371,8 +4391,8 @@ function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, he
     </div>` : ''}
     <h2 class="section-title">${title}</h2>
     <p class="section-desc">${desc}</p>
-    <div class="prier-hub-grid">${categories.map(c=>`
-      <div class="prier-hub-card" data-hub-goto="${c.goto}">
+    <div class="prier-hub-grid">${categories.map((c,i)=>`
+      <div class="prier-hub-card" data-hub-goto="${c.goto||''}" data-hub-index="${i}">
         <div class="prier-hub-card-img" style="background:${c.color};">${c.icon ? `<span class="prier-hub-card-emoji">${c.icon}</span>` : `<img src="${c.img}" alt="" onerror="this.style.display='none'">`}</div>
         <div class="prier-hub-card-body">
           <p class="prier-hub-card-title">${c.label}</p>
@@ -4382,7 +4402,11 @@ function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, he
       </div>`).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('[data-hub-goto]').forEach(card=>{
-    card.onclick = ()=> onGoto(card.dataset.hubGoto);
+    card.onclick = ()=>{
+      const cat = categories[parseInt(card.dataset.hubIndex,10)];
+      if(cat && cat.cross){ goTo(cat.cross.primary, cat.cross.sub); }
+      else { onGoto(card.dataset.hubGoto); }
+    };
   });
 }
 const EGLISE_HUB_CATEGORIES = [
@@ -4431,6 +4455,19 @@ const SAGESSE_HUB_CATEGORIES = [
 ];
 function renderSagesseHub(){
   renderCategoryHubGeneric('🌿 Sagesse', 'Approfondir sa foi, comprendre, et grandir spirituellement.', SAGESSE_HUB_CATEGORIES, (goto)=>{ SUBTAB.sagesse = goto; render(); }, '🌿', HUB_HERO_IMAGES.sagesse);
+}
+
+/* Onglet "Explorer" — regroupe Jésus & Marie, Église et Sagesse, qui restent
+   chacun une rubrique complète par ailleurs (atteignable aussi depuis les
+   liens internes existants) ; cette page est juste le nouveau point d'entrée
+   unique depuis la barre d'onglets. */
+const EXPLORER_HUB_CATEGORIES = [
+  {label:'Jésus & Marie', desc:'Vie de Jésus, vie de Marie, grands thèmes de méditation', icon:'✝️', cross:{primary:'jesus'}, color:'#7C1F2E'},
+  {label:'Église', desc:'Saints, vie liturgique, calendrier, pèlerinages', icon:'⛪', cross:{primary:'eglise'}, color:'#4A3D6B'},
+  {label:'Sagesse & enseignements', desc:'Vie spirituelle, sacrements, enseignements, lexique', icon:'🌿', cross:{primary:'sagesse'}, color:'#5C6E58'}
+];
+function renderExplorerHub(){
+  renderCategoryHubGeneric('🧭 Explorer', 'Jésus, Marie, les saints, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse);
 }
 
 function wireNovenaAudioPlayer(dayData){
@@ -10409,6 +10446,9 @@ function renderScreen(){
     if(sub === 'recits') return renderGenericSection(RECITS_GROUPS, 'ecritures:recits', 'Récits fondateurs');
     if(sub === 'reperes') return renderGenericSection(FONDAMENTAUX, 'ecritures:reperes', 'Repères');
     if(sub === 'memoriser') return renderMemorisation();
+  }
+  if(PRIMARY === 'explorer'){
+    return renderExplorerHub();
   }
   if(PRIMARY === 'jesus'){
     if(!GROUP_SEL['jesus:main']) return renderJesusHub();
