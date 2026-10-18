@@ -3960,7 +3960,10 @@ function renderHome(){
           <p class="home-card-eyebrow">Verset du jour</p>
           <p class="verset-text" style="text-align:left;">« ${v.text} »</p>
           <p class="verset-ref" style="text-align:left;">${v.ref}</p>
-          <button class="btn btn-ghost btn-sm" id="shuffle-verset-btn" style="margin-top:8px;">🔄 Un autre verset</button>
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+            <button class="btn btn-ghost btn-sm" id="shuffle-verset-btn">🔄 Un autre verset</button>
+            <button class="btn btn-gold btn-sm" id="open-verset-reader-btn">Lire et méditer →</button>
+          </div>
         </div>` : ''}
         ${isHomeSectionEnabled('saint') ? `
         <div class="card saint-card home-grid-cell home-card-ribbon home-card--saint">
@@ -5096,6 +5099,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
     <div class="entry-link-row" style="gap:8px; flex-wrap:wrap;">
       <button class="btn btn-ghost btn-sm" id="copy-prayer-btn">📋 Copier le texte</button>
       <button class="btn btn-ghost btn-sm" id="reading-mode-entry-btn">🕯️ Mode lecture</button>
+      <button class="btn btn-ghost btn-sm" id="open-entry-reader-btn">🎨 Modes d'affichage</button>
     </div>
     ${(()=>{
       if(entry.externalUrl === '#') return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" id="goto-rosary-btn">${entry.linkLabel || 'Ouvrir →'}</button></div>`;
@@ -5246,6 +5250,11 @@ function wireEntryDetailExtras(entry, usageKey){
   };
   const readingBtn = document.getElementById('reading-mode-entry-btn');
   if(readingBtn) readingBtn.onclick = enableReadingMode;
+  const readerBtn = document.getElementById('open-entry-reader-btn');
+  if(readerBtn) readerBtn.onclick = ()=>{
+    const art = lumenSacredArtFor(entry);
+    openVerseReader({ title: entry.name, subtitle: entry.dates||'', text: entry.summary, reference: entry.ref||'', images: art ? [art.url] : [] });
+  };
   const markBtn = document.getElementById('mark-prayed-btn');
   if(markBtn && usageKey){
     markBtn.onclick = async ()=>{
@@ -8309,6 +8318,11 @@ function wireVersetShuffle(){
     VERSET_SHUFFLE_IDX = idx;
     render();
   };
+  const readerBtn = document.getElementById('open-verset-reader-btn');
+  if(readerBtn) readerBtn.onclick = ()=>{
+    const v = VERSET_SHUFFLE_IDX !== null ? VERSETS_DU_JOUR[VERSET_SHUFFLE_IDX] : VERSETS_DU_JOUR[dayOfYear() % VERSETS_DU_JOUR.length];
+    openVerseReader({ title: 'Verset du jour', subtitle: 'Une parole pour éclairer votre journée', text: v.text, reference: v.ref });
+  };
 }
 
 /* ================= bible reader (shell) ================= */
@@ -9538,6 +9552,111 @@ function enableReadingMode(){
   };
   function exitOnce(){ exit(); }
   setTimeout(()=> document.getElementById('screen').addEventListener('click', exitOnce), 300);
+}
+
+/* ================= lecteur de texte à 5 styles =================
+   Ouvre un texte (verset, psaume, méditation...) dans un lecteur plein écran
+   avec 5 façons de l'afficher : Lumière (clair, sobre), Nuit (sombre et
+   reposant), Focus (une seule phrase à la fois, pour savourer), Carte (une
+   carte par phrase, à feuilleter) et Image (le texte intégré à une photo). */
+const VREADER_DEFAULT_IMAGES = [
+  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200',
+  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden_Eagle_soaring_overhead.jpg?width=1200',
+  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=1200'
+];
+const VREADER_MODES = [
+  {key:'lumiere', icon:'☀️', label:'Mode Lumière', desc:'Un affichage clair et épuré pour une lecture confortable au quotidien.'},
+  {key:'nuit', icon:'🌙', label:'Mode Nuit', desc:'Une ambiance douce et reposante pour prier le soir.'},
+  {key:'focus', icon:'🌿', label:'Mode Focus', desc:'Une phrase à la fois pour mieux méditer et savourer chaque parole.'},
+  {key:'carte', icon:'🗂️', label:'Mode Carte', desc:'Un passage par carte pour une lecture simple et interactive.'},
+  {key:'image', icon:'🏞️', label:'Mode Image', desc:'Le texte s’intègre à une belle image pour une expérience immersive et inspirante.'}
+];
+let READER_STATE = null;
+function openVerseReader(opts){
+  READER_STATE = {
+    title: opts.title||'', subtitle: opts.subtitle||'', text: opts.text||'', reference: opts.reference||'',
+    images: (opts.images && opts.images.length) ? opts.images : VREADER_DEFAULT_IMAGES,
+    mode: 'lumiere', fontBig: false, cardIdx: 0
+  };
+  renderVerseReader();
+  document.getElementById('verse-reader-overlay').classList.remove('hidden');
+}
+function closeVerseReader(){
+  document.getElementById('verse-reader-overlay').classList.add('hidden');
+  document.getElementById('verse-reader-overlay').innerHTML = '';
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  READER_STATE = null;
+}
+function verseReaderParts(){
+  const text = (READER_STATE.text||'').trim();
+  const parts = text.split(/(?<=[.!?:;])\s+(?=[A-ZÀ-Ü«])/).map(p=>p.trim()).filter(Boolean);
+  return parts.length ? parts : [text];
+}
+function renderVerseReader(){
+  if(!READER_STATE) return;
+  const st = READER_STATE;
+  const host = document.getElementById('verse-reader-overlay');
+  const parts = verseReaderParts();
+  if(st.cardIdx >= parts.length) st.cardIdx = parts.length-1;
+  const usesBg = st.mode==='lumiere' || st.mode==='nuit' || st.mode==='image';
+  const img = usesBg ? st.images[dayOfYear() % st.images.length] : null;
+  let displayText = st.text;
+  if(st.mode==='focus') displayText = parts[st.cardIdx];
+  if(st.mode==='carte') displayText = parts[st.cardIdx];
+  const canPage = st.mode==='focus' || st.mode==='carte';
+  host.innerHTML = `
+    <div class="vreader vreader--${st.mode}">
+      ${img ? `<img class="vreader-bg" src="${img}" alt="" onerror="this.remove();">` : ''}
+      <div class="vreader-scrim"></div>
+      <div class="vreader-topbar">
+        <button class="vreader-icon-btn" id="vreader-close" aria-label="Fermer">←</button>
+        <div style="flex:1;"></div>
+        <button class="vreader-icon-btn" id="vreader-font" aria-label="Taille du texte">Aa</button>
+        <button class="vreader-icon-btn" id="vreader-fav" aria-label="Enregistrer">🔖</button>
+      </div>
+      <div class="vreader-body">
+        ${canPage ? `<p class="vreader-pageno">${st.cardIdx+1} / ${parts.length}</p>` : ''}
+        ${st.mode==='carte' ? `<div class="vreader-card-stack">` : ''}
+        <div class="vreader-text-wrap ${st.mode==='carte' ? 'vreader-card' : ''}">
+          <p class="vreader-title">${st.title}</p>
+          ${st.subtitle ? `<p class="vreader-subtitle">${st.subtitle}</p>` : ''}
+          <p class="vreader-text ${st.fontBig?'vreader-text--big':''}">${displayText}</p>
+          ${st.reference ? `<p class="vreader-ref">— ${st.reference}</p>` : ''}
+        </div>
+        ${st.mode==='carte' ? `</div>` : ''}
+      </div>
+      <div class="vreader-controls">
+        <button class="vreader-nav-btn" id="vreader-prev" ${canPage && st.cardIdx>0 ? '' : 'disabled'}>‹</button>
+        <button class="vreader-play-btn" id="vreader-play" aria-label="Écouter">▶</button>
+        <button class="vreader-nav-btn" id="vreader-next" ${canPage && st.cardIdx<parts.length-1 ? '' : 'disabled'}>›</button>
+      </div>
+      <div class="vreader-modes">
+        ${VREADER_MODES.map(m=>`<button class="vreader-mode-btn ${st.mode===m.key?'active':''}" data-mode="${m.key}">
+          <span class="vreader-mode-icon">${m.icon}</span><span class="vreader-mode-label">${m.label}</span>
+        </button>`).join('')}
+      </div>
+      <p class="vreader-mode-desc">${(VREADER_MODES.find(m=>m.key===st.mode)||{}).desc||''}</p>
+    </div>`;
+  wireVerseReader(parts);
+}
+function wireVerseReader(parts){
+  const st = READER_STATE;
+  document.getElementById('vreader-close').onclick = closeVerseReader;
+  document.getElementById('vreader-font').onclick = ()=>{ st.fontBig = !st.fontBig; renderVerseReader(); };
+  document.getElementById('vreader-fav').onclick = ()=>{ showToast('Ajouté à vos favoris ✦'); };
+  document.querySelectorAll('.vreader-mode-btn').forEach(btn=>{
+    btn.onclick = ()=>{ st.mode = btn.dataset.mode; st.cardIdx = 0; renderVerseReader(); };
+  });
+  const prevBtn = document.getElementById('vreader-prev');
+  const nextBtn = document.getElementById('vreader-next');
+  prevBtn.onclick = ()=>{ if(st.cardIdx>0){ st.cardIdx--; renderVerseReader(); } };
+  nextBtn.onclick = ()=>{ if(st.cardIdx<parts.length-1){ st.cardIdx++; renderVerseReader(); } };
+  document.getElementById('vreader-play').onclick = ()=>{
+    try{
+      if(window.speechSynthesis.speaking){ window.speechSynthesis.cancel(); return; }
+      speakText(`${st.title}. ${st.text}`);
+    }catch(e){ showToast("Lecture audio indisponible"); }
+  };
 }
 
 /* ================= impression & partage réseaux ================= */
