@@ -3784,29 +3784,54 @@ const EGLISE_SUBNAV_GROUPS = [
   {label:'📰 Vie de l\u2019Église', keys:['vie-eglise','actualites','pelerinages']}
 ];
 const SUBNAV_GROUPED_SECTIONS = { prier: PRIER_SUBNAV_GROUPS, devotions: DEVOTIONS_SUBNAV_GROUPS, espace: ESPACE_SUBNAV_GROUPS, eglise: EGLISE_SUBNAV_GROUPS };
+const HUB_SUBTAB_KEYS = {prier:'accueil-prier', ecritures:'accueil-ecritures'};
+let SUBNAV_GROUP_EXPANDED = {};
 function renderSubnavHTML(){
   const subs = SUBNAV[PRIMARY];
   if(!subs) return '';
   const current = SUBTAB[PRIMARY] || subs[0].key;
   SUBTAB[PRIMARY] = current;
+  // On a hub landing page, the hub's own cards already offer full navigation —
+  // showing the flat subnav on top as well is redundant clutter.
+  if(HUB_SUBTAB_KEYS[PRIMARY] && current === HUB_SUBTAB_KEYS[PRIMARY]) return '';
   const groupedDef = SUBNAV_GROUPED_SECTIONS[PRIMARY];
   if(groupedDef){
     const byKey = {}; subs.forEach(s=> byKey[s.key]=s);
-    return `<div class="subnav-grouped">${groupedDef.map(g=>`
-      <div class="subnav-group">
-        <span class="subnav-group-label">${g.label}</span>
-        <div class="subnav-row" style="margin:0;">${g.keys.filter(k=>byKey[k]).map(k=>
-          `<button class="subtab ${current===k?'active':''}" data-sub="${k}">${byKey[k].label}</button>`
+    return `<div class="subnav-grouped">${groupedDef.map((g,gi)=>{
+      const items = g.keys.filter(k=>byKey[k]);
+      const containsCurrent = items.includes(current);
+      const stateKey = PRIMARY+'|'+gi;
+      const expanded = SUBNAV_GROUP_EXPANDED[stateKey] !== undefined ? SUBNAV_GROUP_EXPANDED[stateKey] : containsCurrent;
+      const m = g.label.match(/^(\S+)\s*(.*)$/);
+      const icon = m ? m[1] : '🔸';
+      const title = m ? m[2] : g.label;
+      return `<div class="subnav-group ${expanded?'expanded':''}">
+        <button class="subnav-group-head" data-group-key="${stateKey}">
+          <span class="subnav-group-icon">${icon}</span>
+          <span class="subnav-group-title">${title}</span>
+          <span class="subnav-group-caret">${expanded?'▾':'▸'}</span>
+        </button>
+        <div class="subnav-list" ${expanded?'':'style="display:none;"'}>${items.map(k=>
+          `<button class="subnav-item ${current===k?'active':''}" data-sub="${k}"><span>${byKey[k].label}</span><span class="subnav-chevron">›</span></button>`
         ).join('')}</div>
-      </div>`).join('')}</div>`;
+      </div>`;
+    }).join('')}</div>`;
   }
   return `<div class="subnav-row">${subs.map(s=>
     `<button class="subtab ${current===s.key?'active':''}" data-sub="${s.key}">${s.label}</button>`
   ).join('')}</div>`;
 }
 function wireSubnav(){
-  document.querySelectorAll('.subtab').forEach(btn=>{
+  document.querySelectorAll('.subtab, .subnav-item').forEach(btn=>{
     btn.onclick = ()=>{ SUBTAB[PRIMARY] = btn.dataset.sub; ENTRY_OPEN=null; OPEN_NOVENA=null; NOVENA_OPEN_DAY=null; render(); };
+  });
+  document.querySelectorAll('.subnav-group-head').forEach(btn=>{
+    btn.onclick = ()=>{
+      const key = btn.dataset.groupKey;
+      const nowExpanded = SUBNAV_GROUP_EXPANDED[key] !== undefined ? SUBNAV_GROUP_EXPANDED[key] : btn.closest('.subnav-group').classList.contains('expanded');
+      SUBNAV_GROUP_EXPANDED[key] = !nowExpanded;
+      render();
+    };
   });
 }
 
