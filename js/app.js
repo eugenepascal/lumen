@@ -7033,48 +7033,70 @@ function stopAllAmbiance(){
   stopBgYoutube();
   syncBgAmbianceIcon();
 }
-let LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, expanded:false, paused:false};
+let LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, paused:false};
+/* L'ancien réglage cachait systématiquement le lecteur vidéo YouTube dans un
+   cadre de 1×1 pixel hors de l'écran (opacity:0, pointer-events:none) dès
+   qu'on ne l'« agrandissait » pas explicitement — et YouTube traite souvent
+   ce genre de cadre invisible comme un comportement suspect, affichant alors
+   l'invite « connectez-vous » au lieu de jouer le son. On revient à la
+   configuration qui fonctionnait : le lecteur reste toujours visible (une
+   petite vignette dans la barre, ou en grand sur sa page dédiée), jamais
+   réduit à un pixel hors champ. */
+let AMBIANCE_PLAYER_PAGE_OPEN = false;
 function lumenPlayerShow(label, kind){
-  LUMEN_PLAYER_STATE = {active:true, label, kind, expanded:false, paused:false};
+  LUMEN_PLAYER_STATE = {active:true, label, kind, paused:false};
   renderLumenPlayer();
 }
 function lumenPlayerHide(){
-  LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, expanded:false, paused:false};
+  LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, paused:false};
+  if(AMBIANCE_PLAYER_PAGE_OPEN) closeAmbiancePlayerPage();
   renderLumenPlayer();
 }
-function placeYtHolder(expanded){
-  const holder = document.getElementById('bg-youtube-holder');
-  if(!holder) return;
-  if(expanded){
-    const slot = document.getElementById('lumen-player-expanded-embed');
-    if(slot && holder.parentElement !== slot) slot.appendChild(holder);
-  } else {
-    const widget = document.getElementById('bg-youtube-widget');
-    if(widget && holder.parentElement !== widget) widget.appendChild(holder);
+/* IMPORTANT : on ne déplace plus jamais #bg-youtube-widget avec appendChild()
+   dans une zone dont le innerHTML est régénéré (la barre, la page dédiée) :
+   réaffecter bar.innerHTML détache alors silencieusement le cadre vidéo du
+   document (getElementById ne le retrouve plus ensuite), ce qui coupait le
+   son dès le prochain petit changement d'état (pause, changement de piste...).
+   #bg-youtube-widget reste un nœud unique, toujours rattaché directement au
+   <body> (jamais réparenté) ; on se contente de le repositionner par-dessus
+   un emplacement réservé (la vignette dans la barre, ou le cadre de la page
+   dédiée), via ses coordonnées écran — jamais en le déplaçant dans le DOM. */
+function syncYtWidgetPosition(){
+  const widget = document.getElementById('bg-youtube-widget');
+  if(!widget) return;
+  const showing = LUMEN_PLAYER_STATE.active && LUMEN_PLAYER_STATE.kind === 'yt';
+  if(!showing){
+    widget.classList.remove('yt-widget-live');
+    widget.style.cssText = '';
+    return;
   }
+  const slotId = AMBIANCE_PLAYER_PAGE_OPEN ? 'ambiance-player-embed' : 'lumen-player-thumb-slot';
+  const slot = document.getElementById(slotId);
+  if(!slot){ widget.classList.remove('yt-widget-live'); widget.style.cssText = ''; return; }
+  const r = slot.getBoundingClientRect();
+  widget.classList.add('yt-widget-live');
+  widget.style.cssText = `position:fixed; left:${r.left}px; top:${r.top}px; width:${r.width}px; height:${r.height}px; opacity:1; pointer-events:auto; z-index:${AMBIANCE_PLAYER_PAGE_OPEN ? 61 : 851};`;
 }
+window.addEventListener('resize', syncYtWidgetPosition);
 function renderLumenPlayer(){
   const bar = document.getElementById('lumen-player-bar');
   if(!bar) return;
-  if(!LUMEN_PLAYER_STATE.active){ bar.classList.add('hidden'); placeYtHolder(false); return; }
+  if(!LUMEN_PLAYER_STATE.active){ bar.classList.add('hidden'); syncYtWidgetPosition(); return; }
   bar.classList.remove('hidden');
-  bar.classList.toggle('expanded', LUMEN_PLAYER_STATE.expanded);
+  const showThumb = LUMEN_PLAYER_STATE.kind === 'yt' && !AMBIANCE_PLAYER_PAGE_OPEN;
   bar.innerHTML = `
     <div class="lumen-player-handle" id="lumen-player-handle"></div>
     <div class="lumen-player-row">
-      <span class="lumen-player-icon">${LUMEN_PLAYER_STATE.paused ? '⏸' : '🎵'}</span>
+      ${showThumb ? `<div class="lumen-player-thumb" id="lumen-player-thumb-slot"></div>` : `<span class="lumen-player-icon">${LUMEN_PLAYER_STATE.paused ? '⏸' : '🎵'}</span>`}
       <span class="lumen-player-label">${LUMEN_PLAYER_STATE.label}</span>
       <button class="icon-btn" id="lumen-player-toggle" title="${LUMEN_PLAYER_STATE.paused?'Reprendre':'Pause'}">${LUMEN_PLAYER_STATE.paused?'▶':'⏸'}</button>
-      <button class="icon-btn" id="lumen-player-expand" title="Agrandir">${LUMEN_PLAYER_STATE.expanded?'▾':'▴'}</button>
+      ${LUMEN_PLAYER_STATE.kind==='yt' ? `<button class="icon-btn" id="lumen-player-expand" title="Ouvrir le lecteur">⤢</button>` : ''}
       <button class="icon-btn" id="lumen-player-close" title="Arrêter">✕</button>
     </div>
-    ${LUMEN_PLAYER_STATE.expanded ? `<div class="lumen-player-expanded-body">
-      <p class="studio-note">${LUMEN_PLAYER_STATE.kind==='loop' ? "Boucle instrumentale générée en direct par l'application." : "Lecture vidéo/audio en cours — commandes dans le lecteur ci-dessous."}</p>
-      ${LUMEN_PLAYER_STATE.kind!=='loop' ? `<div id="lumen-player-expanded-embed"></div>` : ''}
-    </div>` : ''}
   `;
   wireLumenPlayer();
-  placeYtHolder(LUMEN_PLAYER_STATE.expanded && LUMEN_PLAYER_STATE.kind !== 'loop');
+  syncYtWidgetPosition();
+  if(AMBIANCE_PLAYER_PAGE_OPEN) renderAmbiancePlayerPage();
 }
 function wireLumenPlayer(){
   const toggleBtn = document.getElementById('lumen-player-toggle');
@@ -7090,10 +7112,7 @@ function wireLumenPlayer(){
     renderLumenPlayer();
   };
   const expandBtn = document.getElementById('lumen-player-expand');
-  if(expandBtn) expandBtn.onclick = ()=>{
-    LUMEN_PLAYER_STATE.expanded = !LUMEN_PLAYER_STATE.expanded;
-    renderLumenPlayer();
-  };
+  if(expandBtn) expandBtn.onclick = openAmbiancePlayerPage;
   const closeBtn = document.getElementById('lumen-player-close');
   if(closeBtn) closeBtn.onclick = ()=>{ stopAllAmbiance(); lumenPlayerHide(); };
   const handle = document.getElementById('lumen-player-handle');
@@ -7112,8 +7131,9 @@ function wireLumenPlayer(){
       const delta = startY - y;
       let newBottom = Math.max(70, Math.min(window.innerHeight - 80, startBottom + delta));
       bar.style.bottom = newBottom + 'px';
+      syncYtWidgetPosition();
     };
-    const onUp = ()=>{ dragging = false; bar.style.transition = ''; };
+    const onUp = ()=>{ dragging = false; bar.style.transition = ''; syncYtWidgetPosition(); };
     handle.addEventListener('mousedown', onDown);
     handle.addEventListener('touchstart', onDown, {passive:true});
     window.addEventListener('mousemove', onMove);
@@ -7121,6 +7141,58 @@ function wireLumenPlayer(){
     window.addEventListener('mouseup', onUp);
     window.addEventListener('touchend', onUp);
   }
+}
+/* ===== nouvelle page dédiée au lecteur d'ambiance =====
+   Au lieu d'agrandir une carte flottante par-dessus l'écran courant (ce qui
+   recréait l'ancien bug d'affichage en double), on ouvre une vraie page de
+   l'application, comme les autres pages plein écran (recherche, lecteur de
+   versets...). Le lecteur YouTube n'est jamais détruit ni relancé : seul son
+   cadre change de place, la lecture continue sans coupure. */
+function openAmbiancePlayerPage(){
+  if(LUMEN_PLAYER_STATE.kind !== 'yt') return;
+  AMBIANCE_PLAYER_PAGE_OPEN = true;
+  document.getElementById('ambiance-player-overlay').classList.remove('hidden');
+  renderAmbiancePlayerPage();
+  renderLumenPlayer();
+}
+function closeAmbiancePlayerPage(){
+  AMBIANCE_PLAYER_PAGE_OPEN = false;
+  const host = document.getElementById('ambiance-player-overlay');
+  if(host){ host.classList.add('hidden'); host.innerHTML = ''; }
+  renderLumenPlayer();
+}
+function renderAmbiancePlayerPage(){
+  const host = document.getElementById('ambiance-player-overlay');
+  if(!host || !AMBIANCE_PLAYER_PAGE_OPEN) return;
+  const st = LUMEN_PLAYER_STATE;
+  host.classList.remove('hidden');
+  host.innerHTML = `
+    <div class="ambiance-player-panel">
+      <div class="ambiance-player-top">
+        <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">←</button>
+        <p class="ambiance-player-title">🎵 Lecteur d'ambiance</p>
+        <div style="width:32px;"></div>
+      </div>
+      <p class="ambiance-player-label">${st.label}</p>
+      <div id="ambiance-player-embed" class="ambiance-player-embed"></div>
+      <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Le son continue pendant que vous naviguez dans l'application — cette page n'est que la vue agrandie.</p>
+      <div class="ambiance-player-controls">
+        <button class="btn btn-ghost btn-sm" id="ambiance-player-toggle">${st.paused ? '▶ Reprendre' : '⏸ Pause'}</button>
+        ${AMBIANCE_SHUFFLE_MODE ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Titre suivant</button>` : ''}
+        <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
+      </div>
+    </div>`;
+  syncYtWidgetPosition();
+  document.getElementById('ambiance-player-back').onclick = closeAmbiancePlayerPage;
+  document.getElementById('ambiance-player-toggle').onclick = ()=>{
+    LUMEN_PLAYER_STATE.paused = !LUMEN_PLAYER_STATE.paused;
+    if(LUMEN_PLAYER_STATE.paused && YT_PLAYER && YT_PLAYER.pauseVideo) YT_PLAYER.pauseVideo();
+    else if(!LUMEN_PLAYER_STATE.paused && YT_PLAYER && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
+    renderAmbiancePlayerPage();
+  };
+  const nextBtn = document.getElementById('ambiance-player-next');
+  if(nextBtn) nextBtn.onclick = ()=>{ playRandomAmbiance(true); };
+  document.getElementById('ambiance-player-stop').onclick = ()=>{ stopAllAmbiance(); lumenPlayerHide(); };
 }
 function playBgYoutube(videoId, label, opts){
   opts = opts || {};
@@ -8104,27 +8176,39 @@ const AELF_OFFICE_FIELDS = {
     ['oraison','Oraison']
   ]
 };
+/* L'AELF sépare les versets avec des balises <br> (pas de \n) : il faut les
+   convertir en retours à la ligne AVANT de retirer le reste des balises HTML,
+   sinon tout le texte (psaumes, cantiques, lectures...) s'affichait comme un
+   seul bloc illisible, sans aucune des coupures de vers du site aelf.org. */
+function aelfCleanText(raw){
+  return (raw||'').toString()
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
 function aelfOfficeFieldHTML(label, value){
   if(value === null || value === undefined) return '';
-  let body;
+  let body, ref = '', titre = '', credit = '';
   if(Array.isArray(value)){
     body = value.filter(Boolean).join('\n');
   } else if(typeof value === 'object'){
-    const titre = value.titre || value.reference || '';
-    body = (value.texte || '').toString();
-    if(!body.trim()) return '';
-    return `<div class="aelf-office-section">
-      <p class="aelf-office-heading">${label}</p>
-      ${titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${titre} »</p>` : ''}
-      <div class="aelf-office-text">${body.replace(/<[^>]+>/g,'')}</div>
-    </div>`;
+    ref = value.reference || '';
+    titre = value.titre || '';
+    if(value.auteur || value.editeur) credit = [value.auteur, value.editeur].filter(Boolean).join(' — ');
+    body = aelfCleanText(value.texte || '');
   } else {
-    body = (value || '').toString();
+    body = aelfCleanText(value);
   }
-  if(!body.trim()) return '';
+  if(!body || !body.trim()) return '';
   return `<div class="aelf-office-section">
-    <p class="aelf-office-heading">${label}</p>
-    <div class="aelf-office-text">${body.replace(/<[^>]+>/g,'')}</div>
+    <p class="aelf-office-heading">${label}${ref ? ` <span class="aelf-office-ref">(${ref})</span>` : ''}</p>
+    ${titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${titre} »</p>` : ''}
+    <div class="aelf-office-text">${body}</div>
+    ${credit ? `<p class="aelf-office-credit">${credit}</p>` : ''}
   </div>`;
 }
 function aelfOfficeHTML(officeKey, json){
@@ -8137,7 +8221,7 @@ function aelfOfficeHTML(officeKey, json){
     html += `<p class="studio-note" style="text-align:center; margin:0 0 14px;">${[info.fete, info.ligne1, info.ligne2].filter(Boolean).join(' — ')}</p>`;
   }
   if(data.introduction){
-    html += `<p class="entry-detail-text" style="text-align:center; font-style:italic; margin-bottom:14px;">${(data.introduction||'').replace(/<[^>]+>/g,'')}</p>`;
+    html += `<p class="entry-detail-text" style="text-align:center; font-style:italic; margin-bottom:14px;">${aelfCleanText(data.introduction)}</p>`;
   }
   let patristiqueTitre = '';
   fields.forEach(([key, label])=>{
@@ -8147,7 +8231,7 @@ function aelfOfficeHTML(officeKey, json){
         html += `<div class="aelf-office-section">
           <p class="aelf-office-heading">${label}</p>
           ${patristiqueTitre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${patristiqueTitre} »</p>` : ''}
-          <div class="aelf-office-text">${(data.texte_patristique||'').replace(/<[^>]+>/g,'')}</div>
+          <div class="aelf-office-text">${aelfCleanText(data.texte_patristique)}</div>
         </div>`;
       }
       return;
@@ -8410,10 +8494,21 @@ function renderAelfOfficeViewer(){
     <h2 class="section-title">📖 ${office.label} — texte officiel AELF</h2>
     <p class="section-desc">Le texte complet de l'office, tel que publié par l'AELF, fournisseur officiel des textes liturgiques en français.</p>
     <div class="chip-row" id="aelf-office-tabs">${AELF_OFFICES.map(o=>`<button class="chip ${o.key===office.key?'active':''}" data-aelf-office="${o.key}">${o.label}</button>`).join('')}</div>
+    <div class="entry-link-row" style="gap:8px; flex-wrap:wrap; margin:10px 0 0;">
+      <button class="btn btn-ghost btn-sm" id="aelf-office-reading-btn">🕯️ Mode lecture</button>
+      <button class="btn btn-ghost btn-sm" id="aelf-office-reader-btn">🎨 Modes d'affichage</button>
+    </div>
     <div id="aelf-office-body"><p class="studio-note" style="text-align:center;">Chargement du texte…</p></div>
     <p style="text-align:center; margin:14px 0 0;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ouvrir sur AELF.org ↗</a></p>
   `;
   document.getElementById('aelf-office-back').onclick = ()=> goTo('prier','office');
+  document.getElementById('aelf-office-reading-btn').onclick = enableReadingMode;
+  document.getElementById('aelf-office-reader-btn').onclick = ()=>{
+    const body = document.getElementById('aelf-office-body');
+    const plain = body ? body.innerText.trim() : '';
+    if(!plain){ showToast('Patientez que le texte soit chargé.'); return; }
+    openVerseReader({ title: office.label, subtitle: 'Texte officiel AELF du ' + date.split('-').reverse().join('/'), text: plain });
+  };
   document.querySelectorAll('[data-aelf-office]').forEach(btn=>{
     btn.onclick = ()=>{ AELF_OFFICE_VIEW = btn.dataset.aelfOffice; renderAelfOfficeViewer(); };
   });
@@ -8471,7 +8566,7 @@ function aelfReadingCardHTML(json){
     <p class="eyebrow" style="color:var(--wine-dark); text-align:center;">⛪ Lectures officielles de la messe</p>
     ${json.informations && json.informations.fete_jour ? `<p class="studio-note" style="text-align:center; margin:0 0 14px;">${json.informations.fete_jour}</p>` : ''}
     ${lectures.map(l=>{
-      const body = (l.contenu||l.texte||'').replace(/<[^>]+>/g,'\n').replace(/\n{2,}/g,'\n').trim();
+      const body = aelfCleanText(l.contenu||l.texte||'');
       const closing = aelfClosingFormula(l.type);
       return `<div class="aelf-office-section">
         <p class="aelf-office-heading">${aelfLectureTypeLabel(l.type)}</p>
@@ -8502,6 +8597,10 @@ function renderTextesDuJour(){
     </div>
 
     <p class="eyebrow" style="color:var(--wine-dark); text-align:center; margin-top:16px;">⛪ Lectures officielles de la messe</p>
+    <div class="entry-link-row" style="gap:8px; flex-wrap:wrap; justify-content:center; margin:8px 0;">
+      <button class="btn btn-ghost btn-sm" id="textes-jour-reading-btn">🕯️ Mode lecture</button>
+      <button class="btn btn-ghost btn-sm" id="textes-jour-reader-btn">🎨 Modes d'affichage</button>
+    </div>
     <div id="textes-jour-messe-body"><p class="studio-note" style="text-align:center;">Chargement des lectures…</p></div>
 
     <div class="card" style="border-left:4px solid var(--wine); margin-top:12px;">
@@ -8525,6 +8624,13 @@ function renderTextesDuJour(){
     await markPrayedToday();
     showToast('📖 Amen.');
     fireCelebration();
+  };
+  document.getElementById('textes-jour-reading-btn').onclick = enableReadingMode;
+  document.getElementById('textes-jour-reader-btn').onclick = ()=>{
+    const body = document.getElementById('textes-jour-messe-body');
+    const plain = body ? body.innerText.trim() : '';
+    if(!plain){ showToast('Patientez que les lectures soient chargées.'); return; }
+    openVerseReader({ title: 'Textes du jour', subtitle: 'Lectures officielles de la messe', text: plain });
   };
   const messeUrl = `https://www.aelf.org/${todayISO()}/romain/messe`;
   fetchAelfDuJour().then(json=>{

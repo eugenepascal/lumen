@@ -818,7 +818,9 @@
   #aelf-office-body, #aelf-bible-body{ max-width:560px; margin:0 auto; }
   .aelf-office-section{ margin-bottom:18px; }
   .aelf-office-heading{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--wine-dark); margin:0 0 6px; padding-bottom:4px; border-bottom:1px solid var(--hairline); }
+  .aelf-office-ref{ font-family:'Inter',sans-serif; font-weight:500; font-size:12px; color:var(--ink-soft); }
   .aelf-office-text{ font-family:'Lora',serif; font-size:14px; line-height:1.8; color:var(--ink); white-space:pre-line; max-width:65ch; margin:0 auto; }
+  .aelf-office-credit{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); text-align:right; max-width:65ch; margin:4px auto 0; font-style:italic; }
   .welcome-splash{
     min-height:70vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
     text-align:center; padding:20px; gap:4px;
@@ -1240,12 +1242,21 @@
   .lumen-player-icon{ font-size:16px; flex-shrink:0; }
   .lumen-player-label{ flex:1; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #lumen-player-bar .icon-btn{ background:rgba(255,255,255,0.15); color:#fff; border:none; width:28px; height:28px; border-radius:50%; font-size:12px; cursor:pointer; flex-shrink:0; }
-  .lumen-player-expanded-body{ padding:0 14px 14px; }
-  .lumen-player-expanded-body .studio-note{ color:rgba(255,255,255,0.8); margin:0 0 8px; }
-  #lumen-player-expanded-embed iframe{ width:100%; height:160px; border-radius:10px; border:none; }
-  #lumen-player-expanded-embed #bg-youtube-holder{
-    position:static; left:auto; top:auto; width:100%; height:160px; overflow:visible; opacity:1; pointer-events:auto;
+  .lumen-player-thumb{ width:38px; height:38px; border-radius:9px; flex-shrink:0; background:rgba(0,0,0,0.3); }
+
+  /* ===== page dédiée au lecteur d'ambiance : le son ne s'arrête jamais en
+     passant ici, on déplace juste le même cadre vidéo dans une vue agrandie,
+     sur sa propre page, au lieu d'une carte flottante par-dessus l'écran. */
+  .ambiance-player-panel{
+    background:var(--vellum-light); border-radius:18px; padding:18px; width:100%; max-width:480px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
   }
+  .ambiance-player-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .ambiance-player-top .icon-btn{ background:var(--gold-pale); border:none; width:32px; height:32px; border-radius:50%; font-size:15px; cursor:pointer; }
+  .ambiance-player-title{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--wine-dark); margin:0; }
+  .ambiance-player-label{ font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--ink); text-align:center; margin:0 0 12px; }
+  .ambiance-player-embed{ width:100%; height:220px; border-radius:12px; background:#000; }
+  .ambiance-player-controls{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
   .sumry-streak{ text-align:center; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; color:var(--wine-dark); margin:12px 0; padding:8px; background:var(--gold-pale); border-radius:12px; }
   .mp-folders-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
   .mp-folder{ text-align:left; cursor:pointer; border:none; border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:6px; }
@@ -2454,17 +2465,24 @@
   @keyframes spin{ to{ transform:rotate(360deg); } }
   #account-info{ text-align:center; }
 
-  /* ===== background YouTube/Spotify host (audio keeps playing, but no longer shown as its
-     own floating card — the single "lumen-player-bar" mini-player at the bottom is now the
-     one visible control for any ambiance sound, to avoid two overlapping players on screen). */
+  /* ===== background YouTube/Spotify host : ce nœud reste TOUJOURS un enfant
+     direct du <body>, jamais déplacé dans le DOM (voir syncYtWidgetPosition
+     dans app.js). Quand rien ne joue, il reste hors écran (1×1px) ; dès
+     qu'une ambiance démarre, JS le repositionne par-dessus la vignette de la
+     barre ou le cadre de la page dédiée via des coordonnées fixes — jamais
+     laissé invisible pendant la lecture, car un cadre YouTube réduit à 1×1
+     pixel hors écran est ce qui déclenchait l'invite « connectez-vous » au
+     lieu de jouer le son. */
   #bg-youtube-widget{
     position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;
-    overflow:hidden; opacity:0; pointer-events:none;
+    overflow:hidden; opacity:0; pointer-events:none; z-index:851;
+    border-radius:10px;
   }
   #bg-youtube-widget.hidden{ display:none; }
+  #bg-youtube-widget.yt-widget-live{ overflow:hidden; background:#000; }
   .bg-yt-header{ display:none; }
   .mini-flame{ display:inline-block; animation: flicker 1.4s ease-in-out infinite; }
-  #bg-youtube-holder{ width:200px; height:113px; }
+  #bg-youtube-holder{ width:100%; height:100%; }
   #bg-youtube-holder iframe{ width:100%; height:100%; display:block; border:none; }
 
   /* ===== ambiance picker: artist groups ===== */
