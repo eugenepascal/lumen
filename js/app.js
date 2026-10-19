@@ -7194,6 +7194,20 @@ function renderAmbiancePlayerPage(){
   if(nextBtn) nextBtn.onclick = ()=>{ playRandomAmbiance(true); };
   document.getElementById('ambiance-player-stop').onclick = ()=>{ stopAllAmbiance(); lumenPlayerHide(); };
 }
+/* Beaucoup de titres de la playlist appartiennent à des chaînes qui
+   interdisent la lecture intégrée sur un autre site (erreur YouTube 150 —
+   une restriction posée par l'auteur de la vidéo, indépendante de notre
+   code : la vidéo se lit très bien sur youtube.com, jamais ici). Plutôt que
+   de faire défiler la liste en boucle à chaque fois (ce qui pouvait échouer
+   en silence sur plusieurs titres d'affilée et donner l'impression que rien
+   ne marche), on essaie une seule autre piste, puis on ouvre directement la
+   vidéo sur YouTube dans un nouvel onglet — ça fonctionne toujours. */
+function openYoutubeDirectly(videoId, label){
+  stopAllAmbiance();
+  lumenPlayerHide();
+  showToast('🎵 Ce titre ne peut pas être joué directement dans l’application (restriction posée par son auteur) — ouverture sur YouTube…');
+  window.open('https://www.youtube.com/watch?v=' + videoId, '_blank', 'noopener');
+}
 function playBgYoutube(videoId, label, opts){
   opts = opts || {};
   const attempt = opts._attempt || 0;
@@ -7204,22 +7218,20 @@ function playBgYoutube(videoId, label, opts){
   createYtPlayer(videoId, true, function(errCode){
     if(!ytErrorIsUnplayable(errCode)) return;
     const pool = opts.pool;
-    if(pool && pool.length > 1 && attempt < 3){
+    if(pool && pool.length > 1 && attempt < 1){
       const alternatives = pool.filter(t => t.videoId !== videoId);
       const next = alternatives[Math.floor(Math.random()*alternatives.length)];
       showToast('🎵 Cette vidéo n’est pas disponible ici, on essaie une autre…');
       playBgYoutube(next.videoId, next.title + ' — ' + next.artist, Object.assign({}, opts, {_attempt: attempt+1}));
     } else {
-      showToast('🎵 Cette musique n’est pas disponible pour le moment — essayez-en une autre dans la liste ✨.');
-      stopAllAmbiance();
-      lumenPlayerHide();
+      openYoutubeDirectly(videoId, label);
     }
   });
   const widget = document.getElementById('bg-youtube-widget');
   if(widget) widget.classList.remove('hidden');
   lumenPlayerShow('🎵 ' + label, 'yt');
   syncBgAmbianceIcon();
-  if(!opts.silent) showToast('🎵 ' + label + ' — si une pub apparaît, cliquez sur « Passer » dans le petit lecteur en bas.');
+  if(!opts.silent) showToast('🎵 ' + label + '…');
 }
 function pickRandomAmbianceTrack(){
   if(!LOUANGES_VIDEOS.length) return null;
@@ -7240,12 +7252,10 @@ function playRandomAmbiance(isAutoAdvance, retryCount){
   createYtPlayer(pick.videoId, false, function(errCode){
     if(!ytErrorIsUnplayable(errCode)) return;
     if(!AMBIANCE_SHUFFLE_MODE) return;
-    if(retryCount < 3){
+    if(retryCount < 1){
       playRandomAmbiance(true, retryCount+1);
     } else {
-      showToast('🔀 Plusieurs titres sont indisponibles en ce moment — réessayez dans un instant.');
-      stopAllAmbiance();
-      lumenPlayerHide();
+      openYoutubeDirectly(pick.videoId, pick.title + ' — ' + pick.artist);
     }
   });
   const widget = document.getElementById('bg-youtube-widget');
