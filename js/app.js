@@ -459,7 +459,7 @@ const SAINTS = [
 ];
 
 const NOVENAS = [
- {id:"joseph", title:"Neuvaine à Saint Joseph", sub:"Pour les soucis du quotidien", tag:"Protection", color:"#5C6E58", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"joseph", title:"Neuvaine à Saint Joseph", sub:"Pour les soucis du quotidien", tag:"Protection", color:"#5C6E58", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Un homme juste", medit:"Joseph n'a jamais cherché à comprendre tout de suite. Il a fait confiance, un pas après l'autre, sans tout maîtriser.", prayer:"Saint Joseph, aidez-moi à avancer aujourd'hui sans tout comprendre, en faisant confiance."},
    {title:"Le silence qui agit", medit:"Aucune parole de Joseph n'est rapportée dans l'Évangile — seulement des gestes fidèles, au bon moment.", prayer:"Seigneur, apprends-moi à agir avec justesse plutôt qu'à me justifier sans cesse."},
@@ -483,7 +483,7 @@ const NOVENAS = [
    {title:"Au cœur de la communion fraternelle", medit:"Par l'union aux Cœurs de Jésus et de Marie, nous communions au cœur doux et juste de Joseph. Saint Joseph, apprends-nous à rendre grâce pour la communion fraternelle au sein de nos familles.", prayer:"Un « Je vous salue Joseph » (voir Jour 1), puis 10 « Je vous salue Marie » et 1 « Notre Père »."},
    {title:"Patron de la bonne mort et des âmes du Purgatoire", medit:"Jésus, Marie, Joseph, priez pour nous au moment de la mort. Nous vous confions spécialement nos ascendants et toute notre histoire familiale.", prayer:"Un « Je vous salue Joseph » (voir Jour 1), puis 10 « Je vous salue Marie » et 1 « Notre Père ». — Prière finale : « Tu lui donneras le nom de Jésus » (Mt 1, 22). Seigneur Dieu, notre Père, combien je te remercie de nous avoir donné ce cadeau inestimable en ton Fils Jésus, homme et Dieu. Avec les Anges, avec Marie et Joseph, avec les bergers, je te bénis, je te loue, je t'adore, je te célèbre. Envoie sur moi ton Esprit, afin de dire et de redire avec le cœur ce Nom qui est au-dessus de tout nom. Par ce nom Tout-Puissant et rempli d'amour : dissipe mes ténèbres et fais de moi un enfant de lumière, lave-moi de mes fautes et donne-moi un cœur nouveau, guéris mes blessures afin d'aimer comme tu aimes, délivre-moi de mes angoisses et donne-moi ta paix. Essuie toute larme de mes yeux, que la joie de l'Esprit m'habite. Donne-moi le don suprême de la Présence du Père. Gloire et louange à toi, Seigneur Jésus ! Amen !"}
   ]},
- {id:"sacre-coeur", title:"Neuvaine au Sacré-Cœur", sub:"L'amour qui reste malgré tout", tag:"Amour", color:"#7C1F2E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"sacre-coeur", title:"Neuvaine au Sacré-Cœur", sub:"L'amour qui reste malgré tout", tag:"Amour", color:"#7C1F2E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Un cœur ouvert", medit:"Le cœur transpercé de Jésus est une image d'un amour qui ne se protège pas, qui reste offert.", prayer:"Seigneur Jésus, doux et humble de cœur, rends mon cœur semblable au tien."},
    {title:"Aimer sans condition", medit:"Le Sacré-Cœur n'attend pas d'être aimé en retour pour continuer d'aimer.", prayer:"Apprends-moi, Seigneur, à aimer sans compter."},
@@ -495,7 +495,7 @@ const NOVENAS = [
    {title:"Le don total", medit:"Le Sacré-Cœur rappelle un don sans réserve — jusqu'au bout, sans retenue.", prayer:"Apprends-moi à me donner sans calculer ce que cela me coûte."},
    {title:"Demeurer dans l'amour", medit:"La neuvaine se termine, mais l'invitation reste : demeurer proche de ce cœur chaque jour.", prayer:"Sacré-Cœur de Jésus, que je revienne à toi chaque jour qui vient. — Prière finale : Sacré-Cœur de Jésus, j'ai confiance en toi. Que cet amour reçu pendant ces neuf jours ne s'arrête pas aujourd'hui, mais continue de transformer mon cœur, jour après jour. Amen."}
   ]},
- {id:"marie-confiance", title:"Neuvaine à Notre-Dame", sub:"Confiance et paix intérieure", tag:"Paix", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"marie-confiance", title:"Neuvaine à Notre-Dame", sub:"Confiance et paix intérieure", tag:"Paix", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Le oui de Marie", medit:"Marie n'a pas tout su d'avance, mais elle a dit oui à ce qu'elle ne maîtrisait pas.", prayer:"Je vous salue Marie, pleine de grâce, le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes, et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l'heure de notre mort. Amen."},
    {title:"La visite à Élisabeth", medit:"Marie s'est mise en route pour servir sa cousine, sans attendre d'aide pour elle-même.", prayer:"Marie, apprenez-moi à me rendre disponible pour les autres, même quand j'ai mes propres soucis."},
@@ -519,7 +519,7 @@ const NOVENAS = [
    {title:"L'espérance", medit:"Marie a cru que Dieu accomplirait ses promesses.", prayer:"Marie, étoile de l'espérance, ravive en moi la foi quand je doute. Aide-moi à attendre sans désespérer. Amen."},
    {title:"L'abandon total", medit:"Marie s'est entièrement abandonnée à Dieu.", prayer:"Marie, je te remets tout : mon passé, mon présent, mon avenir. Prends mon intention et présente-la à ton Fils Jésus. Que la volonté de Dieu s'accomplisse en moi. — Prière finale : Marie, merci d'avoir marché avec moi ces neuf jours. Je continue ma route avec ta confiance dans le cœur, sûr(e) que rien de ce que je t'ai confié n'est resté sans réponse. Amen."}
   ]},
- {id:"therese", title:"Neuvaine à Sainte Thérèse", sub:"La petite voie de l'amour", tag:"Confiance", color:"#5C6E58", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"therese", title:"Neuvaine à Sainte Thérèse", sub:"La petite voie de l'amour", tag:"Confiance", color:"#5C6E58", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"La petite voie", medit:"Thérèse n'a pas cherché de grands exploits : elle a choisi d'aimer dans les gestes les plus ordinaires.", prayer:"Sainte Thérèse, apprenez-moi à trouver Dieu dans les petites choses d'aujourd'hui."},
    {title:"L'enfance spirituelle", medit:"Elle se voyait comme une enfant devant Dieu, sans prétendre à ses propres forces.", prayer:"Seigneur, je viens à toi comme un enfant, sans prétention."},
@@ -531,7 +531,7 @@ const NOVENAS = [
    {title:"La confiance totale", medit:"\u00abTout est grâce\u00bb, disait-elle — une manière de tout recevoir sans s'inquiéter d'avance.", prayer:"Seigneur, aide-moi à recevoir ce jour comme une grâce, même s'il est difficile."},
    {title:"Passer son ciel à faire du bien", medit:"Thérèse voulait continuer, depuis le ciel, à aider ceux qui la prient sur terre.", prayer:"Sainte Thérèse, intercédez pour l'intention que je porte aujourd'hui. — Prière finale : Sainte Thérèse de l'Enfant-Jésus, souvenez-vous de votre promesse de faire du bien sur la terre. Répandez avec abondance votre pluie de roses sur ceux qui vous invoquent, et obtenez-nous de Dieu les grâces que nous attendons de sa bonté infinie. Amen."}
   ]},
- {id:"michel", title:"Neuvaine à Saint Michel", sub:"Protection et force intérieure", tag:"Force", color:"#7C1F2E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"michel", title:"Neuvaine à Saint Michel", sub:"Protection et force intérieure", tag:"Force", color:"#7C1F2E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Qui est comme Dieu ?", medit:"Le nom de Michel est une question qui désarme l'orgueil : personne n'est comme Dieu.", prayer:"Saint Michel archange, défendez-nous dans le combat."},
    {title:"Le combat intérieur", medit:"Le vrai combat commence souvent en soi, contre le découragement ou la lâcheté.", prayer:"Saint Michel, donnez-moi la force de ne pas céder au découragement aujourd'hui."},
@@ -543,7 +543,7 @@ const NOVENAS = [
    {title:"L'appui dans l'épreuve", medit:"Beaucoup se tournent vers lui dans les moments où tout semble vaciller.", prayer:"Soyez présent auprès de ceux qui traversent une épreuve grave aujourd'hui."},
    {title:"Repousser les puissances du mal", medit:"La prière finale à saint Michel demande qu'il repousse ce qui rôde autour des âmes fragiles.", prayer:"Précipitez en enfer Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. — Prière finale : Saint Michel Archange, je vous remercie de m'avoir accompagné(e) ces neuf jours. Restez le gardien de ma vie, aujourd'hui et chaque jour qui vient. Amen."}
   ]},
- {id:"esprit-saint", title:"Neuvaine à l'Esprit Saint", sub:"Les sept dons de l'Esprit", tag:"Sagesse", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"esprit-saint", title:"Neuvaine à l'Esprit Saint", sub:"Les sept dons de l'Esprit", tag:"Sagesse", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Le don de Sagesse", medit:"La sagesse n'est pas d'accumuler des connaissances, mais de voir la vie avec les yeux de Dieu.", prayer:"Esprit Saint, donnez-moi la sagesse de discerner l'essentiel aujourd'hui."},
    {title:"Le don d'Intelligence", medit:"Comprendre en profondeur, au-delà des apparences, ce qui se joue vraiment dans une situation.", prayer:"Esprit Saint, éclairez mon intelligence face à ce qui me dépasse."},
@@ -555,7 +555,7 @@ const NOVENAS = [
    {title:"Les fruits de l'Esprit", medit:"Charité, joie, paix, patience : des fruits qui se voient dans une vie transformée peu à peu.", prayer:"Esprit Saint, faites mûrir en moi vos fruits, un jour après l'autre."},
    {title:"Viens, Esprit Saint", medit:"La neuvaine s'achève là où l'Église a commencé : dans l'attente confiante de l'Esprit.", prayer:"Viens, Esprit Saint, remplis le cœur de tes fidèles et allume en eux le feu de ton amour. — Prière finale : Esprit Saint, merci d'avoir habité ces neuf jours de prière. Reste en moi, agis en moi, transforme-moi peu à peu à l'image de tes dons. Amen."}
   ]},
- {id:"sainte-rita", title:"Neuvaine à Sainte Rita", sub:"La sainte des causes désespérées", tag:"Confiance", color:"#7C1F2E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"sainte-rita", title:"Neuvaine à Sainte Rita", sub:"La sainte des causes désespérées", tag:"Confiance", color:"#7C1F2E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Une vie marquée par l'épreuve", medit:"Rita a connu un mariage difficile, un deuil brutal, puis des portes fermées avant d'entrer au couvent. Rien ne lui a été donné facilement.", prayer:"Sainte Rita, accompagnez-moi dans ce qui me semble aujourd'hui sans issue."},
    {title:"Le pardon avant tout", medit:"Elle a pardonné aux meurtriers de son mari, alors que la vengeance semblait attendue d'elle.", prayer:"Apprenez-moi, Sainte Rita, à pardonner ce que je crois impardonnable."},
@@ -567,7 +567,7 @@ const NOVENAS = [
    {title:"La discrétion du couvent", medit:"Après tant d'épreuves publiques, elle a choisi quarante ans de vie cachée et silencieuse.", prayer:"Apprenez-moi la valeur d'une vie fidèle même sans reconnaissance extérieure."},
    {title:"Une confiance jusqu'au bout", medit:"Rita est restée confiante jusqu'à sa mort, convaincue que rien de ce qu'elle avait enduré n'était perdu.", prayer:"Sainte Rita, aidez-moi à croire que rien de ce que je traverse n'est perdu pour Dieu. — Prière finale : Sainte Rita, patronne des causes désespérées, je vous remercie de m'avoir accompagné(e) ces neuf jours. Continuez à intercéder pour moi, et gardez vivante en moi l'espérance, même dans ce qui semble impossible. Amen."}
   ]},
- {id:"antoine-padoue", title:"Neuvaine à Saint Antoine de Padoue", sub:"Retrouver ce qui compte vraiment", tag:"Espérance", color:"#5C6E58", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"antoine-padoue", title:"Neuvaine à Saint Antoine de Padoue", sub:"Retrouver ce qui compte vraiment", tag:"Espérance", color:"#5C6E58", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Un départ radical", medit:"Antoine quitte une vie confortable de chanoine pour rejoindre les franciscains, attiré par leur radicalité.", prayer:"Saint Antoine, donnez-moi le courage de choisir l'essentiel plutôt que le confortable."},
    {title:"Le prédicateur inattendu", medit:"Personne ne le savait doué pour la parole, jusqu'à ce qu'on le pousse presque par hasard à prêcher un jour.", prayer:"Seigneur, révèle-moi des dons que je ne soupçonne pas encore en moi."},
@@ -579,7 +579,7 @@ const NOVENAS = [
    {title:"Une mort jeune, un rayonnement immense", medit:"Mort à 36 ans seulement, son influence spirituelle a continué de grandir bien après sa mort.", prayer:"Seigneur, que ma vie porte du fruit, quelle qu'en soit la durée."},
    {title:"Le saint le plus populaire", medit:"Peu de saints sont autant invoqués au quotidien, preuve qu'une vie simple et fidèle touche plus large qu'on ne l'imagine.", prayer:"Saint Antoine, intercédez pour ce que je cherche à retrouver aujourd'hui. — Prière finale : Saint Antoine, toi qu'on n'invoque jamais en vain, je te remercie pour ces neuf jours passés en ta compagnie. Continue de veiller sur ce que je t'ai confié, et garde-moi fidèle dans ma foi. Amen."}
   ]},
- {id:"neuvaine-etoile", title:"Neuvaine pour récupérer son étoile", sub:"Retrouver sa lumière intérieure, avec Marie", tag:"Renaissance", color:"#4A3D6B", dailyStructure:"Chaque jour : Signe de croix, méditation et prière du jour ci-dessous, puis 1 à 3 « Je vous salue Marie » et le « Souvenez-vous ». Terminez par un Signe de croix.",
+ {id:"neuvaine-etoile", title:"Neuvaine pour récupérer son étoile", sub:"Retrouver sa lumière intérieure, avec Marie", tag:"Renaissance", color:"#4A3D6B", dailyStructure:"Chaque jour : Signe de croix, méditation et prière du jour ci-dessous, puis 1 Notre Père, 10 « Je vous salue Marie » et le « Souvenez-vous ». Terminez par un Signe de croix.",
   days:[
    {title:"Reconnaître la perte de lumière", medit:"Il arrive que l'âme se fatigue, s'éteigne, se disperse. Dieu n'accuse pas : Il restaure.", prayer:"Marie, Étoile du Matin, je reconnais que ma lumière s'est affaiblie. J'ai donné trop, j'ai porté trop, j'ai oublié qui je suis. Présente-moi à Dieu pour qu'il me relève. Amen."},
    {title:"Se détacher de ce qui a volé la paix", medit:"Certaines blessures, relations ou peurs obscurcissent l'âme.", prayer:"Marie, aide-moi à me détacher de ce qui a épuisé mon cœur. Coupe les liens qui ne viennent pas de Dieu et rends-moi libre intérieurement. Amen."},
@@ -591,7 +591,7 @@ const NOVENAS = [
    {title:"Rallumer l'espérance", medit:"Quand l'étoile revient, le chemin réapparaît.", prayer:"Marie, Étoile de l'espérance, rallume en moi la foi en l'avenir. Que mon cœur espère à nouveau, sans peur, sans amertume. Amen."},
    {title:"Offrande totale et renaissance", medit:"L'étoile retrouvée n'est pas possédée : elle est confiée.", prayer:"Marie, je remets mon âme, ma lumière, ma destinée entre les mains de Dieu. Que ce qui vient de Lui demeure, et que tout le reste s'efface. Je marche désormais dans la paix. Amen. — Prière finale : Marie, merci d'avoir veillé sur mon âme. Je choisis la lumière, la paix, et la confiance en Dieu. Amen."}
   ]},
- {id:"sante", title:"Neuvaine pour la santé", sub:"Confier un corps ou un esprit fatigué", tag:"Guérison", color:"#3B7A3B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"sante", title:"Neuvaine pour la santé", sub:"Confier un corps ou un esprit fatigué", tag:"Guérison", color:"#3B7A3B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Confier ce qui est fragile", medit:"Jésus n'a jamais détourné le regard d'un corps souffrant. Il s'arrêtait, il touchait, il guérissait.", prayer:"Seigneur Jésus, toi qui as guéri tant de malades sur ton chemin, pose ton regard sur mon corps et mon esprit fatigués. Je te confie ce qui est fragile en moi aujourd'hui."},
    {title:"La foi de ceux qui portent", medit:"Des amis ont un jour descendu un paralysé par le toit pour qu'il touche Jésus — ils ont porté pour lui ce qu'il ne pouvait porter seul.", prayer:"Seigneur, merci pour ceux qui me portent dans la prière. Donne-moi aussi la grâce de porter les autres quand ils n'en peuvent plus."},
@@ -603,7 +603,7 @@ const NOVENAS = [
    {title:"Espérer sans forcer", medit:"Espérer une guérison ne veut pas dire exiger un miracle — c'est rester tourné vers Dieu, quoi qu'il arrive.", prayer:"Seigneur, je te présente mon espérance de guérison, et je m'en remets à ta volonté, qui veut mon bien."},
    {title:"Remettre sa santé entre les mains de Dieu", medit:"Au bout de ces neuf jours, ce corps reste confié, comme au premier jour, à Celui qui l'a façonné.", prayer:"Seigneur, je te confie à nouveau ma santé et celle de ceux que j'aime. — Prière finale : Seigneur Jésus, guérisseur des corps et des cœurs, merci de m'avoir accompagné(e) ces neuf jours. Quelle que soit la réponse à ma prière, garde-moi confiant(e) en ta bonté. Amen."}
   ]},
- {id:"travail", title:"Neuvaine pour le travail", sub:"Emploi, projets, décisions professionnelles", tag:"Travail", color:"#8A4A1F", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"travail", title:"Neuvaine pour le travail", sub:"Emploi, projets, décisions professionnelles", tag:"Travail", color:"#8A4A1F", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Le travail de Joseph", medit:"Joseph a nourri sa famille par un travail simple et quotidien, sans attendre qu'il soit remarqué.", prayer:"Saint Joseph, patron des travailleurs, accompagne-moi dans mon travail d'aujourd'hui, visible ou non."},
    {title:"Chercher sans s'épuiser", medit:"Chercher un emploi ou un projet peut peser lourd. Dieu connaît cette fatigue.", prayer:"Seigneur, soutiens-moi dans mes recherches et mes démarches, sans me laisser envahir par l'inquiétude."},
@@ -615,7 +615,7 @@ const NOVENAS = [
    {title:"Servir plutôt que réussir", medit:"Au-delà de la réussite, il y a la question de ce que mon travail sert vraiment.", prayer:"Seigneur, que mon travail serve, d'une manière ou d'une autre, le bien de ceux qui m'entourent."},
    {title:"Confier son avenir professionnel", medit:"Après ces neuf jours, l'avenir reste incertain — mais il n'est plus porté seul(e).", prayer:"Saint Joseph, je te confie mon travail et mon avenir professionnel. — Prière finale : Saint Joseph, modèle des travailleurs, merci de m'avoir accompagné(e) ces neuf jours. Obtiens-moi la grâce de trouver, dans mon travail, de quoi vivre dignement et servir utilement. Amen."}
   ]},
- {id:"gratitude", title:"Neuvaine de gratitude", sub:"Neuf jours pour apprendre à rendre grâce", tag:"Gratitude", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"gratitude", title:"Neuvaine de gratitude", sub:"Neuf jours pour apprendre à rendre grâce", tag:"Gratitude", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Un seul est revenu dire merci", medit:"Sur dix lépreux guéris, un seul est revenu rendre grâce à Jésus. La gratitude n'est jamais automatique — elle se choisit.", prayer:"Seigneur, aujourd'hui, je choisis de revenir vers toi pour dire merci, avant même de demander autre chose."},
    {title:"Les dons ordinaires", medit:"On remarque surtout ce qui manque. Aujourd'hui, j'essaie de voir ce qui m'a été donné sans que j'y pense.", prayer:"Seigneur, ouvre mes yeux sur les dons ordinaires de ce jour : un toit, un repas, une présence."},
@@ -627,7 +627,7 @@ const NOVENAS = [
    {title:"Le magnificat, un chant de gratitude", medit:"Marie a rendu grâce en pleine incertitude, pour ce que Dieu faisait en elle sans qu'elle en voie encore le fruit.", prayer:"Mon âme exalte le Seigneur, exulte mon esprit en Dieu mon Sauveur. Seigneur, apprends-moi ce chant de gratitude."},
    {title:"Une vie reconnaissante", medit:"Au terme de ces neuf jours, la gratitude n'est plus un exercice ponctuel, mais une manière de regarder sa vie.", prayer:"Seigneur, fais de moi quelqu'un de reconnaissant, aujourd'hui et demain. — Prière finale : Seigneur, merci pour ces neuf jours de gratitude. Garde mon cœur attentif à tout ce que je reçois de toi, petit ou grand, visible ou caché. Amen."}
   ]},
- {id:"defunts", title:"Neuvaine pour les âmes du purgatoire", sub:"Prier pour ceux qui nous ont quittés", tag:"Espérance", color:"#4A3D6B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 1 Je vous salue Marie et 1 Gloire au Père pour les défunts, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+ {id:"defunts", title:"Neuvaine pour les âmes du purgatoire", sub:"Prier pour ceux qui nous ont quittés", tag:"Espérance", color:"#4A3D6B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père pour les défunts, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"La communion des saints", medit:"La mort ne rompt pas le lien entre nous : l'Église prie pour ceux qui sont partis, comme pour ceux qui restent.", prayer:"Seigneur, donne le repos éternel à ceux que j'ai aimés et qui ne sont plus là, et que la lumière sans déclin luise pour eux."},
    {title:"Nommer ceux que l'on porte", medit:"Je pense aujourd'hui à une personne précise que je veux confier à Dieu.", prayer:"Seigneur, je te confie (nommer la personne). Accueille-la dans ta paix et ta lumière."},
@@ -638,6 +638,42 @@ const NOVENAS = [
    {title:"La miséricorde de Dieu", medit:"Nous confions nos défunts non à notre propre jugement, mais à la miséricorde infinie de Dieu.", prayer:"Seigneur, ne regarde pas leurs fautes mais ta miséricorde sans limite. Accueille-les auprès de toi."},
    {title:"Marie, consolatrice des affligés", medit:"Marie, qui s'est tenue debout au pied de la croix, comprend ce que c'est que de perdre un être cher.", prayer:"Marie, consolatrice des affligés, veille sur moi dans mon deuil et intercède pour mes défunts."},
    {title:"Jusqu'à nous revoir", medit:"La neuvaine s'achève, mais la prière pour les défunts continue, chaque fois qu'ils reviennent à notre mémoire.", prayer:"Seigneur, accueille mes défunts dans ta lumière, et donne-moi de les retrouver un jour auprès de toi. — Prière finale : Seigneur, merci de m'avoir accompagné(e) ces neuf jours de prière pour les défunts. Garde vivant en moi le souvenir de ceux que j'aime, dans l'espérance de les revoir. Amen."}
+  ]},
+ {id:"notre-dame-noeuds", title:"Neuvaine à Notre-Dame qui défait les nœuds", sub:"Pour démêler ce qui semble bloqué", tag:"Délivrance", color:"#5C6B8A", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Nommer le nœud", medit:"Avant de demander qu'il se défasse, il faut d'abord regarder en face ce qui, dans ma vie, est noué, bloqué, emmêlé.", prayer:"Vierge Marie, qui défaites les nœuds, je viens te présenter ce qui, dans ma vie, semble sans issue. Aide-moi d'abord à le nommer clairement devant toi."},
+   {title:"Les nœuds qu'on a serrés soi-même", medit:"Certains nœuds viennent de nos propres choix, de nos peurs, de nos silences prolongés trop longtemps.", prayer:"Marie, donne-moi l'honnêteté de reconnaître ma part dans ce qui s'est noué, sans me punir pour autant."},
+   {title:"Les nœuds reçus des autres", medit:"D'autres nœuds nous viennent de l'extérieur : une parole blessante, une trahison, une situation qu'on n'a pas choisie.", prayer:"Marie, je te confie aussi ce qui m'a été fait, les liens que d'autres ont noués autour de moi sans mon accord."},
+   {title:"La patience du dénouement", medit:"Un nœud serré se défait rarement d'un coup : il faut souvent tirer doucement, fil après fil.", prayer:"Vierge Marie, donne-moi la patience de laisser Dieu dénouer, fil après fil, ce qui ne peut se défaire d'un coup."},
+   {title:"Ne pas resserrer par peur", medit:"Face à l'incertitude, on a parfois le réflexe de resserrer encore plus fort ce qui nous échappe.", prayer:"Marie, apprends-moi à desserrer les mains plutôt qu'à les crisper, même quand j'ai peur de perdre le contrôle."},
+   {title:"Faire confiance sans tout comprendre", medit:"Marie elle-même a dû avancer sans toujours comprendre le dessein de Dieu, et elle a gardé ces choses dans son cœur.", prayer:"Vierge Marie, toi qui as su garder et méditer sans tout comprendre, obtiens-moi cette même confiance paisible."},
+   {title:"Le fil qui tient encore", medit:"Même dans un nœud serré, il y a toujours un fil qu'on peut commencer à tirer — un premier pas possible.", prayer:"Seigneur, montre-moi le premier fil à tirer aujourd'hui, le premier petit pas vers le dénouement."},
+   {title:"Ce qui se dénoue en silence", medit:"Beaucoup de choses se défont sans bruit, loin de notre regard, dans le temps de Dieu plus que dans le nôtre.", prayer:"Marie, je te confie ce qui doit se dénouer en silence, même si je n'en vois pas encore le résultat."},
+   {title:"Les mains de Marie, libres et ouvertes", medit:"Sur les images de cette dévotion, Marie tient le ruban noué entre ses mains et le lui rend défait, lisse.", prayer:"Vierge Marie qui défaites les nœuds, je te remets ce ruban noué qu'est ma situation. Rends-le-moi dénoué, à ton heure et selon ta sagesse. — Prière finale : Marie, merci de m'avoir accompagné(e) ces neuf jours. Garde mes mains ouvertes et mon cœur confiant pour la suite. Amen."}
+  ]},
+ {id:"divine-misericorde", title:"Neuvaine à la Divine Miséricorde", sub:"Neuf jours confiés au Cœur miséricordieux de Jésus", tag:"Miséricorde", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis le chapelet de la Miséricorde (1 Notre Père, 1 Je vous salue Marie, 1 Je crois en Dieu, puis les invocations « Éternel Père… » et « Pour sa douloureuse Passion… »), avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Toute l'humanité, et moi en elle", medit:"Cette neuvaine, demandée par Jésus à sainte Faustine, s'ouvre sur l'humanité tout entière — avant même de penser à soi.", prayer:"Jésus, j'ai confiance en toi. Je t'offre aujourd'hui l'humanité tout entière, et je me reconnais comme l'un de ses membres, ayant besoin de ta miséricorde."},
+   {title:"Les prêtres et les âmes consacrées", medit:"Jésus demande ensuite de prier pour ceux qui transmettent sa miséricorde par les sacrements et l'enseignement.", prayer:"Jésus, miséricordieux envers nous, aie pitié des prêtres et des âmes consacrées, et rends-les forts de ta sainte miséricorde."},
+   {title:"Les âmes fidèles", medit:"Puis Jésus se tourne vers ceux qui croient et essaient de vivre selon sa parole, souvent sans bruit.", prayer:"Jésus, regarde avec bonté les âmes fidèles et croyantes, et soutiens-les dans leurs épreuves de chaque jour."},
+   {title:"Ceux qui ne croient pas encore", medit:"La miséricorde n'exclut personne, pas même ceux qui doutent, s'éloignent ou ne croient pas.", prayer:"Jésus, toi dont la lumière éclaire les ténèbres, attire à toi ceux qui ne te connaissent pas encore, et fais-les entrer dans ta maison."},
+   {title:"Les divisés et les séparés", medit:"Jésus confie aussi les chrétiens divisés entre eux, pour que l'unité revienne là où elle a été blessée.", prayer:"Jésus, qui as prié pour que tous soient un, rapproche ceux que les divisions ont séparés, dans ton Église et dans mes relations."},
+   {title:"Les doux et les humbles", medit:"Jésus se reconnaît dans les humbles, les doux, les enfants — ceux qui ne cherchent pas à dominer.", prayer:"Jésus, doux et humble de cœur, rends mon propre cœur semblable au tien, à l'abri de l'orgueil et de la dureté."},
+   {title:"Ceux qui glorifient ta miséricorde", medit:"Certains ont déjà fait l'expérience du pardon de Dieu et vivent en témoins de cette miséricorde reçue.", prayer:"Jésus, fortifie en moi la reconnaissance pour tout ce que ta miséricorde a déjà accompli dans ma vie."},
+   {title:"Les âmes du purgatoire", medit:"La neuvaine se tourne aussi vers ceux qui sont passés de ce monde et attendent encore la pleine lumière.", prayer:"Jésus, plonge les âmes du purgatoire dans l'abîme de ta miséricorde, et éteins la soif de feu qui les consume."},
+   {title:"Les âmes tièdes", medit:"Jésus demande enfin de prier pour ceux dont la foi s'est refroidie — y compris, parfois, une part de nous-mêmes.", prayer:"Jésus, infiniment bon, ranime en moi et en ceux qui se sont éloignés le feu de ton amour. — Prière finale : Jésus, j'ai confiance en toi. Merci de m'avoir conduit(e) ces neuf jours au cœur de ta miséricorde. Qu'elle reste mon refuge, aujourd'hui et toujours. Amen."}
+  ]},
+ {id:"charbel", title:"Neuvaine à Saint Charbel", sub:"Le silence et l'abandon d'un ermite libanais", tag:"Guérison", color:"#8A4A1F", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Quitter le bruit", medit:"Charbel a quitté très jeune sa famille pour le monastère, puis le monastère pour l'ermitage — cherchant toujours plus de silence pour Dieu.", prayer:"Saint Charbel, toi qui as choisi le silence pour mieux entendre Dieu, aide-moi à faire, moi aussi, un peu de silence dans ma vie."},
+   {title:"La fidélité cachée", medit:"Pendant plus de vingt ans, Charbel a vécu une vie simple et répétitive, loin des regards — fidèle sans spectacle.", prayer:"Seigneur, donne-moi la grâce d'être fidèle même quand personne ne me voit, à l'image de saint Charbel."},
+   {title:"Le travail des mains", medit:"Moine manuel autant que contemplatif, Charbel priait en travaillant la terre de son ermitage.", prayer:"Saint Charbel, apprends-moi à unir mon travail quotidien à ma prière, sans séparer les deux."},
+   {title:"Le dépouillement", medit:"Charbel a choisi de vivre avec presque rien, convaincu que moins on possède, plus on est libre pour Dieu.", prayer:"Seigneur, détache mon cœur de ce qui l'encombre, pour qu'il reste disponible à ta volonté."},
+   {title:"La souffrance acceptée", medit:"Charbel est mort après une longue agonie, offerte en silence, sans se plaindre de sa souffrance.", prayer:"Saint Charbel, toi qui as uni ta souffrance à celle du Christ, aide-moi à traverser les miennes sans perdre espérance."},
+   {title:"Les guérisons après sa mort", medit:"De nombreuses guérisons inexpliquées ont été rapportées sur sa tombe, attirant des pèlerins de toutes confessions.", prayer:"Seigneur, par l'intercession de saint Charbel, je te confie ce qui, dans mon corps ou mon esprit, a besoin d'être guéri."},
+   {title:"Un saint pour tous, au-delà des frontières", medit:"Chrétiens et non-chrétiens se rendent encore aujourd'hui à son ermitage au Liban, touchés par sa simplicité.", prayer:"Saint Charbel, toi qui rassembles au-delà des différences, intercède pour l'unité et la paix, en moi et autour de moi."},
+   {title:"L'Eucharistie, cœur de sa vie", medit:"Toute la vie de Charbel tournait autour de la messe quotidienne et de l'adoration silencieuse du Saint-Sacrement.", prayer:"Seigneur, que l'Eucharistie devienne, comme pour saint Charbel, le centre tranquille de mes journées."},
+   {title:"Vivre simplement, aujourd'hui", medit:"La neuvaine s'achève avec cette leçon simple : une vie cachée, fidèle et priante peut porter un fruit immense.", prayer:"Saint Charbel, aide-moi à vivre simplement et fidèlement là où je suis. — Prière finale : Saint Charbel, merci de m'avoir accompagné(e) ces neuf jours. Garde-moi dans le silence intérieur et la confiance, quoi qu'il arrive. Amen."}
   ]}
 ];
 
@@ -1369,7 +1405,7 @@ const PRIERES = [
   {
     id:"neuvaines",
     title:"Neuvaines connues",
-    desc:"Des prières réparties sur neuf jours consécutifs, une pratique inspirée des neuf jours d'attente des apôtres entre l'Ascension et la Pentecôte. Pour chacune de ces neuvaines, voici la structure complète à réciter, neuf jours de suite : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père (ou un chapelet entier si vous le souhaitez), suivis de la prière centrale ci-dessous propre à chaque neuvaine, et terminez par un Signe de croix.",
+    desc:"Des prières réparties sur neuf jours consécutifs, une pratique inspirée des neuf jours d'attente des apôtres entre l'Ascension et la Pentecôte. Pour chacune de ces neuvaines, voici la structure complète à réciter, neuf jours de suite : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père (ou un chapelet entier si vous le souhaitez), suivis de la prière centrale ci-dessous propre à chaque neuvaine, et terminez par un Signe de croix.",
     entries:[
       {name:"Neuvaine à l'Esprit Saint", dates:"", tag:null, ref:"Entre l'Ascension et la Pentecôte", avatar:"🕊️", summary:"Viens, Esprit Saint, remplis le cœur de tes fidèles et allume en eux le feu de ton amour. Envoie ton Esprit et tout sera créé, et tu renouvelleras la face de la terre. Ô Dieu, qui as instruit les cœurs de tes fidèles par la lumière de l'Esprit Saint, donne-nous, par ce même Esprit, de goûter ce qui est droit et de jouir toujours de ses consolations. Amen."},
       {name:"Neuvaine à la Divine Miséricorde", dates:"", tag:null, ref:"Du Vendredi saint au dimanche de la Miséricorde", avatar:"❤️", summary:"Éternel Père, je vous offre le Corps et le Sang, l'Âme et la Divinité de votre Fils bien-aimé, Notre-Seigneur Jésus-Christ, en propitiation pour nos péchés et pour ceux du monde entier. Pour sa douloureuse Passion, ayez pitié de nous et du monde entier. Ô Sang et Eau, qui avez jailli du Cœur de Jésus comme une source de miséricorde pour nous, j'ai confiance en vous."},
@@ -4215,7 +4251,8 @@ const NOVENA_ICONS = {
   'joseph': '🔨', 'sacre-coeur': '❤️', 'marie-confiance': '🌹', 'therese': '🌸',
   'michel': '⚔️', 'esprit-saint': '🕊️', 'sainte-rita': '🌹', 'antoine-padoue': '🔍',
   'marie-confiance-abandon': '🕯️', 'joseph-neuvaine-familiale': '🏡', 'neuvaine-etoile': '🌟',
-  'sante': '🌿', 'travail': '🧰', 'gratitude': '🙌', 'defunts': '🕯️'
+  'sante': '🌿', 'travail': '🧰', 'gratitude': '🙌', 'defunts': '🕯️',
+  'notre-dame-noeuds': '🎀', 'divine-misericorde': '✝️', 'charbel': '🌿'
 };
 /* Intentions suggérées, affichées sur la page de présentation de chaque
    neuvaine (« Pour quelles intentions ? »), à titre indicatif. */
@@ -4234,7 +4271,10 @@ const NOVENA_INTENTIONS_HINTS = {
   'sante': ['Une maladie ou une fatigue', 'Un proche malade', 'Les soignants'],
   'travail': ['La recherche d’emploi', 'Une décision professionnelle', 'La paix au travail'],
   'gratitude': ['Apprendre à dire merci', 'Une épreuve traversée', 'Une personne qui compte pour vous'],
-  'defunts': ['Un proche disparu', 'Le deuil', 'Les défunts oubliés']
+  'defunts': ['Un proche disparu', 'Le deuil', 'Les défunts oubliés'],
+  'notre-dame-noeuds': ['Une situation bloquée', 'Un conflit à dénouer', 'Une décision qui traîne'],
+  'divine-misericorde': ['Le pardon', 'Recommencer après une faute', 'La confiance en Dieu'],
+  'charbel': ['Une guérison', 'Le silence intérieur', 'Une vie plus simple']
 };
 const LUMEN_SACRED_ART = [
   {keys:['pierre','peter'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20St.%20Peter%20-%20Google%20Art%20Project.jpg?width=900', credit:'Saint Pierre · El Greco · domaine public'},
@@ -4396,7 +4436,7 @@ function carnetBoxesHTML(text, kind){
   const parts = paragraphs.length ? paragraphs : [String(text)];
   const boxClass = kind==='prayer' ? 'text-box text-box--prayer' : 'text-box text-box--reading';
   return `<div class="text-box-group">` + parts.map((p,i)=>
-    `<div class="${boxClass}"><span class="text-box-icon">${icons[i % icons.length]}</span><p class="text-box-text">${p}</p></div>`
+    `<div class="${boxClass}"><span class="text-box-icon">${icons[i % icons.length]}</span><p class="text-box-text">${linkifyClassicPrayers(p)}</p></div>`
   ).join('') + `</div>`;
 }
 
@@ -4655,6 +4695,17 @@ async function saveNovenaIntention(id, text){
   else delete NOVENA_INTENTIONS[id];
   try{ await window.storage.set('novena-intentions', JSON.stringify(NOVENA_INTENTIONS), false); }catch(e){}
 }
+/* Rappel quotidien optionnel, propre à chaque neuvaine (heure libre, ex.
+   "08:00") — vérifié par checkReminders() comme les autres rappels de l'app. */
+let NOVENA_REMINDERS = {};
+async function loadNovenaReminders(){
+  try{ const r = await window.storage.get('novena-reminders', false); return r ? JSON.parse(r.value) : {}; }catch(e){ return {}; }
+}
+async function saveNovenaReminder(id, time){
+  if(time) NOVENA_REMINDERS[id] = time;
+  else delete NOVENA_REMINDERS[id];
+  try{ await window.storage.set('novena-reminders', JSON.stringify(NOVENA_REMINDERS), false); }catch(e){}
+}
 function wireNovenaPresentationHeader(n){
   const introBtn = document.getElementById('read-intro-btn');
   if(introBtn) introBtn.onclick = ()=>{
@@ -4671,6 +4722,18 @@ function wireNovenaPresentationHeader(n){
   };
   const editBtn = document.getElementById('edit-intention-btn');
   if(editBtn) editBtn.onclick = ()=> addBtn && addBtn.onclick();
+  const reminderBtn = document.getElementById('novena-reminder-btn');
+  if(reminderBtn) reminderBtn.onclick = async ()=>{
+    const current = NOVENA_REMINDERS[n.id] || '08:00';
+    const time = prompt('À quelle heure souhaitez-vous un rappel chaque jour pour cette neuvaine ? (ex. 08:00, ou laissez vide pour désactiver)', current);
+    if(time === null) return;
+    const trimmed = time.trim();
+    if(trimmed && !/^([01]\d|2[0-3]):([0-5]\d)$/.test(trimmed)){ showToast("Format attendu : HH:MM, par exemple 08:00"); return; }
+    if(trimmed && window.Notification && Notification.permission === 'default'){ try{ Notification.requestPermission(); }catch(e){} }
+    await saveNovenaReminder(n.id, trimmed);
+    showToast(trimmed ? `Rappel réglé à ${trimmed} 🔔` : 'Rappel désactivé');
+    render();
+  };
 }
 function renderNovenaDetail(id){
   const n = NOVENAS.find(x=>x.id===id);
@@ -4721,6 +4784,7 @@ function renderNovenaDetail(id){
     <div class="entry-link-row" style="gap:8px; flex-wrap:wrap; margin:10px 0 0;">
       <button class="btn btn-ghost btn-sm" id="read-intro-btn">📖 Lire l'introduction</button>
       <button class="btn btn-ghost btn-sm" id="add-intention-btn">${NOVENA_INTENTIONS[n.id] ? '✎ Modifier mon intention' : '➕ Ajouter une intention'}</button>
+      <button class="btn btn-ghost btn-sm" id="novena-reminder-btn">${NOVENA_REMINDERS[n.id] ? `🔔 Rappel à ${NOVENA_REMINDERS[n.id]}` : '🔔 Rappel quotidien'}</button>
     </div>
     <div class="novena-audio-player" id="novena-audio-${n.id}">
       <button class="novena-audio-play" id="novena-audio-play-btn">▶</button>
@@ -4857,18 +4921,42 @@ function renderNovenaDetail(id){
   }
 }
 
+/* Prière de clôture, commune à chaque jour, pour conclure le déroulement
+   (Signe de croix → intention → méditation → prière → Notre Père → 10 Je
+   vous salue Marie → Gloire au Père → prière finale), comme dans la maquette. */
+function novenaClosingPrayerText(n){
+  return `Seigneur, en terminant cette prière, je te confie à nouveau mon intention. Que cette neuvaine — ${n.sub || n.title} — porte du fruit dans ma vie, et que ta paix demeure en moi aujourd'hui. Par Jésus-Christ notre Seigneur. Amen.`;
+}
+/* Le déroulement complet d'un jour, texte intégral pour chaque étape — à
+   l'image de la maquette : méditation, prière propre à la neuvaine, puis le
+   Notre Père, 10 Je vous salue Marie (avec compteur), le Gloire au Père et
+   une prière finale. */
+function novenaDaySteps(n, d){
+  const saintName = n.title.replace(/^Neuvaine\s*(à|au|aux|pour|de|du|des|d')\s*/i, '');
+  return [
+    {key:'medit', icon:'💭', label:'Méditation du jour', theme:'candle', title:d.title, subtitle:'Méditation', text:d.medit},
+    {key:'prayer', icon:'🙏', label:'Prière à '+saintName, theme:'letter', title:'Prière à '+saintName, subtitle:n.title, text:d.prayer},
+    {key:'pater', icon:'✝️', label:'Notre Père', theme:'letter', title:'Notre Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Notre Père']},
+    {key:'ave', icon:'📿', label:'10 Je vous salue Marie', counter:true},
+    {key:'gloria', icon:'✨', label:'Gloire au Père', theme:'letter', title:'Gloire au Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Gloire au Père']},
+    {key:'final', icon:'🕯️', label:'Prière finale', theme:'candle', title:'Prière finale', subtitle:n.title, text:novenaClosingPrayerText(n)}
+  ];
+}
 function renderNovenaDayPage(n, info, dayIndex){
   const d = n.days[dayIndex];
   const dayDone = info.completed[dayIndex];
   const counterId = n.id+'-day'+dayIndex;
+  const aveCounterId = counterId+'-ave';
   const playing = NOVENA_DAY_AUDIO_PLAYING === counterId;
+  const steps = novenaDaySteps(n, d);
+  const aveCount = SIMPLE_BEAD_COUNTS[aveCounterId] || 0;
   let html = `<div class="detail-wrap">
     <button class="back-link" id="back-to-timeline-btn">← ${n.title}</button>
     <p class="eyebrow" style="color:${n.color};">${ORDINAL_DAYS[dayIndex]} jour${dayDone?' · ✓ prié':''}</p>
     <h1 class="day-title" style="margin-top:2px;">${d.title}</h1>
 
     <div class="hoz-podcast-card">
-      <p class="hoz-podcast-label">🎧 Podcast du jour</p>
+      <p class="hoz-podcast-label">🎧 Écouter tout le déroulement du jour</p>
       <button class="hoz-podcast-btn" id="hoz-podcast-play">
         <span class="hoz-podcast-play-icon">${playing ? '⏸' : '▶'}</span>
         <span>${playing ? 'Pause' : "Écouter l'audio"}</span>
@@ -4876,14 +4964,17 @@ function renderNovenaDayPage(n, info, dayIndex){
       <p class="novena-audio-note">Lecture vocale générée par votre navigateur — pas un enregistrement audio préexistant.</p>
     </div>
 
-    <div class="card" style="margin-top:14px;">
-      <p class="eyebrow" style="color:var(--gold);">📝 Texte de l'audio</p>
-      <p class="entry-detail-text">${d.medit}</p>
-    </div>
-
-    <div class="card" style="margin-top:10px; border-left:4px solid ${n.color};">
-      <p class="eyebrow" style="color:${n.color};">🙏 Prière</p>
-      ${carnetBoxesHTML(d.prayer, 'prayer')}
+    <p class="section-desc" style="margin-top:14px;">Le déroulement complet de ce jour, prière après prière — touchez une étape pour en lire le texte intégral.</p>
+    <div class="novena-day-steps">
+      ${steps.map(s=>`
+        <div class="novena-day-step" data-day-step="${s.key}">
+          <span class="novena-day-step-icon">${s.icon}</span>
+          <span class="novena-day-step-label">${s.label}</span>
+          ${s.counter ? `<span class="novena-day-step-count" data-step-count-for="${aveCounterId}">${aveCount}/10</span>` : ''}
+          <span class="novena-day-step-caret">›</span>
+        </div>
+        ${s.counter ? `<div class="novena-day-step-panel hidden" id="novena-ave-panel">${simpleBeadCounterHTML(aveCounterId, CHAPLET_PRAYER_TEXTS['Je vous salue Marie'])}</div>` : ''}
+      `).join('')}
     </div>
 
     <div style="text-align:center; margin:16px 0;">
@@ -4895,6 +4986,22 @@ function renderNovenaDayPage(n, info, dayIndex){
 
   document.getElementById('screen').innerHTML = html;
   document.getElementById('back-to-timeline-btn').onclick = ()=>{ NOVENA_OPEN_DAY = null; render(); };
+  wireSimpleBeadCounters();
+
+  document.querySelectorAll('[data-day-step]').forEach(row=>{
+    const step = steps.find(s=>s.key===row.dataset.dayStep);
+    if(!step) return;
+    row.onclick = ()=>{
+      if(step.counter){
+        const panel = document.getElementById('novena-ave-panel');
+        if(panel) panel.classList.toggle('hidden');
+        return;
+      }
+      openTextCover(step.theme, step.title, step.subtitle||'', ()=>{
+        openVerseReader({ title: step.title, subtitle: step.subtitle||'', text: step.text||'' });
+      });
+    };
+  });
 
   const playBtn = document.getElementById('hoz-podcast-play');
   if(playBtn){
@@ -4906,7 +5013,8 @@ function renderNovenaDayPage(n, info, dayIndex){
         return;
       }
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(d.medit + '. ' + d.prayer);
+      const fullText = steps.map(s=> s.counter ? `Dix fois : ${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}` : (s.text||'')).join(' ');
+      const u = new SpeechSynthesisUtterance(fullText);
       u.lang = 'fr-FR';
       applyNaturalVoice(u);
       u.onend = ()=>{ if(NOVENA_DAY_AUDIO_PLAYING === counterId){ NOVENA_DAY_AUDIO_PLAYING = null; render(); } };
@@ -4979,9 +5087,7 @@ function candleHTML(lit, id){
 
 const NOVENA_BEAD_SEQUENCE = [
   {label:'Notre Père', big:true},
-  {label:'Je vous salue Marie', big:false},
-  {label:'Je vous salue Marie', big:false},
-  {label:'Je vous salue Marie', big:false},
+  ...Array.from({length:10}).map(()=>({label:'Je vous salue Marie', big:false})),
   {label:'Gloire au Père', big:true}
 ];
 function simpleBeadCounterHTML(counterId, reciteText){
@@ -5022,6 +5128,8 @@ function incrementSimpleBead(id){
   }
   const bead = beadsEl && beadsEl.querySelector(`[data-idx="${(n-1)%BEAD_TOTAL}"]`);
   if(bead) bead.classList.add('lit');
+  const stepBadge = document.querySelector(`[data-step-count-for="${id}"]`);
+  if(stepBadge) stepBadge.textContent = Math.min(n, BEAD_TOTAL) + '/' + BEAD_TOTAL;
   if(n % BEAD_TOTAL === 0) fireCelebration();
 }
 function wireSimpleBeadCounters(){
@@ -5044,6 +5152,8 @@ function wireSimpleBeadCounters(){
       if(display) display.textContent = 0;
       const beadsEl = document.getElementById('counter-beads-'+id);
       if(beadsEl) beadsEl.querySelectorAll('.chaplet-bead').forEach(b=> b.classList.remove('lit'));
+      const stepBadge = document.querySelector(`[data-step-count-for="${id}"]`);
+      if(stepBadge) stepBadge.textContent = '0/10';
     };
   });
   document.querySelectorAll('[data-counter-mic]').forEach(btn=>{
@@ -5103,6 +5213,33 @@ const CHAPLET_PRAYER_TEXTS = {
   'Je crois en Dieu': "Je crois en Dieu, le Père tout-puissant, créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.",
   'Salve Regina': "Salut, ô Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève, exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous vos regards miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie !"
 };
+/* Quand une prière classique n'apparaît qu'en mention abrégée ("Je vous
+   salue Marie...") au fil d'un autre texte — pour ne pas la répéter en
+   entier à chaque refrain — on la rend cliquable pour que son texte
+   intégral reste toujours accessible en un geste, partout dans l'app. */
+function linkifyClassicPrayers(text){
+  if(!text) return text;
+  let out = text;
+  Object.keys(CHAPLET_PRAYER_TEXTS).forEach(label=>{
+    const esc = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('(?:<i>)?('+esc+')(?:\\s*\\.\\.\\.|…)(?:</i>)?', 'g');
+    out = out.replace(re, (m, lab)=> `<a href="#" class="prayer-ref-link" data-prayer-ref="${lab.replace(/"/g,'&quot;')}">${lab}…</a>`);
+  });
+  return out;
+}
+function wirePrayerRefLinks(){
+  document.querySelectorAll('.prayer-ref-link').forEach(a=>{
+    a.onclick = (e)=>{
+      e.preventDefault();
+      const label = a.dataset.prayerRef;
+      const text = CHAPLET_PRAYER_TEXTS[label];
+      if(!text) return;
+      openTextCover('letter', label, 'Prière traditionnelle', ()=>{
+        openVerseReader({ title: label, subtitle: 'Prière traditionnelle', text });
+      });
+    };
+  });
+}
 let GUIDED_CHAPLET_STATE = null;
 function openGuidedChaplet(sequence, title, onComplete){
   GUIDED_CHAPLET_STATE = {sequence, title, idx:0, onComplete};
@@ -7755,6 +7892,7 @@ function wireSpeakShare(){
       });
     };
   });
+  wirePrayerRefLinks();
 }
 
 /* ================= rosary (chapelet interactif, avec vrai chapelet visuel) ================= */
@@ -9256,7 +9394,7 @@ function renderPrieresParHeure(){
   const slotBox = (key, icon, title, color, prayers, buttons)=>`
     <div class="card" style="border-left:4px solid ${color}; margin-top:14px; ${currentSlot===key?'box-shadow:var(--glow-gold);':''}">
       <p class="eyebrow" style="color:${color};">${icon} ${title} ${currentSlot===key?"— c'est maintenant":""}</p>
-      ${prayers.map(p=>`<p class="day-title" style="font-size:15px; margin-top:10px;">${p.t}</p><p class="entry-detail-text">${p.x}</p>`).join('')}
+      ${prayers.map(p=>`<p class="day-title" style="font-size:15px; margin-top:10px;">${p.t}</p><p class="entry-detail-text">${linkifyClassicPrayers(p.x)}</p>`).join('')}
       ${buttons ? `<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">${buttons}</div>` : ''}
     </div>`;
 
@@ -9594,13 +9732,21 @@ function renderAngelus(){
   if(isAngelusTime){
     html += `<div class="info-banner">🔔 C'est justement l'un des moments traditionnels de l'Angélus.</div>`;
   }
+  const angelusClosing = "Que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Amen.";
+  const angelusFullText = [
+    "L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit. Je vous salue Marie...",
+    "Voici la servante du Seigneur, qu'il me soit fait selon votre parole. Je vous salue Marie...",
+    "Et le Verbe s'est fait chair, et il a habité parmi nous. Je vous salue Marie...",
+    "Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ.",
+    angelusClosing
+  ].join('\n\n');
   html += `<div class="card">
-      <p class="entry-detail-text">L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit.<br><i>Je vous salue Marie...</i></p>
-      <p class="entry-detail-text">Voici la servante du Seigneur, qu'il me soit fait selon votre parole.<br><i>Je vous salue Marie...</i></p>
-      <p class="entry-detail-text">Et le Verbe s'est fait chair, et il a habité parmi nous.<br><i>Je vous salue Marie...</i></p>
+      <p class="entry-detail-text">L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit.<br>${linkifyClassicPrayers('<i>Je vous salue Marie...</i>')}</p>
+      <p class="entry-detail-text">Voici la servante du Seigneur, qu'il me soit fait selon votre parole.<br>${linkifyClassicPrayers('<i>Je vous salue Marie...</i>')}</p>
+      <p class="entry-detail-text">Et le Verbe s'est fait chair, et il a habité parmi nous.<br>${linkifyClassicPrayers('<i>Je vous salue Marie...</i>')}</p>
       <p class="entry-detail-text">Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ.</p>
-      ${carnetBoxesHTML("Que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Amen.", 'prayer')}
-      ${speakShareRowHTML("L'Angélus", "L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit.")}
+      ${carnetBoxesHTML(angelusClosing, 'prayer')}
+      ${speakShareRowHTML("L'Angélus", angelusFullText)}
     </div>
     <div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="angelus-reminder-link">🔔 Réglez un rappel à midi</button></div>`;
   document.getElementById('screen').innerHTML = html;
@@ -10057,6 +10203,16 @@ function checkReminders(){
         new Notification('Lumen', {body: msg});
       }
       checkReminders._last = hm+key;
+    }
+  });
+  Object.keys(NOVENA_REMINDERS).forEach(novenaId=>{
+    const time = NOVENA_REMINDERS[novenaId];
+    if(time && time===hm && checkReminders._last!==hm+'novena-'+novenaId){
+      const nov = NOVENAS.find(x=>x.id===novenaId);
+      if(window.Notification && Notification.permission === 'granted'){
+        new Notification('Lumen', {body: `🕯️ C'est l'heure de prier votre neuvaine${nov ? ' : '+nov.title : ''}`});
+      }
+      checkReminders._last = hm+'novena-'+novenaId;
     }
   });
 }
@@ -11419,7 +11575,7 @@ function render(){
 /* ---------- init ---------- */
 async function startApp(){
   document.getElementById('screen').innerHTML = '<div class="loading"><svg class="loading-emblem" viewBox="0 0 24 24"><defs><linearGradient id="flameGrad3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#7C1F2E"/><stop offset="55%" stop-color="#B8863B"/><stop offset="100%" stop-color="#FFF3C4"/></linearGradient></defs><path fill="url(#flameGrad3)" d="M12 2c-2.2 4-6 6.2-6 11a6 6 0 0 0 12 0c0-2.1-1-3.4-2-4.4.4 2-1 3-1 3 .6-3.2-1.1-5.4-3-9.6z"/></svg>Un instant, on allume les lumières…</div>';
-  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages, novenaIntentions] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages(), loadNovenaIntentions()]);
+  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages, novenaIntentions, novenaReminders] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages(), loadNovenaIntentions(), loadNovenaReminders()]);
   PROGRESS = p;
   INTENTIONS = ints;
   JOURNAL = jour;
@@ -11431,6 +11587,7 @@ async function startApp(){
   REMINDERS = reminders;
   NOVENA_COMPANIONS = companions;
   NOVENA_INTENTIONS = novenaIntentions || {};
+  NOVENA_REMINDERS = novenaReminders || {};
   PARCOURS_PROGRESS = parcoursProg || { completedDays: [] };
   CAREME_PROGRESS = caremeProg || { completedDays: [] };
   GRATITUDE_ENTRIES = gratitude || [];
