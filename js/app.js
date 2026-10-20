@@ -590,6 +590,54 @@ const NOVENAS = [
    {title:"Restaurer la dignité et la valeur", medit:"Ton étoile, c'est ta valeur aux yeux de Dieu.", prayer:"Marie, aide-moi à me voir comme Dieu me voit. Rends-moi la dignité que les épreuves ont essayé de m'enlever. Je suis enfant de Dieu. Amen."},
    {title:"Rallumer l'espérance", medit:"Quand l'étoile revient, le chemin réapparaît.", prayer:"Marie, Étoile de l'espérance, rallume en moi la foi en l'avenir. Que mon cœur espère à nouveau, sans peur, sans amertume. Amen."},
    {title:"Offrande totale et renaissance", medit:"L'étoile retrouvée n'est pas possédée : elle est confiée.", prayer:"Marie, je remets mon âme, ma lumière, ma destinée entre les mains de Dieu. Que ce qui vient de Lui demeure, et que tout le reste s'efface. Je marche désormais dans la paix. Amen. — Prière finale : Marie, merci d'avoir veillé sur mon âme. Je choisis la lumière, la paix, et la confiance en Dieu. Amen."}
+  ]},
+ {id:"sante", title:"Neuvaine pour la santé", sub:"Confier un corps ou un esprit fatigué", tag:"Guérison", color:"#3B7A3B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Confier ce qui est fragile", medit:"Jésus n'a jamais détourné le regard d'un corps souffrant. Il s'arrêtait, il touchait, il guérissait.", prayer:"Seigneur Jésus, toi qui as guéri tant de malades sur ton chemin, pose ton regard sur mon corps et mon esprit fatigués. Je te confie ce qui est fragile en moi aujourd'hui."},
+   {title:"La foi de ceux qui portent", medit:"Des amis ont un jour descendu un paralysé par le toit pour qu'il touche Jésus — ils ont porté pour lui ce qu'il ne pouvait porter seul.", prayer:"Seigneur, merci pour ceux qui me portent dans la prière. Donne-moi aussi la grâce de porter les autres quand ils n'en peuvent plus."},
+   {title:"Accepter de ne pas tout maîtriser", medit:"La maladie bouscule nos plans et nos forces. Il n'est pas facile d'accepter ce qu'on ne contrôle pas.", prayer:"Seigneur, aide-moi à traverser l'incertitude sans m'y noyer. Que ma confiance en toi reste plus grande que ma peur."},
+   {title:"La patience du traitement", medit:"Guérir prend souvent du temps — un temps qui demande une patience que l'on n'a pas toujours.", prayer:"Donne-moi la patience de soigner ce qui doit l'être, jour après jour, sans me décourager."},
+   {title:"Le corps, don de Dieu", medit:"Avant d'être malade ou fatigué, ce corps est d'abord un don reçu, digne de soin et de respect.", prayer:"Seigneur, apprends-moi à prendre soin de ce corps que tu m'as donné, sans dureté envers moi-même."},
+   {title:"Les soignants", medit:"Derrière chaque guérison, il y a souvent des mains humaines qui soignent avec compétence et patience.", prayer:"Bénis tous ceux qui soignent aujourd'hui, avec leurs mains et leur science, et donne-leur la force de continuer."},
+   {title:"La paix au milieu de la douleur", medit:"On peut garder une forme de paix intérieure même quand le corps souffre — ce n'est pas se résigner, c'est espérer autrement.", prayer:"Seigneur, donne-moi ta paix, celle que rien de ce qui m'arrive ne peut vraiment ébranler."},
+   {title:"Espérer sans forcer", medit:"Espérer une guérison ne veut pas dire exiger un miracle — c'est rester tourné vers Dieu, quoi qu'il arrive.", prayer:"Seigneur, je te présente mon espérance de guérison, et je m'en remets à ta volonté, qui veut mon bien."},
+   {title:"Remettre sa santé entre les mains de Dieu", medit:"Au bout de ces neuf jours, ce corps reste confié, comme au premier jour, à Celui qui l'a façonné.", prayer:"Seigneur, je te confie à nouveau ma santé et celle de ceux que j'aime. — Prière finale : Seigneur Jésus, guérisseur des corps et des cœurs, merci de m'avoir accompagné(e) ces neuf jours. Quelle que soit la réponse à ma prière, garde-moi confiant(e) en ta bonté. Amen."}
+  ]},
+ {id:"travail", title:"Neuvaine pour le travail", sub:"Emploi, projets, décisions professionnelles", tag:"Travail", color:"#8A4A1F", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Le travail de Joseph", medit:"Joseph a nourri sa famille par un travail simple et quotidien, sans attendre qu'il soit remarqué.", prayer:"Saint Joseph, patron des travailleurs, accompagne-moi dans mon travail d'aujourd'hui, visible ou non."},
+   {title:"Chercher sans s'épuiser", medit:"Chercher un emploi ou un projet peut peser lourd. Dieu connaît cette fatigue.", prayer:"Seigneur, soutiens-moi dans mes recherches et mes démarches, sans me laisser envahir par l'inquiétude."},
+   {title:"La valeur de ce que je fais", medit:"Un travail humble n'est pas un travail sans valeur — chaque tâche bien faite a sa dignité.", prayer:"Apprends-moi à faire ce que j'ai à faire aujourd'hui avec soin, même si cela semble petit."},
+   {title:"Les décisions à prendre", medit:"Changer de voie, accepter ou refuser une offre : ces choix demandent du discernement.", prayer:"Esprit Saint, éclaire la décision professionnelle que je dois prendre."},
+   {title:"La peur de manquer", medit:"L'incertitude du travail touche souvent à une peur plus profonde : celle de manquer de ce qui est nécessaire.", prayer:"Seigneur, donne-nous aujourd'hui notre pain de ce jour, et libère-moi de la peur du lendemain."},
+   {title:"Les collègues et les relations", medit:"Le travail se vit avec d'autres — parfois dans la tension, parfois dans l'entraide.", prayer:"Seigneur, apprends-moi la patience et la charité envers ceux avec qui je travaille."},
+   {title:"Le repos nécessaire", medit:"Même Dieu s'est reposé le septième jour. Le travail n'a de sens que s'il laisse place au repos.", prayer:"Seigneur, aide-moi à respecter mon besoin de repos autant que mon devoir de travailler."},
+   {title:"Servir plutôt que réussir", medit:"Au-delà de la réussite, il y a la question de ce que mon travail sert vraiment.", prayer:"Seigneur, que mon travail serve, d'une manière ou d'une autre, le bien de ceux qui m'entourent."},
+   {title:"Confier son avenir professionnel", medit:"Après ces neuf jours, l'avenir reste incertain — mais il n'est plus porté seul(e).", prayer:"Saint Joseph, je te confie mon travail et mon avenir professionnel. — Prière finale : Saint Joseph, modèle des travailleurs, merci de m'avoir accompagné(e) ces neuf jours. Obtiens-moi la grâce de trouver, dans mon travail, de quoi vivre dignement et servir utilement. Amen."}
+  ]},
+ {id:"gratitude", title:"Neuvaine de gratitude", sub:"Neuf jours pour apprendre à rendre grâce", tag:"Gratitude", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 3 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Un seul est revenu dire merci", medit:"Sur dix lépreux guéris, un seul est revenu rendre grâce à Jésus. La gratitude n'est jamais automatique — elle se choisit.", prayer:"Seigneur, aujourd'hui, je choisis de revenir vers toi pour dire merci, avant même de demander autre chose."},
+   {title:"Les dons ordinaires", medit:"On remarque surtout ce qui manque. Aujourd'hui, j'essaie de voir ce qui m'a été donné sans que j'y pense.", prayer:"Seigneur, ouvre mes yeux sur les dons ordinaires de ce jour : un toit, un repas, une présence."},
+   {title:"Rendre grâce dans l'épreuve", medit:"Rendre grâce ne veut pas dire que tout va bien — c'est reconnaître qu'il reste du bien, même au milieu de la difficulté.", prayer:"Seigneur, aide-moi à trouver une raison de te remercier, même dans ce qui est difficile aujourd'hui."},
+   {title:"Merci pour les personnes", medit:"Je pense aujourd'hui à une personne précise qui a compté pour moi, et je rends grâce pour elle.", prayer:"Seigneur, merci pour (nommer une personne) et pour ce qu'elle m'apporte. Bénis-la aujourd'hui."},
+   {title:"Merci pour ce qui a été surmonté", medit:"Je regarde en arrière un moment difficile que j'ai traversé, et je rends grâce d'être arrivé(e) jusqu'ici.", prayer:"Seigneur, merci de m'avoir porté(e) à travers ce que j'ai déjà traversé."},
+   {title:"La joie simple", medit:"Un rire, un ciel clair, un moment de calme : la joie se cache souvent dans de petites choses.", prayer:"Seigneur, apprends-moi à savourer les joies simples de ce jour sans les laisser filer."},
+   {title:"Merci même sans comprendre", medit:"Il y a des choses que je ne comprends pas encore. Je choisis quand même de faire confiance.", prayer:"Seigneur, je te rends grâce même pour ce que je ne comprends pas encore aujourd'hui."},
+   {title:"Le magnificat, un chant de gratitude", medit:"Marie a rendu grâce en pleine incertitude, pour ce que Dieu faisait en elle sans qu'elle en voie encore le fruit.", prayer:"Mon âme exalte le Seigneur, exulte mon esprit en Dieu mon Sauveur. Seigneur, apprends-moi ce chant de gratitude."},
+   {title:"Une vie reconnaissante", medit:"Au terme de ces neuf jours, la gratitude n'est plus un exercice ponctuel, mais une manière de regarder sa vie.", prayer:"Seigneur, fais de moi quelqu'un de reconnaissant, aujourd'hui et demain. — Prière finale : Seigneur, merci pour ces neuf jours de gratitude. Garde mon cœur attentif à tout ce que je reçois de toi, petit ou grand, visible ou caché. Amen."}
+  ]},
+ {id:"defunts", title:"Neuvaine pour les âmes du purgatoire", sub:"Prier pour ceux qui nous ont quittés", tag:"Espérance", color:"#4A3D6B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 1 Je vous salue Marie et 1 Gloire au Père pour les défunts, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"La communion des saints", medit:"La mort ne rompt pas le lien entre nous : l'Église prie pour ceux qui sont partis, comme pour ceux qui restent.", prayer:"Seigneur, donne le repos éternel à ceux que j'ai aimés et qui ne sont plus là, et que la lumière sans déclin luise pour eux."},
+   {title:"Nommer ceux que l'on porte", medit:"Je pense aujourd'hui à une personne précise que je veux confier à Dieu.", prayer:"Seigneur, je te confie (nommer la personne). Accueille-la dans ta paix et ta lumière."},
+   {title:"Le deuil qui reste", medit:"Prier pour un défunt, c'est aussi une manière d'apprivoiser le manque qu'il laisse en nous.", prayer:"Seigneur, console ceux qui pleurent encore une absence, et donne-moi la paix dans mon propre deuil."},
+   {title:"Espérer au-delà de la mort", medit:"La foi chrétienne ne nie pas la mort, mais elle espère au-delà d'elle, en la résurrection promise.", prayer:"Seigneur, toi qui es ressuscité, donne-moi d'espérer fermement la vie éternelle pour ceux que je confie à ta miséricorde."},
+   {title:"Les défunts oubliés", medit:"Je pense aujourd'hui à ceux pour qui personne ne prie plus, faute de famille ou de mémoire.", prayer:"Seigneur, souviens-toi de tous les défunts que plus personne ne nomme, et accueille-les dans ta miséricorde."},
+   {title:"Prier comme un acte d'amour", medit:"Prier pour un défunt, c'est continuer de l'aimer autrement, par-delà la séparation.", prayer:"Seigneur, que ma prière pour les défunts soit un acte d'amour qui continue au-delà de la mort."},
+   {title:"La miséricorde de Dieu", medit:"Nous confions nos défunts non à notre propre jugement, mais à la miséricorde infinie de Dieu.", prayer:"Seigneur, ne regarde pas leurs fautes mais ta miséricorde sans limite. Accueille-les auprès de toi."},
+   {title:"Marie, consolatrice des affligés", medit:"Marie, qui s'est tenue debout au pied de la croix, comprend ce que c'est que de perdre un être cher.", prayer:"Marie, consolatrice des affligés, veille sur moi dans mon deuil et intercède pour mes défunts."},
+   {title:"Jusqu'à nous revoir", medit:"La neuvaine s'achève, mais la prière pour les défunts continue, chaque fois qu'ils reviennent à notre mémoire.", prayer:"Seigneur, accueille mes défunts dans ta lumière, et donne-moi de les retrouver un jour auprès de toi. — Prière finale : Seigneur, merci de m'avoir accompagné(e) ces neuf jours de prière pour les défunts. Garde vivant en moi le souvenir de ceux que j'aime, dans l'espérance de les revoir. Amen."}
   ]}
 ];
 
@@ -4097,7 +4145,7 @@ function renderHome(){
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('.novena-card').forEach(c=> c.onclick = ()=> goTo('prier','neuvaines'));
   document.querySelectorAll('.upcoming-item[data-novena-id]').forEach(c=>{
-    c.onclick = ()=>{ goTo('prier','neuvaines'); OPEN_NOVENA = c.dataset.novenaId; NOVENA_OPEN_DAY = null; render(); };
+    c.onclick = ()=>{ goTo('prier','neuvaines'); OPEN_NOVENA = c.dataset.novenaId; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render(); };
   });
   wireIntentionButtons();
   const gotoBtn = document.querySelector('[data-goto="intentions"]');
@@ -4152,7 +4200,7 @@ function renderHome(){
       ENTRY_OPEN = {compKey:item.compKey, groupId:item.groupId, idx:item.idx};
       render();
     } else if(item.type === 'novena'){
-      goTo('prier','neuvaines'); OPEN_NOVENA = item.id; NOVENA_OPEN_DAY = null; render();
+      goTo('prier','neuvaines'); OPEN_NOVENA = item.id; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render();
     }
   }
   if(continueCard && lastVisited){
@@ -4166,7 +4214,27 @@ function renderHome(){
 const NOVENA_ICONS = {
   'joseph': '🔨', 'sacre-coeur': '❤️', 'marie-confiance': '🌹', 'therese': '🌸',
   'michel': '⚔️', 'esprit-saint': '🕊️', 'sainte-rita': '🌹', 'antoine-padoue': '🔍',
-  'marie-confiance-abandon': '🕯️', 'joseph-neuvaine-familiale': '🏡', 'neuvaine-etoile': '🌟'
+  'marie-confiance-abandon': '🕯️', 'joseph-neuvaine-familiale': '🏡', 'neuvaine-etoile': '🌟',
+  'sante': '🌿', 'travail': '🧰', 'gratitude': '🙌', 'defunts': '🕯️'
+};
+/* Intentions suggérées, affichées sur la page de présentation de chaque
+   neuvaine (« Pour quelles intentions ? »), à titre indicatif. */
+const NOVENA_INTENTIONS_HINTS = {
+  'joseph': ['Un souci matériel ou professionnel', 'Une décision à prendre', 'La paix dans la famille'],
+  'joseph-neuvaine-familiale': ['La mémoire familiale', 'La paternité', 'La paix du foyer'],
+  'sacre-coeur': ['Un cœur blessé à guérir', 'Apprendre à aimer sans compter', 'La confiance en Dieu'],
+  'marie-confiance': ['La paix intérieure', 'Un moment d’incertitude', 'Se sentir accompagné(e)'],
+  'marie-confiance-abandon': ['Lâcher le contrôle', 'Une épreuve en cours', 'Retrouver l’espérance'],
+  'therese': ['La confiance en Dieu', 'Les petites choses du quotidien', 'Le découragement'],
+  'michel': ['Le combat intérieur', 'La protection', 'Le courage dans l’épreuve'],
+  'esprit-saint': ['Le discernement', 'Une décision importante', 'Grandir dans la foi'],
+  'sainte-rita': ['Une cause qui semble désespérée', 'Le pardon', 'La patience dans l’épreuve'],
+  'antoine-padoue': ['Retrouver ce qui est perdu', 'Un nouveau départ', 'La justice'],
+  'neuvaine-etoile': ['Retrouver sa lumière intérieure', 'Une blessure profonde', 'La renaissance après l’épreuve'],
+  'sante': ['Une maladie ou une fatigue', 'Un proche malade', 'Les soignants'],
+  'travail': ['La recherche d’emploi', 'Une décision professionnelle', 'La paix au travail'],
+  'gratitude': ['Apprendre à dire merci', 'Une épreuve traversée', 'Une personne qui compte pour vous'],
+  'defunts': ['Un proche disparu', 'Le deuil', 'Les défunts oubliés']
 };
 const LUMEN_SACRED_ART = [
   {keys:['pierre','peter'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20St.%20Peter%20-%20Google%20Art%20Project.jpg?width=900', credit:'Saint Pierre · El Greco · domaine public'},
@@ -4342,39 +4410,72 @@ function novenaCardHTML(n, info){
   return `<div class="card novena-card hoz-card" style="--accent:${n.color};" data-id="${n.id}">
     <div class="hoz-card-img">
       ${art ? `<img src="${art.url}" alt="${n.title}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;novena-icon-fallback&quot;>${NOVENA_ICONS[n.id]||'🕯️'}</span>'">` : `<span class="novena-icon-fallback">${NOVENA_ICONS[n.id]||'🕯️'}</span>`}
+      <span class="novena-card-tag" style="background:${n.color};">${n.tag}</span>
       <span class="hoz-card-progress-pill ${info.done?'hoz-card-progress-done':''}">${info.done ? '✓ Terminée' : `Jour ${info.currentDay}/9`}</span>
     </div>
     <div class="hoz-card-body">
       <p class="hoz-card-title">${n.title}</p>
-      <div class="hoz-card-author"><span class="hoz-card-avatar">🕯️</span><span>Par Lumen</span></div>
-      <div class="hoz-card-stats"><span>👤 ${novenaPrayerCount(n)}</span><span>·</span><span>📅 9 jours</span><span>·</span><span>${info.completedCount}/9 priés</span></div>
+      <p class="hoz-card-sub">${n.sub||''}</p>
+      <div class="hoz-card-stats"><span>♥ ${(novenaPrayerCount(n)/100).toFixed(1).replace('.0','')}k</span><span>·</span><span>📅 9 jours</span><span>·</span><span>${info.completedCount}/9 priés</span></div>
     </div>
   </div>`;
 }
 
+/* ===== catalogue des neuvaines : recherche + filtres (Toutes / En cours / Populaires) ===== */
+let NOVENA_FILTER = 'toutes';
+let NOVENA_SEARCH = '';
+const NOVENA_FILTERS = [
+  {key:'toutes', label:'Toutes'},
+  {key:'en-cours', label:'En cours'},
+  {key:'populaires', label:'Populaires'}
+];
+function novenasFilteredList(){
+  let list = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)}));
+  if(NOVENA_FILTER === 'en-cours') list = list.filter(x=> x.info.completedCount>0 && !x.info.done);
+  if(NOVENA_FILTER === 'populaires') list = list.slice().sort((a,b)=> novenaPrayerCount(b.n)-novenaPrayerCount(a.n)).slice(0, Math.max(6, Math.ceil(NOVENAS.length/2)));
+  const q = normalizeForMatch(NOVENA_SEARCH).join(' ').trim();
+  if(q) list = list.filter(x=>{
+    const hay = normalizeForMatch((x.n.title||'')+' '+(x.n.sub||'')+' '+(x.n.tag||'')).join(' ');
+    return hay.includes(q);
+  });
+  return list;
+}
 function renderNovenas(){
   if(OPEN_NOVENA){ renderNovenaDetail(OPEN_NOVENA); return; }
   const inProgressNovenas = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
   const missedToday = inProgressNovenas.length > 0 && STREAK.lastDate !== todayISO();
-  let html = `<h2 class="section-title">🕯️ Toutes les neuvaines</h2>`;
+  let html = `<h2 class="section-title">🕯️ Neuvaines</h2>
+    <p class="section-desc">Confiez vos intentions et cheminez, neuf jours durant.</p>
+    <div class="novena-search-row"><input type="search" id="novena-search-input" class="novena-search-input" placeholder="Rechercher une neuvaine…" value="${NOVENA_SEARCH.replace(/"/g,'&quot;')}"></div>
+    <div class="chip-row" id="novena-filter-row">${NOVENA_FILTERS.map(f=>`<button class="chip ${NOVENA_FILTER===f.key?'active':''}" data-novena-filter="${f.key}">${f.label}</button>`).join('')}</div>`;
   if(missedToday){
     html += `<div class="card" style="border-left:4px solid var(--gold); margin-bottom:14px;">
       <p class="eyebrow" style="color:var(--gold);">🕯️ Petit rappel, sans pression</p>
       <p class="entry-detail-text" style="margin:4px 0 0;">Vous n'avez pas encore prié aujourd'hui pour ${inProgressNovenas.length>1?'vos neuvaines en cours':'votre neuvaine en cours'} (${inProgressNovenas.map(x=>x.n.title).join(', ')}). Un jour manqué ne remet rien en cause — reprenez simplement quand vous êtes prêt(e).</p>
     </div>`;
   }
+  const list = novenasFilteredList();
   html += `<div class="grid">`;
-  NOVENAS.forEach(n=>{
-    const info = novenaProgressInfo(n);
-    html += novenaCardHTML(n, info);
-  });
+  if(!list.length){
+    html += `<div class="empty-state" style="grid-column:1/-1;">Aucune neuvaine ne correspond à votre recherche.</div>`;
+  } else {
+    list.forEach(x=> html += novenaCardHTML(x.n, x.info));
+  }
   html += `</div>`;
   document.getElementById('screen').innerHTML = html;
-  document.querySelectorAll('.novena-card').forEach(c=> c.onclick = ()=>{ OPEN_NOVENA=c.dataset.id; NOVENA_FULLTEXT=true; NOVENA_OPEN_DAY=null; render(); });
+  document.querySelectorAll('.novena-card').forEach(c=> c.onclick = ()=>{ OPEN_NOVENA=c.dataset.id; NOVENA_FULLTEXT=true; NOVENA_OPEN_DAY=null; NOVENA_DAY_DONE_SCREEN=null; render(); });
+  document.querySelectorAll('[data-novena-filter]').forEach(btn=>{
+    btn.onclick = ()=>{ NOVENA_FILTER = btn.dataset.novenaFilter; render(); };
+  });
+  const searchInput = document.getElementById('novena-search-input');
+  if(searchInput){
+    searchInput.oninput = ()=>{ NOVENA_SEARCH = searchInput.value; render(); setTimeout(()=>{ const el=document.getElementById('novena-search-input'); if(el){ el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }, 0); };
+  }
 }
 
 let NOVENA_FULLTEXT = true;
 let NOVENA_OPEN_DAY = null;
+let NOVENA_DAY_DONE_SCREEN = null; // {novenaId, dayIndex} — écran de validation après un jour prié
 let NOVENA_DAY_AUDIO_PLAYING = null;
 const ORDINAL_DAYS = ['Premier','Deuxième','Troisième','Quatrième','Cinquième','Sixième','Septième','Huitième','Neuvième'];
 const HUB_HERO_IMAGES = {
@@ -4543,6 +4644,34 @@ function wireNovenaAudioPlayer(dayData){
     }, 400);
   };
 }
+/* Intention personnelle laissée par la personne pour une neuvaine (texte libre,
+   affiché ensuite sur la page de présentation et sur l'écran « jour terminé »). */
+let NOVENA_INTENTIONS = {};
+async function loadNovenaIntentions(){
+  try{ const r = await window.storage.get('novena-intentions', false); return r ? JSON.parse(r.value) : {}; }catch(e){ return {}; }
+}
+async function saveNovenaIntention(id, text){
+  if(text && text.trim()) NOVENA_INTENTIONS[id] = text.trim();
+  else delete NOVENA_INTENTIONS[id];
+  try{ await window.storage.set('novena-intentions', JSON.stringify(NOVENA_INTENTIONS), false); }catch(e){}
+}
+function wireNovenaPresentationHeader(n){
+  const introBtn = document.getElementById('read-intro-btn');
+  if(introBtn) introBtn.onclick = ()=>{
+    openVerseReader({ title: n.title, subtitle: 'Introduction à la neuvaine', text: n.dailyStructure || n.sub || '' });
+  };
+  const addBtn = document.getElementById('add-intention-btn');
+  if(addBtn) addBtn.onclick = async ()=>{
+    const current = NOVENA_INTENTIONS[n.id] || '';
+    const text = prompt('Quelle intention confiez-vous à cette neuvaine ?', current);
+    if(text === null) return;
+    await saveNovenaIntention(n.id, text);
+    showToast(text.trim() ? 'Intention enregistrée 🕯️' : 'Intention retirée');
+    render();
+  };
+  const editBtn = document.getElementById('edit-intention-btn');
+  if(editBtn) editBtn.onclick = ()=> addBtn && addBtn.onclick();
+}
 function renderNovenaDetail(id){
   const n = NOVENAS.find(x=>x.id===id);
   const info = novenaProgressInfo(n);
@@ -4550,6 +4679,7 @@ function renderNovenaDetail(id){
   const dayData = n.days[dayIdx-1];
   const alreadyDoneToday = info.completed[dayIdx-1];
 
+  if(NOVENA_DAY_DONE_SCREEN && NOVENA_DAY_DONE_SCREEN.novenaId === n.id){ renderNovenaDayDoneScreen(n, NOVENA_DAY_DONE_SCREEN.dayIndex); return; }
   if(NOVENA_OPEN_DAY !== null){ renderNovenaDayPage(n, info, NOVENA_OPEN_DAY); return; }
 
   let dots = '';
@@ -4573,6 +4703,25 @@ function renderNovenaDetail(id){
       <span class="novena-community-progress">${info.done ? '✓ Terminée' : `Jour ${info.currentDay} / 9`}</span>
     </div>
     <p style="font-size:13.5px; color:var(--ink-soft); margin-top:10px;">${n.sub}</p>
+    <div class="novena-info-chips">
+      <span class="novena-info-chip">📅 9 jours</span>
+      <span class="novena-info-chip">⏱️ ~5 min/jour</span>
+      <span class="novena-info-chip">🎧 Audio</span>
+      <span class="novena-info-chip">♥ ${(novenaPrayerCount(n)/100).toFixed(1).replace('.0','')}k</span>
+    </div>
+    ${(NOVENA_INTENTIONS_HINTS[n.id]||[]).length ? `<div class="card" style="margin-top:10px;">
+      <p class="eyebrow" style="color:${n.color};">Pour quelles intentions ?</p>
+      <ul class="novena-intentions-list">${NOVENA_INTENTIONS_HINTS[n.id].map(i=>`<li>${i}</li>`).join('')}</ul>
+    </div>` : ''}
+    ${NOVENA_INTENTIONS[n.id] ? `<div class="card" style="margin-top:10px; border-left:4px solid ${n.color};">
+      <p class="eyebrow" style="color:${n.color};">🕯️ Ma prière aujourd'hui</p>
+      <p class="entry-detail-text" style="margin:4px 0 0;">« ${NOVENA_INTENTIONS[n.id]} »</p>
+      <div style="text-align:right; margin-top:6px;"><button class="btn btn-ghost btn-sm" id="edit-intention-btn">✎ Modifier</button></div>
+    </div>` : ''}
+    <div class="entry-link-row" style="gap:8px; flex-wrap:wrap; margin:10px 0 0;">
+      <button class="btn btn-ghost btn-sm" id="read-intro-btn">📖 Lire l'introduction</button>
+      <button class="btn btn-ghost btn-sm" id="add-intention-btn">${NOVENA_INTENTIONS[n.id] ? '✎ Modifier mon intention' : '➕ Ajouter une intention'}</button>
+    </div>
     <div class="novena-audio-player" id="novena-audio-${n.id}">
       <button class="novena-audio-play" id="novena-audio-play-btn">▶</button>
       <div class="novena-audio-mid">
@@ -4608,10 +4757,11 @@ function renderNovenaDetail(id){
       }).join('')}</div>`;
     html += `</div>`;
     document.getElementById('screen').innerHTML = html;
-    document.getElementById('back-btn').onclick = ()=>{ OPEN_NOVENA=null; NOVENA_FULLTEXT=false; NOVENA_OPEN_DAY=null; render(); };
+    document.getElementById('back-btn').onclick = ()=>{ OPEN_NOVENA=null; NOVENA_FULLTEXT=false; NOVENA_OPEN_DAY=null; NOVENA_DAY_DONE_SCREEN=null; render(); };
     document.getElementById('toggle-fulltext-btn').onclick = ()=>{ NOVENA_FULLTEXT = false; render(); };
     wireNovenaAudioPlayer(dayData);
     wireNovenaBeadSequences();
+    wireNovenaPresentationHeader(n);
     document.querySelectorAll('[data-open-day-btn]').forEach(btn=>{
       btn.onclick = (e)=>{ e.stopPropagation(); NOVENA_OPEN_DAY = parseInt(btn.dataset.openDayBtn,10); render(); };
     });
@@ -4661,10 +4811,11 @@ function renderNovenaDetail(id){
   html += `</div>`;
 
   document.getElementById('screen').innerHTML = html;
-  document.getElementById('back-btn').onclick = ()=>{ OPEN_NOVENA=null; NOVENA_FULLTEXT=false; NOVENA_OPEN_DAY=null; render(); };
+  document.getElementById('back-btn').onclick = ()=>{ OPEN_NOVENA=null; NOVENA_FULLTEXT=false; NOVENA_OPEN_DAY=null; NOVENA_DAY_DONE_SCREEN=null; render(); };
   document.getElementById('toggle-fulltext-btn').onclick = ()=>{ NOVENA_FULLTEXT = true; render(); };
   wireNovenaAudioPlayer(dayData);
   wireNovenaBeadSequences();
+  wireNovenaPresentationHeader(n);
 
   const joinBtn = document.getElementById('join-companions-btn');
   if(joinBtn){
@@ -4688,6 +4839,7 @@ function renderNovenaDetail(id){
       PROGRESS[n.id].completed[dayIdx-1] = true;
       await saveProgress(PROGRESS);
       if(PROGRESS[n.id].completed.every(Boolean)) fireCelebration();
+      NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex:dayIdx-1};
       setTimeout(()=> render(), 550);
     };
   }
@@ -4768,12 +4920,57 @@ function renderNovenaDayPage(n, info, dayIndex){
   if(markBtn){
     markBtn.onclick = async ()=>{
       if(!PROGRESS[n.id]) PROGRESS[n.id] = {completed:[false,false,false,false,false,false,false,false,false]};
+      const wasAlreadyDone = PROGRESS[n.id].completed[dayIndex];
       PROGRESS[n.id].completed[dayIndex] = true;
       await saveProgress(PROGRESS);
       if(PROGRESS[n.id].completed.every(Boolean)) fireCelebration();
+      if(!wasAlreadyDone){ NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex}; }
       render();
     };
   }
+}
+
+/* ===== écran de validation après un jour de neuvaine prié ===== */
+function renderNovenaDayDoneScreen(n, dayIndex){
+  const d = n.days[dayIndex];
+  const isLastDay = dayIndex >= 8;
+  const intention = NOVENA_INTENTIONS[n.id];
+  let html = `<div class="detail-wrap" style="text-align:center;">
+    <div class="novena-done-candle">${candleHTML(true,'done-candle')}</div>
+    <h1 class="day-title" style="margin:14px 0 2px;">${ORDINAL_DAYS[dayIndex]} jour terminé !</h1>
+    <p class="entry-detail-text" style="color:var(--ink-soft);">Que cette prière porte du fruit dans votre vie.</p>
+    <div style="display:flex; flex-direction:column; gap:10px; margin:18px 0; align-items:stretch;">
+      <button class="btn btn-primary" id="novena-done-next-btn">${isLastDay ? '✓ Voir la neuvaine achevée' : 'Jour suivant →'}</button>
+      <button class="btn btn-ghost" id="novena-done-back-btn">🕯️ Revenir au parcours</button>
+      <button class="btn btn-ghost" id="novena-done-share-btn">📤 Partager cette neuvaine</button>
+    </div>
+    ${intention ? `<div class="card" style="text-align:left; border-left:4px solid ${n.color};">
+      <p class="eyebrow" style="color:${n.color};">🕯️ Ma prière aujourd'hui</p>
+      <p class="entry-detail-text" style="margin:4px 0 0;">« ${intention} »</p>
+      <div style="text-align:right; margin-top:6px;"><button class="btn btn-ghost btn-sm" id="novena-done-edit-intention-btn">✎ Modifier</button></div>
+    </div>` : `<div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="novena-done-add-intention-btn">➕ Confier une intention à cette neuvaine</button></div>`}
+  </div>`;
+  document.getElementById('screen').innerHTML = html;
+  document.getElementById('novena-done-next-btn').onclick = ()=>{
+    NOVENA_DAY_DONE_SCREEN = null;
+    NOVENA_OPEN_DAY = isLastDay ? null : (dayIndex + 1);
+    NOVENA_FULLTEXT = isLastDay;
+    render();
+  };
+  document.getElementById('novena-done-back-btn').onclick = ()=>{ NOVENA_DAY_DONE_SCREEN = null; NOVENA_OPEN_DAY = null; render(); };
+  document.getElementById('novena-done-share-btn').onclick = ()=> shareText('Prions ensemble', `Je prie la ${n.title} en ce moment (${n.sub}). Rejoins-moi si tu veux prier avec moi, jour après jour.`);
+  const addBtn = document.getElementById('novena-done-add-intention-btn');
+  const editBtn = document.getElementById('novena-done-edit-intention-btn');
+  const openPrompt = async ()=>{
+    const current = NOVENA_INTENTIONS[n.id] || '';
+    const text = prompt('Quelle intention confiez-vous à cette neuvaine ?', current);
+    if(text === null) return;
+    await saveNovenaIntention(n.id, text);
+    showToast(text.trim() ? 'Intention enregistrée 🕯️' : 'Intention retirée');
+    render();
+  };
+  if(addBtn) addBtn.onclick = openPrompt;
+  if(editBtn) editBtn.onclick = openPrompt;
 }
 
 function candleHTML(lit, id){
@@ -6844,7 +7041,7 @@ function renderFavoris(){
       if(e.target.closest('.fav-star')) return;
       const f = JSON.parse(c.dataset.favOpen.replace(/&apos;/g,"'"));
       if(f.type==='entry'){ PRIMARY = f.primary; SUBTAB[f.primary] = f.sub; GROUP_SEL[f.compKey] = f.groupId; ENTRY_OPEN = {compKey:f.compKey, groupId:f.groupId, idx:f.idx}; render(); }
-      else if(f.type==='novena'){ goTo('prier','neuvaines'); OPEN_NOVENA = f.id; NOVENA_OPEN_DAY = null; render(); }
+      else if(f.type==='novena'){ goTo('prier','neuvaines'); OPEN_NOVENA = f.id; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render(); }
     };
   });
 }
@@ -11223,7 +11420,7 @@ function render(){
 /* ---------- init ---------- */
 async function startApp(){
   document.getElementById('screen').innerHTML = '<div class="loading"><svg class="loading-emblem" viewBox="0 0 24 24"><defs><linearGradient id="flameGrad3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#7C1F2E"/><stop offset="55%" stop-color="#B8863B"/><stop offset="100%" stop-color="#FFF3C4"/></linearGradient></defs><path fill="url(#flameGrad3)" d="M12 2c-2.2 4-6 6.2-6 11a6 6 0 0 0 12 0c0-2.1-1-3.4-2-4.4.4 2-1 3-1 3 .6-3.2-1.1-5.4-3-9.6z"/></svg>Un instant, on allume les lumières…</div>';
-  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages()]);
+  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages, novenaIntentions] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages(), loadNovenaIntentions()]);
   PROGRESS = p;
   INTENTIONS = ints;
   JOURNAL = jour;
@@ -11234,6 +11431,7 @@ async function startApp(){
   ADVENT_PROGRESS = adventProg;
   REMINDERS = reminders;
   NOVENA_COMPANIONS = companions;
+  NOVENA_INTENTIONS = novenaIntentions || {};
   PARCOURS_PROGRESS = parcoursProg || { completedDays: [] };
   CAREME_PROGRESS = caremeProg || { completedDays: [] };
   GRATITUDE_ENTRIES = gratitude || [];
