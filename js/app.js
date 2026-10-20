@@ -5339,12 +5339,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
     </div>
     ${entry.ref ? `<p class="saint-prayer" style="margin-bottom:12px;">${entry.ref}</p>` : ''}
     ${carnetBoxesHTML(entry.summary, 'reading')}
-    ${speakShareRowHTML(entry.name, entry.summary)}
-    <div class="entry-link-row" style="gap:8px; flex-wrap:wrap;">
-      <button class="btn btn-ghost btn-sm" id="copy-prayer-btn">📋 Copier le texte</button>
-      <button class="btn btn-ghost btn-sm" id="reading-mode-entry-btn">🕯️ Mode lecture</button>
-      <button class="btn btn-ghost btn-sm" id="open-entry-reader-btn">🎨 Modes d'affichage</button>
-    </div>
+    ${textActionsRowHTML('candle', entry.name, entry.dates||'', entry.summary, entry.ref||'', detailArt ? [detailArt.url] : [])}
     ${(()=>{
       if(entry.externalUrl === '#') return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" id="goto-rosary-btn">${entry.linkLabel || 'Ouvrir →'}</button></div>`;
       if(!entry.externalUrl) return '';
@@ -5489,19 +5484,6 @@ function openReciteMode(name, text){
   };
 }
 function wireEntryDetailExtras(entry, usageKey){
-  const copyBtn = document.getElementById('copy-prayer-btn');
-  if(copyBtn) copyBtn.onclick = ()=>{
-    navigator.clipboard.writeText(entry.name + '\n\n' + entry.summary).then(()=> showToast('Texte copié 📋'));
-  };
-  const readingBtn = document.getElementById('reading-mode-entry-btn');
-  if(readingBtn) readingBtn.onclick = enableReadingMode;
-  const readerBtn = document.getElementById('open-entry-reader-btn');
-  if(readerBtn) readerBtn.onclick = ()=>{
-    const art = lumenSacredArtFor(entry);
-    openTextCover('candle', entry.name, entry.dates||'', ()=>{
-      openVerseReader({ title: entry.name, subtitle: entry.dates||'', text: entry.summary, reference: entry.ref||'', images: art ? [art.url] : [] });
-    });
-  };
   const markBtn = document.getElementById('mark-prayed-btn');
   if(markBtn && usageKey){
     markBtn.onclick = async ()=>{
@@ -7740,22 +7722,39 @@ function openShareImage(title, text){
     });
   };
 }
-function speakShareRowHTML(title, text){
-  const safe = text.replace(/'/g,"&apos;").replace(/"/g,"&quot;");
-  return `<div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-    <button class="btn btn-ghost btn-sm speak-btn" data-text="${safe}">🔊 Écouter</button>
-    <button class="btn btn-ghost btn-sm share-btn" data-title="${title.replace(/"/g,'&quot;')}" data-text="${safe}">📤 Partager</button>
-    <button class="btn btn-ghost btn-sm image-btn" data-title="${title.replace(/"/g,'&quot;')}" data-text="${safe}">🖼️ Image</button>
-    <button class="btn btn-ghost btn-sm print-btn" data-title="${title.replace(/"/g,'&quot;')}" data-text="${safe}">🖨️ Imprimer</button>
-    <button class="btn btn-ghost btn-sm social-btn" data-title="${title.replace(/"/g,'&quot;')}" data-text="${safe}">📋 Copier réseaux</button>
+/* Rangée d'actions unifiée pour tout texte affiché dans l'app : on ne garde
+   que ce qui est vraiment utile (le lecteur plein écran couvre déjà l'écoute,
+   l'image et le partage internes ; inutile de dupliquer imprimer/copier). */
+function textActionsRowHTML(theme, title, subtitle, text, reference, images){
+  const safeText = text.replace(/'/g,"&apos;").replace(/"/g,"&quot;");
+  const safeTitle = (title||'').replace(/'/g,"&apos;").replace(/"/g,"&quot;");
+  const safeSub = (subtitle||'').replace(/'/g,"&apos;").replace(/"/g,"&quot;");
+  const safeRef = (reference||'').replace(/'/g,"&apos;").replace(/"/g,"&quot;");
+  const imgsAttr = images && images.length ? images.join(',').replace(/"/g,'&quot;') : '';
+  return `<div class="entry-link-row" style="gap:8px; flex-wrap:wrap;">
+    <button class="btn btn-ghost btn-sm tdisplay-btn" data-theme="${theme||'candle'}" data-title="${safeTitle}" data-subtitle="${safeSub}" data-text="${safeText}" data-reference="${safeRef}" data-images="${imgsAttr}">🎨 Modes d'affichage</button>
+    <button class="btn btn-ghost btn-sm treading-btn">🕯️ Mode lecture</button>
+    <button class="btn btn-ghost btn-sm share-btn" data-title="${safeTitle}" data-text="${safeText}">📤 Partager</button>
   </div>`;
 }
+function speakShareRowHTML(title, text){ return textActionsRowHTML('candle', title, '', text, ''); }
 function wireSpeakShare(){
   document.querySelectorAll('.speak-btn').forEach(b=> b.onclick = ()=> speakText(b.dataset.text));
   document.querySelectorAll('.share-btn').forEach(b=> b.onclick = ()=> shareText(b.dataset.title, b.dataset.text));
-  document.querySelectorAll('.image-btn').forEach(b=> b.onclick = ()=> openShareImage(b.dataset.title, b.dataset.text));
-  document.querySelectorAll('.print-btn').forEach(b=> b.onclick = ()=> printCard(b.dataset.title, b.dataset.text));
-  document.querySelectorAll('.social-btn').forEach(b=> b.onclick = ()=> copyForSocial(b.dataset.title, b.dataset.text));
+  document.querySelectorAll('.treading-btn').forEach(b=> b.onclick = enableReadingMode);
+  document.querySelectorAll('.tdisplay-btn').forEach(b=>{
+    b.onclick = ()=>{
+      const theme = b.dataset.theme || 'candle';
+      const title = b.dataset.title || '';
+      const subtitle = b.dataset.subtitle || '';
+      const text = b.dataset.text || '';
+      const reference = b.dataset.reference || '';
+      const images = b.dataset.images ? b.dataset.images.split(',').filter(Boolean) : [];
+      openTextCover(theme, title, subtitle, ()=>{
+        openVerseReader({ title, subtitle, text, reference, images });
+      });
+    };
+  });
 }
 
 /* ================= rosary (chapelet interactif, avec vrai chapelet visuel) ================= */
