@@ -5301,7 +5301,9 @@ function wireEntryDetailExtras(entry, usageKey){
   const readerBtn = document.getElementById('open-entry-reader-btn');
   if(readerBtn) readerBtn.onclick = ()=>{
     const art = lumenSacredArtFor(entry);
-    openVerseReader({ title: entry.name, subtitle: entry.dates||'', text: entry.summary, reference: entry.ref||'', images: art ? [art.url] : [] });
+    openTextCover('candle', entry.name, entry.dates||'', ()=>{
+      openVerseReader({ title: entry.name, subtitle: entry.dates||'', text: entry.summary, reference: entry.ref||'', images: art ? [art.url] : [] });
+    });
   };
   const markBtn = document.getElementById('mark-prayed-btn');
   if(markBtn && usageKey){
@@ -8517,7 +8519,9 @@ function renderAelfOfficeViewer(){
     const body = document.getElementById('aelf-office-body');
     const plain = body ? body.innerText.trim() : '';
     if(!plain){ showToast('Patientez que le texte soit chargé.'); return; }
-    openVerseReader({ title: office.label, subtitle: 'Texte officiel AELF du ' + date.split('-').reverse().join('/'), text: plain });
+    openTextCover('letter', office.label, 'Texte officiel AELF du ' + date.split('-').reverse().join('/'), ()=>{
+      openVerseReader({ title: office.label, subtitle: 'Texte officiel AELF du ' + date.split('-').reverse().join('/'), text: plain });
+    });
   };
   document.querySelectorAll('[data-aelf-office]').forEach(btn=>{
     btn.onclick = ()=>{ AELF_OFFICE_VIEW = btn.dataset.aelfOffice; renderAelfOfficeViewer(); };
@@ -8617,6 +8621,7 @@ function renderTextesDuJour(){
       <p class="eyebrow" style="color:var(--wine);">📜 Psaume du jour</p>
       <p class="day-title" style="font-size:16px;">${psEntry.name}</p>
       <p class="entry-detail-text">${psEntry.summary}</p>
+      <div style="text-align:right; margin-top:8px;"><button class="btn btn-ghost btn-sm" id="psaume-jour-reader-btn">🎨 Modes d'affichage</button></div>
     </div>
 
     <div class="card" style="border-left:4px solid var(--gold-pale); margin-top:12px; text-align:center;">
@@ -8636,11 +8641,18 @@ function renderTextesDuJour(){
     fireCelebration();
   };
   document.getElementById('textes-jour-reading-btn').onclick = enableReadingMode;
+  document.getElementById('psaume-jour-reader-btn').onclick = ()=>{
+    openTextCover('scroll', psEntry.name, 'Psaume du jour', ()=>{
+      openVerseReader({ title: psEntry.name, subtitle: 'Psaume du jour', text: psEntry.summary });
+    });
+  };
   document.getElementById('textes-jour-reader-btn').onclick = ()=>{
     const body = document.getElementById('textes-jour-messe-body');
     const plain = body ? body.innerText.trim() : '';
     if(!plain){ showToast('Patientez que les lectures soient chargées.'); return; }
-    openVerseReader({ title: 'Textes du jour', subtitle: 'Lectures officielles de la messe', text: plain });
+    openTextCover('book', 'Textes du jour', 'Lectures officielles de la messe', ()=>{
+      openVerseReader({ title: 'Textes du jour', subtitle: 'Lectures officielles de la messe', text: plain });
+    });
   };
   const messeUrl = `https://www.aelf.org/${todayISO()}/romain/messe`;
   fetchAelfDuJour().then(json=>{
@@ -8676,7 +8688,9 @@ function wireVersetShuffle(){
   const readerBtn = document.getElementById('open-verset-reader-btn');
   if(readerBtn) readerBtn.onclick = ()=>{
     const v = VERSET_SHUFFLE_IDX !== null ? VERSETS_DU_JOUR[VERSET_SHUFFLE_IDX] : VERSETS_DU_JOUR[dayOfYear() % VERSETS_DU_JOUR.length];
-    openVerseReader({ title: 'Verset du jour', subtitle: 'Une parole pour éclairer votre journée', text: v.text, reference: v.ref });
+    openTextCover('book', 'Verset du jour', 'Une parole pour éclairer votre journée', ()=>{
+      openVerseReader({ title: 'Verset du jour', subtitle: 'Une parole pour éclairer votre journée', text: v.text, reference: v.ref });
+    });
   };
 }
 
@@ -9926,12 +9940,50 @@ const VREADER_MODES = [
   {key:'carte', icon:'🗂️', label:'Mode Carte', desc:'Un passage par carte pour une lecture simple et interactive.'},
   {key:'image', icon:'🏞️', label:'Mode Image', desc:'Le texte s’intègre à une belle image pour une expérience immersive et inspirante.'}
 ];
+/* ================= écran d'ouverture thématique =================
+   Un court écran d'invitation, avant d'entrer dans le lecteur de texte,
+   dont l'habillage (livre, parchemin, lettre, bougie) annonce le type de
+   texte qu'on va lire — inspiré des ouvertures de livre, de parchemin qui
+   se déroule, de lettre qui s'ouvre ou de bougie qui s'allume. */
+const TCOVER_THEMES = {
+  book:   { icon:'📖', cta:'Ouvrir le livre',        hint:"Touchez le livre pour découvrir la Parole d'aujourd'hui", verb:'Ouverture de la Parole…' },
+  scroll: { icon:'📜', cta:'Dérouler le parchemin',  hint:'Touchez le parchemin pour le dérouler',                  verb:'Déroulement du psaume…' },
+  letter: { icon:'✉️', cta:'Ouvrir la lettre',       hint:'Touchez la lettre pour l’ouvrir',                        verb:'Ouverture de la prière…' },
+  candle: { icon:'🕯️', cta:'Allumer',                hint:'Touchez la bougie pour allumer la lumière',              verb:'La lumière se fait…' }
+};
+function openTextCover(theme, title, desc, onOpen){
+  const t = TCOVER_THEMES[theme] || TCOVER_THEMES.book;
+  let host = document.getElementById('tcover-overlay-host');
+  if(!host){ host = document.createElement('div'); host.id = 'tcover-overlay-host'; document.body.appendChild(host); }
+  host.innerHTML = `
+    <div class="tcover tcover--${theme}">
+      <button class="tcover-close" id="tcover-close" aria-label="Fermer">←</button>
+      <div class="tcover-content">
+        <button class="tcover-icon-wrap" id="tcover-icon" aria-label="${t.cta}"><span class="tcover-icon">${t.icon}</span></button>
+        <p class="tcover-eyebrow">✦ Lumen ✦</p>
+        <h2 class="tcover-title">${title}</h2>
+        ${desc ? `<p class="tcover-desc">${desc}</p>` : ''}
+        <p class="tcover-hint" id="tcover-hint">${t.hint}</p>
+        <button class="tcover-cta" id="tcover-cta">${t.cta}</button>
+      </div>
+    </div>`;
+  const overlay = host.querySelector('.tcover');
+  const close = ()=>{ host.innerHTML = ''; };
+  document.getElementById('tcover-close').onclick = close;
+  const open = ()=>{
+    overlay.classList.add('tcover--opening');
+    const hint = document.getElementById('tcover-hint'); if(hint) hint.textContent = t.verb;
+    setTimeout(()=>{ host.innerHTML = ''; onOpen(); }, 460);
+  };
+  document.getElementById('tcover-cta').onclick = open;
+  document.getElementById('tcover-icon').onclick = open;
+}
 let READER_STATE = null;
 function openVerseReader(opts){
   READER_STATE = {
     title: opts.title||'', subtitle: opts.subtitle||'', text: opts.text||'', reference: opts.reference||'',
     images: (opts.images && opts.images.length) ? opts.images : VREADER_DEFAULT_IMAGES,
-    mode: 'lumiere', fontBig: false, cardIdx: 0
+    mode: 'lumiere', fontBig: false, cardIdx: 0, playing: false
   };
   renderVerseReader();
   document.getElementById('verse-reader-overlay').classList.remove('hidden');
@@ -9941,6 +9993,31 @@ function closeVerseReader(){
   document.getElementById('verse-reader-overlay').innerHTML = '';
   try{ window.speechSynthesis.cancel(); }catch(e){}
   READER_STATE = null;
+}
+/* Estime une durée de lecture (≈150 mots/minute) pour afficher une barre de
+   progression audio même si l'API de synthèse vocale ne donne pas la durée réelle. */
+function estimateReadSeconds(text){
+  const words = (text||'').trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(3, Math.round(words / (150/60)));
+}
+function formatMinSec(totalSeconds){
+  const s = Math.max(0, Math.round(totalSeconds));
+  const m = Math.floor(s/60), r = s%60;
+  return m + ':' + String(r).padStart(2,'0');
+}
+function speakWithProgress(text, totalSeconds, onTick, onEnd){
+  try{
+    if(!window.speechSynthesis){ showToast("Lecture vocale indisponible sur ce navigateur"); return null; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    applyNaturalVoice(u);
+    const textLen = Math.max(1, text.length);
+    u.onboundary = (e)=>{ if(typeof e.charIndex === 'number') onTick(Math.min(1, e.charIndex/textLen)); };
+    u.onend = ()=>{ onTick(1); onEnd(); };
+    u.onerror = ()=>{ onEnd(); };
+    window.speechSynthesis.speak(u);
+    return u;
+  }catch(e){ showToast("Lecture vocale indisponible"); onEnd(); return null; }
 }
 function verseReaderParts(){
   const text = (READER_STATE.text||'').trim();
@@ -9967,6 +10044,7 @@ function renderVerseReader(){
         <button class="vreader-icon-btn" id="vreader-close" aria-label="Fermer">←</button>
         <div style="flex:1;"></div>
         <button class="vreader-icon-btn" id="vreader-font" aria-label="Taille du texte">Aa</button>
+        <button class="vreader-icon-btn" id="vreader-share" aria-label="Partager">📤</button>
         <button class="vreader-icon-btn" id="vreader-fav" aria-label="Enregistrer">🔖</button>
       </div>
       <div class="vreader-body">
@@ -9976,13 +10054,18 @@ function renderVerseReader(){
           <p class="vreader-title">${st.title}</p>
           ${st.subtitle ? `<p class="vreader-subtitle">${st.subtitle}</p>` : ''}
           <p class="vreader-text ${st.fontBig?'vreader-text--big':''}">${displayText}</p>
-          ${st.reference ? `<p class="vreader-ref">— ${st.reference}</p>` : ''}
+          ${st.reference ? `<p class="vreader-ref">${st.reference}</p>` : ''}
         </div>
         ${st.mode==='carte' ? `</div>` : ''}
       </div>
+      <div class="vreader-audio-row">
+        <span class="vreader-audio-time" id="vreader-audio-elapsed">0:00</span>
+        <div class="vreader-audio-track"><div class="vreader-audio-fill" id="vreader-audio-fill" style="width:0%"></div></div>
+        <span class="vreader-audio-time" id="vreader-audio-total">${formatMinSec(estimateReadSeconds(displayText))}</span>
+      </div>
       <div class="vreader-controls">
         <button class="vreader-nav-btn" id="vreader-prev" ${canPage && st.cardIdx>0 ? '' : 'disabled'}>‹</button>
-        <button class="vreader-play-btn" id="vreader-play" aria-label="Écouter">▶</button>
+        <button class="vreader-play-btn" id="vreader-play" aria-label="Écouter">${st.playing ? '❚❚' : '▶'}</button>
         <button class="vreader-nav-btn" id="vreader-next" ${canPage && st.cardIdx<parts.length-1 ? '' : 'disabled'}>›</button>
       </div>
       <div class="vreader-modes">
@@ -9992,25 +10075,47 @@ function renderVerseReader(){
       </div>
       <p class="vreader-mode-desc">${(VREADER_MODES.find(m=>m.key===st.mode)||{}).desc||''}</p>
     </div>`;
-  wireVerseReader(parts);
+  wireVerseReader(parts, displayText);
 }
-function wireVerseReader(parts){
+function wireVerseReader(parts, displayText){
   const st = READER_STATE;
   document.getElementById('vreader-close').onclick = closeVerseReader;
   document.getElementById('vreader-font').onclick = ()=>{ st.fontBig = !st.fontBig; renderVerseReader(); };
   document.getElementById('vreader-fav').onclick = ()=>{ showToast('Ajouté à vos favoris ✦'); };
+  document.getElementById('vreader-share').onclick = ()=>{ copyForSocial(st.title, st.text); };
   document.querySelectorAll('.vreader-mode-btn').forEach(btn=>{
-    btn.onclick = ()=>{ st.mode = btn.dataset.mode; st.cardIdx = 0; renderVerseReader(); };
+    btn.onclick = ()=>{
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+      st.playing = false; st.mode = btn.dataset.mode; st.cardIdx = 0; renderVerseReader();
+    };
   });
   const prevBtn = document.getElementById('vreader-prev');
   const nextBtn = document.getElementById('vreader-next');
-  prevBtn.onclick = ()=>{ if(st.cardIdx>0){ st.cardIdx--; renderVerseReader(); } };
-  nextBtn.onclick = ()=>{ if(st.cardIdx<parts.length-1){ st.cardIdx++; renderVerseReader(); } };
+  prevBtn.onclick = ()=>{ if(st.cardIdx>0){ try{ window.speechSynthesis.cancel(); }catch(e){} st.playing=false; st.cardIdx--; renderVerseReader(); } };
+  nextBtn.onclick = ()=>{ if(st.cardIdx<parts.length-1){ try{ window.speechSynthesis.cancel(); }catch(e){} st.playing=false; st.cardIdx++; renderVerseReader(); } };
   document.getElementById('vreader-play').onclick = ()=>{
-    try{
-      if(window.speechSynthesis.speaking){ window.speechSynthesis.cancel(); return; }
-      speakText(`${st.title}. ${st.text}`);
-    }catch(e){ showToast("Lecture audio indisponible"); }
+    if(st.playing){
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+      st.playing = false;
+      const btn = document.getElementById('vreader-play'); if(btn) btn.textContent = '▶';
+      return;
+    }
+    const textToSpeak = displayText || st.text;
+    const total = estimateReadSeconds(textToSpeak);
+    st.playing = true;
+    const playBtn = document.getElementById('vreader-play'); if(playBtn) playBtn.textContent = '❚❚';
+    speakWithProgress(textToSpeak, total, (ratio)=>{
+      if(!st.playing) return;
+      const fill = document.getElementById('vreader-audio-fill');
+      const elapsed = document.getElementById('vreader-audio-elapsed');
+      if(fill) fill.style.width = Math.round(ratio*100) + '%';
+      if(elapsed) elapsed.textContent = formatMinSec(ratio*total);
+    }, ()=>{
+      st.playing = false;
+      const btn = document.getElementById('vreader-play'); if(btn) btn.textContent = '▶';
+      const fill = document.getElementById('vreader-audio-fill'); if(fill) fill.style.width = '0%';
+      const elapsed = document.getElementById('vreader-audio-elapsed'); if(elapsed) elapsed.textContent = '0:00';
+    });
   };
 }
 
