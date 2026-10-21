@@ -3953,13 +3953,13 @@ const HOME_SECTIONS = [
    dédiées à Lumen (même palette, même style que le reste de l'app) plutôt
    que des photos externes. */
 const HOME_SHORTCUTS = [
-  {label:'Prier', icon:'🙏', img:'./images/prayer.svg', primary:'prier'},
-  {label:'Bible', icon:'📖', img:'./images/bible.svg', primary:'ecritures'},
-  {label:'Neuvaines', icon:'🕯️', img:'./images/novena-joseph.svg', primary:'prier', sub:'neuvaines'},
-  {label:'Chapelet', icon:'📿', img:'./images/rosary.svg', primary:'devotions', sub:'chapelet'},
-  {label:'Saints', icon:'✦', img:'./images/saints.svg', primary:'eglise', sub:'saints'},
-  {label:'Méditer', icon:'🌿', img:'./images/wisdom.svg', primary:'sagesse', sub:'meditations-audio'},
-  {label:'Offices', icon:'⛪', img:'./images/church.svg', primary:'prier', sub:'textes-du-jour'},
+  {label:'Prier', icon:'🙏', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Albrecht%20Dürer%20-%20Praying%20Hands%2C%201508%20-%20Google%20Art%20Project.jpg?width=400', primary:'prier'},
+  {label:'Bible', icon:'📖', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=400', primary:'ecritures'},
+  {label:'Neuvaines', icon:'🕯️', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20The-Madonna-and-Child-128.jpg?width=400', primary:'prier', sub:'neuvaines'},
+  {label:'Chapelet', icon:'📿', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bernadette%20Soubirous%20en%201863%2C%20photo%20Billard-Perrin.jpg?width=400', primary:'devotions', sub:'chapelet'},
+  {label:'Saints', icon:'✦', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20St.%20Peter%20-%20Google%20Art%20Project.jpg?width=400', primary:'eglise', sub:'saints'},
+  {label:'Méditer', icon:'🌿', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Thomas%20Aquinas%20by%20Sandro%20Botticelli.jpg?width=400', primary:'sagesse', sub:'meditations-audio'},
+  {label:'Offices', icon:'⛪', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=400', primary:'prier', sub:'textes-du-jour'},
   {label:'Plus', icon:'🧭', img:'./images/themes.svg', primary:'explorer'}
 ];
 function isHomeSectionEnabled(key){
@@ -4082,7 +4082,7 @@ function homePage1HTML(){
 
     ${homeTitleRowHTML('🔥','Ma progression','linear-gradient(160deg, #AFC2D6, #6E8FAE)', 'Voir tout →', 'home-progress-all-btn')}
     <div class="home-progress-scroll">
-      ${inProgress.length ? inProgress.map(({n,info})=>`<div class="home-progress-item">${novenaCardHTML(n, info)}</div>`).join('') : `<div class="home-progress-item"><div class="card hoz-card"><div class="hoz-card-img" style="background:#5C6E58;"><img src="./images/novena-joseph.svg" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="hoz-card-body"><p class="eyebrow" style="color:var(--gold);">🕯️ Neuvaine</p><p class="hoz-card-sub" style="-webkit-line-clamp:unset;">Vous n'avez pas encore commencé de neuvaine — même un seul jour est un bon début.</p><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="neuvaines" style="margin-top:4px;">Découvrir →</button></div></div></div>`}
+      ${inProgress.length ? inProgress.map(({n,info})=>`<div class="home-progress-item">${novenaCardHTML(n, info)}</div>`).join('') : `<div class="home-progress-item"><div class="card hoz-card"><div class="hoz-card-img" style="background:#5C6E58;"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Joseph%20with%20the%20Infant%20Jesus%20by%20Guido%20Reni%2C%20c%201635.jpg?width=600" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="hoz-card-body"><p class="eyebrow" style="color:var(--gold);">🕯️ Neuvaine</p><p class="hoz-card-sub" style="-webkit-line-clamp:unset;">Vous n'avez pas encore commencé de neuvaine — même un seul jour est un bon début.</p><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="neuvaines" style="margin-top:4px;">Découvrir →</button></div></div></div>`}
       ${(()=>{
         const setKey = todaysRosarySet();
         const set = ROSARY_SETS[setKey];
@@ -4091,7 +4091,7 @@ function homePage1HTML(){
         return `<div class="home-progress-item">
           <div class="card hoz-card">
             <div class="hoz-card-img" style="background:#6B2545;">
-              <img src="./images/rosary.svg" alt="" loading="lazy">
+              <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Zurbar%C3%A1n%20%28atribuido%29-John%20of%20the%20Cross-1656.jpg?width=600" alt="" loading="lazy" onerror="this.style.display='none'">
               <span class="hoz-card-progress-pill">${midSession ? `Mystère ${mysteryNow}/5` : 'Chapelet du jour'}</span>
             </div>
             <div class="hoz-card-body">
@@ -4183,16 +4183,16 @@ function homePage2HTML(){
   const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
   const v = VERSETS_DU_JOUR[weekNumber() % VERSETS_DU_JOUR.length];
   const quick = [
-    {label:'Psaume du jour', icon:'📜', img:'./images/psalms.svg', primary:'ecritures', sub:'psaumes'},
-    {label:'Laudes du jour', icon:'☀️', img:'./images/church.svg', primary:'prier', sub:'laudes'},
-    {label:'Prière du matin', icon:'🌅', img:'./images/walking-to-light.svg', primary:'prier', sub:'laudes'},
-    {label:'Prière du soir', icon:'🌙', img:'./images/oratory.svg', primary:'prier', sub:'compline'}
+    {label:'Psaume du jour', icon:'📜', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Image%20Th%C3%A9r%C3%A8se%20Lisieux.jpg?width=400', primary:'ecritures', sub:'psaumes'},
+    {label:'Laudes du jour', icon:'☀️', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20Saint%20Francis%20in%20ecstasy%20-%20Google%20Art%20Project.jpg?width=400', primary:'prier', sub:'laudes'},
+    {label:'Prière du matin', icon:'🌅', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/St%20Catherine.%20San%20Domenico.jpg?width=400', primary:'prier', sub:'laudes'},
+    {label:'Prière du soir', icon:'🌙', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Sandro%20Botticelli%20-%20St%20Augustin%20dans%20son%20cabinet%20de%20travail.jpg?width=400', primary:'prier', sub:'compline'}
   ];
   const discover = [
-    {label:'Neuvaine à Notre-Dame', img:'./images/novena-mary.svg', novena:'marie-confiance'},
-    {label:'Chemin de croix', icon:'✝️', primary:'prier', sub:'chemin-croix'},
-    {label:'Prier pour les malades', icon:'🙏', img:'./images/mercy.svg', novena:'sante'},
-    {label:'Apprendre sa foi', img:'./images/wisdom.svg', primary:'sagesse', sub:'enseignements'}
+    {label:'Neuvaine à Notre-Dame', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lady%20of%20Guadalupe.jpg?width=300', novena:'marie-confiance'},
+    {label:'Chemin de croix', icon:'✝️', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fabrizio%20Santafede%20-%20St.%20Stephen%20the%20Martyr.jpg?width=300', primary:'prier', sub:'chemin-croix'},
+    {label:'Prier pour les malades', icon:'🙏', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Rembrandt%20De%20aartsengel%20verlaat%20Tobias%20en%20zijn%20gezin.%201637.jpg?width=300', novena:'sante'},
+    {label:'Apprendre sa foi', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Jerome%20Writing-Caravaggio%20%28c.%201607%29.jpg?width=300', primary:'sagesse', sub:'enseignements'}
   ];
 
   return `
@@ -4212,7 +4212,7 @@ function homePage2HTML(){
     ${homeTitleRowHTML('🔥','Méditation du jour','linear-gradient(160deg, #AFC2D6, #6E8FAE)', 'Voir toutes →', 'p2-medit-all')}
     <div class="card hoz-card">
       <div class="hoz-card-img" style="background:#4A3D6B;">
-        <img src="./images/wisdom.svg" alt="" loading="lazy" onerror="this.style.display='none'">
+        <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=600" alt="" loading="lazy" onerror="this.style.display='none'">
       </div>
       <div class="hoz-card-body">
         <p class="hoz-card-title">${medit.title}</p>
@@ -4244,7 +4244,7 @@ function homePage2HTML(){
     <div class="home-tile-grid">
       ${discover.map(d=>`
       <div class="home-tile-big" data-discover-primary="${d.primary||'prier'}" data-discover-sub="${d.sub||'neuvaines'}" ${d.novena?`data-discover-novena="${d.novena}"`:''}>
-        <span class="home-tile-big-icon" style="background:linear-gradient(160deg,#E7C98C,#B8863B);">${d.img?`<img src="${d.img}" alt="" loading="lazy">`:`<span>${d.icon||'✦'}</span>`}</span>
+        <span class="home-tile-big-icon" style="background:linear-gradient(160deg,#E7C98C,#B8863B);">${d.img?`<img src="${d.img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${d.icon||'✦'}'">`:`<span>${d.icon||'✦'}</span>`}</span>
         <span class="home-tile-big-label">${d.label}</span>
       </div>`).join('')}
     </div>
