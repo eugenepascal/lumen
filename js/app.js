@@ -4046,10 +4046,16 @@ function homePage1HTML(){
   const inProgress = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
 
   return `
-    <div class="home-hero-simple">
-      <p class="home-hero-simple-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>que la paix soit avec vous.</p>
-      <p class="home-hero-simple-sub">Un moment avec Dieu pour aujourd'hui.</p>
-    </div>
+    <figure class="home-hero" id="home-hero-wrap">
+      <img id="home-hero-img" src="${['https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden_Eagle_soaring_overhead.jpg?width=1200'][dayOfYear()%3]}" alt="" onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200';">
+      <div class="home-hero-duotone"></div>
+      <div class="home-hero-scrim"></div>
+      <figcaption>
+        <p class="home-hero-kicker"><span class="home-hero-kicker-pill">${saluTime}${USER_NAME ? ', '+USER_NAME : ''}</span></p>
+        <p class="home-hero-line">que la paix soit avec vous.</p>
+        <p class="home-hero-sub">Un moment avec Dieu pour aujourd'hui.</p>
+      </figcaption>
+    </figure>
     ${USER_NAME ? '' : `
       <div class="home-name-prompt" style="margin:10px 0 2px;">
         <input type="text" id="home-name-input" placeholder="Comment souhaitez-vous qu'on vous appelle ?">
@@ -4057,9 +4063,14 @@ function homePage1HTML(){
       </div>`}
 
     ${homeTitleHTML('☀️','Évangile du jour','linear-gradient(160deg, #D9A35C, #B8863B)')}
-    <div class="card" id="home-evangile-card">
-      <p class="studio-note">Chargement des lectures du jour…</p>
-      <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>
+    <div class="card hoz-card" id="home-evangile-card">
+      <div class="hoz-card-img" style="background:#B8863B;">
+        <img src="./images/gospel.svg" alt="" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="hoz-card-body">
+        <p class="studio-note">Chargement des lectures du jour…</p>
+        <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>
+      </div>
     </div>
 
     ${homeTitleRowHTML('🔥','Mes raccourcis','linear-gradient(160deg, #D9A35C, #B8863B)', 'Personnaliser ⊞', 'home-personalize-btn')}
@@ -4071,7 +4082,7 @@ function homePage1HTML(){
 
     ${homeTitleRowHTML('🔥','Ma progression','linear-gradient(160deg, #AFC2D6, #6E8FAE)', 'Voir tout →', 'home-progress-all-btn')}
     <div class="home-progress-scroll">
-      ${inProgress.length ? inProgress.map(({n,info})=>`<div class="home-progress-item">${novenaCardHTML(n, info)}</div>`).join('') : `<div class="home-progress-item"><div class="card" style="text-align:left;"><p class="eyebrow" style="color:var(--gold);">🕯️ Neuvaine</p><p class="entry-summary" style="-webkit-line-clamp:unset; margin:4px 0 10px;">Vous n'avez pas encore commencé de neuvaine — même un seul jour est un bon début.</p><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="neuvaines">Découvrir →</button></div></div>`}
+      ${inProgress.length ? inProgress.map(({n,info})=>`<div class="home-progress-item">${novenaCardHTML(n, info)}</div>`).join('') : `<div class="home-progress-item"><div class="card hoz-card"><div class="hoz-card-img" style="background:#5C6E58;"><img src="./images/novena-joseph.svg" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="hoz-card-body"><p class="eyebrow" style="color:var(--gold);">🕯️ Neuvaine</p><p class="hoz-card-sub" style="-webkit-line-clamp:unset;">Vous n'avez pas encore commencé de neuvaine — même un seul jour est un bon début.</p><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="neuvaines" style="margin-top:4px;">Découvrir →</button></div></div></div>`}
       ${(()=>{
         const setKey = todaysRosarySet();
         const set = ROSARY_SETS[setKey];
@@ -4093,7 +4104,7 @@ function homePage1HTML(){
       })()}
     </div>
 
-    ${homeTitleRowHTML('🤝','Intentions de prière','linear-gradient(160deg, #C98A9A, #8A4A5E)', 'Voir toutes →', 'home-intentions-all-btn')}
+    ${homeTitleRowHTML('♡','Intentions de prière','linear-gradient(160deg, #C98A9A, #8A4A5E)', 'Voir toutes →', 'home-intentions-all-btn')}
     <div class="home-intentions-block">
       <div class="card home-confier-card" id="home-confier-btn">
         <span class="home-confier-icon">♡</span>
@@ -4108,8 +4119,8 @@ function homePage1HTML(){
 }
 function loadHomeEvangileCard(){
   fetchAelfDuJour().then(json=>{
-    const card = document.getElementById('home-evangile-card');
-    if(!card) return;
+    const body = document.querySelector('#home-evangile-card .hoz-card-body');
+    if(!body) return;
     const messe = json && json.messes && json.messes[0];
     const lectures = messe ? (messe.lectures||[]) : [];
     const evangile = lectures.find(l=>{
@@ -4117,12 +4128,12 @@ function loadHomeEvangileCard(){
       return t.includes('evangile') && !t.includes('verset');
     });
     if(!evangile){
-      card.innerHTML = `<p class="studio-note">Les lectures d'aujourd'hui vous attendent.</p>
+      body.innerHTML = `<p class="studio-note">Les lectures d'aujourd'hui vous attendent.</p>
         <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>`;
     } else {
-      const body = aelfCleanText(evangile.contenu||evangile.texte||'');
-      const snippet = body.length>170 ? body.slice(0,170).trim()+'…' : body;
-      card.innerHTML = `
+      const cleaned = aelfCleanText(evangile.contenu||evangile.texte||'');
+      const snippet = cleaned.length>170 ? cleaned.slice(0,170).trim()+'…' : cleaned;
+      body.innerHTML = `
         ${evangile.ref ? `<p class="eyebrow" style="color:var(--gold);">${evangile.ref}</p>` : ''}
         <p class="verset-text">« ${snippet} »</p>
         <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>`;
@@ -4172,15 +4183,15 @@ function homePage2HTML(){
   const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
   const v = VERSETS_DU_JOUR[weekNumber() % VERSETS_DU_JOUR.length];
   const quick = [
-    {label:'Psaume du jour', icon:'📜', primary:'ecritures', sub:'psaumes'},
-    {label:'Laudes du jour', icon:'☀️', primary:'prier', sub:'laudes'},
-    {label:'Prière du matin', icon:'🌅', primary:'prier', sub:'laudes'},
-    {label:'Prière du soir', icon:'🌙', primary:'prier', sub:'compline'}
+    {label:'Psaume du jour', icon:'📜', img:'./images/psalms.svg', primary:'ecritures', sub:'psaumes'},
+    {label:'Laudes du jour', icon:'☀️', img:'./images/church.svg', primary:'prier', sub:'laudes'},
+    {label:'Prière du matin', icon:'🌅', img:'./images/walking-to-light.svg', primary:'prier', sub:'laudes'},
+    {label:'Prière du soir', icon:'🌙', img:'./images/oratory.svg', primary:'prier', sub:'compline'}
   ];
   const discover = [
     {label:'Neuvaine à Notre-Dame', img:'./images/novena-mary.svg', novena:'marie-confiance'},
     {label:'Chemin de croix', icon:'✝️', primary:'prier', sub:'chemin-croix'},
-    {label:'Prier pour les malades', icon:'🙏', novena:'sante'},
+    {label:'Prier pour les malades', icon:'🙏', img:'./images/mercy.svg', novena:'sante'},
     {label:'Apprendre sa foi', img:'./images/wisdom.svg', primary:'sagesse', sub:'enseignements'}
   ];
 
@@ -4214,7 +4225,7 @@ function homePage2HTML(){
     <div class="home-shortcuts-grid">
       ${quick.map(q=>`
       <button class="home-shortcut" data-shortcut-primary="${q.primary}" data-shortcut-sub="${q.sub}">
-        <span class="home-shortcut-img" style="font-size:22px;">${q.icon}</span>
+        <span class="home-shortcut-img"><img src="${q.img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${q.icon}'"></span>
         <span class="home-shortcut-label">${q.label}</span>
       </button>`).join('')}
     </div>
