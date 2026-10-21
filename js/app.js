@@ -3751,10 +3751,10 @@ const SUBNAV = {
    TAB_GROUP_MEMBERS plus bas pour l'état "actif" de chaque onglet. */
 const PRIMARY_TABS = [
   {key:'accueil', label:'Accueil'},
-  {key:'ecritures', label:'Bible'},
   {key:'prier', label:'Prier'},
-  {key:'explorer', label:'Explorer'},
-  {key:'espace', label:'Moi'}
+  {key:'ecritures', label:'Bible'},
+  {key:'explorer', label:'Découvrir'},
+  {key:'espace', label:'Ma chapelle'}
 ];
 /* quelles anciennes rubriques comptent comme "actives" pour chaque onglet visible */
 const TAB_GROUP_MEMBERS = {
@@ -3969,6 +3969,15 @@ function isHomeSectionEnabled(key){
 function homeTitleHTML(emoji, text, tint){
   return `<h2 class="section-title home-sec-title"><span class="home-sec-emblem" style="background:${tint};">${emoji}</span>${text}</h2>`;
 }
+/* En-tête de section d'accueil avec, en plus, un lien d'action à droite
+   (« Voir tout → » etc.), comme dans la maquette. */
+function homeTitleRowHTML(emoji, text, tint, linkLabel, linkId){
+  return `<div class="home-sec-row">
+    ${homeTitleHTML(emoji, text, tint)}
+    ${linkLabel ? `<button class="home-sec-link" id="${linkId}">${linkLabel}</button>` : ''}
+  </div>`;
+}
+let HOME_PAGE_IDX = 0;
 let WELCOME_SEEN_THIS_SESSION = false;
 function renderWelcomeSplash(){
   const hour = new Date().getHours();
@@ -3993,166 +4002,74 @@ function renderWelcomeSplash(){
   };
 }
 function renderHome(){
-  const {saint, isFeast} = getSaintOfDay();
-  const initial = saint.name.trim()[0];
-  const inProgress = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
-  const topIntentions = [...INTENTIONS, ...PRIVATE_INTENTIONS].sort((a,b)=>b.prayers-a.prayers).slice(0,2);
-  const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
-  const colorKey = todaysLiturgicalColor();
-  const color = LITURGICAL_COLORS[colorKey];
-  const seasonBanner = computeLiturgicalSeasonBanner();
-  let seasonCard = '';
-  if(seasonBanner.includes('Avent')){
-    seasonCard = `<div class="card" style="border-left:4px solid var(--gold);">
-      <p class="eyebrow" style="color:var(--gold);">✨ Temps de l'Avent</p>
-      <p class="entry-detail-text" style="margin-bottom:10px;">Un temps d'attente et de préparation à Noël. Essayez la neuvaine de l'Avent, ou prenez un moment de Lectio Divina pour préparer votre cœur.</p>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="prieres">📿 Neuvaine de Noël</button>
-        <button class="btn btn-ghost btn-sm" data-goto-primary="prier" data-goto-sub="lectio">📕 Lectio Divina</button>
-      </div>
+  document.getElementById('screen').innerHTML = `
+    <div class="home-carousel" id="home-carousel">
+      <div class="home-carousel-page">${homePage1HTML()}</div>
+      <div class="home-carousel-page">${homePage2HTML()}</div>
+    </div>
+    <div class="home-carousel-dots" id="home-carousel-dots">
+      <span class="hcd ${HOME_PAGE_IDX===0?'active':''}" data-panel="0" aria-label="Page 1"></span>
+      <span class="hcd ${HOME_PAGE_IDX===1?'active':''}" data-panel="1" aria-label="Page 2"></span>
     </div>`;
-  } else if(seasonBanner.includes('Carême')){
-    seasonCard = `<div class="card" style="border-left:4px solid var(--wine);">
-      <p class="eyebrow" style="color:var(--wine);">✝️ Temps du Carême</p>
-      <p class="entry-detail-text" style="margin-bottom:10px;">Un temps de conversion, de jeûne et de partage. C'est le moment de faire l'examen du soir régulièrement, ou de préparer votre confession.</p>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="examen">🌙 Faire mon examen</button>
-        <button class="btn btn-ghost btn-sm" data-goto-primary="prier" data-goto-sub="confession">🕊️ Préparer ma confession</button>
-      </div>
-    </div>`;
-  }
 
+  document.querySelectorAll('.home-shortcut').forEach(btn=>{
+    btn.onclick = ()=> goTo(btn.dataset.shortcutPrimary, btn.dataset.shortcutSub || null);
+  });
+
+  wireHomePage1();
+  wireHomePage2();
+
+  const homeCarousel = document.getElementById('home-carousel');
+  if(homeCarousel){
+    const dots = document.querySelectorAll('#home-carousel-dots .hcd');
+    if(HOME_PAGE_IDX) homeCarousel.scrollLeft = HOME_PAGE_IDX * homeCarousel.clientWidth;
+    homeCarousel.onscroll = ()=>{
+      const idx = Math.round(homeCarousel.scrollLeft / Math.max(1,homeCarousel.clientWidth));
+      HOME_PAGE_IDX = idx;
+      dots.forEach((d,i)=> d.classList.toggle('active', i===idx));
+    };
+    dots.forEach(d=>{
+      d.onclick = ()=>{
+        const idx = parseInt(d.dataset.panel,10);
+        homeCarousel.scrollTo({left: idx*homeCarousel.clientWidth, behavior:'smooth'});
+      };
+    });
+  }
+}
+
+/* ---------- Accueil, page 1 : aujourd'hui, raccourcis, progression, intentions ---------- */
+function homePage1HTML(){
   const hourNow = new Date().getHours();
   let saluTime = 'Bonjour';
   if(hourNow >= 18 || hourNow < 5) saluTime = 'Bonsoir';
   else if(hourNow >= 12) saluTime = 'Bon après-midi';
-  const lastVisited = RECENT[0];
+  const inProgress = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
 
-  const showInactivityBanner = DAYS_SINCE_LAST_OPEN >= 3;
-  DAYS_SINCE_LAST_OPEN = 0;
-  const moment = (()=>{
-    const h = hourNow;
-    if(h>=5 && h<9) return {icon:'🌅', label:"Prier les Laudes", text:"Pour bien commencer la journée.", primary:'prier', sub:'laudes'};
-    if(h>=12 && h<14) return {icon:'🔔', label:"Milieu du jour", text:"Une pause pour souffler et se recentrer.", primary:'prier', sub:'midi'};
-    if(h>=18 && h<22) return {icon:'🌙', label:"Faire mon examen", text:"Un temps pour relire ce qui vient d'être vécu.", primary:'prier', sub:'examen'};
-    if(h>=22 || h<5) return {icon:'🌌', label:"Prier la Compline", text:"Un dernier moment de paix avant la nuit.", primary:'prier', sub:'compline'};
-    return {icon:'🕯️', label:"Les textes du jour", text:"Un instant pour vous tourner vers Dieu.", primary:'prier', sub:'textes-du-jour'};
-  })();
-  let html = `
-    <figure class="home-hero" id="home-hero-wrap">
-      <img id="home-hero-img" src="${['https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden_Eagle_soaring_overhead.jpg?width=1200'][dayOfYear()%3]}" alt="" onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200';">
-      <div class="home-hero-duotone"></div>
-      <div class="home-hero-scrim"></div>
-      <div class="home-hero-walker" aria-hidden="true"><span>🕯️</span></div>
-      <figcaption>
-        <p class="home-hero-kicker"><span class="home-hero-kicker-pill">${saluTime}${USER_NAME ? ', '+USER_NAME : ''}</span></p>
-        <p class="home-hero-line">${STREAK.count>0 ? `${STREAK.count} jour${STREAK.count>1?'s':''} de suite — continuez ainsi.` : "Un moment pour vous poser, respirer, et vous tourner vers Dieu."}</p>
-      </figcaption>
-    </figure>
+  return `
+    <div class="home-hero-simple">
+      <p class="home-hero-simple-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>que la paix soit avec vous.</p>
+      <p class="home-hero-simple-sub">Un moment avec Dieu pour aujourd'hui.</p>
+    </div>
     ${USER_NAME ? '' : `
       <div class="home-name-prompt" style="margin:10px 0 2px;">
         <input type="text" id="home-name-input" placeholder="Comment souhaitez-vous qu'on vous appelle ?">
         <button class="btn btn-gold btn-sm" id="home-name-save">Valider</button>
       </div>`}
 
-    <div class="home-today-strip">
-      <span class="home-today-chip"><span class="home-today-dot" style="background:${color.hex};"></span>${color.label}</span>
-      <span class="home-today-chip">📅 ${frenchDate()}</span>
-      ${STREAK.count>0 ? `<span class="home-today-chip home-today-chip--streak">🔥 ${STREAK.count}</span>` : ''}
+    ${homeTitleHTML('☀️','Évangile du jour','linear-gradient(160deg, #D9A35C, #B8863B)')}
+    <div class="card" id="home-evangile-card">
+      <p class="studio-note">Chargement des lectures du jour…</p>
+      <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>
     </div>
 
-    ${showInactivityBanner ? `
-    <div class="card" style="border-left:4px solid var(--gold); margin:14px 0; text-align:center;">
-      <p class="eyebrow" style="color:var(--gold);">✦ Content de vous revoir</p>
-      <p class="entry-detail-text" style="margin:4px 0 0;">Cela faisait plusieurs jours. Pas besoin de rattraper quoi que ce soit — juste reprendre, là où vous êtes aujourd'hui.</p>
-    </div>` : ''}
-
-    ${seasonCard ? `<div style="margin-top:14px;">${seasonCard}</div>` : ''}
-
-    ${homeTitleHTML('✦','Aujourd’hui','linear-gradient(160deg, var(--gold-light), var(--gold))')}
-    <div class="home-2col">
-      <button class="home-moment-panel home-grid-cell" data-goto-primary="${moment.primary}" data-goto-sub="${moment.sub}">
-        <span class="home-moment-icon-badge"><span class="home-moment-icon">${moment.icon}</span></span>
-        <span class="home-moment-label">${moment.label}</span>
-        <span class="home-moment-text">${moment.text}</span>
-      </button>
-      ${(()=>{
-        const q = QUOTES_SAINTS[dayOfYear() % QUOTES_SAINTS.length];
-        const qArt = lumenSacredArtFor({name:q.author});
-        const v = VERSET_SHUFFLE_IDX !== null ? VERSETS_DU_JOUR[VERSET_SHUFFLE_IDX] : VERSETS_DU_JOUR[dayOfYear() % VERSETS_DU_JOUR.length];
-        const prayedToday = STREAK.lastDate === todayISO();
-        let tier = 'spark';
-        if(STREAK.count >= 100) tier = 'blaze'; else if(STREAK.count >= 40) tier = 'strong'; else if(STREAK.count >= 7) tier = 'steady';
-        const flameScale = Math.min(1.6, 1 + STREAK.count * 0.025);
-        return `
-        ${isHomeSectionEnabled('verset') ? `
-        <div class="card home-grid-cell home-card home-card--verset" style="background:linear-gradient(155deg, var(--vellum-light) 0%, var(--gold-pale) 150%);">
-          <span class="home-card-quotemark">”</span>
-          <span class="home-card-badge">📖</span>
-          <p class="home-card-eyebrow">Verset du jour</p>
-          <p class="verset-text" style="text-align:left;">« ${v.text} »</p>
-          <p class="verset-ref" style="text-align:left;">${v.ref}</p>
-          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
-            <button class="btn btn-ghost btn-sm" id="shuffle-verset-btn">🔄 Un autre verset</button>
-            <button class="btn btn-gold btn-sm" id="open-verset-reader-btn">Lire et méditer →</button>
-          </div>
-        </div>` : ''}
-        ${isHomeSectionEnabled('saint') ? `
-        <div class="card saint-card home-grid-cell home-card-ribbon home-card--saint">
-          <div class="saint-emblem">${initial}</div>
-          <div>
-            <p class="saint-name">${saint.name}</p>
-            <p class="saint-bio"><span class="dropcap">${saint.bio.trim()[0]}</span>${saint.bio.trim().slice(1)}</p>
-            <p class="saint-prayer">${saint.prayer}</p>
-            <div style="text-align:right; margin-top:8px;"><button class="btn btn-ghost btn-sm" data-goto-cal="1">🕊️ Calendrier</button></div>
-          </div>
-        </div>` : ''}
-        ${isHomeSectionEnabled('streak') ? `
-        <div class="card home-grid-cell home-card-ribbon home-card--streak" style="text-align:center;">
-          <div class="lumen-flame lumen-flame-${tier} ${STREAK.count>0?'lit':''}" style="margin:0 auto; transform:scale(${flameScale}); transition:transform 0.6s cubic-bezier(.34,1.56,.64,1);">
-            <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
-          </div>
-          <p class="streak-growth-note">${STREAK.count>0 ? `🔥 grandit un peu plus chaque jour` : 'Priez aujourd’hui pour l’allumer'}</p>
-          <span class="streak-num">${STREAK.count}</span>
-          <div class="streak-label">${STREAK.count>1?'jours de suite':'jour'}</div>
-          <button class="btn ${prayedToday?'btn-ghost':'btn-primary'} btn-sm" id="prayed-today-btn" style="margin-top:8px;" ${prayedToday?'disabled':''}>${prayedToday?"Prié aujourd'hui ✓":"🕯️ J'ai prié aujourd'hui"}</button>
-          <div style="margin-top:6px;"><button class="btn btn-ghost btn-sm" id="random-prayer-btn">🎲 Prière surprise</button></div>
-        </div>` : ''}
-        ${((lastVisited && isHomeSectionEnabled('continue')) || RECENT.length > 1) ? `
-        <div class="card home-grid-cell home-card home-card--continue">
-          <span class="home-card-badge">↩️</span>
-          <p class="home-card-eyebrow">Reprendre le fil</p>
-          ${(lastVisited && isHomeSectionEnabled('continue')) ? `
-          <div class="entry-card" id="continue-card" style="cursor:pointer;">
-            <div class="entry-avatar">${lastVisited.avatar||'📖'}</div>
-            <div class="entry-body"><p class="entry-name">${lastVisited.name}</p><p class="entry-summary">${lastVisited.summary||''}</p></div>
-          </div>` : ''}
-          ${RECENT.length > 1 ? `
-          <div class="recent-scroll" style="margin-top:8px;">${RECENT.slice(1,5).map((r,i)=>`
-            <button class="recent-chip" data-recent-idx="${i+1}">
-              <span>${r.avatar||'📖'}</span><span>${r.name}</span>
-            </button>`).join('')}</div>` : ''}
-        </div>` : ''}
-        ${isHomeSectionEnabled('citation') ? `
-        <div class="card home-grid-cell home-card home-card--citation" style="text-align:center; padding-top:16px !important;">
-          <span class="home-card-quotemark" style="right:auto; left:50%; transform:translateX(-50%); top:-14px;">”</span>
-          ${qArt ? `<div class="home-quote-img" style="margin:0 auto;"><img src="${qArt.url}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : '<span style="font-size:22px;">💬</span>'}
-          <p class="entry-detail-text" style="font-style:italic; font-size:12.5px; margin:6px 0 2px;">« ${q.text} »</p>
-          <p class="studio-note" style="margin:0;">— ${q.author}</p>
-        </div>` : ''}`;
-      })()}
-    </div>
-
-    ${homeTitleHTML('🔥','Mes raccourcis','linear-gradient(160deg, #D9A35C, #B8863B)')}
+    ${homeTitleRowHTML('🔥','Mes raccourcis','linear-gradient(160deg, #D9A35C, #B8863B)', 'Personnaliser ⊞', 'home-personalize-btn')}
     <div class="home-shortcuts-grid">${HOME_SHORTCUTS.map(s=>`
       <button class="home-shortcut" data-shortcut-primary="${s.primary}" data-shortcut-sub="${s.sub||''}">
         <span class="home-shortcut-img"><img src="${s.img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${s.icon}'"></span>
         <span class="home-shortcut-label">${s.label}</span>
       </button>`).join('')}</div>
 
-    <div class="home-divider"><span>✦</span></div>
-
-    ${homeTitleHTML('📈','Ma progression','linear-gradient(160deg, #AFC2D6, #6E8FAE)')}
+    ${homeTitleRowHTML('🔥','Ma progression','linear-gradient(160deg, #AFC2D6, #6E8FAE)', 'Voir tout →', 'home-progress-all-btn')}
     <div class="home-progress-scroll">
       ${inProgress.length ? inProgress.map(({n,info})=>`<div class="home-progress-item">${novenaCardHTML(n, info)}</div>`).join('') : `<div class="home-progress-item"><div class="card" style="text-align:left;"><p class="eyebrow" style="color:var(--gold);">🕯️ Neuvaine</p><p class="entry-summary" style="-webkit-line-clamp:unset; margin:4px 0 10px;">Vous n'avez pas encore commencé de neuvaine — même un seul jour est un bon début.</p><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="neuvaines">Découvrir →</button></div></div>`}
       ${(()=>{
@@ -4161,7 +4078,7 @@ function renderHome(){
         const midSession = ROSARY_STATE && ROSARY_STATE.setKey === setKey && ROSARY_STATE.phase !== 'intro';
         const mysteryNow = midSession ? ROSARY_STATE.mysteryIdx+1 : 0;
         return `<div class="home-progress-item">
-          <div class="card hoz-card" style="--accent:#6B2545;">
+          <div class="card hoz-card">
             <div class="hoz-card-img" style="background:#6B2545;">
               <img src="./images/rosary.svg" alt="" loading="lazy">
               <span class="hoz-card-progress-pill">${midSession ? `Mystère ${mysteryNow}/5` : 'Chapelet du jour'}</span>
@@ -4176,87 +4093,64 @@ function renderHome(){
       })()}
     </div>
 
-    ${homeTitleHTML('🤝','Intentions de prière','linear-gradient(160deg, #C98A9A, #8A4A5E)')}
+    ${homeTitleRowHTML('🤝','Intentions de prière','linear-gradient(160deg, #C98A9A, #8A4A5E)', 'Voir toutes →', 'home-intentions-all-btn')}
     <div class="home-intentions-block">
-      ${topIntentions.length ? intentionCardHTML(topIntentions[0]) : ''}
-      <button class="btn ${topIntentions.length?'btn-ghost':'btn-primary'}" style="width:100%; margin-top:${topIntentions.length?'8px':'0'};" data-goto="intentions">${topIntentions.length?'Voir toutes les intentions →':'🕊️ Confier une intention'}</button>
-      <p class="studio-note" style="text-align:center; margin-top:6px;">Vous n'êtes pas seul. Nous prions avec vous.</p>
+      <div class="card home-confier-card" id="home-confier-btn">
+        <span class="home-confier-icon">♡</span>
+        <span class="home-confier-text">
+          <span class="home-confier-title">Confier une intention</span>
+          <span class="home-confier-sub">Vous n'êtes pas seul. Nous prions avec vous.</span>
+        </span>
+        <span class="home-confier-chevron">›</span>
+      </div>
     </div>
-
-    <div class="home-divider"><span>✦</span></div>
-
-    ${isHomeSectionEnabled('pensee') ? `
-    <div class="flourish-divider">✦ ❦ ✦</div>
-    ${homeTitleHTML('💭','Pensée du jour','linear-gradient(160deg, var(--gold-light), var(--sage,#8FA13F))')}
-    <div class="card home-card home-card--pensee">
-      <span class="home-card-badge">💭</span>
-      <p class="saint-name" style="margin:0 0 6px 46px;">${medit.title}</p>
-      <p class="entry-summary" style="-webkit-line-clamp:unset; margin-left:0;">${medit.text}</p>
-    </div>` : ''}
   `;
-
-  const HOME_TILE_CATEGORIES = [
-    {label:'Écritures', emoji:'📖', accent:'ecritures', img:HUB_HERO_IMAGES.jesus, keys:["L'armure de Dieu",'Psaumes par thème','Bible & Histoire','Jésus']},
-    {label:'Église', emoji:'⛪', accent:'eglise', img:HUB_HERO_IMAGES.eglise, keys:['Saints','Calendrier des saints',"Vie de l'Église"]},
-    {label:'Sagesse & Espace', emoji:'🌿', accent:'sagesse', img:HUB_HERO_IMAGES.sagesse, keys:['Vie spirituelle','Mon journal','Studio']}
-  ];
-  html += `<div class="home-divider"><span>✦</span></div>` + homeTitleHTML('🧭','Explorer','linear-gradient(160deg, #AFC2D6, #6E8FAE)');
-  HOME_TILE_CATEGORIES.forEach(cat=>{
-    const tiles = HOME_TILES.filter(t=>cat.keys.includes(t.label));
-    if(!tiles.length) return;
-    html += `<div class="home-tile-category home-tile-category--${cat.accent}" style="${cat.img ? `background-image:linear-gradient(100deg, var(--vellum-light) 32%, rgba(245,239,228,0.4)), url('${cat.img}');` : ''}">
-      <p class="home-tile-cat-label"><span class="home-tile-cat-emoji">${cat.emoji}</span>${cat.label}</p>
-      <div class="home-tile-grid">`;
-    tiles.forEach(t=>{
-      html += `<div class="home-tile-big" data-primary="${t.primary}" data-sub="${t.sub}">
-        <span class="home-tile-big-icon">${t.icon}</span>
-        <span class="home-tile-big-label">${t.label}</span>
-      </div>`;
+}
+function loadHomeEvangileCard(){
+  fetchAelfDuJour().then(json=>{
+    const card = document.getElementById('home-evangile-card');
+    if(!card) return;
+    const messe = json && json.messes && json.messes[0];
+    const lectures = messe ? (messe.lectures||[]) : [];
+    const evangile = lectures.find(l=>{
+      const t = (l.type||'').toLowerCase();
+      return t.includes('evangile') && !t.includes('verset');
     });
-    html += `</div></div>`;
+    if(!evangile){
+      card.innerHTML = `<p class="studio-note">Les lectures d'aujourd'hui vous attendent.</p>
+        <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>`;
+    } else {
+      const body = aelfCleanText(evangile.contenu||evangile.texte||'');
+      const snippet = body.length>170 ? body.slice(0,170).trim()+'…' : body;
+      card.innerHTML = `
+        ${evangile.ref ? `<p class="eyebrow" style="color:var(--gold);">${evangile.ref}</p>` : ''}
+        <p class="verset-text">« ${snippet} »</p>
+        <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>`;
+    }
+    const cta = document.getElementById('home-evangile-cta');
+    if(cta) cta.onclick = ()=> goTo('prier','textes-du-jour');
   });
+}
+function wireHomePage1(){
+  const cta0 = document.getElementById('home-evangile-cta');
+  if(cta0) cta0.onclick = ()=> goTo('prier','textes-du-jour');
+  loadHomeEvangileCard();
 
-  document.getElementById('screen').innerHTML = html;
+  const personalizeBtn = document.getElementById('home-personalize-btn');
+  if(personalizeBtn) personalizeBtn.onclick = ()=> showToast('Personnalisation bientôt disponible ✨');
+
   document.querySelectorAll('.novena-card').forEach(c=> c.onclick = ()=> goTo('prier','neuvaines'));
-  document.querySelectorAll('.upcoming-item[data-novena-id]').forEach(c=>{
-    c.onclick = ()=>{ goTo('prier','neuvaines'); OPEN_NOVENA = c.dataset.novenaId; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render(); };
-  });
-  document.querySelectorAll('.home-shortcut').forEach(btn=>{
-    btn.onclick = ()=> goTo(btn.dataset.shortcutPrimary, btn.dataset.shortcutSub || null);
-  });
-  wireIntentionButtons();
-  const gotoBtn = document.querySelector('[data-goto="intentions"]');
-  if(gotoBtn) gotoBtn.onclick = ()=> goTo('prier','intentions');
-  const gotoCalBtn = document.querySelector('[data-goto-cal]');
-  if(gotoCalBtn) gotoCalBtn.onclick = ()=> goTo('eglise','calendrier');
-  const randomBtn = document.getElementById('random-prayer-btn');
-  if(randomBtn) randomBtn.onclick = ()=>{
-    const allGroups = PRIERES;
-    const g = allGroups[Math.floor(Math.random()*allGroups.length)];
-    const i = Math.floor(Math.random()*g.entries.length);
-    PRIMARY='prier'; SUBTAB.prier='prieres'; GROUP_SEL['prier:prieres']=g.id;
-    ENTRY_OPEN = {compKey:'prier:prieres', groupId:g.id, idx:i};
-    render();
-  };
-  document.querySelectorAll('.home-tile-big').forEach(c=>{
-    c.onclick = ()=> goTo(c.dataset.primary, c.dataset.sub);
-  });
   document.querySelectorAll('[data-goto-primary]').forEach(btn=>{
     btn.onclick = ()=> goTo(btn.dataset.gotoPrimary, btn.dataset.gotoSub);
   });
-  const homeCarousel = document.getElementById('home-carousel');
-  if(homeCarousel){
-    const dots = document.querySelectorAll('#home-carousel-dots .hcd');
-    homeCarousel.onscroll = ()=>{
-      const idx = Math.round(homeCarousel.scrollLeft / homeCarousel.clientWidth);
-      dots.forEach((d,i)=> d.classList.toggle('active', i===idx));
-    };
-    dots.forEach(d=>{
-      d.onclick = ()=>{
-        homeCarousel.scrollTo({left: parseInt(d.dataset.panel,10)*homeCarousel.clientWidth, behavior:'smooth'});
-      };
-    });
-  }
+  const progressAllBtn = document.getElementById('home-progress-all-btn');
+  if(progressAllBtn) progressAllBtn.onclick = ()=> goTo('prier','neuvaines');
+
+  const intentionsAllBtn = document.getElementById('home-intentions-all-btn');
+  if(intentionsAllBtn) intentionsAllBtn.onclick = ()=> goTo('prier','intentions');
+  const confierBtn = document.getElementById('home-confier-btn');
+  if(confierBtn) confierBtn.onclick = ()=> goTo('prier','intentions');
+
   const nameSaveBtn = document.getElementById('home-name-save');
   if(nameSaveBtn){
     nameSaveBtn.onclick = async ()=>{
@@ -4269,23 +4163,130 @@ function renderHome(){
       renderHome();
     };
   }
-  const continueCard = document.getElementById('continue-card');
-  function navigateToRecentItem(item){
-    if(item.type === 'entry'){
-      PRIMARY = item.primary; SUBTAB[item.primary] = item.sub;
-      GROUP_SEL[item.compKey] = item.groupId;
-      ENTRY_OPEN = {compKey:item.compKey, groupId:item.groupId, idx:item.idx};
-      render();
-    } else if(item.type === 'novena'){
-      goTo('prier','neuvaines'); OPEN_NOVENA = item.id; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render();
-    }
+}
+
+/* ---------- Accueil, page 2 : saint, méditation, lecture rapide, guide, découvertes ---------- */
+function homePage2HTML(){
+  const {saint, isFeast} = getSaintOfDay();
+  const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'./images/saints.svg'};
+  const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
+  const v = VERSETS_DU_JOUR[weekNumber() % VERSETS_DU_JOUR.length];
+  const quick = [
+    {label:'Psaume du jour', icon:'📜', primary:'ecritures', sub:'psaumes'},
+    {label:'Laudes du jour', icon:'☀️', primary:'prier', sub:'laudes'},
+    {label:'Prière du matin', icon:'🌅', primary:'prier', sub:'laudes'},
+    {label:'Prière du soir', icon:'🌙', primary:'prier', sub:'compline'}
+  ];
+  const discover = [
+    {label:'Neuvaine à Notre-Dame', img:'./images/novena-mary.svg', novena:'marie-confiance'},
+    {label:'Chemin de croix', icon:'✝️', primary:'prier', sub:'chemin-croix'},
+    {label:'Prier pour les malades', icon:'🙏', novena:'sante'},
+    {label:'Apprendre sa foi', img:'./images/wisdom.svg', primary:'sagesse', sub:'enseignements'}
+  ];
+
+  return `
+    ${homeTitleRowHTML('👑','Saint du jour','linear-gradient(160deg, #C98A9A, #8A4A5E)', 'Voir tous →', 'p2-saints-all')}
+    <div class="card hoz-card">
+      <div class="hoz-card-img" style="background:#7C1F2E;">
+        <img src="${saintArt.url}" alt="" loading="lazy" onerror="this.style.display='none'">
+        ${isFeast ? `<span class="hoz-card-progress-pill">Fête du jour</span>` : ''}
+      </div>
+      <div class="hoz-card-body">
+        <p class="hoz-card-title">${saint.name}</p>
+        <p class="hoz-card-sub" style="-webkit-line-clamp:3;">${saint.bio}</p>
+        <button class="btn btn-gold btn-sm" id="p2-saint-cta" style="margin-top:4px;">Découvrir sa vie et sa prière →</button>
+      </div>
+    </div>
+
+    ${homeTitleRowHTML('🔥','Méditation du jour','linear-gradient(160deg, #AFC2D6, #6E8FAE)', 'Voir toutes →', 'p2-medit-all')}
+    <div class="card hoz-card">
+      <div class="hoz-card-img" style="background:#4A3D6B;">
+        <img src="./images/wisdom.svg" alt="" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <div class="hoz-card-body">
+        <p class="hoz-card-title">${medit.title}</p>
+        <p class="hoz-card-sub" style="-webkit-line-clamp:3;">${medit.text}</p>
+        <button class="btn btn-gold btn-sm" id="p2-medit-cta" style="margin-top:4px;">Lire la méditation →</button>
+      </div>
+    </div>
+
+    ${homeTitleRowHTML('📖','Lecture rapide','linear-gradient(160deg, #D9A35C, #B8863B)', 'Voir plus →', 'p2-quick-all')}
+    <div class="home-shortcuts-grid">
+      ${quick.map(q=>`
+      <button class="home-shortcut" data-shortcut-primary="${q.primary}" data-shortcut-sub="${q.sub}">
+        <span class="home-shortcut-img" style="font-size:22px;">${q.icon}</span>
+        <span class="home-shortcut-label">${q.label}</span>
+      </button>`).join('')}
+    </div>
+
+    ${homeTitleHTML('🔥','Lumen Guide','linear-gradient(160deg, #B8863B, #7C1F2E)')}
+    <div class="card home-guide-card" id="p2-guide-card">
+      <span class="home-guide-icon">💬</span>
+      <span class="home-guide-body">
+        <span class="home-guide-title">Une question ? <span class="home-guide-badge">NOUVEAU</span></span>
+        <span class="home-guide-sub">Posez votre question à Lumen Guide, votre compagnon spirituel.</span>
+      </span>
+      <span class="home-guide-chevron">›</span>
+    </div>
+
+    ${homeTitleRowHTML('🔥','À découvrir cette semaine','linear-gradient(160deg, #AFC2A6, #6E8F6E)', 'Voir tout →', 'p2-discover-all')}
+    <div class="home-tile-grid">
+      ${discover.map(d=>`
+      <div class="home-tile-big" data-discover-primary="${d.primary||'prier'}" data-discover-sub="${d.sub||'neuvaines'}" ${d.novena?`data-discover-novena="${d.novena}"`:''}>
+        <span class="home-tile-big-icon" style="background:linear-gradient(160deg,#E7C98C,#B8863B);">${d.img?`<img src="${d.img}" alt="" loading="lazy">`:`<span>${d.icon||'✦'}</span>`}</span>
+        <span class="home-tile-big-label">${d.label}</span>
+      </div>`).join('')}
+    </div>
+
+    <div class="home-divider"><span>✦</span></div>
+    <div class="card home-verse-banner">
+      <div class="lumen-flame lumen-flame-steady lit" style="margin:0 auto 8px;"><div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div></div>
+      <p class="home-verse-banner-text">« ${v.text} »</p>
+      <p class="home-verse-banner-ref">${v.ref}</p>
+    </div>
+  `;
+}
+function wireHomePage2(){
+  const {saint, isFeast} = getSaintOfDay();
+  const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'./images/saints.svg'};
+  const saintBtn = document.getElementById('p2-saint-cta');
+  if(saintBtn){
+    saintBtn.onclick = ()=>{
+      openTextCover('candle', saint.name, isFeast?'Fête du jour':'', ()=>{
+        openVerseReader({ title: saint.name, subtitle: isFeast?'Fête du jour':'', text: saint.bio + '\n\n' + saint.prayer, reference:'', images: saintArt.url?[saintArt.url]:[] });
+      });
+    };
   }
-  if(continueCard && lastVisited){
-    continueCard.onclick = ()=> navigateToRecentItem(lastVisited);
+  const saintsAllBtn = document.getElementById('p2-saints-all');
+  if(saintsAllBtn) saintsAllBtn.onclick = ()=> goTo('eglise','saints');
+
+  const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
+  const meditBtn = document.getElementById('p2-medit-cta');
+  if(meditBtn){
+    meditBtn.onclick = ()=>{
+      openTextCover('candle', medit.title, '', ()=>{
+        openVerseReader({ title: medit.title, subtitle:'', text: medit.text, reference:'', images:['./images/wisdom.svg'] });
+      });
+    };
   }
-  document.querySelectorAll('[data-recent-idx]').forEach(btn=>{
-    btn.onclick = ()=> navigateToRecentItem(RECENT[parseInt(btn.dataset.recentIdx,10)]);
+  const meditAllBtn = document.getElementById('p2-medit-all');
+  if(meditAllBtn) meditAllBtn.onclick = ()=> goTo('sagesse','meditations-audio');
+
+  const quickAllBtn = document.getElementById('p2-quick-all');
+  if(quickAllBtn) quickAllBtn.onclick = ()=> goTo('prier','textes-du-jour');
+
+  const guideCard = document.getElementById('p2-guide-card');
+  if(guideCard) guideCard.onclick = ()=> openGuide();
+
+  document.querySelectorAll('[data-discover-primary]').forEach(el=>{
+    el.onclick = ()=>{
+      const novenaId = el.dataset.discoverNovena;
+      if(novenaId){ goTo('prier','neuvaines'); OPEN_NOVENA = novenaId; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render(); }
+      else goTo(el.dataset.discoverPrimary, el.dataset.discoverSub || null);
+    };
   });
+  const discoverAllBtn = document.getElementById('p2-discover-all');
+  if(discoverAllBtn) discoverAllBtn.onclick = ()=> goTo('prier','neuvaines');
 }
 
 const NOVENA_ICONS = {
@@ -4690,132 +4691,8 @@ const EXPLORER_HUB_CATEGORIES = [
   {label:'Église', desc:'Saints, vie liturgique, calendrier, pèlerinages', icon:'⛪', cross:{primary:'eglise', sub:'accueil-eglise'}, color:'#4A3D6B'},
   {label:'Sagesse & enseignements', desc:'Vie spirituelle, sacrements, enseignements, lexique', icon:'🌿', cross:{primary:'sagesse', sub:'accueil-sagesse'}, color:'#5C6E58'}
 ];
-function explorerWeeklyDiscoverItems(){
-  return [
-    {label:'Examen du soir', img:'./images/journal.svg', bg:'radial-gradient(circle at 32% 28%, #E7C98C, #B8863B 80%)', primary:'prier', sub:'examen'},
-    {label:'Combat spirituel', img:'./images/mercy.svg', bg:'radial-gradient(circle at 32% 28%, #D6B8C2, #7C1F2E 80%)', primary:'devotions', sub:'armure'},
-    {label:'Pèlerinages virtuels', img:'./images/walking-to-light.svg', bg:'radial-gradient(circle at 32% 28%, #C9B8E0, #4A3D6B 80%)', primary:'eglise', sub:'pelerinages-virtuels'},
-    {label:'Quiz de la foi', img:'./images/search.svg', bg:'radial-gradient(circle at 32% 28%, #D3E6C4, #5C6E58 85%)', primary:'sagesse', sub:'quiz'}
-  ];
-}
 function renderExplorerHub(){
-  const {saint, isFeast} = getSaintOfDay();
-  const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'./images/saints.svg'};
-  const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
-  const v = VERSETS_DU_JOUR[weekNumber() % VERSETS_DU_JOUR.length];
-  const quick = [
-    {label:'Psaume du jour', icon:'📜', primary:'ecritures', sub:'psaumes'},
-    {label:'Laudes du jour', icon:'☀️', primary:'prier', sub:'laudes'},
-    {label:'Prière du matin', icon:'🌅', primary:'prier', sub:'laudes'},
-    {label:'Prière du soir', icon:'🌙', primary:'prier', sub:'compline'}
-  ];
-  const discover = explorerWeeklyDiscoverItems();
-  const html = `
-    <h2 class="section-title">🧭 Découvrir</h2>
-    <p class="section-desc">Chaque jour, un saint, une méditation, et de quoi nourrir votre semaine.</p>
-
-    ${homeTitleHTML('✦','Saint du jour','linear-gradient(160deg, #C98A9A, #8A4A5E)')}
-    <div class="card hoz-card">
-      <div class="hoz-card-img" style="background:#7C1F2E;">
-        <img src="${saintArt.url}" alt="" loading="lazy" onerror="this.style.display='none'">
-        ${isFeast ? `<span class="hoz-card-progress-pill">Fête du jour</span>` : ''}
-      </div>
-      <div class="hoz-card-body">
-        <p class="hoz-card-title">${saint.name}</p>
-        <p class="hoz-card-sub">${saint.bio}</p>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
-          <button class="btn btn-gold btn-sm" id="explorer-saint-cta">Découvrir sa vie et sa prière →</button>
-          <button class="btn btn-ghost btn-sm" id="explorer-saints-all">Voir tous →</button>
-        </div>
-      </div>
-    </div>
-
-    ${homeTitleHTML('💭','Méditation du jour','linear-gradient(160deg, #AFC2D6, #6E8FAE)')}
-    <div class="card hoz-card">
-      <div class="hoz-card-img" style="background:#4A3D6B;">
-        <img src="./images/wisdom.svg" alt="" loading="lazy" onerror="this.style.display='none'">
-      </div>
-      <div class="hoz-card-body">
-        <p class="hoz-card-title">${medit.title}</p>
-        <p class="hoz-card-sub" style="-webkit-line-clamp:3;">${medit.text}</p>
-        <button class="btn btn-gold btn-sm" id="explorer-medit-cta" style="margin-top:4px;">Lire la méditation →</button>
-      </div>
-    </div>
-
-    ${homeTitleHTML('📖','Lecture rapide','linear-gradient(160deg, #D9A35C, #B8863B)')}
-    <div class="home-shortcuts-grid">
-      ${quick.map(q=>`
-      <button class="home-shortcut" data-shortcut-primary="${q.primary}" data-shortcut-sub="${q.sub}">
-        <span class="home-shortcut-img" style="font-size:22px;">${q.icon}</span>
-        <span class="home-shortcut-label">${q.label}</span>
-      </button>`).join('')}
-    </div>
-
-    <div class="card" id="explorer-guide-card" style="display:flex; align-items:center; gap:12px; cursor:pointer; margin-top:14px;">
-      <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(160deg, #D9A35C, #B8863B); display:flex; align-items:center; justify-content:center; font-size:20px; flex:none;">✨</div>
-      <div style="flex:1;">
-        <p style="font-family:'Fraunces',serif; font-weight:600; font-size:15px; margin:0 0 2px;">Lumen Guide <span style="background:var(--wine); color:#fff; font-size:9px; font-weight:700; padding:2px 7px; border-radius:999px; margin-left:6px; vertical-align:middle;">NOUVEAU</span></p>
-        <p style="font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); margin:0;">Posez une question, laissez-vous guider</p>
-      </div>
-      <span style="font-size:18px; color:var(--ink-soft);">→</span>
-    </div>
-
-    ${homeTitleHTML('🗓️','À découvrir cette semaine','linear-gradient(160deg, #AFC2A6, #6E8F6E)')}
-    <div class="home-tile-grid">
-      ${discover.map(d=>`
-      <div class="home-tile-big" data-discover-primary="${d.primary}" data-discover-sub="${d.sub}">
-        <span class="home-tile-big-icon" style="background:${d.bg};"><img src="${d.img}" alt="" loading="lazy"></span>
-        <span class="home-tile-big-label">${d.label}</span>
-      </div>`).join('')}
-    </div>
-
-    <div class="home-divider"><span>✦</span></div>
-    <div class="card" style="text-align:center; background:linear-gradient(160deg, var(--wine-dark,#4A1420), var(--wine,#7C1F2E)); color:#fff; padding:22px 18px;">
-      <div class="lumen-flame lumen-flame-steady lit" style="margin:0 auto 8px;"><div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div></div>
-      <p style="font-family:'Fraunces',serif; font-style:italic; font-size:15px; line-height:1.5; margin:0 0 6px;">« ${v.text} »</p>
-      <p style="font-family:'Inter',sans-serif; font-size:11.5px; opacity:0.85; margin:0;">${v.ref}</p>
-    </div>
-
-    <div class="home-divider"><span>✦</span></div>
-    <h2 class="section-title" style="margin-top:4px;">Explorer par thème</h2>
-    <div class="prier-hub-grid">${EXPLORER_HUB_CATEGORIES.map((c,i)=>`
-      <div class="prier-hub-card" data-explorer-theme-index="${i}">
-        <div class="prier-hub-card-img" style="background:${c.color};"><span class="prier-hub-card-emoji">${c.icon}</span></div>
-        <div class="prier-hub-card-body">
-          <p class="prier-hub-card-title">${c.label}</p>
-          <p class="prier-hub-card-desc">${c.desc}</p>
-          <span class="prier-hub-card-cta">Explorer →</span>
-        </div>
-      </div>`).join('')}</div>`;
-  document.getElementById('screen').innerHTML = html;
-
-  document.getElementById('explorer-saint-cta').onclick = ()=>{
-    openTextCover('candle', saint.name, isFeast ? 'Fête du jour' : '', ()=>{
-      openVerseReader({ title: saint.name, subtitle: isFeast?'Fête du jour':'', text: saint.bio + '\n\n' + saint.prayer, reference: '', images: saintArt.url ? [saintArt.url] : [] });
-    });
-  };
-  document.getElementById('explorer-saints-all').onclick = ()=> goTo('eglise','saints');
-  document.getElementById('explorer-medit-cta').onclick = ()=>{
-    openTextCover('candle', medit.title, '', ()=>{
-      openVerseReader({ title: medit.title, subtitle:'', text: medit.text, reference:'', images:['./images/wisdom.svg'] });
-    });
-  };
-  document.querySelectorAll('.home-shortcut').forEach(btn=>{
-    btn.onclick = ()=> goTo(btn.dataset.shortcutPrimary, btn.dataset.shortcutSub || null);
-  });
-  document.getElementById('explorer-guide-card').onclick = ()=> openGuide();
-  document.querySelectorAll('[data-discover-primary]').forEach(el=>{
-    el.onclick = ()=> goTo(el.dataset.discoverPrimary, el.dataset.discoverSub || null);
-  });
-  document.querySelectorAll('[data-explorer-theme-index]').forEach(card=>{
-    card.onclick = ()=>{
-      const cat = EXPLORER_HUB_CATEGORIES[parseInt(card.dataset.explorerThemeIndex,10)];
-      if(cat && cat.cross){
-        if(cat.cross.resetJesusHub) GROUP_SEL['jesus:main'] = null;
-        goTo(cat.cross.primary, cat.cross.sub);
-      }
-    };
-  });
+  renderCategoryHubGeneric('🧭 Explorer', 'Jésus, Marie, les saints, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse);
 }
 
 const ECRITURES_HUB_CATEGORIES = [
@@ -11551,6 +11428,8 @@ function renderBreadcrumb(){
 
 /* ================= main dispatcher ================= */
 function renderScreen(){
+  const isHomeCarousel = PRIMARY === 'accueil' && (ONBOARDING_SEEN || WELCOME_SEEN_THIS_SESSION);
+  document.getElementById('screen').classList.toggle('screen-carousel-mode', isHomeCarousel);
   if(PRIMARY === 'accueil'){
     /* Deux écrans distincts : "Bienvenue" (courte présentation, uniquement pour
        les nouveaux utilisateurs pas encore passés par l'accueil guidé) et
