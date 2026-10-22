@@ -6025,8 +6025,65 @@ function findNovenaEntryForSaint(entry){
 function saintTeachingPoints(entry){
   const sentences = (entry.summary||'').split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
   const icons = ['🙏','✝️','📖','🕊️'];
-  return sentences.slice(0,4).map((s,i)=>({icon:icons[i%icons.length], text:s}));
+  return sentences.slice(0,4).map((s,i)=>{
+    const words = s.split(/\s+/);
+    const title = words.slice(0, Math.min(6, words.length)).join(' ').replace(/[.,;:]$/,'');
+    return {icon:icons[i%icons.length], title, text:s};
+  });
 }
+/* Patronages traditionnellement reconnus — associations larges et bien établies,
+   volontairement formulées de façon générale plutôt que trop spécifiques, afin
+   de rester fiables sans prétendre à une liste canonique exhaustive. */
+const SAINT_PATRONAGE = {
+  "Saint Joseph": "familles, travailleurs, pères, bonne mort, Église universelle",
+  "Saint Pierre": "pêcheurs, papauté, Église universelle",
+  "Saint Paul": "missionnaires, évangélisation, écrivains chrétiens",
+  "Saint Étienne": "diacres, maçons",
+  "Saint Ignace d'Antioche": "évêques persécutés, unité de l'Église",
+  "Saintes Perpétue et Félicité": "mères de famille, femmes enceintes",
+  "Saint Augustin d'Hippone": "théologiens, imprimeurs, brasseurs",
+  "Saint Jérôme": "traducteurs, bibliothécaires, étudiants des Écritures",
+  "Saint Athanase d'Alexandrie": "défenseurs de la foi, théologiens",
+  "Saint Basile le Grand": "réformateurs monastiques, hospitaliers",
+  "Saint François d'Assise": "écologistes, animaux, Italie, marchands",
+  "Saint Thomas d'Aquin": "étudiants, théologiens, écoles catholiques",
+  "Saint Bernard de Clairvaux": "apiculteurs, cisterciens",
+  "Sainte Jeanne d'Arc": "France, soldats",
+  "Sainte Catherine de Sienne": "Italie, infirmières, journalistes catholiques",
+  "Saint Ignace de Loyola": "exercices spirituels, soldats, retraitants",
+  "Sainte Thérèse d'Ávila": "Espagne, personnes souffrant de migraines",
+  "Saint Jean de la Croix": "mystiques, poètes, contemplatifs",
+  "Saint Vincent de Paul": "œuvres de charité, Saint-Vincent-de-Paul, orphelins",
+  "Sainte Bernadette Soubirous": "malades, bergers, Lourdes",
+  "Sainte Thérèse de Lisieux": "missions, fleuristes, France",
+  "Saint Maximilien Kolbe": "prisonniers, familles, journalistes",
+  "Saint Pio de Pietrelcina (Padre Pio)": "confesseurs, adolescents, personnes anxieuses",
+  "Sainte Teresa de Calcutta (Mère Teresa)": "missionnaires de la charité, journées mondiales de la jeunesse",
+  "Saint Jean-Paul II": "familles, journées mondiales de la jeunesse"
+};
+/* Citations retenues uniquement lorsqu'elles sont solidement attestées (paroles
+   bibliques rapportées, écrits authentiques du saint, ou propos historiquement
+   bien documentés). Volontairement absente pour les saints où aucune citation
+   fiable n'est disponible, plutôt que d'en inventer une. */
+const SAINT_QUOTE = {
+  "Saint Pierre": {text:"Tu es le Christ, le Fils du Dieu vivant.", ref:"Mt 16, 16"},
+  "Saint Paul": {text:"J'ai combattu le bon combat, j'ai achevé la course, j'ai gardé la foi.", ref:"2 Tm 4, 7"},
+  "Saint Étienne": {text:"Seigneur, ne leur impute pas ce péché.", ref:"Ac 7, 60"},
+  "Saint Ignace d'Antioche": {text:"Je suis le froment de Dieu, il faut que je sois broyé par la dent des bêtes pour devenir le pain pur du Christ.", ref:"Lettre aux Romains, IV"},
+  "Saint Augustin d'Hippone": {text:"Tu nous as faits pour toi, Seigneur, et notre cœur est sans repos tant qu'il ne repose en toi.", ref:"Confessions, I, 1"},
+  "Saint Jérôme": {text:"Ignorer les Écritures, c'est ignorer le Christ.", ref:"Commentaire sur Isaïe, prologue"},
+  "Saint François d'Assise": {text:"Loué sois-tu, mon Seigneur, pour sœur notre mère la Terre.", ref:"Cantique des créatures"},
+  "Sainte Jeanne d'Arc": {text:"Si je n'y suis, Dieu m'y mette ; si j'y suis, Dieu m'y garde.", ref:"Procès de condamnation, 1431"},
+  "Sainte Catherine de Sienne": {text:"Sois ce que tu dois être, et tu mettras le feu au monde entier.", ref:"Lettres"},
+  "Saint Ignace de Loyola": {text:"Allez, et enflammez tout.", ref:"Parole à saint François Xavier, tradition jésuite"},
+  "Saint Jean de la Croix": {text:"Au soir de la vie, nous serons jugés sur l'amour.", ref:"Paroles de lumière et d'amour"},
+  "Sainte Bernadette Soubirous": {text:"Je ne suis pas chargée de vous le faire croire, je suis chargée de vous le dire.", ref:"Parole rapportée au sujet des apparitions"},
+  "Sainte Thérèse de Lisieux": {text:"Je veux passer mon ciel à faire du bien sur la terre.", ref:"Derniers entretiens"},
+  "Saint Maximilien Kolbe": {text:"Je suis prêtre catholique, je veux prendre sa place : il a une femme et des enfants.", ref:"Parole rapportée à Auschwitz, 1941"},
+  "Saint Pio de Pietrelcina (Padre Pio)": {text:"Priez, espérez, et ne vous inquiétez pas.", ref:"Parole attribuée, tradition capucine"},
+  "Sainte Teresa de Calcutta (Mère Teresa)": {text:"Nous ne pouvons pas faire de grandes choses, seulement de petites choses avec un grand amour.", ref:"Parole attribuée"},
+  "Saint Jean-Paul II": {text:"N'ayez pas peur !", ref:"Homélie d'inauguration du pontificat, 22 octobre 1978"}
+};
 function allSaintEntries(groups){
   const list = [];
   groups.forEach(g=> g.entries.forEach((e,idx)=> list.push({entry:e, groupId:g.id, idx})));
@@ -6157,21 +6214,34 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
   }
 
   if(!SAINT_PROFILE_TAB){
-    const thumb = imgUrl ? `<img id="saint-hero-img" src="${imgUrl}" alt="" onerror="this.closest('figure').remove();">` : '';
     const nov = findNovenaEntryForSaint(entry);
-    let html = `<div class="saint-portrait">
-      <div class="office-head-row" style="padding:0 2px;">
-        <button class="back-link" id="saint-back-btn" style="margin:0;">← ${sectionBackLabel(compKey)}</button>
+    const patronage = SAINT_PATRONAGE[entry.name];
+    const quote = SAINT_QUOTE[entry.name];
+    const heroInner = imgUrl
+      ? `<img id="saint-hero-img" src="${imgUrl}" alt="" onerror="this.closest('.saint-portrait-hero').classList.add('no-img');">`
+      : '';
+    let html = `<div class="saint-portrait-hero ${imgUrl?'':'no-img'}">
+      ${heroInner}
+      <div class="saint-portrait-hero-scrim"></div>
+      <div class="saint-portrait-hero-top">
+        <button class="back-link saint-hero-back" id="saint-back-btn">← ${sectionBackLabel(compKey)}</button>
         ${favStarHTML(fav)}
       </div>
-      ${thumb ? `<figure class="saint-portrait-hero">${thumb}<figcaption class="saint-img-credit">${art ? '🔍 ' + art.credit : ''}</figcaption></figure>` : `<div class="halo-wrap" style="width:120px; height:120px; margin:18px auto;"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo" style="font-size:52px;">${entry.avatar||'📖'}</div></div>`}
-      <p class="saint-portrait-name">${entry.name}</p>
-      <p class="saint-portrait-sub">${entry.ref||''}</p>
+      ${!imgUrl ? `<div class="halo-wrap" style="width:96px; height:96px; margin:0 auto;"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo" style="font-size:44px;">${entry.avatar||'📖'}</div></div>` : ''}
+      <div class="saint-portrait-hero-bottom">
+        <p class="saint-portrait-name">${entry.name}</p>
+        <p class="saint-portrait-sub">${entry.ref||''}</p>
+      </div>
+    </div>
+    <div class="saint-portrait">
+      ${art ? `<p class="saint-img-credit">🔍 ${art.credit}</p>` : ''}
       <div class="saint-info-row">
         <span>📅 Fête : ${saintFeastShort(entry.dates)||'—'}</span>
+        ${patronage ? `<span>🛡️ Patronage : ${patronage}</span>` : ''}
       </div>
       <div class="card saint-quote-card">
-        <p class="saint-prayer" style="margin:0;">${entry.summary.split(/(?<=[.!?])\s+/)[0]}</p>
+        <p class="saint-prayer" style="margin:0;">« ${quote ? quote.text : entry.summary.split(/(?<=[.!?])\s+/)[0]} »</p>
+        ${quote ? `<p class="studio-note" style="margin-top:6px;">${quote.ref}</p>` : `<p class="studio-note" style="margin-top:6px;">Résumé de sa vie — aucune citation personnelle attestée n'est disponible</p>`}
       </div>
       <button class="btn btn-primary" id="saint-discover-btn" style="width:100%; margin:14px 0;">Découvrir sa vie →</button>
       <div class="saint-shortcut-row">
@@ -6205,20 +6275,30 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
   ];
   let body = '';
   if(SAINT_PROFILE_TAB === 'vie'){
+    const lifespan = saintLifespan(entry.dates);
+    const startYear = (lifespan.match(/\d{3,4}/)||[])[0];
+    const endYear = (lifespan.match(/\d{3,4}/g)||[])[1];
     body = `<div class="card">
       <p class="eyebrow" style="color:var(--gold);">Une vie de fidélité</p>
       <p class="entry-detail-text">${entry.summary}</p>
       ${imgUrl ? `<figure class="saint-midfigure"><img src="${imgUrl}" alt="" onerror="this.closest('figure').remove();"></figure>` : ''}
       <p class="eyebrow" style="color:var(--gold); margin-top:14px;">Dates importantes</p>
-      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">🗓️ Vie</span><br><span class="gen-note">${saintLifespan(entry.dates)||'Date de naissance inconnue'}</span></div>
+      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">🕯️ Naissance</span><br><span class="gen-note">${startYear ? 'vers '+startYear : (lifespan||'date inconnue')}</span></div>
+      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">✝️ ${endYear?'Mort':'Vie'}</span><br><span class="gen-note">${endYear ? 'vers '+endYear : (lifespan||'—')}</span></div>
       <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">✦ Fête</span><br><span class="gen-note">${saintFeastShort(entry.dates)||'—'}</span></div>
       ${textActionsRowHTML('candle', entry.name, saintFeastShort(entry.dates), entry.summary, entry.ref||'', imgUrl?[imgUrl]:[])}
     </div>`;
   } else if(SAINT_PROFILE_TAB === 'enseignements'){
     const points = saintTeachingPoints(entry);
     body = `<p class="eyebrow" style="color:var(--gold);">Un modèle pour aujourd'hui</p>
-      <div class="card" style="display:flex; flex-direction:column; gap:10px;">
-        ${points.map(p=>`<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">${p.icon} </span><span class="gen-note">${p.text}</span></div>`).join('')}
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        ${points.map(p=>`<div class="card saint-teach-card">
+          <span class="saint-teach-icon">${p.icon}</span>
+          <div style="flex:1;">
+            <p class="saint-teach-title">${p.title}</p>
+            <p class="entry-summary" style="-webkit-line-clamp:unset;">${p.text}</p>
+          </div>
+        </div>`).join('')}
       </div>`;
   } else if(SAINT_PROFILE_TAB === 'priere'){
     const prayer = saintCalendarPrayerFor(entry) || `${entry.name}, priez pour nous.`;
@@ -6234,10 +6314,21 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
       <div class="entry-link-row"><button class="btn btn-ghost btn-sm" id="saint-link-prieres">📿 Autres prières aux saints →</button></div>
     </div>`;
   } else if(SAINT_PROFILE_TAB === 'plus'){
-    body = `${imgUrl ? `<div class="card">
+    const quote = SAINT_QUOTE[entry.name];
+    const patronage = SAINT_PATRONAGE[entry.name];
+    body = `${quote ? `<div class="card">
+      <p class="eyebrow" style="color:var(--gold);">💬 Citation</p>
+      <p class="saint-prayer" style="margin:4px 0 2px;">« ${quote.text} »</p>
+      <p class="studio-note">${quote.ref}</p>
+    </div>` : ''}
+    ${imgUrl ? `<div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">🖼️ Iconographie</p>
       <figure class="saint-midfigure" style="margin:8px 0 2px;"><img src="${imgUrl}" alt="" onerror="this.closest('figure').remove();"></figure>
       ${art ? `<p class="studio-note">${art.credit}</p>` : ''}
+    </div>` : ''}
+    ${patronage ? `<div class="card" style="margin-top:12px;">
+      <p class="eyebrow" style="color:var(--gold);">🛡️ Patronage</p>
+      <p class="entry-detail-text" style="margin:4px 0 0;">${patronage}</p>
     </div>` : ''}
     <div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">📅 Fête et célébration liturgique</p>
