@@ -902,11 +902,17 @@
   .rosary-color-dot{ width:28px; height:28px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0; }
   .rosary-color-dot.active{ border-color:var(--ink); transform:scale(1.1); }
   #aelf-office-body, #aelf-bible-body{ max-width:560px; margin:0 auto; }
-  .aelf-office-section{ margin-bottom:18px; }
-  .aelf-office-heading{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--wine-dark); margin:0 0 6px; padding-bottom:4px; border-bottom:1px solid var(--hairline); }
-  .aelf-office-ref{ font-family:'Inter',sans-serif; font-weight:500; font-size:12px; color:var(--ink-soft); }
-  .aelf-office-text{ font-family:'Lora',serif; font-size:14px; line-height:1.8; color:var(--ink); white-space:pre-line; max-width:65ch; margin:0 auto; }
+  .aelf-office-section{ margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--hairline); }
+  .aelf-office-section:last-child{ border-bottom:none; }
+  .aelf-office-section.aelf-office-intro{ border-bottom:none; margin-bottom:14px; }
+  .aelf-office-heading.eyebrow{ display:block; margin:0 0 10px; }
+  .aelf-office-ref{ text-transform:none; letter-spacing:0; font-weight:500; color:var(--ink-soft); font-size:11px; }
+  .aelf-office-antienne{ font-family:'Lora',serif; font-size:13.5px; line-height:1.6; color:var(--wine-dark); font-style:italic; margin:0 0 8px; max-width:65ch; margin-left:auto; margin-right:auto; }
+  .aelf-office-text{ font-family:'Lora',serif; font-size:14px; line-height:1.85; color:var(--ink); white-space:pre-line; max-width:65ch; margin:0 auto; }
   .aelf-office-credit{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); text-align:right; max-width:65ch; margin:4px auto 0; font-style:italic; }
+  .aelf-dialogue-mark{ color:var(--gold); font-weight:700; font-family:'Inter',sans-serif; font-size:12.5px; }
+  .aelf-verse-num{ color:var(--gold); font-weight:600; font-size:11px; font-family:'Inter',sans-serif; vertical-align:text-top; margin-right:2px; }
+  .aelf-pause{ color:var(--gold); font-weight:700; }
   .welcome-splash{
     min-height:70vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
     text-align:center; padding:20px; gap:4px;
@@ -925,7 +931,7 @@
     border-radius:22px 22px 0 0; padding:26px 22px 30px; animation:fadeIn 0.25s ease;
   }
   .guide-close{ position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%; border:none; background:var(--vellum); color:var(--ink-soft); font-size:14px; cursor:pointer; }
-  .guide-eyebrow{ font-family:'Inter',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--gold); margin:0; }
+  .guide-eyebrow{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; color:var(--gold); margin:0; }
   .guide-title{ font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--ink); margin:4px 0 4px; }
   .guide-desc{ font-family:'Inter',sans-serif; font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
   .guide-options{ display:flex; flex-direction:column; gap:8px; max-height:38vh; overflow-y:auto; }
@@ -1391,7 +1397,7 @@
     position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%;
     border:none; background:var(--vellum); color:var(--ink-soft); font-size:14px; cursor:pointer;
   }
-  .guided-chaplet-title{ font-family:'Inter',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--gold); margin:0 0 14px; }
+  .guided-chaplet-title{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; color:var(--gold); margin:0 0 14px; }
   .guided-chaplet-beads{ display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin-bottom:18px; }
   .guided-chaplet-beads .chaplet-bead{ width:24px; height:24px; }
   .guided-chaplet-beads .bead-big{ width:32px; height:32px; }
@@ -1427,7 +1433,7 @@
      et description en dessous sur fond clair (pas de texte incrusté). */
   .novena-hero-plain{ height:230px; border-radius:16px; overflow:hidden; background:var(--gold-pale); display:flex; align-items:center; justify-content:center; }
   .novena-hero-plain img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; }
-  .novena-hero-tag{ text-align:center; font-family:'Inter',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--wine); margin:14px 0 2px; }
+  .novena-hero-tag{ text-align:center; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; color:var(--wine); margin:14px 0 2px; }
   .novena-hero-title{ text-align:center; font-family:'Fraunces',serif; font-size:23px; font-weight:600; color:var(--ink); margin:0 0 8px; }
   .novena-hero-desc{ text-align:center; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink-soft); margin:0 0 4px; padding:0 8px; }
   /* --- Hozana-style cards --- */
@@ -1780,7 +1786,7 @@
   .home-tile-category--eglise .home-tile-big-icon{ background:radial-gradient(circle at 32% 28%, #DCCBF0, #8E6FB3 80%); }
   .home-tile-category--sagesse .home-tile-big-icon{ background:radial-gradient(circle at 32% 28%, #D3E6C4, var(--sage,#5C6E58) 85%); }
   .home-tile-big-label{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-align:center; color:var(--ink); line-height:1.25; }
-  .sumry-section-label{ font-family:'Inter',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--ink-soft); margin:14px 0 8px; }
+  .sumry-section-label{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; color:var(--ink-soft); margin:14px 0 8px; }
   .sumry-gauge{ margin-bottom:10px; }
   .sumry-gauge-top{ display:flex; justify-content:space-between; font-family:'Inter',sans-serif; font-size:12px; color:var(--ink); margin-bottom:4px; }
   .sumry-gauge-track{ height:7px; border-radius:99px; background:var(--hairline); overflow:hidden; }
@@ -2829,7 +2835,7 @@
     border-radius:16px; padding:16px; margin-bottom:14px; color:#fff;
     box-shadow:0 8px 24px rgba(0,0,0,0.2); position:relative; overflow:hidden;
   }
-  .ambiance-hero-eyebrow{ font-family:'Inter',sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:1px; opacity:0.85; margin:0 0 6px; }
+  .ambiance-hero-eyebrow{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; opacity:0.85; margin:0 0 6px; }
   .ambiance-hero-title{ font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin:0; }
   .ambiance-hero-artist{ font-family:'Inter',sans-serif; font-size:12.5px; opacity:0.9; margin:2px 0 10px; }
   .synth-collapse{ margin-top:16px; }

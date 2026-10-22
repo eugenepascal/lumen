@@ -9418,6 +9418,24 @@ function aelfCleanText(raw){
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
+/* Met en forme, ligne par ligne, le texte liturgique nettoyé par aelfCleanText :
+   dialogues V/ R/ en gras coloré, numéros de versets détachés, astérisques de
+   psalmodie mis en valeur — comme sur aelf.org, sans toucher aux \n (la classe
+   .aelf-office-text garde white-space:pre-line). */
+function aelfFormatLiturgicalText(text){
+  if(!text) return '';
+  return text.split('\n').map(line=>{
+    if(!line.trim()) return '';
+    let l = line;
+    let prefix = '';
+    const dlg = l.match(/^(V\/|R\/)\s*(.*)$/);
+    if(dlg){ prefix = `<span class="aelf-dialogue-mark">${dlg[1]}</span> `; l = dlg[2]; }
+    const vm = l.match(/^(\d{1,3})\s+(.*)$/);
+    if(vm){ l = `<span class="aelf-verse-num">${vm[1]}</span> ${vm[2]}`; }
+    l = l.replace(/\*/g, '<span class="aelf-pause">*</span>');
+    return prefix + l;
+  }).join('\n');
+}
 function aelfOfficeFieldHTML(label, value){
   if(value === null || value === undefined) return '';
   let body, ref = '', titre = '', credit = '';
@@ -9433,9 +9451,39 @@ function aelfOfficeFieldHTML(label, value){
   }
   if(!body || !body.trim()) return '';
   return `<div class="aelf-office-section">
-    <p class="aelf-office-heading">${label}${ref ? ` <span class="aelf-office-ref">(${ref})</span>` : ''}</p>
+    <p class="eyebrow aelf-office-heading">${label}${ref ? ` <span class="aelf-office-ref">(${ref})</span>` : ''}</p>
     ${titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${titre} »</p>` : ''}
-    <div class="aelf-office-text">${body}</div>
+    <div class="aelf-office-text">${aelfFormatLiturgicalText(body)}</div>
+    ${credit ? `<p class="aelf-office-credit">${credit}</p>` : ''}
+  </div>`;
+}
+/* Fusionne une antienne avec le psaume/cantique qui la suit dans UNE seule
+   section — comme sur aelf.org, où l'antienne précède directement son psaume
+   plutôt que d'avoir sa propre carte séparée. */
+function aelfOfficeMergedSectionHTML(antValue, mainValue, mainLabel){
+  let antBody = '';
+  if(antValue !== undefined && antValue !== null){
+    antBody = Array.isArray(antValue) ? antValue.filter(Boolean).join(' ')
+      : aelfCleanText(typeof antValue==='object' ? (antValue.texte||'') : antValue).replace(/\n+/g,' ');
+  }
+  if(mainValue === null || mainValue === undefined) return '';
+  let body, ref = '', titre = '', credit = '';
+  if(Array.isArray(mainValue)){
+    body = mainValue.filter(Boolean).join('\n');
+  } else if(typeof mainValue === 'object'){
+    ref = mainValue.reference || '';
+    titre = mainValue.titre || '';
+    if(mainValue.auteur || mainValue.editeur) credit = [mainValue.auteur, mainValue.editeur].filter(Boolean).join(' — ');
+    body = aelfCleanText(mainValue.texte || '');
+  } else {
+    body = aelfCleanText(mainValue);
+  }
+  if(!body || !body.trim()) return '';
+  return `<div class="aelf-office-section">
+    <p class="eyebrow aelf-office-heading">${mainLabel}${ref ? ` <span class="aelf-office-ref">(${ref})</span>` : ''}</p>
+    ${antBody ? `<p class="aelf-office-antienne">Ant. ${antBody}</p>` : ''}
+    ${titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${titre} »</p>` : ''}
+    <div class="aelf-office-text">${aelfFormatLiturgicalText(body)}</div>
     ${credit ? `<p class="aelf-office-credit">${credit}</p>` : ''}
   </div>`;
 }
@@ -9449,23 +9497,31 @@ function aelfOfficeHTML(officeKey, json){
     html += `<p class="studio-note" style="text-align:center; margin:0 0 14px;">${[info.fete, info.ligne1, info.ligne2].filter(Boolean).join(' — ')}</p>`;
   }
   if(data.introduction){
-    html += `<p class="entry-detail-text" style="text-align:center; font-style:italic; margin-bottom:14px;">${aelfCleanText(data.introduction)}</p>`;
+    html += `<div class="aelf-office-section aelf-office-intro">
+      <div class="aelf-office-text" style="text-align:center;">${aelfFormatLiturgicalText(aelfCleanText(data.introduction))}</div>
+    </div>`;
   }
-  let patristiqueTitre = '';
-  fields.forEach(([key, label])=>{
+  let i = 0;
+  while(i < fields.length){
+    const [key, label] = fields[i];
     if(key === 'texte_patristique'){
-      patristiqueTitre = data.titre_patristique || '';
+      const titre = data.titre_patristique || '';
       if(data.texte_patristique){
         html += `<div class="aelf-office-section">
-          <p class="aelf-office-heading">${label}</p>
-          ${patristiqueTitre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${patristiqueTitre} »</p>` : ''}
-          <div class="aelf-office-text">${aelfCleanText(data.texte_patristique)}</div>
+          <p class="eyebrow aelf-office-heading">${label}</p>
+          ${titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:4px;">« ${titre} »</p>` : ''}
+          <div class="aelf-office-text">${aelfFormatLiturgicalText(aelfCleanText(data.texte_patristique))}</div>
         </div>`;
       }
-      return;
+      i++; continue;
+    }
+    if(key.startsWith('antienne') && fields[i+1] && data[fields[i+1][0]] !== undefined){
+      html += aelfOfficeMergedSectionHTML(data[key], data[fields[i+1][0]], fields[i+1][1]);
+      i += 2; continue;
     }
     html += aelfOfficeFieldHTML(label, data[key]);
-  });
+    i++;
+  }
   return html || null;
 }
 let VATICAN_NEWS_CACHE = undefined;
@@ -9896,11 +9952,11 @@ function aelfReadingCardHTML(json){
     <p class="eyebrow" style="color:var(--wine-dark); text-align:center;">⛪ Lectures officielles de la messe</p>
     ${json.informations && json.informations.fete_jour ? `<p class="studio-note" style="text-align:center; margin:0 0 14px;">${json.informations.fete_jour}</p>` : ''}
     ${lectures.map(l=>{
-      const body = aelfCleanText(l.contenu||l.texte||'');
+      const body = aelfFormatLiturgicalText(aelfCleanText(l.contenu||l.texte||''));
       const closing = aelfClosingFormula(l.type);
       return `<div class="aelf-office-section">
-        <p class="aelf-office-heading">${aelfLectureTypeLabel(l.type)}</p>
-        ${l.titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:2px;">« ${l.titre} »${l.ref?' ('+l.ref+')':''}</p>` : (l.ref ? `<p class="studio-note">${l.ref}</p>` : '')}
+        <p class="eyebrow aelf-office-heading">${aelfLectureTypeLabel(l.type)}${l.ref ? ` <span class="aelf-office-ref">(${l.ref})</span>` : ''}</p>
+        ${l.titre ? `<p class="entry-detail-text" style="font-style:italic; margin-bottom:2px;">« ${l.titre} »</p>` : ''}
         ${l.intro_lue ? `<p class="studio-note" style="margin-bottom:8px;">${l.intro_lue}</p>` : ''}
         <div class="aelf-office-text">${body}</div>
         ${closing ? `<p class="entry-detail-text" style="text-align:right; font-style:italic; margin-top:6px;">${closing}</p>` : ''}
