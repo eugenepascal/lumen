@@ -9438,7 +9438,7 @@ function renderAelfBibleBooks(){
 let AELF_BIBLE_CURRENT = null;
 let AELF_BIBLE_TAB = 'texte';
 let AELF_BIBLE_FONT_BIG = false;
-const AELF_BIBLE_HERO_IMG = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900';
+const AELF_BIBLE_HERO_IMG = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bible-706641.jpg?width=900';
 /* Essaie plusieurs formes possibles de la réponse de l'API AELF (le format
    exact n'étant pas garanti) pour en extraire une liste {number, text} —
    sinon on revient sans casser à l'ancien embed AELF.org. */
