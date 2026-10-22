@@ -5039,15 +5039,29 @@ function novenaClosingPrayerText(n){
    l'image de la maquette : méditation, prière propre à la neuvaine, puis le
    Notre Père, 10 Je vous salue Marie (avec compteur), le Gloire au Père et
    une prière finale. */
-function novenaDaySteps(n, d){
+/* Illustration symbolique Lumen par étape — dessins originaux maison (pas
+   des photos tierces), choisis pour illustrer chaque prière du déroulement :
+   livre ouvert pour la méditation, mains jointes pour la prière propre à la
+   neuvaine (ou le portrait du saint/figure quand on en a un, vérifié), croix
+   rayonnante pour le Notre Père, chapelet fleuri pour les 10 Je vous salue
+   Marie, colombe pour le Gloire au Père, cierge pour la prière finale. */
+const NOVENA_STEP_ART = {
+  medit:   {url:'./images/novena-step-meditation.svg', credit:'Illustration symbolique Lumen'},
+  prayer:  {url:'./images/novena-step-prayer.svg', credit:'Illustration symbolique Lumen'},
+  pater:   {url:'./images/novena-step-paternoster.svg', credit:'Illustration symbolique Lumen'},
+  ave:     {url:'./images/novena-step-ave.svg', credit:'Illustration symbolique Lumen'},
+  gloria:  {url:'./images/novena-step-gloria.svg', credit:'Illustration symbolique Lumen'},
+  final:   {url:'./images/novena-step-final.svg', credit:'Illustration symbolique Lumen'}
+};
+function novenaDaySteps(n, d, dedicatedArt){
   const saintName = n.title.replace(/^Neuvaine\s*(à|au|aux|pour|de|du|des|d')\s*/i, '');
   return [
-    {key:'medit', icon:'💭', label:'Méditation du jour', theme:'candle', title:d.title, subtitle:'Méditation', text:d.medit},
-    {key:'prayer', icon:'🙏', label:'Prière à '+saintName, theme:'letter', title:'Prière à '+saintName, subtitle:n.title, text:d.prayer},
-    {key:'pater', icon:'✝️', label:'Notre Père', theme:'letter', title:'Notre Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Notre Père']},
-    {key:'ave', icon:'📿', label:'10 Je vous salue Marie', counter:true},
-    {key:'gloria', icon:'✨', label:'Gloire au Père', theme:'letter', title:'Gloire au Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Gloire au Père']},
-    {key:'final', icon:'🕯️', label:'Prière finale', theme:'candle', title:'Prière finale', subtitle:n.title, text:novenaClosingPrayerText(n)}
+    {key:'medit', icon:'💭', img:NOVENA_STEP_ART.medit.url, label:'Méditation du jour', theme:'candle', title:d.title, subtitle:'Méditation', text:d.medit},
+    {key:'prayer', icon:'🙏', img:(dedicatedArt && dedicatedArt.url) || NOVENA_STEP_ART.prayer.url, label:'Prière à '+saintName, theme:'letter', title:'Prière à '+saintName, subtitle:n.title, text:d.prayer},
+    {key:'pater', icon:'✝️', img:NOVENA_STEP_ART.pater.url, label:'Notre Père', theme:'letter', title:'Notre Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Notre Père']},
+    {key:'ave', icon:'📿', img:NOVENA_STEP_ART.ave.url, label:'10 Je vous salue Marie', counter:true},
+    {key:'gloria', icon:'✨', img:NOVENA_STEP_ART.gloria.url, label:'Gloire au Père', theme:'letter', title:'Gloire au Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Gloire au Père']},
+    {key:'final', icon:'🕯️', img:NOVENA_STEP_ART.final.url, label:'Prière finale', theme:'candle', title:'Prière finale', subtitle:n.title, text:novenaClosingPrayerText(n)}
   ];
 }
 function renderNovenaDayPage(n, info, dayIndex){
@@ -5056,9 +5070,9 @@ function renderNovenaDayPage(n, info, dayIndex){
   const counterId = n.id+'-day'+dayIndex;
   const aveCounterId = counterId+'-ave';
   const playing = NOVENA_DAY_AUDIO_PLAYING === counterId;
-  const steps = novenaDaySteps(n, d);
-  const aveCount = SIMPLE_BEAD_COUNTS[aveCounterId] || 0;
   const art = lumenNovenaDedicatedArt({id:n.id, name:n.title, summary:n.sub});
+  const steps = novenaDaySteps(n, d, art);
+  const aveCount = SIMPLE_BEAD_COUNTS[aveCounterId] || 0;
   let html = `<div class="detail-wrap">
     <button class="back-link" id="back-to-timeline-btn">← ${n.title}</button>
 
@@ -5089,7 +5103,10 @@ function renderNovenaDayPage(n, info, dayIndex){
     <div class="novena-day-steps">
       ${steps.map(s=>`
         <div class="novena-day-step" data-day-step="${s.key}">
-          <span class="novena-day-step-icon">${s.icon}</span>
+          <span class="novena-day-step-thumb-wrap">
+            <img class="novena-day-step-thumb" src="${s.img}" alt="" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="novena-day-step-icon" style="display:none;">${s.icon}</span>
+          </span>
           <span class="novena-day-step-label">${s.label}</span>
           ${s.counter ? `<span class="novena-day-step-count" data-step-count-for="${aveCounterId}">${aveCount}/10</span>` : ''}
           <span class="novena-day-step-caret">›</span>

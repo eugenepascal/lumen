@@ -1448,7 +1448,10 @@
     border:1px solid var(--hairline); border-radius:14px; padding:12px 14px; cursor:pointer;
   }
   .novena-day-step:active{ background:var(--gold-pale); }
-  .novena-day-step-icon{ font-size:18px; flex-shrink:0; }
+  .novena-day-step-thumb-wrap{ position:relative; width:38px; height:38px; flex-shrink:0; border-radius:10px; overflow:hidden; background:var(--gold-pale); }
+  .novena-day-step-thumb{ width:100%; height:100%; object-fit:cover; display:block; }
+  .novena-day-step-icon{ font-size:18px; flex-shrink:0; width:100%; height:100%; align-items:center; justify-content:center; }
+  .novena-day-step-thumb-wrap .novena-day-step-icon{ position:absolute; inset:0; }
   .novena-day-step-label{ flex:1; font-family:'Inter',sans-serif; font-size:14px; font-weight:600; color:var(--ink); }
   .novena-day-step-count{
     font-family:'Inter',sans-serif; font-size:11.5px; font-weight:700; color:var(--wine-dark);

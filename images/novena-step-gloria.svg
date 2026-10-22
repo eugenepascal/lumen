@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#7C1F2E"/>
+    <stop offset="1" stop-color="#4E1420"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="50%" cy="42%" r="62%">
+    <stop stop-color="#F1D493" stop-opacity=".65"/>
+    <stop offset="1" stop-color="#F1D493" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#F6E3B4"/>
+    <stop offset="1" stop-color="#C9A876"/>
+  </linearGradient>
+</defs>
+<rect width="300" height="300" fill="url(#bg)"/>
+<circle cx="150" cy="140" r="125" fill="url(#glow)"/>
+<g stroke="#F6E3B4" stroke-opacity=".35" stroke-width="3">
+  <line x1="150" y1="30" x2="150" y2="60"/>
+  <line x1="80" y1="60" x2="100" y2="80"/>
+  <line x1="220" y1="60" x2="200" y2="80"/>
+  <line x1="60" y1="140" x2="90" y2="140"/>
+  <line x1="240" y1="140" x2="210" y2="140"/>
+</g>
+<g fill="url(#gold)">
+  <path d="M150 112 C140 96 112 92 98 108 C86 122 92 142 108 152 C120 160 140 166 150 178 C160 166 180 160 192 152 C208 142 214 122 202 108 C188 92 160 96 150 112 Z"/>
+  <path d="M150 178 L150 168 M150 178 C136 184 118 186 104 180 C108 192 122 200 140 200 Z"/>
+  <path d="M150 178 C164 184 182 186 196 180 C192 192 178 200 160 200 Z"/>
+</g>
+<circle cx="150" cy="130" r="150" fill="none" stroke="#F6E3B4" stroke-opacity=".18" stroke-width="3"/>
+</svg>
