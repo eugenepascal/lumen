@@ -3792,6 +3792,11 @@ function dayOfYear(){
   const start = new Date(d.getFullYear(),0,0);
   return Math.floor((d - start) / 86400000);
 }
+function saintDateLabel(mmdd){
+  if(!mmdd) return '';
+  const [mm,dd] = mmdd.split('-').map(Number);
+  return `${dd} ${MONTH_NAMES_FR[mm-1]||''}`;
+}
 function getSaintOfDay(){
   const key = todayKey();
   const exact = SAINTS.find(s => s.d === key);
@@ -3971,10 +3976,12 @@ function homeTitleHTML(emoji, text, tint){
 }
 /* En-tête de section d'accueil avec, en plus, un lien d'action à droite
    (« Voir tout → » etc.), comme dans la maquette. */
-function homeTitleRowHTML(emoji, text, tint, linkLabel, linkId){
+function homeTitleRowHTML(emoji, text, tint, linkLabel, linkId, linkIsStatic){
   return `<div class="home-sec-row">
     ${homeTitleHTML(emoji, text, tint)}
-    ${linkLabel ? `<button class="home-sec-link" id="${linkId}">${linkLabel}</button>` : ''}
+    ${linkLabel !== undefined && linkLabel !== null ? (linkIsStatic
+      ? `<span class="home-sec-link home-sec-link-static" id="${linkId}">${linkLabel}</span>`
+      : `<button class="home-sec-link" id="${linkId}">${linkLabel}</button>`) : ''}
   </div>`;
 }
 let HOME_PAGE_IDX = 0;
@@ -4058,12 +4065,11 @@ function homePage1HTML(){
         <button class="btn btn-gold btn-sm" id="home-name-save">Valider</button>
       </div>`}
 
-    ${homeTitleHTML('☀️','Évangile du jour','linear-gradient(160deg, #D9A35C, #B8863B)')}
+    ${homeTitleRowHTML('☀️','Évangile du jour','linear-gradient(160deg, #D9A35C, #B8863B)', '', 'home-evangile-ref', true)}
     <figure class="evangile-hero" id="home-evangile-card">
       <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=900" alt="" loading="lazy" onerror="this.style.display='none'">
       <div class="evangile-hero-scrim"></div>
       <figcaption class="evangile-hero-body">
-        <p class="evangile-ref" id="home-evangile-ref"></p>
         <p class="evangile-quote" id="home-evangile-quote">Chargement des lectures du jour…</p>
         <div style="text-align:right;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>
       </figcaption>
@@ -4100,8 +4106,9 @@ function homePage1HTML(){
         const mysteryNow = midSession ? ROSARY_STATE.mysteryIdx+1 : 0;
         return `<div class="home-progress-item">${homeProgressCardHTML({
           img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Zurbar%C3%A1n%20%28atribuido%29-John%20of%20the%20Cross-1656.jpg?width=400', icon:'📿', bg:'#6B2545',
-          title:`Chapelet — ${set.label}`, sub: midSession ? `Mystère ${mysteryNow} sur 5` : 'Prier un chapelet aujourd’hui',
+          title:'Chapelet du jour', sub: set.label,
           current: mysteryNow, total: midSession ? 5 : 0,
+          footnote: midSession ? `${mysteryNow} sur 5` : '',
           ctaLabel: midSession ? 'Continuer →' : 'Commencer →',
           attrs:'data-goto-primary="devotions" data-goto-sub="chapelet"'
         })}</div>`;
@@ -4137,7 +4144,7 @@ function loadHomeEvangileCard(){
       quote.textContent = 'Les lectures d’aujourd’hui vous attendent.';
     } else {
       const cleaned = aelfCleanText(evangile.contenu||evangile.texte||'');
-      const snippet = cleaned.length>150 ? cleaned.slice(0,150).trim()+'…' : cleaned;
+      const snippet = cleaned.length>170 ? cleaned.slice(0,170).trim()+'…' : cleaned;
       if(ref) ref.textContent = evangile.ref || '';
       quote.textContent = `« ${snippet} »`;
     }
@@ -4203,26 +4210,24 @@ function homePage2HTML(){
     <div class="card hoz-card">
       <div class="hoz-card-img" style="background:#7C1F2E;">
         <img src="${saintArt.url}" alt="" loading="lazy" onerror="this.style.display='none'">
-        ${isFeast ? `<span class="hoz-card-progress-pill">Fête du jour</span>` : ''}
       </div>
       <div class="hoz-card-body">
         <p class="hoz-card-title">${saint.name}</p>
+        <p class="hoz-card-date">📅 ${saintDateLabel(saint.d)}${isFeast ? ' · Fête du jour' : ''}</p>
         <p class="hoz-card-sub" style="-webkit-line-clamp:3;">${saint.bio}</p>
         <button class="btn btn-gold btn-sm" id="p2-saint-cta" style="margin-top:4px;">Découvrir sa vie et sa prière →</button>
       </div>
     </div>
 
     ${homeTitleRowHTML('🔥','Méditation du jour','linear-gradient(160deg, #AFC2D6, #6E8FAE)', 'Voir toutes →', 'p2-medit-all')}
-    <div class="card hoz-card">
-      <div class="hoz-card-img" style="background:#4A3D6B;">
-        <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=600" alt="" loading="lazy" onerror="this.style.display='none'">
-      </div>
-      <div class="hoz-card-body">
-        <p class="hoz-card-title">${medit.title}</p>
-        <p class="hoz-card-sub" style="-webkit-line-clamp:3;">${medit.text}</p>
-        <button class="btn btn-gold btn-sm" id="p2-medit-cta" style="margin-top:4px;">Lire la méditation →</button>
-      </div>
-    </div>
+    <figure class="evangile-hero">
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900" alt="" loading="lazy" onerror="this.style.display='none'">
+      <div class="evangile-hero-scrim"></div>
+      <figcaption class="evangile-hero-body">
+        <p class="evangile-quote">« ${medit.text} »</p>
+        <div style="text-align:right;"><button class="btn btn-primary btn-sm" id="p2-medit-cta">Lire la méditation →</button></div>
+      </figcaption>
+    </figure>
 
     ${homeTitleRowHTML('📖','Lecture rapide','linear-gradient(160deg, #D9A35C, #B8863B)', 'Voir plus →', 'p2-quick-all')}
     <div class="home-shortcuts-grid">
@@ -4499,7 +4504,7 @@ function carnetBoxesHTML(text, kind){
 /* Carte compacte « Ma progression » de l'accueil : petite vignette carrée à
    gauche + titre, sous-titre et vraie barre de progression à droite — comme
    dans la maquette (plus compacte que les cartes-photo pleine largeur). */
-function homeProgressCardHTML({img, icon, bg, title, sub, current, total, ctaLabel, extraClass, attrs}){
+function homeProgressCardHTML({img, icon, bg, title, sub, current, total, footnote, ctaLabel, extraClass, attrs}){
   const pct = total ? Math.max(4, Math.round(100*current/total)) : 0;
   return `<div class="card home-progress-card ${extraClass||''}" ${attrs||''}>
     <div class="home-progress-card-img" style="background:${bg||'var(--gold-pale)'};">
@@ -4509,6 +4514,7 @@ function homeProgressCardHTML({img, icon, bg, title, sub, current, total, ctaLab
       <p class="home-progress-card-title">${title}</p>
       <p class="home-progress-card-sub">${sub}</p>
       ${total ? `<div class="home-progress-bar"><div class="home-progress-bar-fill" style="width:${pct}%;"></div></div>` : ''}
+      ${footnote ? `<p class="home-progress-card-footnote">${footnote}</p>` : ''}
       <button class="btn btn-primary btn-sm">${ctaLabel}</button>
     </div>
   </div>`;
