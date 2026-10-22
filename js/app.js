@@ -6102,7 +6102,9 @@ const SAINT_DEVOTION = {
    trouvée, plutôt que de réutiliser la même image ou d'en inventer une. */
 const SAINT_EXTRA_ART = {
   "Saint François d'Assise": [{url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Giotto%20-%20Saint%20Francis%20Receiving%20the%20Stigmata.jpg?width=600', credit:'Saint François recevant les stigmates · Giotto · domaine public'}],
-  "Saint Jean-Paul II": [{url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bernard%20Gotfryd%20%E2%80%93%20Pope%20John%20Paul%20II%20%281983%29.jpg?width=600', credit:'Saint Jean-Paul II, 1983 · photographie Bernard Gotfryd · domaine public'}]
+  "Saint Jean-Paul II": [{url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bernard%20Gotfryd%20%E2%80%93%20Pope%20John%20Paul%20II%20%281983%29.jpg?width=600', credit:'Saint Jean-Paul II, 1983 · photographie Bernard Gotfryd · domaine public'}],
+  "Sainte Jeanne d'Arc": [{url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Ingres%20coronation%20charles%20vii.jpg?width=600', credit:'Jeanne d’Arc au sacre de Charles VII · Ingres · domaine public'}],
+  "Saint Thomas d'Aquin": [{url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Carlo%20Crivelli%20007.jpg?width=600', credit:'Saint Thomas d’Aquin · Carlo Crivelli · domaine public'}]
 };
 function allSaintEntries(groups){
   const list = [];
