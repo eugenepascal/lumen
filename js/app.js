@@ -9450,17 +9450,34 @@ const AELF_OFFICE_GUIDES = {
   complies: "Complies est la dernière prière du jour avant le repos, un examen paisible de la journée et une remise de la nuit entre les mains de Dieu.",
   lectures: "L'Office des lectures nourrit l'intelligence de la foi par un long temps de méditation : un psaume approfondi, une lecture biblique et un texte des Pères de l'Église ou d'un saint."
 };
+// AELF's API occasionally answers with a 503 (server-side overload), which also
+// drops CORS headers and surfaces to fetch() as a generic "Failed to fetch".
+// Retrying a couple of times with a short backoff clears most of these.
+async function aelfFetchJson(url, attempts){
+  attempts = attempts || 3;
+  let lastErr = null;
+  for(let i=0;i<attempts;i++){
+    try{
+      const res = await fetch(url, {cache:'no-store'});
+      if(!res.ok) throw new Error('aelf http '+res.status);
+      return await res.json();
+    }catch(e){
+      lastErr = e;
+      if(i < attempts-1) await new Promise(r=>setTimeout(r, 600*(i+1)));
+    }
+  }
+  throw lastErr;
+}
 async function fetchAelfOffice(officeKey, date){
   const cacheKey = officeKey+'|'+date;
   if(AELF_OFFICE_CACHE[cacheKey] !== undefined) return AELF_OFFICE_CACHE[cacheKey];
   try{
-    const res = await fetch(`https://api.aelf.org/v1/${officeKey}/${date}/france`);
-    if(!res.ok) throw new Error('aelf http '+res.status);
-    const json = await res.json();
+    const json = await aelfFetchJson(`https://api.aelf.org/v1/${officeKey}/${date}/france`);
     AELF_OFFICE_CACHE[cacheKey] = json;
     return json;
   }catch(e){
-    AELF_OFFICE_CACHE[cacheKey] = null;
+    // Don't cache the failure: AELF's outages are usually brief, so a later
+    // retry (manual or from reopening the office) should be allowed to succeed.
     return null;
   }
 }
@@ -10037,9 +10054,13 @@ function renderAelfOfficeBody(){
     if(!html){
       AELF_OFFICE_LAST_PLAIN_TEXT = '';
       bodyEl.innerHTML = `<div class="card empty-state" style="text-align:left;">
-        Ce texte n'a pas pu être chargé ici pour le moment.
-        <br><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px;">Le lire sur AELF.org ↗</a>
+        Les serveurs de l'AELF sont momentanément indisponibles : impossible de charger ce texte ici pour le moment.
+        <br>
+        <button class="btn btn-ghost btn-sm" id="aelf-office-retry-btn" style="margin-top:8px;">↻ Réessayer</button>
+        <a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px; margin-left:8px;">Le lire sur AELF.org ↗</a>
       </div>`;
+      const retryBtn = document.getElementById('aelf-office-retry-btn');
+      if(retryBtn) retryBtn.onclick = ()=>{ renderAelfOfficeBody(); };
       return;
     }
     bodyEl.innerHTML = html + `<p class="studio-note" style="text-align:center; margin-top:8px;">Source : <a href="${aelfUrl}" target="_blank" rel="noopener">AELF</a>, fournisseur officiel des textes liturgiques.</p>`;
@@ -10049,14 +10070,14 @@ function renderAelfOfficeBody(){
 let AELF_CACHE = {date:null, data:null, failed:false};
 async function fetchAelfDuJour(){
   const today = todayISO();
-  if(AELF_CACHE.date === today) return AELF_CACHE.data || null;
+  if(AELF_CACHE.date === today && AELF_CACHE.data) return AELF_CACHE.data;
   try{
-    const res = await fetch(`https://api.aelf.org/v1/messes/${today}/france`);
-    if(!res.ok) throw new Error('aelf http '+res.status);
-    const json = await res.json();
+    const json = await aelfFetchJson(`https://api.aelf.org/v1/messes/${today}/france`);
     AELF_CACHE = {date: today, data: json, failed: false};
     return json;
   }catch(e){
+    // Leave AELF_CACHE.data empty (don't lock in the failure) so the next call
+    // -- e.g. a manual retry -- gets a fresh attempt instead of a cached null.
     AELF_CACHE = {date: today, data: null, failed: true};
     return null;
   }
