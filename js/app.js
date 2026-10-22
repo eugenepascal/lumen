@@ -6342,6 +6342,9 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
     const iconImages = [];
     if(imgUrl) iconImages.push({url:imgUrl, credit: art ? art.credit : ''});
     (SAINT_EXTRA_ART[entry.name]||[]).forEach(x=> iconImages.push(x));
+    if(iconImages.length < 2){
+      iconImages.push({url:'./images/saint-generic-cross.svg', credit:'Illustration symbolique Lumen', generic:true});
+    }
     body = `${quote ? `<div class="card">
       <p class="eyebrow" style="color:var(--gold);">💬 Citation</p>
       <p class="saint-prayer" style="margin:4px 0 2px;">« ${quote.text} »</p>
@@ -6350,9 +6353,11 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
     ${iconImages.length ? `<div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">🖼️ Iconographie</p>
       <div class="saint-icono-row">
-        ${iconImages.map((img,i)=>`<img class="saint-icono-thumb" src="${img.url}" alt="" loading="lazy" data-icono-idx="${i}" onerror="this.remove();">`).join('')}
+        ${iconImages.map((img,i)=>`<figure class="saint-icono-fig">
+          <img class="saint-icono-thumb ${img.generic?'generic':''}" src="${img.url}" alt="" loading="lazy" data-icono-idx="${i}" ${img.generic?'':`onerror="this.closest('figure').remove();"`}>
+          <figcaption>${img.credit||''}</figcaption>
+        </figure>`).join('')}
       </div>
-      <p class="studio-note" style="margin-top:8px;">${iconImages[0].credit||''}</p>
     </div>` : ''}
     ${patronage ? `<div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">🛡️ Patronage</p>
