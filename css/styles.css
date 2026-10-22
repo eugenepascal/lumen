@@ -2746,6 +2746,7 @@
     cursor:pointer; display:flex; align-items:center; justify-content:center;
   }
   .vreader--nuit .vreader-icon-btn, .vreader--image .vreader-icon-btn{ background:rgba(255,255,255,0.16); color:#fff; }
+  .vreader-icon-btn.active{ background:var(--gold); color:#fff; }
 
   .vreader-body{
     /* justify-content:flex-start + marge auto sur le bloc de texte (au lieu de
@@ -2770,6 +2771,8 @@
   .vreader-ref::before{
     content:'✦'; display:block; font-size:11px; letter-spacing:4px; opacity:0.55; margin-bottom:9px;
   }
+  .vreader-explication{ max-width:36ch; text-align:left; }
+  .vreader-explication p:last-child{ font-family:'Lora',serif; font-size:15.5px; line-height:1.6; margin:4px 0 0; }
 
   .vreader-card-stack{ position:relative; max-width:320px; width:100%; margin:auto 0; }
   .vreader-card-stack::before, .vreader-card-stack::after{

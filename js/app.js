@@ -5326,6 +5326,15 @@ const CHAPLET_PRAYER_TEXTS = {
   'Je crois en Dieu': "Je crois en Dieu, le Père tout-puissant, créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.",
   'Salve Regina': "Salut, ô Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève, exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous vos regards miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie !"
 };
+/* Une courte explication par prière classique, pour l'onglet « Explication »
+   du lecteur de textes — façon maquette (écran du Notre Père). */
+const PRAYER_EXPLICATIONS = {
+  'Notre Père': "C'est la prière que Jésus lui-même a enseignée à ses disciples (Matthieu 6, 9-13). Elle s'adresse directement à Dieu comme un enfant s'adresse à son père : on y loue son nom, on demande que son règne vienne, on lui confie nos besoins du jour, et on lui demande le pardon en nous engageant nous-mêmes à pardonner.",
+  'Je vous salue Marie': "Cette prière unit les paroles de l'ange Gabriel à Marie lors de l'Annonciation (Luc 1, 28) et celles de sa cousine Élisabeth lors de la Visitation (Luc 1, 42), suivies d'une demande d'intercession. C'est la prière centrale du chapelet, répétée pour méditer, dizaine après dizaine, les mystères de la vie du Christ.",
+  'Gloire au Père': "Appelée aussi doxologie, cette courte prière rend gloire aux trois Personnes de la Trinité — Père, Fils et Esprit Saint — et rappelle que cette gloire n'a ni commencement ni fin. Elle conclut traditionnellement chaque dizaine du chapelet et de nombreux psaumes.",
+  'Je crois en Dieu': "C'est le Symbole des Apôtres, un résumé très ancien de la foi chrétienne, qui reprend les grandes étapes du salut : la création, la vie, la mort et la résurrection du Christ, et l'espérance de la vie éternelle. Le réciter, c'est redire ce que l'on croit, avec toute l'Église.",
+  'Salve Regina': "Cette antienne mariale, chantée depuis le Moyen Âge, s'adresse à Marie comme à une mère à qui l'on confie ses peines « dans cette vallée de larmes », avec la confiance qu'elle nous conduira finalement à son Fils. Elle conclut traditionnellement la prière du chapelet."
+};
 /* Quand une prière classique n'apparaît qu'en mention abrégée ("Je vous
    salue Marie...") au fil d'un autre texte — pour ne pas la répéter en
    entier à chaque refrain — on la rend cliquable pour que son texte
@@ -10771,6 +10780,8 @@ function openVerseReader(opts){
   READER_STATE = {
     title: opts.title||'', subtitle: opts.subtitle||'', text: opts.text||'', reference: opts.reference||'',
     images: (opts.images && opts.images.length) ? opts.images : VREADER_DEFAULT_IMAGES,
+    explication: opts.explication || PRAYER_EXPLICATIONS[opts.title] || '',
+    showExplication: false,
     mode: 'lumiere', fontBig: false, cardIdx: 0, playing: false
   };
   renderVerseReader();
@@ -10834,6 +10845,7 @@ function renderVerseReader(){
         <button class="vreader-icon-btn" id="vreader-font" aria-label="Taille du texte">Aa</button>
         <button class="vreader-icon-btn" id="vreader-share" aria-label="Partager">📤</button>
         <button class="vreader-icon-btn" id="vreader-fav" aria-label="Enregistrer">${isFavorited({type:'vreader-text', title:st.title, subtitle:st.subtitle, reference:st.reference})?'✓':'🔖'}</button>
+        ${st.explication ? `<button class="vreader-icon-btn ${st.showExplication?'active':''}" id="vreader-explication" aria-label="Explication">💡</button>` : ''}
       </div>
       <div class="vreader-body">
         ${canPage ? `<p class="vreader-pageno">${st.cardIdx+1} / ${parts.length}</p>` : ''}
@@ -10841,8 +10853,8 @@ function renderVerseReader(){
         <div class="vreader-text-wrap ${st.mode==='carte' ? 'vreader-card' : ''}">
           <p class="vreader-title">${st.title}</p>
           ${st.subtitle ? `<p class="vreader-subtitle">${st.subtitle}</p>` : ''}
-          <p class="vreader-text ${st.fontBig?'vreader-text--big':''}">${displayText}</p>
-          ${st.reference ? `<p class="vreader-ref">${st.reference}</p>` : ''}
+          ${st.explication && st.showExplication ? `<div class="vreader-explication"><p class="eyebrow" style="color:var(--gold);">💡 Pour comprendre</p><p>${st.explication}</p></div>` : `<p class="vreader-text ${st.fontBig?'vreader-text--big':''}">${displayText}</p>`}
+          ${st.reference && !(st.explication && st.showExplication) ? `<p class="vreader-ref">${st.reference}</p>` : ''}
         </div>
         ${st.mode==='carte' ? `</div>` : ''}
       </div>
@@ -10879,6 +10891,8 @@ function wireVerseReader(parts, displayText){
     e.target.textContent = isFavorited(favObj) ? '✓' : '🔖';
   };
   document.getElementById('vreader-share').onclick = ()=>{ copyForSocial(st.title, st.text); };
+  const explicationBtn = document.getElementById('vreader-explication');
+  if(explicationBtn) explicationBtn.onclick = ()=>{ st.showExplication = !st.showExplication; renderVerseReader(); };
   document.querySelectorAll('.vreader-mode-btn').forEach(btn=>{
     btn.onclick = ()=>{
       try{ window.speechSynthesis.cancel(); }catch(e){}
