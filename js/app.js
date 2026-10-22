@@ -2880,22 +2880,42 @@ const SACREMENTS = [
 ];
 
 const ROSARY_SETS = {
-  joyeux: {label:"Mystères joyeux", days:"Lundi et samedi", mysteres:[
-    "L'Annonciation à Marie","La Visitation à sa cousine Élisabeth","La Nativité de Jésus à Bethléem",
-    "La Présentation de Jésus au Temple","Le Recouvrement de Jésus au Temple"
-  ]},
-  douloureux: {label:"Mystères douloureux", days:"Mardi et vendredi", mysteres:[
-    "L'Agonie de Jésus à Gethsémani","La Flagellation","Le Couronnement d'épines",
-    "Le Portement de croix","La Crucifixion et la mort de Jésus"
-  ]},
-  glorieux: {label:"Mystères glorieux", days:"Mercredi et dimanche", mysteres:[
-    "La Résurrection de Jésus","L'Ascension de Jésus au ciel","La Pentecôte",
-    "L'Assomption de Marie","Le Couronnement de Marie"
-  ]},
-  lumineux: {label:"Mystères lumineux", days:"Jeudi", mysteres:[
-    "Le Baptême de Jésus au Jourdain","Les Noces de Cana","L'Annonce du Royaume de Dieu",
-    "La Transfiguration","L'Institution de l'Eucharistie"
-  ]}
+  joyeux: {label:"Mystères joyeux", days:"Lundi et samedi",
+    image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20053.jpg?width=900",
+    mysteres:[
+      {title:"L'Annonciation à Marie", ref:"Luc 1, 28", quote:"Réjouis-toi, comblée de grâce, le Seigneur est avec toi."},
+      {title:"La Visitation à sa cousine Élisabeth", ref:"Luc 1, 41-42", quote:"Tu es bénie entre toutes les femmes, et le fruit de tes entrailles est béni."},
+      {title:"La Nativité de Jésus à Bethléem", ref:"Luc 2, 7", quote:"Elle mit au monde son fils premier-né, l'enveloppa de langes et le coucha dans une mangeoire."},
+      {title:"La Présentation de Jésus au Temple", ref:"Luc 2, 22", quote:"Ils amenèrent l'enfant à Jérusalem pour le présenter au Seigneur."},
+      {title:"Le Recouvrement de Jésus au Temple", ref:"Luc 2, 46", quote:"Ils le trouvèrent dans le Temple, assis au milieu des docteurs, les écoutant et les interrogeant."}
+    ]},
+  douloureux: {label:"Mystères douloureux", days:"Mardi et vendredi",
+    image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Cristo%20crucificado.jpg?width=900",
+    mysteres:[
+      {title:"L'Agonie de Jésus à Gethsémani", ref:"Matthieu 26, 39", quote:"Mon Père, s'il est possible, que cette coupe passe loin de moi ! Cependant, non pas ce que je veux, mais ce que tu veux."},
+      {title:"La Flagellation", ref:"Jean 19, 1", quote:"Alors Pilate prit Jésus et le fit flageller."},
+      {title:"Le Couronnement d'épines", ref:"Jean 19, 2", quote:"Les soldats tressèrent une couronne d'épines, la posèrent sur sa tête et le revêtirent d'un manteau de pourpre."},
+      {title:"Le Portement de croix", ref:"Jean 19, 17", quote:"Portant lui-même sa croix, il sortit vers le lieu dit du Crâne."},
+      {title:"La Crucifixion et la mort de Jésus", ref:"Luc 23, 46", quote:"Père, entre tes mains je remets mon esprit. Et, ayant dit cela, il expira."}
+    ]},
+  glorieux: {label:"Mystères glorieux", days:"Mercredi et dimanche",
+    image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Peter%20Paul%20Rubens%20-%20The%20Resurrection%20of%20Christ%20-%20WGA20209.jpg?width=900",
+    mysteres:[
+      {title:"La Résurrection de Jésus", ref:"Matthieu 28, 6", quote:"Il n'est pas ici, car il est ressuscité, comme il l'avait dit."},
+      {title:"L'Ascension de Jésus au ciel", ref:"Actes 1, 9", quote:"Il fut élevé, et une nuée le déroba à leurs yeux."},
+      {title:"La Pentecôte", ref:"Actes 2, 4", quote:"Ils furent tous remplis de l'Esprit Saint et se mirent à parler en d'autres langues."},
+      {title:"L'Assomption de Marie", ref:"Apocalypse 12, 1", quote:"Une femme enveloppée du soleil, la lune sous ses pieds et sur sa tête une couronne de douze étoiles."},
+      {title:"Le Couronnement de Marie", ref:"Apocalypse 12, 1", quote:"Elle apparaît couronnée, Reine auprès du Roi son Fils, pour l'éternité."}
+    ]},
+  lumineux: {label:"Mystères lumineux", days:"Jeudi",
+    image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Piero%20della%20Francesca%20-%20Baptism%20of%20Christ%20-%20WGA17595.jpg?width=900",
+    mysteres:[
+      {title:"Le Baptême de Jésus au Jourdain", ref:"Matthieu 3, 17", quote:"Celui-ci est mon Fils bien-aimé, en qui j'ai mis toute ma joie."},
+      {title:"Les Noces de Cana", ref:"Jean 2, 5", quote:"Faites tout ce qu'il vous dira."},
+      {title:"L'Annonce du Royaume de Dieu", ref:"Marc 1, 15", quote:"Le temps est accompli, le règne de Dieu est tout proche. Convertissez-vous et croyez à l'Évangile."},
+      {title:"La Transfiguration", ref:"Matthieu 17, 5", quote:"Celui-ci est mon Fils bien-aimé, écoutez-le."},
+      {title:"L'Institution de l'Eucharistie", ref:"Matthieu 26, 26", quote:"Ceci est mon corps. Prenez, mangez : ceci est mon corps."}
+    ]}
 };
 function todaysRosarySet(){
   const day = new Date().getDay(); // 0=dimanche
@@ -3733,6 +3753,7 @@ let THEME = 'light';
 let FONT_SIZE = 'md';
 let ONBOARDING_SEEN = false;
 let ROSARY_STATE = null;
+let ROSARY_TAB = 'texte';
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
@@ -8011,14 +8032,16 @@ function renderRosary(){
     ROSARY_STATE = { setKey: todaysRosarySet(), phase:'intro', mysteryIdx:0, beadCount:0 };
   }
   const set = ROSARY_SETS[ROSARY_STATE.setKey];
-  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-    <h2 class="section-title" style="margin-bottom:0;">🔗 Chapelet</h2>
-    <button class="btn btn-ghost btn-sm" id="rosary-immersive-btn">🕯️ Mode immersif</button>
+  let html = `<div class="rosary-head-row">
+    <span class="rosary-set-pill">🔗 ${set.label}</span>
+    <button class="btn btn-ghost btn-sm" id="rosary-change-set-btn">Changer de chapelet</button>
   </div>`;
-  html += `<div class="chip-row">${Object.keys(ROSARY_SETS).map(k=>
-    `<button class="chip ${ROSARY_STATE.setKey===k?'active':''}" data-set="${k}">${ROSARY_SETS[k].label}</button>`
-  ).join('')}</div>`;
-  html += `<p class="section-desc">${set.days} — ${set.label.toLowerCase()}</p>`;
+  if(ROSARY_STATE.phase !== 'mystery'){
+    html += `<div class="chip-row">${Object.keys(ROSARY_SETS).map(k=>
+      `<button class="chip ${ROSARY_STATE.setKey===k?'active':''}" data-set="${k}">${ROSARY_SETS[k].label}</button>`
+    ).join('')}</div>`;
+    html += `<p class="section-desc">${set.days} — ${set.label.toLowerCase()}</p>`;
+  }
 
   if(ROSARY_STATE.phase === 'intro'){
     html += `<div class="card">
@@ -8035,20 +8058,58 @@ function renderRosary(){
     </div>`;
   } else if(ROSARY_STATE.phase === 'mystery'){
     const mi = ROSARY_STATE.mysteryIdx;
-    html += `<div class="step-progress">${set.mysteres.map((_,i)=>`<span class="${i<mi?'done':i===mi?'current':''}"></span>`).join('')}</div>`;
-    html += `<div class="card">
-      <p class="eyebrow" style="color:var(--gold);">${mi+1}${mi===0?'er':'e'} mystère</p>
-      <p class="day-title">${set.mysteres[mi]}</p>
-      <p class="entry-detail-text">Notre Père</p>
-      <p class="saint-prayer" style="margin-bottom:10px;">${CHAPLET_PRAYER_TEXTS['Notre Père']}</p>
-      <p class="entry-detail-text">Je vous salue Marie (répété 10 fois — touchez les perles pour égrener)</p>
-      <p class="saint-prayer" style="margin-bottom:10px;">${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}</p>
-      <p class="entry-detail-text">Gloire au Père (à la fin de la dizaine)</p>
-      <p class="saint-prayer">${CHAPLET_PRAYER_TEXTS['Gloire au Père']}</p>
-      <div class="real-chaplet-wrap">${realChapletArcHTML(ROSARY_STATE.beadCount, 10)}</div>
-      <p class="studio-note" style="text-align:center;">${ROSARY_STATE.beadCount} / 10 — touchez la perle suivante</p>
-      <div style="text-align:center; margin-top:8px;"><button class="btn btn-primary btn-sm" id="mystery-next" ${ROSARY_STATE.beadCount<10?'disabled':''}>${mi<4?'Mystère suivant →':'Terminer →'}</button></div>
+    const myst = set.mysteres[mi];
+    html += `<figure class="bible-reader-hero rosary-mystery-hero">
+      <img src="${set.image}" alt="" onerror="this.style.display='none'">
+      <div class="bible-reader-hero-scrim"></div>
+      <button class="bible-reader-hero-btn rosary-immersive-hero-btn" id="rosary-immersive-btn" aria-label="Mode immersif">🕯️</button>
+    </figure>`;
+    html += `<div class="bible-reader-nav">
+      <button class="bible-reader-nav-arrow" id="mystery-prev" ${mi<=0?'disabled':''} aria-label="Mystère précédent">‹</button>
+      <div class="bible-reader-nav-title">
+        <p class="bible-reader-book">${mi+1}${mi===0?'er':'e'} mystère</p>
+        <p class="bible-reader-chapter">${myst.title}</p>
+      </div>
+      <button class="bible-reader-nav-arrow" id="mystery-next-arrow" ${mi>=4?'disabled':''} aria-label="Mystère suivant">›</button>
     </div>`;
+    html += `<div class="step-progress">${set.mysteres.map((_,i)=>`<span class="${i<mi?'done':i===mi?'current':''}"></span>`).join('')}</div>`;
+    html += `<div class="bible-reader-tabs">${['texte','meditation','audio'].map(t=>
+      `<button class="bible-reader-tab ${ROSARY_TAB===t?'active':''}" data-rtab="${t}">${t==='texte'?'Texte':t==='meditation'?'Méditation':'Audio'}</button>`
+    ).join('')}</div>`;
+    if(ROSARY_TAB === 'texte'){
+      html += `<div class="card">
+        <p class="eyebrow" style="color:var(--gold);">${myst.ref}</p>
+        <p class="vreader-text" style="font-style:italic;">« ${myst.quote} »</p>
+        <p class="entry-detail-text" style="margin-top:14px;">Notre Père</p>
+        <p class="saint-prayer" style="margin-bottom:10px;">${CHAPLET_PRAYER_TEXTS['Notre Père']}</p>
+        <p class="entry-detail-text">Je vous salue Marie (répété 10 fois — touchez les perles pour égrener)</p>
+        <p class="saint-prayer" style="margin-bottom:10px;">${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}</p>
+        <p class="entry-detail-text">Gloire au Père (à la fin de la dizaine)</p>
+        <p class="saint-prayer">${CHAPLET_PRAYER_TEXTS['Gloire au Père']}</p>
+        <div class="real-chaplet-wrap">${realChapletArcHTML(ROSARY_STATE.beadCount, 10)}</div>
+        <p class="studio-note" style="text-align:center;">${ROSARY_STATE.beadCount} / 10 — touchez la perle suivante</p>
+        <div style="text-align:center; margin-top:8px;"><button class="btn btn-primary btn-sm" id="mystery-next" ${ROSARY_STATE.beadCount<10?'disabled':''}>${mi<4?'Mystère suivant →':'Terminer →'}</button></div>
+      </div>`;
+    } else if(ROSARY_TAB === 'meditation'){
+      html += `<div class="bible-meditation">
+        <p class="eyebrow" style="color:var(--gold);">Pour méditer</p>
+        <p class="vreader-text" style="font-style:italic;">« ${myst.quote} »</p>
+        <p class="section-desc" style="margin-top:14px;">Arrêtez-vous un instant sur ce mystère : ${myst.title.toLowerCase()}. Qu'est-ce que cette scène de l'Évangile éveille en vous aujourd'hui ?</p>
+      </div>`;
+    } else {
+      const meditText = `${myst.title}. ${myst.ref}. ${myst.quote}`;
+      const total = estimateReadSeconds(meditText);
+      html += `<div class="bible-audio-pane">
+        <p class="eyebrow" style="color:var(--gold); text-align:center;">${myst.title}</p>
+        <div class="vreader-audio-row" style="margin:14px 0;">
+          <span class="vreader-audio-time" id="rosary-audio-elapsed">0:00</span>
+          <div class="vreader-audio-track"><div class="vreader-audio-fill" id="rosary-audio-fill" style="width:0%"></div></div>
+          <span class="vreader-audio-time">${formatMinSec(total)}</span>
+        </div>
+        <div style="text-align:center;"><button class="vreader-play-btn" id="rosary-audio-play" aria-label="Écouter">▶</button></div>
+        <p class="studio-note" style="text-align:center; margin-top:10px;">Lecture vocale générée par votre navigateur.</p>
+      </div>`;
+    }
   } else if(ROSARY_STATE.phase === 'done'){
     html += `<div class="card" style="text-align:center;">
       <p class="day-title">Chapelet achevé ✦</p>
@@ -8060,23 +8121,49 @@ function renderRosary(){
   document.getElementById('screen').innerHTML = html;
   const immersiveBtn = document.getElementById('rosary-immersive-btn');
   if(immersiveBtn) immersiveBtn.onclick = enableReadingMode;
+  const changeSetBtn = document.getElementById('rosary-change-set-btn');
+  if(changeSetBtn) changeSetBtn.onclick = ()=>{ ROSARY_STATE = { setKey: ROSARY_STATE.setKey, phase:'intro', mysteryIdx:0, beadCount:0 }; render(); };
   document.querySelectorAll('.chip').forEach(c=> c.onclick = ()=>{ ROSARY_STATE.setKey = c.dataset.set; render(); });
   const startBtn = document.getElementById('rosary-start');
-  if(startBtn) startBtn.onclick = ()=>{ ROSARY_STATE.phase='mystery'; render(); };
+  if(startBtn) startBtn.onclick = ()=>{ ROSARY_STATE.phase='mystery'; ROSARY_TAB='texte'; render(); };
   document.querySelectorAll('.real-chaplet-bead[data-bead-idx]').forEach(bead=>{
     bead.onclick = ()=>{
       const idx = parseInt(bead.dataset.beadIdx,10);
       if(idx === ROSARY_STATE.beadCount && ROSARY_STATE.beadCount < 10){ ROSARY_STATE.beadCount++; render(); }
     };
   });
+  document.querySelectorAll('.bible-reader-tab[data-rtab]').forEach(btn=>{
+    btn.onclick = ()=>{ ROSARY_TAB = btn.dataset.rtab; try{ window.speechSynthesis.cancel(); }catch(e){} render(); };
+  });
+  const prevArrow = document.getElementById('mystery-prev');
+  if(prevArrow) prevArrow.onclick = ()=>{ if(ROSARY_STATE.mysteryIdx>0){ ROSARY_STATE.mysteryIdx--; ROSARY_STATE.beadCount=0; ROSARY_TAB='texte'; render(); } };
+  const nextArrow = document.getElementById('mystery-next-arrow');
+  if(nextArrow) nextArrow.onclick = ()=>{ if(ROSARY_STATE.mysteryIdx<4){ ROSARY_STATE.mysteryIdx++; ROSARY_STATE.beadCount=0; ROSARY_TAB='texte'; render(); } };
+  const rosaryAudioPlay = document.getElementById('rosary-audio-play');
+  if(rosaryAudioPlay){
+    let playing = false;
+    const myst = set.mysteres[ROSARY_STATE.mysteryIdx];
+    const meditText = `${myst.title}. ${myst.ref}. ${myst.quote}`;
+    const total = estimateReadSeconds(meditText);
+    rosaryAudioPlay.onclick = ()=>{
+      if(playing){ try{ window.speechSynthesis.cancel(); }catch(e){} playing=false; rosaryAudioPlay.textContent='▶'; return; }
+      playing = true; rosaryAudioPlay.textContent = '❚❚';
+      speakWithProgress(meditText, total, (ratio)=>{
+        const fill = document.getElementById('rosary-audio-fill');
+        const elapsed = document.getElementById('rosary-audio-elapsed');
+        if(fill) fill.style.width = Math.round(ratio*100)+'%';
+        if(elapsed) elapsed.textContent = formatMinSec(ratio*total);
+      }, ()=>{ playing=false; if(rosaryAudioPlay) rosaryAudioPlay.textContent='▶'; });
+    };
+  }
   const nextBtn = document.getElementById('mystery-next');
   if(nextBtn) nextBtn.onclick = async ()=>{
-    if(ROSARY_STATE.mysteryIdx < 4){ ROSARY_STATE.mysteryIdx++; ROSARY_STATE.beadCount=0; }
+    if(ROSARY_STATE.mysteryIdx < 4){ ROSARY_STATE.mysteryIdx++; ROSARY_STATE.beadCount=0; ROSARY_TAB='texte'; }
     else { ROSARY_STATE.phase='done'; await markPrayedToday(); fireCelebration(); }
     render();
   };
   const restartBtn = document.getElementById('rosary-restart');
-  if(restartBtn) restartBtn.onclick = ()=>{ ROSARY_STATE = { setKey: todaysRosarySet(), phase:'intro', mysteryIdx:0, beadCount:0 }; render(); };
+  if(restartBtn) restartBtn.onclick = ()=>{ ROSARY_STATE = { setKey: todaysRosarySet(), phase:'intro', mysteryIdx:0, beadCount:0 }; ROSARY_TAB='texte'; render(); };
 }
 
 /* ================= examen du soir ================= */

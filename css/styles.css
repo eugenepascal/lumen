@@ -838,6 +838,10 @@
   .bible-reader-body--big .bible-verse{ font-size:19px; }
   .bible-verse-num{ font-family:'Inter',sans-serif; font-weight:700; font-size:11.5px; color:var(--wine); vertical-align:super; margin-right:4px; }
   .bible-reader-toolbar{ display:flex; justify-content:center; gap:10px; padding:14px 18px 22px; }
+  .rosary-head-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+  .rosary-set-pill{ font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--wine-dark); background:rgba(107,37,69,0.08); border-radius:999px; padding:6px 14px; }
+  .rosary-mystery-hero{ height:170px; border-radius:18px; margin:10px 0 2px; }
+  .rosary-immersive-hero-btn{ right:12px; left:auto; }
   #aelf-office-body, #aelf-bible-body{ max-width:560px; margin:0 auto; }
   .aelf-office-section{ margin-bottom:18px; }
   .aelf-office-heading{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--wine-dark); margin:0 0 6px; padding-bottom:4px; border-bottom:1px solid var(--hairline); }
