@@ -7208,8 +7208,12 @@ function renderStudio(){
 function favKey(f){
   if(!f) return '';
   if(f.type === 'novena') return 'novena|' + f.id;
+  if(f.type === 'bible-chapter') return 'bible|' + f.code + '|' + f.chapter;
+  if(f.type === 'office') return 'office|' + f.key;
+  if(f.type === 'vreader-text') return 'vreader|' + (f.title||'') + '|' + (f.reference||f.subtitle||'');
   return 'entry|' + (f.compKey||'') + '|' + (f.groupId||'') + '|' + (f.idx!=null?f.idx:'');
 }
+const OFFICE_KEY_TO_SUB = {laudes:'laudes', tierce:'tierce', sexte:'sexte', none:'none', vepres:'vepres', complies:'compline', lectures:'lectures-office'};
 function isFavorited(f){
   const key = favKey(f);
   return FAVORITES.some(x=>favKey(x)===key);
@@ -7274,6 +7278,9 @@ function renderFavoris(){
       const f = JSON.parse(c.dataset.favOpen.replace(/&apos;/g,"'"));
       if(f.type==='entry'){ PRIMARY = f.primary; SUBTAB[f.primary] = f.sub; GROUP_SEL[f.compKey] = f.groupId; ENTRY_OPEN = {compKey:f.compKey, groupId:f.groupId, idx:f.idx}; render(); }
       else if(f.type==='novena'){ goTo('prier','neuvaines'); OPEN_NOVENA = f.id; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render(); }
+      else if(f.type==='bible-chapter'){ AELF_BIBLE_CURRENT = {code:f.code, name:f.name, chapter:f.chapter}; goTo('ecritures','aelf-bible-chapter'); }
+      else if(f.type==='office'){ AELF_OFFICE_VIEW = f.key; AELF_OFFICE_TAB = 'texte'; goTo('prier', OFFICE_KEY_TO_SUB[f.key]||'laudes'); }
+      else if(f.type==='vreader-text'){ openVerseReader({title:f.title, subtitle:f.subtitle, text:f.text, reference:f.reference}); }
     };
   });
 }
@@ -9069,6 +9076,7 @@ function renderAelfOfficeViewer(){
       <div class="bible-reader-toolbar">
         <button class="vreader-icon-btn" id="aelf-office-reader-btn" aria-label="Modes d'affichage">🎨</button>
         <button class="vreader-icon-btn" id="aelf-office-share" aria-label="Partager">📤</button>
+        <button class="vreader-icon-btn" id="aelf-office-fav" aria-label="Favoris">${isFavorited({type:'office', key:office.key})?'✓':'⭐'}</button>
       </div>
       <p style="text-align:center; margin:0 0 14px;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ouvrir sur AELF.org ↗</a></p>
     </div>
@@ -9083,6 +9091,15 @@ function renderAelfOfficeViewer(){
     });
   };
   document.getElementById('aelf-office-share').onclick = ()=> copyForSocial(office.label, AELF_OFFICE_LAST_PLAIN_TEXT || office.label);
+  document.getElementById('aelf-office-fav').onclick = async (e)=>{
+    const favObj = {type:'office', key:office.key, name:'Prière des Heures — '+office.label, avatar:'📿', summary:'Office des Heures'};
+    const key = favKey(favObj);
+    const idx = FAVORITES.findIndex(x=>favKey(x)===key);
+    if(idx>=0){ FAVORITES.splice(idx,1); showToast('Retiré de vos favoris'); }
+    else { FAVORITES.unshift(favObj); showToast('Ajouté à vos favoris ✦'); }
+    await savePrefs();
+    e.target.textContent = isFavorited(favObj) ? '✓' : '⭐';
+  };
   document.querySelectorAll('[data-office-group]').forEach(btn=>{
     btn.onclick = ()=>{
       const g = AELF_OFFICE_GROUPS.find(x=>x.label===btn.dataset.officeGroup);
@@ -9443,7 +9460,7 @@ function renderAelfBibleChapter(){
         <img src="${AELF_BIBLE_HERO_IMG}" alt="" onerror="this.style.display='none'">
         <div class="bible-reader-hero-scrim"></div>
         <button class="bible-reader-hero-btn bible-reader-hero-back" id="aelf-bible-back" aria-label="Retour">←</button>
-        <button class="bible-reader-hero-btn bible-reader-hero-fav" id="aelf-bible-fav" aria-label="Enregistrer">🔖</button>
+        <button class="bible-reader-hero-btn bible-reader-hero-fav" id="aelf-bible-fav" aria-label="Enregistrer">${isFavorited({type:'bible-chapter', code, chapter})?'✓':'🔖'}</button>
       </figure>
       <div class="bible-reader-nav">
         <button class="bible-reader-nav-arrow" id="aelf-chap-prev" ${chapter<=1?'disabled':''} aria-label="Chapitre précédent">‹</button>
@@ -9463,12 +9480,25 @@ function renderAelfBibleChapter(){
         <button class="vreader-icon-btn" id="aelf-font-minus" aria-label="Diminuer la taille">A-</button>
         <button class="vreader-icon-btn" id="aelf-font-plus" aria-label="Augmenter la taille">A+</button>
         <button class="vreader-icon-btn" id="aelf-share" aria-label="Partager">📤</button>
-        <button class="vreader-icon-btn" id="aelf-bookmark" aria-label="Signet">🔖</button>
+        <button class="vreader-icon-btn" id="aelf-bookmark" aria-label="Signet">${isFavorited({type:'bible-chapter', code, chapter})?'✓':'🔖'}</button>
         <button class="vreader-icon-btn" id="aelf-listen" aria-label="Écouter">🔊</button>
       </div>
     </div>`;
   document.getElementById('aelf-bible-back').onclick = ()=>{ AELF_BIBLE_CURRENT = null; goTo('ecritures','aelf-bible-books'); };
-  document.getElementById('aelf-bible-fav').onclick = ()=> showToast('Ajouté à vos favoris ✦');
+  const bibleFavObj = {type:'bible-chapter', code, chapter, name, avatar:'📖', summary:`${name}${code!=='Ps'?' — chapitre '+chapter:''}`};
+  const toggleBibleFav = async ()=>{
+    const key = favKey(bibleFavObj);
+    const idx = FAVORITES.findIndex(x=>favKey(x)===key);
+    if(idx>=0){ FAVORITES.splice(idx,1); showToast('Retiré de vos favoris'); }
+    else { FAVORITES.unshift(bibleFavObj); showToast('Ajouté à vos favoris ✦'); }
+    await savePrefs();
+    const active = isFavorited(bibleFavObj);
+    const heroBtn = document.getElementById('aelf-bible-fav');
+    const toolbarBtn = document.getElementById('aelf-bookmark');
+    if(heroBtn) heroBtn.textContent = active ? '✓' : '🔖';
+    if(toolbarBtn) toolbarBtn.textContent = active ? '✓' : '🔖';
+  };
+  document.getElementById('aelf-bible-fav').onclick = toggleBibleFav;
   document.getElementById('aelf-chap-prev').onclick = ()=>{ AELF_BIBLE_CURRENT.chapter--; renderAelfBibleChapter(); };
   document.getElementById('aelf-chap-next').onclick = ()=>{ AELF_BIBLE_CURRENT.chapter++; renderAelfBibleChapter(); };
   document.querySelectorAll('.bible-reader-tab').forEach(btn=>{
@@ -9477,7 +9507,7 @@ function renderAelfBibleChapter(){
   document.getElementById('aelf-font-minus').onclick = ()=>{ AELF_BIBLE_FONT_BIG=false; document.getElementById('aelf-bible-body').classList.remove('bible-reader-body--big'); };
   document.getElementById('aelf-font-plus').onclick = ()=>{ AELF_BIBLE_FONT_BIG=true; document.getElementById('aelf-bible-body').classList.add('bible-reader-body--big'); };
   document.getElementById('aelf-share').onclick = ()=> copyForSocial(`${name}${code!=='Ps'?' '+chapter:''}`, AELF_BIBLE_LAST_PLAIN_TEXT||name);
-  document.getElementById('aelf-bookmark').onclick = ()=> showToast('Ajouté à vos signets 🔖');
+  document.getElementById('aelf-bookmark').onclick = toggleBibleFav;
   document.getElementById('aelf-listen').onclick = ()=>{ AELF_BIBLE_TAB='audio'; renderAelfBibleChapter(); };
   renderAelfBibleBody();
 }
@@ -10803,7 +10833,7 @@ function renderVerseReader(){
         <div style="flex:1;"></div>
         <button class="vreader-icon-btn" id="vreader-font" aria-label="Taille du texte">Aa</button>
         <button class="vreader-icon-btn" id="vreader-share" aria-label="Partager">📤</button>
-        <button class="vreader-icon-btn" id="vreader-fav" aria-label="Enregistrer">🔖</button>
+        <button class="vreader-icon-btn" id="vreader-fav" aria-label="Enregistrer">${isFavorited({type:'vreader-text', title:st.title, subtitle:st.subtitle, reference:st.reference})?'✓':'🔖'}</button>
       </div>
       <div class="vreader-body">
         ${canPage ? `<p class="vreader-pageno">${st.cardIdx+1} / ${parts.length}</p>` : ''}
@@ -10839,7 +10869,15 @@ function wireVerseReader(parts, displayText){
   const st = READER_STATE;
   document.getElementById('vreader-close').onclick = closeVerseReader;
   document.getElementById('vreader-font').onclick = ()=>{ st.fontBig = !st.fontBig; renderVerseReader(); };
-  document.getElementById('vreader-fav').onclick = ()=>{ showToast('Ajouté à vos favoris ✦'); };
+  document.getElementById('vreader-fav').onclick = async (e)=>{
+    const favObj = {type:'vreader-text', title:st.title, subtitle:st.subtitle, text:st.text, reference:st.reference, avatar:'🔖', name:st.title, summary:st.subtitle||st.reference||''};
+    const key = favKey(favObj);
+    const idx = FAVORITES.findIndex(x=>favKey(x)===key);
+    if(idx>=0){ FAVORITES.splice(idx,1); showToast('Retiré de vos favoris'); }
+    else { FAVORITES.unshift(favObj); showToast('Ajouté à vos favoris ✦'); }
+    await savePrefs();
+    e.target.textContent = isFavorited(favObj) ? '✓' : '🔖';
+  };
   document.getElementById('vreader-share').onclick = ()=>{ copyForSocial(st.title, st.text); };
   document.querySelectorAll('.vreader-mode-btn').forEach(btn=>{
     btn.onclick = ()=>{
