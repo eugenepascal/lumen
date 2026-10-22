@@ -6305,8 +6305,8 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
       <p class="entry-detail-text">${entry.summary}</p>
       ${imgUrl ? `<figure class="saint-midfigure"><img src="${imgUrl}" alt="" onerror="this.closest('figure').remove();"></figure>` : ''}
       <p class="eyebrow" style="color:var(--gold); margin-top:14px;">Dates importantes</p>
-      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">🕯️ Naissance</span><br><span class="gen-note">${startYear ? 'vers '+startYear : (lifespan||'date inconnue')}</span></div>
-      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">✝️ ${endYear?'Mort':'Vie'}</span><br><span class="gen-note">${endYear ? 'vers '+endYear : (lifespan||'—')}</span></div>
+      ${startYear ? `<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">🕯️ Naissance</span><br><span class="gen-note">vers ${startYear}</span></div>` : `<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">🕯️ Vie</span><br><span class="gen-note">${lifespan||'date inconnue'}</span></div>`}
+      ${endYear ? `<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">✝️ Mort</span><br><span class="gen-note">vers ${endYear}</span></div>` : ''}
       <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">✦ Fête</span><br><span class="gen-note">${saintFeastShort(entry.dates)||'—'}</span></div>
       ${textActionsRowHTML('candle', entry.name, saintFeastShort(entry.dates), entry.summary, entry.ref||'', imgUrl?[imgUrl]:[])}
     </div>`;
