@@ -9196,23 +9196,137 @@ function renderAelfBibleBooks(){
   });
 }
 let AELF_BIBLE_CURRENT = null;
+let AELF_BIBLE_TAB = 'texte';
+let AELF_BIBLE_FONT_BIG = false;
+const AELF_BIBLE_HERO_IMG = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900';
+/* Essaie plusieurs formes possibles de la réponse de l'API AELF (le format
+   exact n'étant pas garanti) pour en extraire une liste {number, text} —
+   sinon on revient sans casser à l'ancien embed AELF.org. */
+function parseAelfBibleVerses(json){
+  if(!json) return null;
+  let raw = json.content ?? json.verses ?? json.data ?? json.chapitre ?? json.texte ?? null;
+  if(!raw && Array.isArray(json)) raw = json;
+  if(!raw) return null;
+  if(Array.isArray(raw)){
+    const out = raw.map(v=>{
+      if(typeof v === 'string') return {number:'', text: aelfCleanText(v)};
+      const number = v.number ?? v.numero ?? v.verse ?? v.num ?? v.verset ?? '';
+      const text = aelfCleanText(v.content ?? v.text ?? v.texte ?? '');
+      return {number, text};
+    }).filter(v=>v.text);
+    return out.length ? out : null;
+  }
+  if(typeof raw === 'object'){
+    const out = Object.keys(raw).map(k=>({number:k, text:aelfCleanText(raw[k])})).filter(v=>v.text);
+    return out.length ? out : null;
+  }
+  return null;
+}
 function renderAelfBibleChapter(){
   if(!AELF_BIBLE_CURRENT){ renderAelfBibleBooks(); return; }
   const {code, name, chapter} = AELF_BIBLE_CURRENT;
-  const aelfUrl = `https://www.aelf.org/bible/${code}/${chapter}`;
   document.getElementById('screen').innerHTML = `
-    <button class="back-link" id="aelf-bible-back">← Tous les livres</button>
-    <h2 class="section-title">📖 ${name}${code!=='Ps' ? ' — chapitre '+chapter : ''}</h2>
-    <div class="aelf-chapter-nav">
-      <button class="btn btn-ghost btn-sm" id="aelf-chap-prev" ${chapter<=1?'disabled':''}>← Chapitre précédent</button>
-      <button class="btn btn-ghost btn-sm" id="aelf-chap-next">Chapitre suivant →</button>
-    </div>
-    <p style="text-align:center; margin:10px 0;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-gold btn-sm">Ouvrir ce chapitre sur AELF.org ↗</a></p>
-    <div class="aelf-embed-wrap"><iframe src="${aelfUrl}" title="Texte AELF" loading="lazy"></iframe></div>
-    <p class="studio-note" style="text-align:center; margin-top:8px;">Si le texte ne s'affiche pas ci-dessus (selon votre navigateur), utilisez le bouton au-dessus pour l'ouvrir directement.</p>`;
+    <div class="bible-reader">
+      <figure class="bible-reader-hero">
+        <img src="${AELF_BIBLE_HERO_IMG}" alt="" onerror="this.style.display='none'">
+        <div class="bible-reader-hero-scrim"></div>
+        <button class="bible-reader-hero-btn bible-reader-hero-back" id="aelf-bible-back" aria-label="Retour">←</button>
+        <button class="bible-reader-hero-btn bible-reader-hero-fav" id="aelf-bible-fav" aria-label="Enregistrer">🔖</button>
+      </figure>
+      <div class="bible-reader-nav">
+        <button class="bible-reader-nav-arrow" id="aelf-chap-prev" ${chapter<=1?'disabled':''} aria-label="Chapitre précédent">‹</button>
+        <div class="bible-reader-nav-title">
+          <p class="bible-reader-book">${name}</p>
+          ${code!=='Ps' ? `<p class="bible-reader-chapter">Chapitre ${chapter}</p>` : ''}
+        </div>
+        <button class="bible-reader-nav-arrow" id="aelf-chap-next" aria-label="Chapitre suivant">›</button>
+      </div>
+      <div class="bible-reader-tabs">
+        ${['texte','meditation','audio'].map(t=>`<button class="bible-reader-tab ${AELF_BIBLE_TAB===t?'active':''}" data-tab="${t}">${t==='texte'?'Texte':t==='meditation'?'Méditation':'Audio'}</button>`).join('')}
+      </div>
+      <div class="bible-reader-body ${AELF_BIBLE_FONT_BIG?'bible-reader-body--big':''}" id="aelf-bible-body">
+        <p class="studio-note" style="text-align:center;">Chargement du texte…</p>
+      </div>
+      <div class="bible-reader-toolbar">
+        <button class="vreader-icon-btn" id="aelf-font-minus" aria-label="Diminuer la taille">A-</button>
+        <button class="vreader-icon-btn" id="aelf-font-plus" aria-label="Augmenter la taille">A+</button>
+        <button class="vreader-icon-btn" id="aelf-share" aria-label="Partager">📤</button>
+        <button class="vreader-icon-btn" id="aelf-bookmark" aria-label="Signet">🔖</button>
+        <button class="vreader-icon-btn" id="aelf-listen" aria-label="Écouter">🔊</button>
+      </div>
+    </div>`;
   document.getElementById('aelf-bible-back').onclick = ()=>{ AELF_BIBLE_CURRENT = null; goTo('ecritures','aelf-bible-books'); };
+  document.getElementById('aelf-bible-fav').onclick = ()=> showToast('Ajouté à vos favoris ✦');
   document.getElementById('aelf-chap-prev').onclick = ()=>{ AELF_BIBLE_CURRENT.chapter--; renderAelfBibleChapter(); };
   document.getElementById('aelf-chap-next').onclick = ()=>{ AELF_BIBLE_CURRENT.chapter++; renderAelfBibleChapter(); };
+  document.querySelectorAll('.bible-reader-tab').forEach(btn=>{
+    btn.onclick = ()=>{ AELF_BIBLE_TAB = btn.dataset.tab; try{ window.speechSynthesis.cancel(); }catch(e){} renderAelfBibleBody(); document.querySelectorAll('.bible-reader-tab').forEach(b=> b.classList.toggle('active', b===btn)); };
+  });
+  document.getElementById('aelf-font-minus').onclick = ()=>{ AELF_BIBLE_FONT_BIG=false; document.getElementById('aelf-bible-body').classList.remove('bible-reader-body--big'); };
+  document.getElementById('aelf-font-plus').onclick = ()=>{ AELF_BIBLE_FONT_BIG=true; document.getElementById('aelf-bible-body').classList.add('bible-reader-body--big'); };
+  document.getElementById('aelf-share').onclick = ()=> copyForSocial(`${name}${code!=='Ps'?' '+chapter:''}`, AELF_BIBLE_LAST_PLAIN_TEXT||name);
+  document.getElementById('aelf-bookmark').onclick = ()=> showToast('Ajouté à vos signets 🔖');
+  document.getElementById('aelf-listen').onclick = ()=>{ AELF_BIBLE_TAB='audio'; renderAelfBibleChapter(); };
+  renderAelfBibleBody();
+}
+let AELF_BIBLE_LAST_PLAIN_TEXT = '';
+async function renderAelfBibleBody(){
+  const body = document.getElementById('aelf-bible-body');
+  if(!body || !AELF_BIBLE_CURRENT) return;
+  const {code, name, chapter} = AELF_BIBLE_CURRENT;
+  const aelfUrl = `https://www.aelf.org/bible/${code}/${chapter}`;
+  body.innerHTML = `<p class="studio-note" style="text-align:center;">Chargement du texte…</p>`;
+  const json = await fetchAelfBibleChapter(code, chapter);
+  const verses = parseAelfBibleVerses(json);
+  if(!verses){
+    // Repli : le format de réponse n'a pas pu être lu — on garde l'ancien
+    // embed AELF.org plutôt que de montrer un écran vide.
+    body.innerHTML = `
+      <p style="text-align:center; margin:4px 0 10px;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-gold btn-sm">Ouvrir ce chapitre sur AELF.org ↗</a></p>
+      <div class="aelf-embed-wrap"><iframe src="${aelfUrl}" title="Texte AELF" loading="lazy"></iframe></div>
+      <p class="studio-note" style="text-align:center; margin-top:8px;">Si le texte ne s'affiche pas ci-dessus (selon votre navigateur), utilisez le bouton au-dessus pour l'ouvrir directement.</p>`;
+    AELF_BIBLE_LAST_PLAIN_TEXT = `${name}${code!=='Ps'?' '+chapter:''} — à lire sur aelf.org`;
+    return;
+  }
+  AELF_BIBLE_LAST_PLAIN_TEXT = verses.map(v=>v.text).join(' ');
+  if(AELF_BIBLE_TAB === 'texte'){
+    body.innerHTML = `<div class="bible-verses">${verses.map(v=>
+      `<p class="bible-verse">${v.number?`<span class="bible-verse-num">${v.number}</span>`:''}${v.text}</p>`
+    ).join('')}</div>`;
+  } else if(AELF_BIBLE_TAB === 'meditation'){
+    const first = verses[0];
+    body.innerHTML = `<div class="bible-meditation">
+      <p class="eyebrow" style="color:var(--gold);">Pour méditer</p>
+      <p class="vreader-text" style="font-style:italic;">« ${first ? first.text : ''} »</p>
+      <p class="section-desc" style="margin-top:14px;">Relisez lentement ce chapitre, verset après verset. Qu'est-ce qui vous touche aujourd'hui ? À quoi ce texte vous invite-t-il concrètement ?</p>
+    </div>`;
+  } else {
+    const total = estimateReadSeconds(AELF_BIBLE_LAST_PLAIN_TEXT);
+    body.innerHTML = `<div class="bible-audio-pane">
+      <p class="eyebrow" style="color:var(--gold); text-align:center;">${name}${code!=='Ps'?' — chapitre '+chapter:''}</p>
+      <div class="vreader-audio-row" style="margin:14px 0;">
+        <span class="vreader-audio-time" id="bible-audio-elapsed">0:00</span>
+        <div class="vreader-audio-track"><div class="vreader-audio-fill" id="bible-audio-fill" style="width:0%"></div></div>
+        <span class="vreader-audio-time">${formatMinSec(total)}</span>
+      </div>
+      <div style="text-align:center;"><button class="vreader-play-btn" id="bible-audio-play" aria-label="Écouter">▶</button></div>
+      <p class="studio-note" style="text-align:center; margin-top:10px;">Lecture vocale générée par votre navigateur.</p>
+    </div>`;
+    const playBtn = document.getElementById('bible-audio-play');
+    if(playBtn){
+      let playing = false;
+      playBtn.onclick = ()=>{
+        if(playing){ try{ window.speechSynthesis.cancel(); }catch(e){} playing=false; playBtn.textContent='▶'; return; }
+        playing = true; playBtn.textContent = '❚❚';
+        speakWithProgress(AELF_BIBLE_LAST_PLAIN_TEXT, total, (ratio)=>{
+          const fill = document.getElementById('bible-audio-fill');
+          const elapsed = document.getElementById('bible-audio-elapsed');
+          if(fill) fill.style.width = Math.round(ratio*100)+'%';
+          if(elapsed) elapsed.textContent = formatMinSec(ratio*total);
+        }, ()=>{ playing=false; if(playBtn) playBtn.textContent='▶'; });
+      };
+    }
+  }
 }
 function renderBibleReader(){
   if(BIBLE_VIEW_MODE === 'plan'){ renderBiblePlan(); return; }
@@ -10365,8 +10479,9 @@ const VREADER_DEFAULT_IMAGES = [
   'https://commons.wikimedia.org/wiki/Special:Redirect/file/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=1200'
 ];
 const VREADER_MODES = [
-  {key:'lumiere', icon:'☀️', label:'Mode Lumière', desc:'Un affichage clair et épuré pour une lecture confortable au quotidien.'},
-  {key:'nuit', icon:'🌙', label:'Mode Nuit', desc:'Une ambiance douce et reposante pour prier le soir.'},
+  {key:'lumiere', icon:'☀️', label:'Mode Clair', desc:'Un affichage clair et épuré pour une lecture confortable au quotidien.'},
+  {key:'nuit', icon:'🌙', label:'Mode Nuit', desc:'Un fond sombre et reposant pour prier le soir.'},
+  {key:'parchemin', icon:'📜', label:'Mode Parchemin', desc:'Une présentation inspirée des livres anciens, sur un vélin couleur parchemin.'},
   {key:'focus', icon:'🌿', label:'Mode Focus', desc:'Une phrase à la fois pour mieux méditer et savourer chaque parole.'},
   {key:'carte', icon:'🗂️', label:'Mode Carte', desc:'Un passage par carte pour une lecture simple et interactive.'},
   {key:'image', icon:'🏞️', label:'Mode Image', desc:'Le texte s’intègre à une belle image pour une expérience immersive et inspirante.'}
