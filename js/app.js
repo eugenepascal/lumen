@@ -4329,7 +4329,7 @@ function wireHomePage2(){
   document.querySelectorAll('[data-discover-primary]').forEach(el=>{
     el.onclick = ()=>{
       const novenaId = el.dataset.discoverNovena;
-      if(novenaId){ goTo('prier','neuvaines'); OPEN_NOVENA = novenaId; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render(); }
+      if(novenaId){ goTo('prier','neuvaines'); OPEN_NOVENA = novenaId; NOVENA_OPEN_DAY = null; NOVENA_FULLTEXT = false; NOVENA_DAY_DONE_SCREEN = null; render(); }
       else goTo(el.dataset.discoverPrimary, el.dataset.discoverSub || null);
     };
   });
@@ -4611,7 +4611,7 @@ function renderNovenas(){
   }
   html += `</div>`;
   document.getElementById('screen').innerHTML = html;
-  document.querySelectorAll('.novena-card').forEach(c=> c.onclick = ()=>{ OPEN_NOVENA=c.dataset.id; NOVENA_FULLTEXT=true; NOVENA_OPEN_DAY=null; NOVENA_DAY_DONE_SCREEN=null; render(); });
+  document.querySelectorAll('.novena-card').forEach(c=> c.onclick = ()=>{ OPEN_NOVENA=c.dataset.id; NOVENA_FULLTEXT=false; NOVENA_OPEN_DAY=null; NOVENA_DAY_DONE_SCREEN=null; render(); });
   document.querySelectorAll('[data-novena-filter]').forEach(btn=>{
     btn.onclick = ()=>{ NOVENA_FILTER = btn.dataset.novenaFilter; render(); };
   });
@@ -4621,7 +4621,7 @@ function renderNovenas(){
   }
 }
 
-let NOVENA_FULLTEXT = true;
+let NOVENA_FULLTEXT = false;
 let NOVENA_OPEN_DAY = null;
 let NOVENA_DAY_DONE_SCREEN = null; // {novenaId, dayIndex} — écran de validation après un jour prié
 let NOVENA_DAY_AUDIO_PLAYING = null;
@@ -4848,20 +4848,13 @@ function renderNovenaDetail(id){
   const info = novenaProgressInfo(n);
   const dayIdx = info.done ? 9 : info.currentDay;
   const dayData = n.days[dayIdx-1];
-  const alreadyDoneToday = info.completed[dayIdx-1];
 
   if(NOVENA_DAY_DONE_SCREEN && NOVENA_DAY_DONE_SCREEN.novenaId === n.id){ renderNovenaDayDoneScreen(n, NOVENA_DAY_DONE_SCREEN.dayIndex); return; }
   if(NOVENA_OPEN_DAY !== null){ renderNovenaDayPage(n, info, NOVENA_OPEN_DAY); return; }
-
-  let dots = '';
-  for(let i=1;i<=9;i++){
-    let cls = 'day-dot';
-    if(info.completed[i-1]) cls += ' done';
-    else if(i===info.currentDay && !info.done) cls += ' current';
-    dots += `<div class="${cls}">${info.completed[i-1] ? '✓' : i}</div>`;
-  }
+  if(NOVENA_FULLTEXT){ renderNovenaParcours(n, info); return; }
 
   const heroArt = lumenNovenaDedicatedArt({id:n.id, name:n.title, summary:n.sub});
+  const ctaLabel = info.done ? '✓ Revoir ma neuvaine' : (info.currentDay>1 ? 'Continuer la neuvaine' : 'Commencer la neuvaine');
   let html = `<div class="detail-wrap">
     <button class="back-link" id="back-btn">← Toutes les neuvaines</button>
     <div class="novena-community-banner" ${heroArt ? '' : `style="background:${n.color};"`}>
@@ -4889,6 +4882,7 @@ function renderNovenaDetail(id){
       <p class="entry-detail-text" style="margin:4px 0 0;">« ${NOVENA_INTENTIONS[n.id]} »</p>
       <div style="text-align:right; margin-top:6px;"><button class="btn btn-ghost btn-sm" id="edit-intention-btn">✎ Modifier</button></div>
     </div>` : ''}
+    <button class="btn btn-primary" id="start-novena-btn" style="width:100%; margin-top:14px;">${ctaLabel}</button>
     <div class="entry-link-row" style="gap:8px; flex-wrap:wrap; margin:10px 0 0;">
       <button class="btn btn-ghost btn-sm" id="read-intro-btn">📖 Lire l'introduction</button>
       <button class="btn btn-ghost btn-sm" id="add-intention-btn">${NOVENA_INTENTIONS[n.id] ? '✎ Modifier mon intention' : '➕ Ajouter une intention'}</button>
@@ -4902,91 +4896,19 @@ function renderNovenaDetail(id){
       </div>
     </div>
     <p class="novena-audio-note">Lecture vocale générée par votre navigateur — pas un enregistrement audio préexistant.</p>
-    <div style="text-align:right; margin:8px 0;">
-      <button class="btn btn-ghost btn-sm" id="toggle-fulltext-btn">${NOVENA_FULLTEXT ? '🕯️ Revenir au parcours guidé' : '📖 Voir les 9 prières en entier'}</button>
+    <div class="companions-row" style="margin-top:4px;">
+      <span class="companions-count" id="companions-count">🤝 ${NOVENA_COMPANIONS[n.id]||0} personne(s) prient cette neuvaine avec vous</span>
     </div>
-  `;
-
-  if(NOVENA_FULLTEXT){
-    html += `<p class="section-desc">Les neuf jours de cette neuvaine, façon « communauté » — touchez un jour pour lire sa méditation et sa prière.</p>
-      ${n.dailyStructure ? `<div class="card" style="border-left:4px solid ${n.color}; margin-bottom:10px;">
-        <p class="eyebrow" style="color:${n.color};">🔁 Chaque jour, en plus</p>
-        <p class="entry-detail-text" style="margin:4px 0 8px;">${n.dailyStructure}</p>
-        ${novenaBeadSequenceHTML(n.id+'-fulltext')}
-      </div>` : ''}
-      <div class="hoz-timeline">${n.days.map((d,i)=>{
-        const dayDone = info.completed[i];
-        const beadCount = SIMPLE_BEAD_COUNTS[n.id+'-day'+i] || 0;
-        return `<div class="hoz-timeline-item ${dayDone?'done':''}" data-open-day="${i}">
-          <div class="hoz-timeline-dot">${dayDone?'✓':(i+1)}</div>
-          <div class="hoz-timeline-content">
-            <p class="hoz-timeline-daylabel">${ORDINAL_DAYS[i]} jour</p>
-            <p class="hoz-timeline-title">${d.title}</p>
-            <div class="hoz-timeline-meta"><span>🕯️ ${novenaPrayerCount(n) - (8-i)*23}</span>${beadCount>0?`<span>📿 ${beadCount}</span>`:''}</div>
-            <button class="btn btn-gold btn-sm hoz-timeline-read-btn" data-open-day-btn="${i}">📖 Lire ce jour</button>
-          </div>
-        </div>`;
-      }).join('')}</div>`;
-    html += `</div>`;
-    document.getElementById('screen').innerHTML = html;
-    document.getElementById('back-btn').onclick = ()=>{ OPEN_NOVENA=null; NOVENA_FULLTEXT=false; NOVENA_OPEN_DAY=null; NOVENA_DAY_DONE_SCREEN=null; render(); };
-    document.getElementById('toggle-fulltext-btn').onclick = ()=>{ NOVENA_FULLTEXT = false; render(); };
-    wireNovenaAudioPlayer(dayData);
-    wireNovenaBeadSequences();
-    wireNovenaPresentationHeader(n);
-    document.querySelectorAll('[data-open-day-btn]').forEach(btn=>{
-      btn.onclick = (e)=>{ e.stopPropagation(); NOVENA_OPEN_DAY = parseInt(btn.dataset.openDayBtn,10); render(); };
-    });
-    document.querySelectorAll('.hoz-timeline-item').forEach(item=>{
-      item.onclick = ()=>{ NOVENA_OPEN_DAY = parseInt(item.dataset.openDay,10); render(); };
-    });
-    return;
-  }
-
-  html += `<div class="day-dots">${dots}</div>`;
-  if(n.dailyStructure){
-    html += `<div class="card" style="border-left:4px solid ${n.color}; margin-bottom:10px;">
-      <p class="eyebrow" style="color:${n.color};">🔁 Chaque jour, en plus</p>
-      <p class="entry-detail-text" style="margin:4px 0 8px;">${n.dailyStructure}</p>
-      ${novenaBeadSequenceHTML(n.id+'-guided')}
-    </div>`;
-  }
-
-  if(info.done){
-    html += `<div class="card" style="text-align:center;">
-      <p class="day-title">Neuvaine achevée ✦</p>
-      <p class="day-medit">Vous avez prié les neuf jours. Rien n'empêche de la recommencer, ou de porter une nouvelle intention.</p>
-      <div class="candle-wrap" style="justify-content:center; margin-top:10px;">${candleHTML(true,'restart-candle')}</div>
-      <button class="btn btn-ghost btn-sm" id="restart-btn" style="margin-top:14px;">Recommencer la neuvaine</button>
-    </div>`;
-  } else {
-    html += `<div class="card">
-      <p class="day-title">Jour ${dayIdx} — ${dayData.title}</p>
-      <p class="day-medit">${dayData.medit}</p>
-      ${carnetBoxesHTML(dayData.prayer, 'prayer')}
-      <div class="candle-wrap">
-        ${candleHTML(alreadyDoneToday, 'day-candle')}
-        <button class="btn ${alreadyDoneToday? 'btn-ghost':'btn-primary'} btn-sm" id="pray-day-btn" ${alreadyDoneToday? 'disabled':''}>
-          ${alreadyDoneToday? "Prié aujourd'hui ✓" : "J'ai prié ce jour"}
-        </button>
-        <button class="btn btn-gold btn-sm" id="listen-day-btn">🎙️ Prier ce jour (écouté)</button>
-      </div>
-      <div class="companions-row">
-        <span class="companions-count" id="companions-count">🤝 ${NOVENA_COMPANIONS[n.id]||0} personne(s) prient cette neuvaine avec vous</span>
-      </div>
-      <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
-        <button class="btn btn-gold btn-sm" id="join-companions-btn">🤝 Je m'engage aussi</button>
-        <button class="btn btn-ghost btn-sm" id="invite-companion-btn">📤 Inviter quelqu'un</button>
-      </div>
-    </div>`;
-  }
-  html += `</div>`;
+    <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+      <button class="btn btn-gold btn-sm" id="join-companions-btn">🤝 Je m'engage aussi</button>
+      <button class="btn btn-ghost btn-sm" id="invite-companion-btn">📤 Inviter quelqu'un</button>
+    </div>
+  </div>`;
 
   document.getElementById('screen').innerHTML = html;
   document.getElementById('back-btn').onclick = ()=>{ OPEN_NOVENA=null; NOVENA_FULLTEXT=false; NOVENA_OPEN_DAY=null; NOVENA_DAY_DONE_SCREEN=null; render(); };
-  document.getElementById('toggle-fulltext-btn').onclick = ()=>{ NOVENA_FULLTEXT = true; render(); };
+  document.getElementById('start-novena-btn').onclick = ()=>{ NOVENA_FULLTEXT = true; render(); };
   wireNovenaAudioPlayer(dayData);
-  wireNovenaBeadSequences();
   wireNovenaPresentationHeader(n);
 
   const joinBtn = document.getElementById('join-companions-btn');
@@ -5001,24 +4923,54 @@ function renderNovenaDetail(id){
   if(inviteBtn){
     inviteBtn.onclick = ()=> shareText('Prions ensemble', `Je prie la ${n.title} en ce moment (${n.sub}). Rejoins-moi si tu veux prier avec moi, jour après jour.`);
   }
+}
 
-  const prayBtn = document.getElementById('pray-day-btn');
-  if(prayBtn){
-    prayBtn.onclick = async ()=>{
-      const candle = document.getElementById('day-candle');
-      candle.classList.add('lit','burst');
-      if(!PROGRESS[n.id]) PROGRESS[n.id] = {completed:[false,false,false,false,false,false,false,false,false]};
-      PROGRESS[n.id].completed[dayIdx-1] = true;
-      await saveProgress(PROGRESS);
-      if(PROGRESS[n.id].completed.every(Boolean)) fireCelebration();
-      NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex:dayIdx-1};
-      setTimeout(()=> render(), 550);
-    };
-  }
-  const listenDayBtn = document.getElementById('listen-day-btn');
-  if(listenDayBtn){
-    listenDayBtn.onclick = ()=> openReciteMode(n.title + ' — ' + dayData.title, dayData.medit + ' ' + dayData.prayer);
-  }
+/* Écran « Parcours des neuf jours », façon maquette : la ligne de 9 bougies,
+   la barre de progression (Jour X sur 9), puis la liste compacte des 9
+   jours avec leur titre — on y touche un jour pour l'ouvrir. */
+function renderNovenaParcours(n, info){
+  const progressPct = info.done ? 100 : Math.round((info.currentDay/9)*100);
+  let html = `<div class="detail-wrap">
+    <button class="back-link" id="back-btn">← ${n.title}</button>
+    <div class="novena-candle-row" aria-label="Progression de la neuvaine">
+      ${Array.from({length:9}).map((_,i)=>`<span class="novena-candle ${info.completed[i]?'lit':(!info.done && i===info.currentDay-1)?'current':''}">🕯️</span>`).join('')}
+    </div>
+    <div class="novena-progress-row">
+      <span>Votre progression</span>
+      <span>${info.done ? 'Terminée' : `Jour ${info.currentDay} sur 9`} · ${progressPct}%</span>
+    </div>
+    <div class="novena-progress-bar-wrap"><div class="novena-progress-bar-fill" style="width:${progressPct}%;"></div></div>
+    <div class="novena-parcours-list" style="margin-top:14px;">
+      ${n.days.map((d,i)=>{
+        const dayDone = info.completed[i];
+        const isCurrent = !info.done && i === info.currentDay-1;
+        return `<div class="novena-parcours-row ${isCurrent?'current':''}" data-open-day="${i}">
+          <span class="novena-parcours-daylabel">Jour ${i+1}</span>
+          <span class="novena-parcours-title">${d.title}</span>
+          ${dayDone ? '<span class="novena-parcours-check">✓</span>' : '<span class="novena-parcours-caret">›</span>'}
+        </div>`;
+      }).join('')}
+    </div>
+    ${info.done ? `<div class="card" style="text-align:center; margin-top:14px;">
+      <p class="day-title">Neuvaine achevée ✦</p>
+      <p class="day-medit">Vous avez prié les neuf jours. Rien n'empêche de la recommencer, ou de porter une nouvelle intention.</p>
+      <div class="candle-wrap" style="justify-content:center; margin-top:10px;">${candleHTML(true,'restart-candle')}</div>
+      <button class="btn btn-ghost btn-sm" id="restart-btn" style="margin-top:14px;">Recommencer la neuvaine</button>
+    </div>` : ''}
+    ${n.dailyStructure ? `<div class="card" style="border-left:4px solid ${n.color}; margin-top:14px;">
+      <p class="eyebrow" style="color:${n.color};">🔁 Chaque jour, en plus</p>
+      <p class="entry-detail-text" style="margin:4px 0 8px;">${n.dailyStructure}</p>
+      ${novenaBeadSequenceHTML(n.id+'-fulltext')}
+    </div>` : ''}
+  </div>`;
+
+  document.getElementById('screen').innerHTML = html;
+  document.getElementById('back-btn').onclick = ()=>{ NOVENA_FULLTEXT=false; render(); };
+  wireNovenaBeadSequences();
+  wireNovenaPresentationHeader(n);
+  document.querySelectorAll('.novena-parcours-row').forEach(row=>{
+    row.onclick = ()=>{ NOVENA_OPEN_DAY = parseInt(row.dataset.openDay,10); render(); };
+  });
   const restartBtn = document.getElementById('restart-btn');
   if(restartBtn){
     restartBtn.onclick = async ()=>{
@@ -5040,11 +4992,12 @@ function novenaClosingPrayerText(n){
    Notre Père, 10 Je vous salue Marie (avec compteur), le Gloire au Père et
    une prière finale. */
 /* Illustration symbolique Lumen par étape — dessins originaux maison (pas
-   des photos tierces), choisis pour illustrer chaque prière du déroulement :
-   livre ouvert pour la méditation, mains jointes pour la prière propre à la
-   neuvaine (ou le portrait du saint/figure quand on en a un, vérifié), croix
-   rayonnante pour le Notre Père, chapelet fleuri pour les 10 Je vous salue
-   Marie, colombe pour le Gloire au Père, cierge pour la prière finale. */
+   des photos tierces), choisis pour illustrer chaque prière du déroulement,
+   comme dans la maquette : livre ouvert pour la méditation, mains jointes
+   pour la prière du jour, croix rayonnante pour le Notre Père, chapelet
+   fleuri pour les 10 Je vous salue Marie, colombe pour le Gloire au Père,
+   et pour la prière finale le portrait du saint/figure quand on en a un
+   (vérifié), sinon un cierge. */
 const NOVENA_STEP_ART = {
   medit:   {url:'./images/novena-step-meditation.svg', credit:'Illustration symbolique Lumen'},
   prayer:  {url:'./images/novena-step-prayer.svg', credit:'Illustration symbolique Lumen'},
@@ -5057,11 +5010,11 @@ function novenaDaySteps(n, d, dedicatedArt){
   const saintName = n.title.replace(/^Neuvaine\s*(à|au|aux|pour|de|du|des|d')\s*/i, '');
   return [
     {key:'medit', icon:'💭', img:NOVENA_STEP_ART.medit.url, label:'Méditation du jour', theme:'candle', title:d.title, subtitle:'Méditation', text:d.medit},
-    {key:'prayer', icon:'🙏', img:(dedicatedArt && dedicatedArt.url) || NOVENA_STEP_ART.prayer.url, label:'Prière à '+saintName, theme:'letter', title:'Prière à '+saintName, subtitle:n.title, text:d.prayer},
+    {key:'prayer', icon:'🙏', img:NOVENA_STEP_ART.prayer.url, label:'Prière à '+saintName, theme:'letter', title:'Prière à '+saintName, subtitle:n.title, text:d.prayer},
     {key:'pater', icon:'✝️', img:NOVENA_STEP_ART.pater.url, label:'Notre Père', theme:'letter', title:'Notre Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Notre Père']},
     {key:'ave', icon:'📿', img:NOVENA_STEP_ART.ave.url, label:'10 Je vous salue Marie', counter:true},
     {key:'gloria', icon:'✨', img:NOVENA_STEP_ART.gloria.url, label:'Gloire au Père', theme:'letter', title:'Gloire au Père', subtitle:'Prière traditionnelle', text:CHAPLET_PRAYER_TEXTS['Gloire au Père']},
-    {key:'final', icon:'🕯️', img:NOVENA_STEP_ART.final.url, label:'Prière finale', theme:'candle', title:'Prière finale', subtitle:n.title, text:novenaClosingPrayerText(n)}
+    {key:'final', icon:'🕯️', img:(dedicatedArt && dedicatedArt.url) || NOVENA_STEP_ART.final.url, label:'Prière finale', theme:'candle', title:'Prière finale', subtitle:n.title, text:novenaClosingPrayerText(n)}
   ];
 }
 function renderNovenaDayPage(n, info, dayIndex){
@@ -5181,10 +5134,18 @@ function renderNovenaDayDoneScreen(n, dayIndex){
   const d = n.days[dayIndex];
   const isLastDay = dayIndex >= 8;
   const intention = NOVENA_INTENTIONS[n.id];
+  const steps = novenaDaySteps(n, d);
+  const aveCount = SIMPLE_BEAD_COUNTS[n.id+'-day'+dayIndex+'-ave'] || 0;
   let html = `<div class="detail-wrap" style="text-align:center;">
     <div class="novena-done-candle">${candleHTML(true,'done-candle')}</div>
     <h1 class="day-title" style="margin:14px 0 2px;">${ORDINAL_DAYS[dayIndex]} jour terminé !</h1>
     <p class="entry-detail-text" style="color:var(--ink-soft);">Que cette prière porte du fruit dans votre vie.</p>
+    <div class="novena-done-checklist">
+      ${steps.map(s=>`<div class="novena-done-check-row">
+        <span class="novena-done-check-mark">✓</span>
+        <span class="novena-done-check-label">${s.label}${s.key==='ave' ? ` (${Math.min(aveCount,10)}/10)` : ''}</span>
+      </div>`).join('')}
+    </div>
     <div style="display:flex; flex-direction:column; gap:10px; margin:18px 0; align-items:stretch;">
       <button class="btn btn-primary" id="novena-done-next-btn">${isLastDay ? '✓ Voir la neuvaine achevée' : 'Jour suivant →'}</button>
       <button class="btn btn-ghost" id="novena-done-back-btn">🕯️ Revenir au parcours</button>
@@ -5203,7 +5164,7 @@ function renderNovenaDayDoneScreen(n, dayIndex){
     NOVENA_FULLTEXT = isLastDay;
     render();
   };
-  document.getElementById('novena-done-back-btn').onclick = ()=>{ NOVENA_DAY_DONE_SCREEN = null; NOVENA_OPEN_DAY = null; render(); };
+  document.getElementById('novena-done-back-btn').onclick = ()=>{ NOVENA_DAY_DONE_SCREEN = null; NOVENA_OPEN_DAY = null; NOVENA_FULLTEXT = true; render(); };
   document.getElementById('novena-done-share-btn').onclick = ()=> shareText('Prions ensemble', `Je prie la ${n.title} en ce moment (${n.sub}). Rejoins-moi si tu veux prier avec moi, jour après jour.`);
   const addBtn = document.getElementById('novena-done-add-intention-btn');
   const editBtn = document.getElementById('novena-done-edit-intention-btn');
@@ -6297,7 +6258,7 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
     const scNovena = document.getElementById('saint-sc-neuvaine');
     if(scNovena) scNovena.onclick = ()=>{
       if(!nov) return;
-      ENTRY_OPEN = null; OPEN_NOVENA = nov.id; NOVENA_OPEN_DAY = 0;
+      ENTRY_OPEN = null; OPEN_NOVENA = nov.id; NOVENA_OPEN_DAY = 0; NOVENA_FULLTEXT = true;
       PRIMARY = 'prier'; SUBTAB.prier = 'neuvaines';
       render();
     };
@@ -6418,7 +6379,7 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
     const nov2 = findNovenaEntryForSaint(entry);
     linkNeuvaine.onclick = ()=>{
       if(!nov2) return;
-      ENTRY_OPEN = null; OPEN_NOVENA = nov2.id; NOVENA_OPEN_DAY = 0;
+      ENTRY_OPEN = null; OPEN_NOVENA = nov2.id; NOVENA_OPEN_DAY = 0; NOVENA_FULLTEXT = true;
       PRIMARY = 'prier'; SUBTAB.prier = 'neuvaines';
       render();
     };
@@ -7778,7 +7739,7 @@ function renderFavoris(){
       if(e.target.closest('.fav-star')) return;
       const f = JSON.parse(c.dataset.favOpen.replace(/&apos;/g,"'"));
       if(f.type==='entry'){ PRIMARY = f.primary; SUBTAB[f.primary] = f.sub; GROUP_SEL[f.compKey] = f.groupId; ENTRY_OPEN = {compKey:f.compKey, groupId:f.groupId, idx:f.idx}; render(); }
-      else if(f.type==='novena'){ goTo('prier','neuvaines'); OPEN_NOVENA = f.id; NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = null; render(); }
+      else if(f.type==='novena'){ goTo('prier','neuvaines'); OPEN_NOVENA = f.id; NOVENA_OPEN_DAY = null; NOVENA_FULLTEXT = false; NOVENA_DAY_DONE_SCREEN = null; render(); }
       else if(f.type==='bible-chapter'){ AELF_BIBLE_CURRENT = {code:f.code, name:f.name, chapter:f.chapter}; goTo('ecritures','aelf-bible-chapter'); }
       else if(f.type==='office'){ AELF_OFFICE_VIEW = f.key; AELF_OFFICE_TAB = 'texte'; goTo('prier', OFFICE_KEY_TO_SUB[f.key]||'laudes'); }
       else if(f.type==='vreader-text'){ openVerseReader({title:f.title, subtitle:f.subtitle, text:f.text, reference:f.reference}); }

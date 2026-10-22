@@ -1460,6 +1460,27 @@
   .novena-day-step-caret{ color:var(--ink-soft); font-size:16px; flex-shrink:0; }
   .novena-day-step-panel{ margin:-2px 0 4px; }
   .novena-day-step-panel.hidden{ display:none; }
+
+  /* écran « Parcours des neuf jours » : barre de progression + liste compacte */
+  .novena-progress-row{ display:flex; justify-content:space-between; align-items:center; margin:14px 0 6px; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); font-weight:600; }
+  .novena-progress-bar-wrap{ height:7px; background:var(--gold-pale); border-radius:999px; overflow:hidden; }
+  .novena-progress-bar-fill{ height:100%; background:var(--wine); border-radius:999px; transition:width .3s ease; }
+  .novena-parcours-list{ display:flex; flex-direction:column; background:var(--vellum-light); border-radius:14px; overflow:hidden; border:1px solid var(--hairline); }
+  .novena-parcours-row{ display:flex; align-items:center; gap:12px; padding:13px 14px; cursor:pointer; border-bottom:1px solid var(--hairline); }
+  .novena-parcours-row:last-child{ border-bottom:none; }
+  .novena-parcours-row:active{ background:var(--gold-pale); }
+  .novena-parcours-row.current{ background:var(--gold-pale); }
+  .novena-parcours-daylabel{ font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; color:var(--wine); flex-shrink:0; width:52px; }
+  .novena-parcours-title{ flex:1; font-family:'Fraunces',serif; font-size:14.5px; font-weight:600; color:var(--ink); }
+  .novena-parcours-check{ color:var(--gold); font-size:16px; font-weight:700; flex-shrink:0; }
+  .novena-parcours-caret{ color:var(--ink-soft); font-size:16px; flex-shrink:0; }
+
+  /* écran de validation du jour : récapitulatif à coches */
+  .novena-done-checklist{ display:flex; flex-direction:column; gap:2px; margin:16px 0; text-align:left; background:var(--vellum-light); border:1px solid var(--hairline); border-radius:14px; overflow:hidden; }
+  .novena-done-check-row{ display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid var(--hairline); }
+  .novena-done-check-row:last-child{ border-bottom:none; }
+  .novena-done-check-mark{ color:#fff; background:var(--gold); width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+  .novena-done-check-label{ font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; color:var(--ink); }
   .home-hero{
     position:relative; height:240px; margin:-18px -18px 0; overflow:hidden;
     border-radius:0 0 26px 26px;
