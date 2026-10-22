@@ -1937,6 +1937,35 @@
   .entry-link-row{ display:flex; justify-content:flex-end; margin-bottom:14px; }
   .entry-nav-row{ display:flex; justify-content:space-between; gap:10px; }
 
+  /* ===== saints: catalogue grid card ===== */
+  .saint-grid-card{ cursor:pointer; text-align:left; }
+  .saint-grid-avatar{ width:100%; height:92px; border-radius:14px; font-size:30px; }
+  .saint-grid-tag{ font-family:'Inter',sans-serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--wine); margin:2px 0 0; }
+
+  /* ===== saints: portrait panel ===== */
+  .saint-portrait{ max-width:520px; margin:0 auto; }
+  .saint-portrait-hero{ position:relative; margin:10px 0 14px; border-radius:20px; overflow:hidden; background:var(--vellum-light); }
+  .saint-portrait-hero img{ width:100%; display:block; max-height:340px; object-fit:cover; object-position:center 18%; cursor:zoom-in; }
+  .saint-img-credit{ font-family:'Inter',sans-serif; font-size:10.5px; color:var(--ink-soft); text-align:center; padding:6px 10px; }
+  .saint-portrait-name{ font-family:'Fraunces',serif; font-weight:700; font-size:24px; text-align:center; margin:4px 0 2px; color:var(--wine-dark); }
+  .saint-portrait-sub{ font-size:13.5px; color:var(--ink-soft); text-align:center; margin:0 0 10px; }
+  .saint-info-row{ display:flex; justify-content:center; gap:14px; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); margin-bottom:12px; flex-wrap:wrap; }
+  .saint-quote-card{ text-align:center; background:var(--vellum-light); }
+  .saint-shortcut-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:4px; }
+  .saint-shortcut-btn{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:12px 4px; border-radius:14px; border:1px solid var(--hairline); background:var(--vellum-light); font-size:20px; cursor:pointer; color:var(--ink); }
+  .saint-shortcut-btn span{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; }
+  .saint-shortcut-btn:disabled{ opacity:0.4; cursor:not-allowed; }
+
+  /* ===== saints: tabbed profile (vie / enseignements / prière / plus) ===== */
+  .saint-midfigure{ margin:14px 0; border-radius:14px; overflow:hidden; }
+  .saint-midfigure img{ width:100%; display:block; max-height:220px; object-fit:cover; }
+
+  /* ===== saints: image zoom overlay ===== */
+  .saint-zoom-overlay{ position:fixed; inset:0; background:rgba(10,6,8,0.9); display:flex; align-items:center; justify-content:center; z-index:9999; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+  .saint-zoom-overlay.open{ opacity:1; pointer-events:auto; }
+  .saint-zoom-overlay img{ max-width:92vw; max-height:88vh; border-radius:10px; object-fit:contain; }
+  .saint-zoom-close{ position:absolute; top:18px; right:18px; width:36px; height:36px; border-radius:50%; border:none; background:rgba(255,255,255,0.15); color:#fff; font-size:16px; cursor:pointer; }
+
   /* genealogy timeline */
   .gen-era{ font-family:'Fraunces',serif; font-weight:600; color:var(--wine-dark); margin:20px 0 8px; font-size:15px; }
   .gen-era:first-child{ margin-top:0; }

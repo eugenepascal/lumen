@@ -2237,6 +2237,14 @@ const PRIERES = [
 
 const SAINTS_LIBRARY = [
   {
+    id:"figures-evangiles",
+    title:"Figures des Évangiles",
+    desc:"Des proches de Jésus dont l'Évangile garde la mémoire.",
+    entries:[
+      {name:"Saint Joseph", dates:"Ier siècle — fêté le 19 mars", tag:null, avatar:"🪵", ref:"Époux de la Vierge Marie, père nourricier de Jésus", summary:"Charpentier silencieux, il a protégé sans jamais chercher à paraître. L'Évangile ne rapporte aucune de ses paroles — seulement ses gestes fidèles. Proclamé patron de l'Église universelle en 1870 par le pape Pie IX."}
+    ]
+  },
+  {
     id:"apotres-martyrs",
     title:"Apôtres et premiers martyrs",
     desc:"Les figures fondatrices des premiers siècles du christianisme.",
@@ -5964,7 +5972,343 @@ function novenasForMonth(monthIndex, year, group){
 let NEUVAINE_MONTH_VIEW = false;
 let NEUVAINE_VIEW_DATE = new Date();
 
+/* ================= Bibliothèque des saints (catalogue + fiche à onglets) ================= */
+const SAINT_CATEGORY_META = {
+  protecteurs:{label:'Protecteurs', icon:'🛡️'},
+  docteurs:{label:'Docteurs', icon:'📖'},
+  martyrs:{label:'Martyrs', icon:'🔥'},
+  saintes:{label:'Saintes', icon:'👑'}
+};
+function saintCategoryTags(entry){
+  const t = ((entry.name||'')+' '+(entry.ref||'')+' '+(entry.summary||'')).toLowerCase();
+  const tags = [];
+  if(/docteur de l.église/.test(t)) tags.push('docteurs');
+  if(/martyr/.test(t)) tags.push('martyrs');
+  if(/^sainte/i.test(entry.name)) tags.push('saintes');
+  if(!tags.length) tags.push('protecteurs');
+  return tags;
+}
+function saintFeastShort(dates){
+  if(!dates) return '';
+  const m = dates.match(/fêtée?s?\s+le\s+(.+)$/i);
+  return m ? m[1].trim() : dates;
+}
+function saintLifespan(dates){
+  if(!dates) return '';
+  const m = dates.match(/^(.+?)\s*—\s*fêtée?s?/i);
+  return m ? m[1].trim() : '';
+}
+function saintMonthIndex(dates){
+  const short = saintFeastShort(dates).toLowerCase();
+  for(let i=0;i<MONTH_NAMES_FR.length;i++){
+    if(short.includes(MONTH_NAMES_FR[i])) return i;
+  }
+  return -1;
+}
+function saintCalendarPrayerFor(entry){
+  const alias = {
+    "Saint Augustin d'Hippone": "Saint Augustin",
+    "Sainte Thérèse de Lisieux": "Sainte Thérèse de l'Enfant-Jésus"
+  };
+  const lookupName = alias[entry.name] || entry.name;
+  const hit = SAINTS.find(s=> s.name === lookupName);
+  return hit ? hit.prayer : null;
+}
+function findNovenaEntryForSaint(entry){
+  const words = normalizeForMatch(entry.name.replace(/^saintes?\s+|^saints?\s+/i,''));
+  const firstName = words[0];
+  if(!firstName || firstName.length<3) return null;
+  const matches = NOVENAS.filter(n => normalizeForMatch(n.title).includes(firstName));
+  if(!matches.length) return null;
+  return matches.find(n => !/famil/i.test(n.id)) || matches[0];
+}
+function saintTeachingPoints(entry){
+  const sentences = (entry.summary||'').split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
+  const icons = ['🙏','✝️','📖','🕊️'];
+  return sentences.slice(0,4).map((s,i)=>({icon:icons[i%icons.length], text:s}));
+}
+function allSaintEntries(groups){
+  const list = [];
+  groups.forEach(g=> g.entries.forEach((e,idx)=> list.push({entry:e, groupId:g.id, idx})));
+  return list;
+}
+function saintCardHTML(entry, groupId, idx){
+  const art = lumenSacredArtFor(entry);
+  const imgUrl = entry.img || (art ? art.url : null);
+  const thumb = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📖').replace(/'/g,"\\'")}'">` : (entry.avatar || '📖');
+  const tags = saintCategoryTags(entry);
+  const tagLabel = tags.length ? (SAINT_CATEGORY_META[tags[0]]||{}).label : '';
+  return `<div class="card saint-grid-card" data-group="${groupId}" data-idx="${idx}">
+    <div class="entry-avatar entry-avatar-photo saint-grid-avatar">${thumb}</div>
+    <p class="entry-name" style="margin-top:8px;">${entry.name}</p>
+    <p class="studio-note" style="margin:2px 0;">${saintFeastShort(entry.dates)||''}</p>
+    ${tagLabel ? `<p class="saint-grid-tag">${tagLabel}</p>` : ''}
+  </div>`;
+}
+let SAINT_SEARCH = '';
+let SAINT_CAT_VIEW = 'tous';
+let SAINT_CAT_FILTER = null;
+let SAINT_PROFILE_TAB = null;
+let SAINT_PROFILE_KEY = null;
+function wireSaintsCards(){
+  document.querySelectorAll('.saint-grid-card').forEach(c=>{
+    c.onclick = ()=>{ ENTRY_OPEN = {compKey:'eglise:saints', groupId:c.dataset.group, idx:parseInt(c.dataset.idx,10)}; render(); };
+  });
+}
+function wireSaintsCatalogueChrome(groups, compKey){
+  const input = document.getElementById('saints-search-input');
+  if(input){
+    input.oninput = (e)=>{
+      SAINT_SEARCH = e.target.value;
+      const caret = e.target.selectionStart;
+      render();
+      const el = document.getElementById('saints-search-input');
+      if(el){ el.focus(); el.setSelectionRange(caret, caret); }
+    };
+  }
+  document.querySelectorAll('.saint-view-chip').forEach(b=>{
+    b.onclick = ()=>{ SAINT_CAT_VIEW = b.dataset.view; render(); };
+  });
+  document.querySelectorAll('.saint-cat-chip').forEach(b=>{
+    b.onclick = ()=>{ SAINT_CAT_FILTER = (SAINT_CAT_FILTER === b.dataset.cat) ? null : b.dataset.cat; render(); };
+  });
+  document.querySelectorAll('.saint-theme-chip').forEach(b=>{
+    b.onclick = ()=>{ GROUP_SEL[compKey] = b.dataset.group; render(); };
+  });
+  wireSaintsCards();
+}
+function renderSaintsCatalogue(groups, compKey, sectionLabel){
+  const q = SAINT_SEARCH.trim().toLowerCase();
+  let list = allSaintEntries(groups);
+  if(SAINT_CAT_FILTER) list = list.filter(x=> saintCategoryTags(x.entry).includes(SAINT_CAT_FILTER));
+
+  let html = `<h2 class="section-title">${sectionLabel}</h2>
+    <p class="section-desc">Découvrez leur vie, leurs enseignements et priez avec eux.</p>
+    <div class="ambiance-search-wrap">
+      <input type="text" id="saints-search-input" placeholder="🔍 Rechercher un saint…" value="${SAINT_SEARCH.replace(/"/g,'&quot;')}">
+    </div>`;
+
+  if(q){
+    const results = list.filter(x=> (x.entry.name+' '+(x.entry.ref||'')+' '+(x.entry.summary||'')).toLowerCase().includes(q));
+    html += `<p class="studio-note" style="margin-bottom:8px;">${results.length} résultat${results.length>1?'s':''} pour « ${q} »</p>
+      <div class="grid">${results.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+    document.getElementById('screen').innerHTML = html;
+    wireSaintsCatalogueChrome(groups, compKey);
+    return;
+  }
+
+  html += `<div class="chip-row">
+    <button class="chip saint-view-chip ${SAINT_CAT_VIEW==='tous'?'active':''}" data-view="tous">Tous</button>
+    <button class="chip saint-view-chip ${SAINT_CAT_VIEW==='mois'?'active':''}" data-view="mois">Par mois</button>
+    <button class="chip saint-view-chip ${SAINT_CAT_VIEW==='theme'?'active':''}" data-view="theme">Par thème</button>
+  </div>
+  <div class="chip-row">${Object.keys(SAINT_CATEGORY_META).map(k=>
+    `<button class="chip saint-cat-chip ${SAINT_CAT_FILTER===k?'active':''}" data-cat="${k}">${SAINT_CATEGORY_META[k].icon} ${SAINT_CATEGORY_META[k].label}</button>`
+  ).join('')}</div>`;
+
+  if(SAINT_CAT_VIEW === 'theme'){
+    const activeId = GROUP_SEL[compKey] || groups[0].id;
+    GROUP_SEL[compKey] = activeId;
+    const group = groups.find(g=>g.id===activeId) || groups[0];
+    html += `<div class="chip-row">${groups.map(g=>
+      `<button class="chip saint-theme-chip ${g.id===group.id?'active':''}" data-group="${g.id}">${g.title}</button>`
+    ).join('')}</div>
+    <p class="section-desc">${group.desc||''}</p>`;
+    const entries = group.entries
+      .map((e,i)=>({entry:e, groupId:group.id, idx:i}))
+      .filter(x=> !SAINT_CAT_FILTER || saintCategoryTags(x.entry).includes(SAINT_CAT_FILTER));
+    html += `<div class="grid">${entries.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+  } else if(SAINT_CAT_VIEW === 'mois'){
+    const byMonth = Array.from({length:12}, ()=>[]);
+    list.forEach(x=>{
+      const mi = saintMonthIndex(x.entry.dates);
+      if(mi >= 0) byMonth[mi].push(x);
+    });
+    byMonth.forEach((arr, mi)=>{
+      if(!arr.length) return;
+      html += `<p class="eyebrow" style="color:var(--gold); margin:16px 0 6px; text-transform:capitalize;">${MONTH_NAMES_FR[mi]}</p>
+        <div class="grid">${arr.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+    });
+  } else {
+    html += `<div class="grid">${list.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+  }
+
+  document.getElementById('screen').innerHTML = html;
+  wireSaintsCatalogueChrome(groups, compKey);
+}
+function renderSaintDetail(entry, group, idx, groups, compKey){
+  const key = group.id + ':' + idx;
+  if(SAINT_PROFILE_KEY !== key){ SAINT_PROFILE_KEY = key; SAINT_PROFILE_TAB = null; }
+  const art = lumenSacredArtFor(entry);
+  const imgUrl = entry.img || (art ? art.url : null);
+  const favMeta = {primary:PRIMARY, sub:SUBTAB[PRIMARY], compKey, groupId:group.id};
+  const fav = {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey, groupId:group.id, idx, name:entry.name, avatar:entry.avatar, summary:(entry.summary||'').slice(0,90)};
+  const totalCount = group.entries.length;
+
+  function wireCommon(){
+    const backBtn = document.getElementById('saint-back-btn');
+    if(backBtn) backBtn.onclick = ()=>{
+      if(SAINT_PROFILE_TAB) { SAINT_PROFILE_TAB = null; render(); }
+      else { ENTRY_OPEN = null; render(); }
+    };
+    wireFavStars();
+    const zoom = document.getElementById('saint-hero-img');
+    if(zoom && imgUrl) zoom.onclick = ()=> openSaintImageZoom(imgUrl, entry.name);
+  }
+
+  if(!SAINT_PROFILE_TAB){
+    const thumb = imgUrl ? `<img id="saint-hero-img" src="${imgUrl}" alt="" onerror="this.closest('figure').remove();">` : '';
+    const nov = findNovenaEntryForSaint(entry);
+    let html = `<div class="saint-portrait">
+      <div class="office-head-row" style="padding:0 2px;">
+        <button class="back-link" id="saint-back-btn" style="margin:0;">← ${sectionBackLabel(compKey)}</button>
+        ${favStarHTML(fav)}
+      </div>
+      ${thumb ? `<figure class="saint-portrait-hero">${thumb}<figcaption class="saint-img-credit">${art ? '🔍 ' + art.credit : ''}</figcaption></figure>` : `<div class="halo-wrap" style="width:120px; height:120px; margin:18px auto;"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo" style="font-size:52px;">${entry.avatar||'📖'}</div></div>`}
+      <p class="saint-portrait-name">${entry.name}</p>
+      <p class="saint-portrait-sub">${entry.ref||''}</p>
+      <div class="saint-info-row">
+        <span>📅 Fête : ${saintFeastShort(entry.dates)||'—'}</span>
+      </div>
+      <div class="card saint-quote-card">
+        <p class="saint-prayer" style="margin:0;">${entry.summary.split(/(?<=[.!?])\s+/)[0]}</p>
+      </div>
+      <button class="btn btn-primary" id="saint-discover-btn" style="width:100%; margin:14px 0;">Découvrir sa vie →</button>
+      <div class="saint-shortcut-row">
+        <button class="saint-shortcut-btn" id="saint-sc-priere">🙏<span>Prière</span></button>
+        <button class="saint-shortcut-btn" id="saint-sc-neuvaine" ${nov?'':'disabled'}>🕯️<span>Neuvaine</span></button>
+        <button class="saint-shortcut-btn" id="saint-sc-intentions">🤝<span>Intentions</span></button>
+        <button class="saint-shortcut-btn" id="saint-sc-partager">📤<span>Partager</span></button>
+      </div>
+    </div>`;
+    document.getElementById('screen').innerHTML = html;
+    wireCommon();
+    document.getElementById('saint-discover-btn').onclick = ()=>{ SAINT_PROFILE_TAB = 'vie'; render(); };
+    document.getElementById('saint-sc-priere').onclick = ()=>{ SAINT_PROFILE_TAB = 'priere'; render(); };
+    const scNovena = document.getElementById('saint-sc-neuvaine');
+    if(scNovena) scNovena.onclick = ()=>{
+      if(!nov) return;
+      ENTRY_OPEN = null; OPEN_NOVENA = nov.id; NOVENA_OPEN_DAY = 0;
+      PRIMARY = 'prier'; SUBTAB.prier = 'neuvaines';
+      render();
+    };
+    document.getElementById('saint-sc-intentions').onclick = ()=> goTo('prier','intentions');
+    document.getElementById('saint-sc-partager').onclick = ()=> shareText(entry.name, entry.summary);
+    return;
+  }
+
+  const tabs = [
+    {id:'vie', label:'Vie'},
+    {id:'enseignements', label:'Enseignements'},
+    {id:'priere', label:'Prière'},
+    {id:'plus', label:'Plus'}
+  ];
+  let body = '';
+  if(SAINT_PROFILE_TAB === 'vie'){
+    body = `<div class="card">
+      <p class="eyebrow" style="color:var(--gold);">Une vie de fidélité</p>
+      <p class="entry-detail-text">${entry.summary}</p>
+      ${imgUrl ? `<figure class="saint-midfigure"><img src="${imgUrl}" alt="" onerror="this.closest('figure').remove();"></figure>` : ''}
+      <p class="eyebrow" style="color:var(--gold); margin-top:14px;">Dates importantes</p>
+      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">🗓️ Vie</span><br><span class="gen-note">${saintLifespan(entry.dates)||'Date de naissance inconnue'}</span></div>
+      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">✦ Fête</span><br><span class="gen-note">${saintFeastShort(entry.dates)||'—'}</span></div>
+      ${textActionsRowHTML('candle', entry.name, saintFeastShort(entry.dates), entry.summary, entry.ref||'', imgUrl?[imgUrl]:[])}
+    </div>`;
+  } else if(SAINT_PROFILE_TAB === 'enseignements'){
+    const points = saintTeachingPoints(entry);
+    body = `<p class="eyebrow" style="color:var(--gold);">Un modèle pour aujourd'hui</p>
+      <div class="card" style="display:flex; flex-direction:column; gap:10px;">
+        ${points.map(p=>`<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">${p.icon} </span><span class="gen-note">${p.text}</span></div>`).join('')}
+      </div>`;
+  } else if(SAINT_PROFILE_TAB === 'priere'){
+    const prayer = saintCalendarPrayerFor(entry) || `${entry.name}, priez pour nous.`;
+    const nov = findNovenaEntryForSaint(entry);
+    body = `<div class="card">
+      <p class="eyebrow" style="color:var(--gold);">Prière à ${entry.name}</p>
+      <p class="saint-prayer">${prayer}</p>
+      ${textActionsRowHTML('candle', entry.name, 'Prière', prayer, '', [])}
+    </div>
+    <div class="card" style="margin-top:12px;">
+      <p class="eyebrow" style="color:var(--gold);">Textes liés</p>
+      ${nov ? `<div class="entry-link-row"><button class="btn btn-ghost btn-sm" id="saint-link-neuvaine">🕯️ ${nov.title} →</button></div>` : ''}
+      <div class="entry-link-row"><button class="btn btn-ghost btn-sm" id="saint-link-prieres">📿 Autres prières aux saints →</button></div>
+    </div>`;
+  } else if(SAINT_PROFILE_TAB === 'plus'){
+    body = `${imgUrl ? `<div class="card">
+      <p class="eyebrow" style="color:var(--gold);">🖼️ Iconographie</p>
+      <figure class="saint-midfigure" style="margin:8px 0 2px;"><img src="${imgUrl}" alt="" onerror="this.closest('figure').remove();"></figure>
+      ${art ? `<p class="studio-note">${art.credit}</p>` : ''}
+    </div>` : ''}
+    <div class="card" style="margin-top:12px;">
+      <p class="eyebrow" style="color:var(--gold);">📅 Fête et célébration liturgique</p>
+      <p class="entry-detail-text" style="margin:4px 0 10px;">${saintFeastShort(entry.dates)||'—'}</p>
+      <button class="btn btn-ghost btn-sm" id="saint-link-calendar">Voir dans le calendrier →</button>
+    </div>`;
+  }
+
+  let html = `<div class="bible-reader" style="margin:-18px -18px 0;">
+    <div style="padding:18px 18px 0;">
+      <div class="office-head-row">
+        <button class="back-link" id="saint-back-btn" style="margin:0;">← ${entry.name}</button>
+        ${favStarHTML(fav)}
+      </div>
+      <h2 class="section-title" style="margin:2px 0 10px;">${entry.name}</h2>
+      <div class="bible-reader-tabs" style="padding:0 0 10px;">
+        ${tabs.map(t=>`<button class="bible-reader-tab ${SAINT_PROFILE_TAB===t.id?'active':''}" data-saint-tab="${t.id}">${t.label}</button>`).join('')}
+      </div>
+    </div>
+    <div style="padding:0 18px 18px;">${body}</div>
+  </div>`;
+  document.getElementById('screen').innerHTML = html;
+  wireCommon();
+  document.querySelectorAll('[data-saint-tab]').forEach(b=>{
+    b.onclick = ()=>{ SAINT_PROFILE_TAB = b.dataset.saintTab; render(); };
+  });
+  wireSpeakShare();
+  const linkNeuvaine = document.getElementById('saint-link-neuvaine');
+  if(linkNeuvaine){
+    const nov2 = findNovenaEntryForSaint(entry);
+    linkNeuvaine.onclick = ()=>{
+      if(!nov2) return;
+      ENTRY_OPEN = null; OPEN_NOVENA = nov2.id; NOVENA_OPEN_DAY = 0;
+      PRIMARY = 'prier'; SUBTAB.prier = 'neuvaines';
+      render();
+    };
+  }
+  const linkPrieres = document.getElementById('saint-link-prieres');
+  if(linkPrieres) linkPrieres.onclick = ()=>{ ENTRY_OPEN=null; PRIMARY='devotions'; SUBTAB.devotions='prieres'; PRIERES_CATEGORY='prieres-aux-saints'; render(); };
+  const linkCal = document.getElementById('saint-link-calendar');
+  if(linkCal) linkCal.onclick = ()=> goTo('eglise','calendrier');
+}
+function sectionBackLabel(compKey){
+  return 'Bibliothèque des saints';
+}
+let SAINT_ZOOM_OVERLAY = null;
+function openSaintImageZoom(url, name){
+  if(!SAINT_ZOOM_OVERLAY){
+    SAINT_ZOOM_OVERLAY = document.createElement('div');
+    SAINT_ZOOM_OVERLAY.className = 'saint-zoom-overlay';
+    SAINT_ZOOM_OVERLAY.innerHTML = `<img id="saint-zoom-img" src="" alt=""><button class="saint-zoom-close" id="saint-zoom-close">✕</button>`;
+    document.body.appendChild(SAINT_ZOOM_OVERLAY);
+    SAINT_ZOOM_OVERLAY.onclick = (e)=>{ if(e.target===SAINT_ZOOM_OVERLAY || e.target.id==='saint-zoom-close') SAINT_ZOOM_OVERLAY.classList.remove('open'); };
+  }
+  document.getElementById('saint-zoom-img').src = url;
+  document.getElementById('saint-zoom-img').alt = name || '';
+  SAINT_ZOOM_OVERLAY.classList.add('open');
+}
+function renderSaintsHub(groups, compKey, sectionLabel){
+  if(ENTRY_OPEN && ENTRY_OPEN.compKey === compKey){
+    const group = groups.find(g=>g.id===ENTRY_OPEN.groupId);
+    const entry = group.entries[ENTRY_OPEN.idx];
+    renderSaintDetail(entry, group, ENTRY_OPEN.idx, groups, compKey);
+    return;
+  }
+  SAINT_PROFILE_TAB = null; SAINT_PROFILE_KEY = null;
+  renderSaintsCatalogue(groups, compKey, sectionLabel);
+}
+
 function renderGenericSection(groups, compKey, sectionLabel){
+  if(compKey === 'eglise:saints') return renderSaintsHub(groups, compKey, sectionLabel);
   const halo = compKey === 'eglise:saints';
   if(ENTRY_OPEN && ENTRY_OPEN.compKey === compKey){
     const group = groups.find(g=>g.id===ENTRY_OPEN.groupId);
