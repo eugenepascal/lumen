@@ -4127,6 +4127,15 @@ function homePage1HTML(){
         <button class="btn btn-gold btn-sm" id="home-name-save">Valider</button>
       </div>`}
 
+    <div class="card home-guide-card" id="p1-guide-card" style="margin:12px 0 18px;">
+      <span class="home-guide-icon">🗺️</span>
+      <span class="home-guide-body">
+        <span class="home-guide-title">Par où commencer ? <span class="home-guide-badge">GUIDE</span></span>
+        <span class="home-guide-sub">Posez une question à Lumen Guide, votre compagnon pour explorer l'application.</span>
+      </span>
+      <span class="home-guide-chevron">›</span>
+    </div>
+
     ${homeTitleRowHTML('☀️','Évangile du jour','linear-gradient(160deg, #D9A35C, #B8863B)', '', 'home-evangile-ref', true)}
     <figure class="evangile-hero" id="home-evangile-card">
       <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=900" alt="" loading="lazy" onerror="this.style.display='none'">
@@ -4219,6 +4228,9 @@ function wireHomePage1(){
   if(cta0) cta0.onclick = ()=> goTo('prier','textes-du-jour');
   loadHomeEvangileCard();
 
+  const guideCardP1 = document.getElementById('p1-guide-card');
+  if(guideCardP1) guideCardP1.onclick = ()=> openGuide();
+
   const personalizeBtn = document.getElementById('home-personalize-btn');
   if(personalizeBtn) personalizeBtn.onclick = ()=> showToast('Personnalisation bientôt disponible ✨');
 
@@ -4298,16 +4310,6 @@ function homePage2HTML(){
         <span class="home-shortcut-img"><img src="${q.img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${q.icon}'"></span>
         <span class="home-shortcut-label">${q.label}</span>
       </button>`).join('')}
-    </div>
-
-    ${homeTitleHTML('🔥','Lumen Guide','linear-gradient(160deg, #B8863B, #7C1F2E)')}
-    <div class="card home-guide-card" id="p2-guide-card">
-      <span class="home-guide-icon">💬</span>
-      <span class="home-guide-body">
-        <span class="home-guide-title">Une question ? <span class="home-guide-badge">NOUVEAU</span></span>
-        <span class="home-guide-sub">Posez votre question à Lumen Guide, votre compagnon spirituel.</span>
-      </span>
-      <span class="home-guide-chevron">›</span>
     </div>
 
     ${homeTitleRowHTML('🔥','À découvrir cette semaine','linear-gradient(160deg, #AFC2A6, #6E8F6E)', 'Voir tout →', 'p2-discover-all')}
@@ -5783,13 +5785,16 @@ function wireEntryDetailExtras(entry, usageKey){
 }
 
 function renderGenealogyTimeline(){
-  let html = `<div class="card">`;
+  let html = `<p class="section-desc" style="margin-top:0;">La lignée principale (trait plein) descend de génération en génération ; les frères et sœurs ou branches parallèles (↳) s'en détachent sans la poursuivre.</p><div class="card gen-tree">`;
   GENEALOGY.forEach(item=>{
-    if(item.era){ html += `<p class="gen-era">${item.era}</p>`; }
-    else{
-      html += `<div class="gen-item"><span class="gen-label">${item.label}</span> — <span class="gen-note">${item.note||''}</span></div>`;
-      if(item.gap) html += `<p class="gen-gap">↳ ${item.gap}</p>`;
-    }
+    if(item.era){ html += `<p class="gen-tree-era gen-era">${item.era}</p>`; return; }
+    if(item.divider){ html += `<div class="gen-tree-divider">⛓️ ${item.note||''}</div>`; return; }
+    html += `<div class="gen-tree-node${item.dashed?' dashed':''}${item.final?' final':''}">
+      <p class="gen-tree-label">${item.label}</p>
+      ${item.note ? `<p class="gen-tree-note">${item.note}</p>` : ''}
+    </div>`;
+    if(item.branch) html += `<div class="gen-tree-branch">${item.branch}</div>`;
+    if(item.gap) html += `<div class="gen-tree-gap">${item.gap}</div>`;
   });
   html += `</div>`;
   return html;
@@ -6403,6 +6408,244 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
 function sectionBackLabel(compKey){
   return 'Bibliothèque des saints';
 }
+
+/* ================= grandes figures (rois, prophètes...) — même présentation que la Bibliothèque des saints =================
+   HISTORY (Genèse, juges, rois, prophètes, portraits...) utilisait la grille
+   générique comme toutes les autres rubriques. On lui donne ici le même
+   traitement éditorial que les saints : recherche, filtres par catégorie,
+   fiche portrait (avec halo, faute de portraits peints pour la plupart de ces
+   figures), citation, et onglets Vie / Enseignements / Réflexion / Plus —
+   adapté aux champs propres à ces figures (règne, référence biblique) plutôt
+   qu'à ceux des saints (fête, patronage, neuvaine), qui ne s'y appliquent
+   pas. */
+const HISTORY_CAT_GROUPS = [
+  {label:'📜 Origines', ids:['livres-de-moise','figures-genese','avant-les-juges']},
+  {label:'⚔️ Juges & tribus', ids:['chronique-des-juges','douze-tribus-israel']},
+  {label:'👑 Rois', ids:['monarchie-unifiee','royaume-divise','royaume-nord','royaume-sud']},
+  {label:'🔥 Prophètes', ids:['grands-prophetes','petits-prophetes']},
+  {label:'✝️ Nouveau Testament', ids:['douze-apotres']},
+  {label:'📖 Portraits & thèmes', ids:['grands-portraits','grands-portraits-destinee','aura-puissance-beaute','beaute-dans-bible']},
+  {label:'🙏 Prière', ids:['psaumes-par-intention']}
+];
+const HISTORY_TAG_META = {
+  bon: {label:'Roi fidèle', icon:'✦'},
+  mauvais: {label:'Roi infidèle', icon:'⚠️'},
+  mitige: {label:'Règne mitigé', icon:'◐'}
+};
+function allHistoryEntries(groups){
+  const list = [];
+  groups.forEach(g=> g.entries.forEach((e,idx)=> list.push({entry:e, groupId:g.id, idx})));
+  return list;
+}
+function historyCardHTML(entry, groupId, idx){
+  const tagMeta = entry.tag && HISTORY_TAG_META[entry.tag];
+  return `<div class="card saint-grid-card" data-group="${groupId}" data-idx="${idx}">
+    <div class="entry-avatar entry-avatar-photo saint-grid-avatar">${entry.avatar||'📜'}</div>
+    <p class="entry-name" style="margin-top:8px;">${entry.name}</p>
+    <p class="studio-note" style="margin:2px 0;">${entry.dates||''}</p>
+    ${tagMeta ? `<p class="saint-grid-tag">${tagMeta.icon} ${tagMeta.label}</p>` : ''}
+  </div>`;
+}
+let HISTORY_SEARCH = '';
+let HISTORY_PROFILE_TAB = null;
+let HISTORY_PROFILE_KEY = null;
+function wireHistoryCards(){
+  document.querySelectorAll('.saint-grid-card').forEach(c=>{
+    c.onclick = ()=>{ ENTRY_OPEN = {compKey:'ecritures:bible', groupId:c.dataset.group, idx:parseInt(c.dataset.idx,10)}; render(); };
+  });
+}
+function wireFiguresCatalogueChrome(groups, compKey){
+  const input = document.getElementById('history-search-input');
+  if(input){
+    input.oninput = (e)=>{
+      HISTORY_SEARCH = e.target.value;
+      const caret = e.target.selectionStart;
+      render();
+      const el = document.getElementById('history-search-input');
+      if(el){ el.focus(); el.setSelectionRange(caret, caret); }
+    };
+  }
+  document.querySelectorAll('.history-group-chip').forEach(b=>{
+    b.onclick = ()=>{ GROUP_SEL[compKey] = b.dataset.group; render(); };
+  });
+  wireHistoryCards();
+}
+function renderFiguresCatalogue(groups, compKey, sectionLabel){
+  const q = HISTORY_SEARCH.trim().toLowerCase();
+  const list = allHistoryEntries(groups);
+  let html = `<h2 class="section-title">${sectionLabel}</h2>
+    <p class="section-desc">Rois, prophètes et grandes figures de l'Ancien et du Nouveau Testament — leur vie, leurs épreuves et ce qu'elles nous enseignent.</p>
+    <div class="ambiance-search-wrap">
+      <input type="text" id="history-search-input" placeholder="🔍 Rechercher une figure…" value="${HISTORY_SEARCH.replace(/"/g,'&quot;')}">
+    </div>`;
+
+  if(q){
+    const results = list.filter(x=> (x.entry.name+' '+(x.entry.ref||'')+' '+(x.entry.summary||'')).toLowerCase().includes(q));
+    html += `<p class="studio-note" style="margin-bottom:8px;">${results.length} résultat${results.length>1?'s':''} pour « ${q} »</p>
+      <div class="grid">${results.map(x=>historyCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+    document.getElementById('screen').innerHTML = html;
+    wireFiguresCatalogueChrome(groups, compKey);
+    return;
+  }
+
+  const activeId = GROUP_SEL[compKey] || groups[0].id;
+  GROUP_SEL[compKey] = activeId;
+  const group = groups.find(g=>g.id===activeId) || groups[0];
+  const byId = {}; groups.forEach(g=> byId[g.id]=g);
+  html += `<div class="subnav-grouped">${HISTORY_CAT_GROUPS.map(cat=>{
+    const chips = cat.ids.filter(id=>byId[id]);
+    if(!chips.length) return '';
+    return `<div class="subnav-group">
+      <span class="subnav-group-label">${cat.label}</span>
+      <div class="chip-row" style="margin:0;">${chips.map(id=>
+        `<button class="chip history-group-chip ${id===group.id?'active':''}" data-group="${id}">${(SECTION_ICONS[id]||'')} ${byId[id].title}</button>`
+      ).join('')}</div>
+    </div>`;
+  }).join('')}</div>
+  <p class="section-desc">${group.desc||''}</p>
+  <div class="grid">${group.entries.map((e,i)=>historyCardHTML(e, group.id, i)).join('')}</div>`;
+
+  document.getElementById('screen').innerHTML = html;
+  wireFiguresCatalogueChrome(groups, compKey);
+}
+function renderFigureDetail(entry, group, idx, groups, compKey){
+  const key = group.id + ':' + idx;
+  if(HISTORY_PROFILE_KEY !== key){ HISTORY_PROFILE_KEY = key; HISTORY_PROFILE_TAB = null; }
+  const favMeta = {primary:PRIMARY, sub:SUBTAB[PRIMARY], compKey, groupId:group.id};
+  const fav = {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey, groupId:group.id, idx, name:entry.name, avatar:entry.avatar, summary:(entry.summary||'').slice(0,90)};
+  const tagMeta = entry.tag && HISTORY_TAG_META[entry.tag];
+
+  function wireCommon(){
+    const backBtn = document.getElementById('history-back-btn');
+    if(backBtn) backBtn.onclick = ()=>{
+      if(HISTORY_PROFILE_TAB) { HISTORY_PROFILE_TAB = null; render(); }
+      else { ENTRY_OPEN = null; render(); }
+    };
+    wireFavStars();
+  }
+
+  if(!HISTORY_PROFILE_TAB){
+    let html = `<div class="saint-portrait-hero no-img">
+      <div class="saint-portrait-hero-scrim"></div>
+      <div class="saint-portrait-hero-top">
+        <button class="back-link saint-hero-back" id="history-back-btn">← ${group.title}</button>
+        ${favStarHTML(fav)}
+      </div>
+      <div class="halo-wrap" style="width:96px; height:96px; margin:0 auto;"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo" style="font-size:44px;">${entry.avatar||'📜'}</div></div>
+      <div class="saint-portrait-hero-bottom">
+        <p class="saint-portrait-name">${entry.name}</p>
+        <p class="saint-portrait-sub">${entry.ref||''}</p>
+      </div>
+    </div>
+    <div class="saint-portrait">
+      <div class="saint-info-row">
+        <span>📅 Repère : ${entry.dates||'—'}</span>
+        ${tagMeta ? `<span>${tagMeta.icon} ${tagMeta.label}</span>` : ''}
+      </div>
+      <div class="card saint-quote-card">
+        <p class="saint-prayer" style="margin:0;">« ${entry.summary.split(/(?<=[.!?])\s+/)[0]} »</p>
+        <p class="studio-note" style="margin-top:6px;">${entry.ref||'Résumé de son histoire'}</p>
+      </div>
+      <button class="btn btn-primary" id="history-discover-btn" style="width:100%; margin:14px 0;">Découvrir son histoire →</button>
+      <div class="saint-shortcut-row">
+        <button class="saint-shortcut-btn" id="history-sc-reflexion">🕯️<span>Réflexion</span></button>
+        <button class="saint-shortcut-btn" id="history-sc-intentions">🤝<span>Intentions</span></button>
+        <button class="saint-shortcut-btn" id="history-sc-partager">📤<span>Partager</span></button>
+      </div>
+    </div>`;
+    document.getElementById('screen').innerHTML = html;
+    wireCommon();
+    document.getElementById('history-discover-btn').onclick = ()=>{ HISTORY_PROFILE_TAB = 'vie'; render(); };
+    document.getElementById('history-sc-reflexion').onclick = ()=>{ HISTORY_PROFILE_TAB = 'reflexion'; render(); };
+    document.getElementById('history-sc-intentions').onclick = ()=> goTo('prier','intentions');
+    document.getElementById('history-sc-partager').onclick = ()=> shareText(entry.name, entry.summary);
+    return;
+  }
+
+  const tabs = [
+    {id:'vie', label:'Vie'},
+    {id:'enseignements', label:'Enseignements'},
+    {id:'reflexion', label:'Réflexion'},
+    {id:'plus', label:'Plus'}
+  ];
+  let body = '';
+  if(HISTORY_PROFILE_TAB === 'vie'){
+    body = `<div class="card">
+      <p class="eyebrow" style="color:var(--gold);">Son histoire</p>
+      <p class="entry-detail-text">${entry.summary}</p>
+      <p class="eyebrow" style="color:var(--gold); margin-top:14px;">Repères</p>
+      <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">📅 Période</span><br><span class="gen-note">${entry.dates||'non précisée'}</span></div>
+      ${entry.ref ? `<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">📖 Référence</span><br><span class="gen-note">${entry.ref}</span></div>` : ''}
+      ${tagMeta ? `<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">${tagMeta.icon} Jugement du récit biblique</span><br><span class="gen-note">${tagMeta.label}</span></div>` : ''}
+      ${textActionsRowHTML('candle', entry.name, entry.dates||'', entry.summary, entry.ref||'', [])}
+    </div>`;
+  } else if(HISTORY_PROFILE_TAB === 'enseignements'){
+    const points = saintTeachingPoints(entry);
+    body = `<p class="eyebrow" style="color:var(--gold);">Ce que cette vie nous enseigne</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        ${points.map(p=>`<div class="card saint-teach-card">
+          <span class="saint-teach-icon">${p.icon}</span>
+          <div style="flex:1;">
+            <p class="saint-teach-title">${p.title}</p>
+            <p class="entry-summary" style="-webkit-line-clamp:unset;">${p.text}</p>
+          </div>
+        </div>`).join('')}
+      </div>`;
+  } else if(HISTORY_PROFILE_TAB === 'reflexion'){
+    body = `<div class="card">
+      <p class="eyebrow" style="color:var(--gold);">Prière inspirée par ${entry.name}</p>
+      <p class="saint-prayer">Seigneur, à la lumière de l'histoire de ${entry.name}, apprends-moi à reconnaître ta présence dans ma propre vie — dans mes forces comme dans mes faiblesses. Donne-moi un cœur attentif à ta parole et fidèle à ton alliance. Amen.</p>
+      <p class="studio-note" style="margin-top:6px;">Une prière composée pour accompagner la méditation de cette figure — pas un texte liturgique officiel.</p>
+      ${textActionsRowHTML('candle', entry.name, 'Réflexion', `Seigneur, à la lumière de l'histoire de ${entry.name}, apprends-moi à reconnaître ta présence dans ma propre vie — dans mes forces comme dans mes faiblesses. Donne-moi un cœur attentif à ta parole et fidèle à ton alliance. Amen.`, '', [])}
+    </div>`;
+  } else if(HISTORY_PROFILE_TAB === 'plus'){
+    body = `<div class="card">
+      <p class="eyebrow" style="color:var(--gold);">📖 Référence biblique</p>
+      <p class="entry-detail-text" style="margin:4px 0 0;">${entry.ref||'—'}</p>
+    </div>
+    ${tagMeta ? `<div class="card" style="margin-top:12px;">
+      <p class="eyebrow" style="color:var(--gold);">${tagMeta.icon} Jugement du récit biblique</p>
+      <p class="entry-detail-text" style="margin:4px 0 0;">${tagMeta.label}</p>
+    </div>` : ''}
+    <div class="card" style="margin-top:12px;">
+      <p class="eyebrow" style="color:var(--gold);">📜 Voir dans son contexte</p>
+      <p class="section-desc" style="margin:4px 0 10px;">Retrouvez cette période dans la généalogie biblique et la ligne du temps complète.</p>
+      <button class="btn btn-ghost btn-sm" id="history-link-genealogy">Voir la généalogie →</button>
+    </div>`;
+  }
+
+  let html = `<div class="bible-reader" style="margin:-18px -18px 0;">
+    <div style="padding:18px 18px 0;">
+      <div class="office-head-row">
+        <button class="back-link" id="history-back-btn" style="margin:0;">← ${entry.name}</button>
+        ${favStarHTML(fav)}
+      </div>
+      <h2 class="section-title" style="margin:2px 0 10px;">${entry.name}</h2>
+      <div class="bible-reader-tabs" style="padding:0 0 10px;">
+        ${tabs.map(t=>`<button class="bible-reader-tab ${HISTORY_PROFILE_TAB===t.id?'active':''}" data-history-tab="${t.id}">${t.label}</button>`).join('')}
+      </div>
+    </div>
+    <div style="padding:0 18px 18px;">${body}</div>
+  </div>`;
+  document.getElementById('screen').innerHTML = html;
+  wireCommon();
+  document.querySelectorAll('[data-history-tab]').forEach(b=>{
+    b.onclick = ()=>{ HISTORY_PROFILE_TAB = b.dataset.historyTab; render(); };
+  });
+  wireSpeakShare();
+  const linkGenealogy = document.getElementById('history-link-genealogy');
+  if(linkGenealogy) linkGenealogy.onclick = ()=>{ ENTRY_OPEN=null; PRIMARY='ecritures'; SUBTAB.ecritures='recits'; GROUP_SEL['ecritures:recits']='genealogie'; render(); };
+}
+function renderFiguresHub(groups, compKey, sectionLabel){
+  if(ENTRY_OPEN && ENTRY_OPEN.compKey === compKey){
+    const group = groups.find(g=>g.id===ENTRY_OPEN.groupId);
+    const entry = group.entries[ENTRY_OPEN.idx];
+    renderFigureDetail(entry, group, ENTRY_OPEN.idx, groups, compKey);
+    return;
+  }
+  HISTORY_PROFILE_TAB = null; HISTORY_PROFILE_KEY = null;
+  renderFiguresCatalogue(groups, compKey, sectionLabel);
+}
 let SAINT_ZOOM_OVERLAY = null;
 function openSaintImageZoom(url, name){
   if(!SAINT_ZOOM_OVERLAY){
@@ -6429,6 +6672,7 @@ function renderSaintsHub(groups, compKey, sectionLabel){
 
 function renderGenericSection(groups, compKey, sectionLabel){
   if(compKey === 'eglise:saints') return renderSaintsHub(groups, compKey, sectionLabel);
+  if(compKey === 'ecritures:bible') return renderFiguresHub(groups, compKey, sectionLabel);
   const halo = compKey === 'eglise:saints';
   if(ENTRY_OPEN && ENTRY_OPEN.compKey === compKey){
     const group = groups.find(g=>g.id===ENTRY_OPEN.groupId);
@@ -6454,21 +6698,12 @@ function renderGenericSection(groups, compKey, sectionLabel){
   const group = groups.find(g=>g.id===activeId) || groups[0];
 
   let html = `<h2 class="section-title">✦ ${sectionLabel}</h2>`;
-  const HISTORY_CAT_GROUPS = [
-    {label:'📜 Origines', ids:['livres-de-moise','figures-genese','avant-les-juges']},
-    {label:'⚔️ Juges & tribus', ids:['chronique-des-juges','douze-tribus-israel']},
-    {label:'👑 Rois', ids:['monarchie-unifiee','royaume-divise','royaume-nord','royaume-sud']},
-    {label:'🔥 Prophètes', ids:['grands-prophetes','petits-prophetes']},
-    {label:'✝️ Nouveau Testament', ids:['douze-apotres']},
-    {label:'📖 Portraits & thèmes', ids:['grands-portraits','grands-portraits-destinee','aura-puissance-beaute','beaute-dans-bible']},
-    {label:'🙏 Prière', ids:['psaumes-par-intention']}
-  ];
   const JESUS_CAT_GROUPS = [
     {label:'✝️ Vies', ids:['vie-de-jesus','vie-de-marie','vie-de-joseph','vie-des-apotres']},
     {label:'💭 Méditations', ids:['meditations-sainte-famille','meditations-pardon','grands-themes-meditation']},
     {label:'📜 Repères', ids:['genealogie-jesus']}
   ];
-  const CAT_GROUPS_BY_COMPKEY = { 'ecritures:bible': HISTORY_CAT_GROUPS, 'jesus:main': JESUS_CAT_GROUPS };
+  const CAT_GROUPS_BY_COMPKEY = { 'jesus:main': JESUS_CAT_GROUPS };
   const catGroups = CAT_GROUPS_BY_COMPKEY[compKey];
   if(catGroups && groups.length > 1){
     const byId = {}; groups.forEach(g=> byId[g.id]=g);
@@ -7875,155 +8110,73 @@ function toggleReadPage(){
   showToast('🔊 Lecture de la page…');
 }
 
-/* ================= ambiance sonore de fond, persistante pendant la navigation ================= */
+/* ================= ambiance sonore de fond =================
+   Ancienne configuration restaurée à la demande : une fenêtre affiche
+   directement la vidéo YouTube dans un lecteur natif (ses propres contrôles
+   lecture/pause/volume), au lieu de piloter l'API JS YT.Player et un widget
+   flottant repositionné par-dessus l'écran — source de bugs silencieux
+   (lecture coupée à la navigation, cadre invisible soupçonné de bot par
+   YouTube...). C'est plus simple et plus fiable : fermer la fenêtre arrête
+   le son, la vidéo ne continue pas en fond pendant la navigation. */
 let BG_YT_VIDEO_ID = null;
 let BG_SPOTIFY_ACTIVE = false;
 let AMBIANCE_SHUFFLE_MODE = false;
 let AMBIANCE_SHUFFLE_LAST = null;
-let YT_PLAYER = null;
-let YT_API_QUEUE = [];
-function ensureYouTubeAPI(cb){
-  if(window.YT && window.YT.Player){ cb(); return; }
-  YT_API_QUEUE.push(cb);
-  if(document.getElementById('yt-iframe-api-script')) return;
-  const tag = document.createElement('script');
-  tag.id = 'yt-iframe-api-script';
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
-  window.onYouTubeIframeAPIReady = function(){
-    const queue = YT_API_QUEUE; YT_API_QUEUE = [];
-    queue.forEach(fn=>fn());
-  };
-}
-function destroyYtPlayer(){
-  if(YT_PLAYER && YT_PLAYER.destroy){ try{ YT_PLAYER.destroy(); }catch(e){} }
-  YT_PLAYER = null;
-  const holder = document.getElementById('bg-youtube-holder');
-  if(holder) holder.innerHTML = '';
-}
-function onYtPlayerStateChange(e){
-  if(e.data === 0){ // ENDED
-    if(AMBIANCE_SHUFFLE_MODE){ playRandomAmbiance(true); }
-  }
-}
-function ytErrorIsUnplayable(code){ return [2,5,100,101,150].indexOf(code) !== -1; }
-function createYtPlayer(videoId, loopSingle, onError){
-  destroyYtPlayer();
-  const holder = document.getElementById('bg-youtube-holder');
-  if(!holder) return;
-  const mount = document.createElement('div');
-  mount.id = 'bg-youtube-mount';
-  holder.appendChild(mount);
-  ensureYouTubeAPI(()=>{
-    if(!document.getElementById('bg-youtube-mount')) return; // navigation cancelled it meanwhile
-    YT_PLAYER = new YT.Player('bg-youtube-mount', {
-      videoId,
-      playerVars: Object.assign({autoplay:1, playsinline:1, controls:1, origin: window.location.origin}, loopSingle ? {loop:1, playlist:videoId} : {}),
-      events: {
-        onStateChange: onYtPlayerStateChange,
-        onError: function(e){ if(onError) onError(e.data); }
-      }
-    });
-  });
-}
-function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID; }
+let AMBIANCE_VIDEO_OPEN = false;
+let AMBIANCE_VIDEO_LABEL = '';
+function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID || BG_SPOTIFY_ACTIVE; }
 function syncBgAmbianceIcon(){
   const btn = document.getElementById('bg-ambiance-btn');
   if(btn) btn.classList.toggle('tool-active', isBgAmbiancePlaying());
 }
-function stopBgYoutube(){
+function stopAllAmbiance(){
+  stopLoop();
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_SHUFFLE_MODE = false;
-  destroyYtPlayer();
-  const widget = document.getElementById('bg-youtube-widget');
-  if(widget) widget.classList.add('hidden');
-}
-function stopAllAmbiance(){
-  stopLoop();
-  stopBgYoutube();
+  AMBIANCE_VIDEO_OPEN = false;
+  const host = document.getElementById('ambiance-player-overlay');
+  if(host){ host.classList.add('hidden'); host.innerHTML = ''; }
+  renderLumenPlayer();
   syncBgAmbianceIcon();
 }
 let LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, paused:false};
-/* L'ancien réglage cachait systématiquement le lecteur vidéo YouTube dans un
-   cadre de 1×1 pixel hors de l'écran (opacity:0, pointer-events:none) dès
-   qu'on ne l'« agrandissait » pas explicitement — et YouTube traite souvent
-   ce genre de cadre invisible comme un comportement suspect, affichant alors
-   l'invite « connectez-vous » au lieu de jouer le son. On revient à la
-   configuration qui fonctionnait : le lecteur reste toujours visible (une
-   petite vignette dans la barre, ou en grand sur sa page dédiée), jamais
-   réduit à un pixel hors champ. */
-let AMBIANCE_PLAYER_PAGE_OPEN = false;
 function lumenPlayerShow(label, kind){
   LUMEN_PLAYER_STATE = {active:true, label, kind, paused:false};
   renderLumenPlayer();
 }
 function lumenPlayerHide(){
   LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, paused:false};
-  if(AMBIANCE_PLAYER_PAGE_OPEN) closeAmbiancePlayerPage();
   renderLumenPlayer();
 }
-/* IMPORTANT : on ne déplace plus jamais #bg-youtube-widget avec appendChild()
-   dans une zone dont le innerHTML est régénéré (la barre, la page dédiée) :
-   réaffecter bar.innerHTML détache alors silencieusement le cadre vidéo du
-   document (getElementById ne le retrouve plus ensuite), ce qui coupait le
-   son dès le prochain petit changement d'état (pause, changement de piste...).
-   #bg-youtube-widget reste un nœud unique, toujours rattaché directement au
-   <body> (jamais réparenté) ; on se contente de le repositionner par-dessus
-   un emplacement réservé (la vignette dans la barre, ou le cadre de la page
-   dédiée), via ses coordonnées écran — jamais en le déplaçant dans le DOM. */
-function syncYtWidgetPosition(){
-  const widget = document.getElementById('bg-youtube-widget');
-  if(!widget) return;
-  const showing = LUMEN_PLAYER_STATE.active && LUMEN_PLAYER_STATE.kind === 'yt';
-  if(!showing){
-    widget.classList.remove('yt-widget-live');
-    widget.style.cssText = '';
-    return;
-  }
-  const slotId = AMBIANCE_PLAYER_PAGE_OPEN ? 'ambiance-player-embed' : 'lumen-player-thumb-slot';
-  const slot = document.getElementById(slotId);
-  if(!slot){ widget.classList.remove('yt-widget-live'); widget.style.cssText = ''; return; }
-  const r = slot.getBoundingClientRect();
-  widget.classList.add('yt-widget-live');
-  widget.style.cssText = `position:fixed; left:${r.left}px; top:${r.top}px; width:${r.width}px; height:${r.height}px; opacity:1; pointer-events:auto; z-index:${AMBIANCE_PLAYER_PAGE_OPEN ? 61 : 851};`;
-}
-window.addEventListener('resize', syncYtWidgetPosition);
+/* La petite barre persistante ne sert plus qu'au fond sonore local en boucle
+   (pluie, chant...), qui continue réellement pendant la navigation. Pour la
+   vidéo YouTube et Spotify, la fenêtre elle-même (ambiance-player-overlay)
+   est l'unique interface, comme avant : pas de miniature à repositionner. */
 function renderLumenPlayer(){
   const bar = document.getElementById('lumen-player-bar');
   if(!bar) return;
-  if(!LUMEN_PLAYER_STATE.active){ bar.classList.add('hidden'); syncYtWidgetPosition(); return; }
+  if(!LUMEN_PLAYER_STATE.active || LUMEN_PLAYER_STATE.kind !== 'loop'){ bar.classList.add('hidden'); return; }
   bar.classList.remove('hidden');
-  const showThumb = LUMEN_PLAYER_STATE.kind === 'yt' && !AMBIANCE_PLAYER_PAGE_OPEN;
   bar.innerHTML = `
     <div class="lumen-player-handle" id="lumen-player-handle"></div>
     <div class="lumen-player-row">
-      ${showThumb ? `<div class="lumen-player-thumb" id="lumen-player-thumb-slot"></div>` : `<span class="lumen-player-icon">${LUMEN_PLAYER_STATE.paused ? '⏸' : '🎵'}</span>`}
+      <span class="lumen-player-icon">${LUMEN_PLAYER_STATE.paused ? '⏸' : '🎵'}</span>
       <span class="lumen-player-label">${LUMEN_PLAYER_STATE.label}</span>
       <button class="icon-btn" id="lumen-player-toggle" title="${LUMEN_PLAYER_STATE.paused?'Reprendre':'Pause'}">${LUMEN_PLAYER_STATE.paused?'▶':'⏸'}</button>
-      ${LUMEN_PLAYER_STATE.kind==='yt' ? `<button class="icon-btn" id="lumen-player-expand" title="Ouvrir le lecteur">⤢</button>` : ''}
       <button class="icon-btn" id="lumen-player-close" title="Arrêter">✕</button>
     </div>
   `;
   wireLumenPlayer();
-  syncYtWidgetPosition();
-  if(AMBIANCE_PLAYER_PAGE_OPEN) renderAmbiancePlayerPage();
 }
 function wireLumenPlayer(){
   const toggleBtn = document.getElementById('lumen-player-toggle');
   if(toggleBtn) toggleBtn.onclick = ()=>{
     LUMEN_PLAYER_STATE.paused = !LUMEN_PLAYER_STATE.paused;
-    if(LUMEN_PLAYER_STATE.kind === 'loop'){
-      if(LUMEN_PLAYER_STATE.paused && LOOP_TIMER){ clearInterval(LOOP_TIMER); LOOP_TIMER = null; }
-      else if(!LUMEN_PLAYER_STATE.paused && CURRENT_LOOP){ startLoop(CURRENT_LOOP); LUMEN_PLAYER_STATE.paused=false; }
-    } else if(LUMEN_PLAYER_STATE.kind === 'yt' && YT_PLAYER){
-      if(LUMEN_PLAYER_STATE.paused && YT_PLAYER.pauseVideo) YT_PLAYER.pauseVideo();
-      else if(!LUMEN_PLAYER_STATE.paused && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
-    }
+    if(LUMEN_PLAYER_STATE.paused && LOOP_TIMER){ clearInterval(LOOP_TIMER); LOOP_TIMER = null; }
+    else if(!LUMEN_PLAYER_STATE.paused && CURRENT_LOOP){ startLoop(CURRENT_LOOP); LUMEN_PLAYER_STATE.paused=false; }
     renderLumenPlayer();
   };
-  const expandBtn = document.getElementById('lumen-player-expand');
-  if(expandBtn) expandBtn.onclick = openAmbiancePlayerPage;
   const closeBtn = document.getElementById('lumen-player-close');
   if(closeBtn) closeBtn.onclick = ()=>{ stopAllAmbiance(); lumenPlayerHide(); };
   const handle = document.getElementById('lumen-player-handle');
@@ -8042,9 +8195,8 @@ function wireLumenPlayer(){
       const delta = startY - y;
       let newBottom = Math.max(70, Math.min(window.innerHeight - 80, startBottom + delta));
       bar.style.bottom = newBottom + 'px';
-      syncYtWidgetPosition();
     };
-    const onUp = ()=>{ dragging = false; bar.style.transition = ''; syncYtWidgetPosition(); };
+    const onUp = ()=>{ dragging = false; bar.style.transition = ''; };
     handle.addEventListener('mousedown', onDown);
     handle.addEventListener('touchstart', onDown, {passive:true});
     window.addEventListener('mousemove', onMove);
@@ -8053,94 +8205,61 @@ function wireLumenPlayer(){
     window.addEventListener('touchend', onUp);
   }
 }
-/* ===== nouvelle page dédiée au lecteur d'ambiance =====
-   Au lieu d'agrandir une carte flottante par-dessus l'écran courant (ce qui
-   recréait l'ancien bug d'affichage en double), on ouvre une vraie page de
-   l'application, comme les autres pages plein écran (recherche, lecteur de
-   versets...). Le lecteur YouTube n'est jamais détruit ni relancé : seul son
-   cadre change de place, la lecture continue sans coupure. */
-function openAmbiancePlayerPage(){
-  if(LUMEN_PLAYER_STATE.kind !== 'yt') return;
-  AMBIANCE_PLAYER_PAGE_OPEN = true;
-  document.getElementById('ambiance-player-overlay').classList.remove('hidden');
-  renderAmbiancePlayerPage();
-  renderLumenPlayer();
-}
-function closeAmbiancePlayerPage(){
-  AMBIANCE_PLAYER_PAGE_OPEN = false;
+/* La fenêtre qui affiche directement la vidéo YouTube (ou l'intégration
+   Spotify). Un <iframe> standard avec ses propres contrôles natifs — fermer
+   la fenêtre (✕ ou « Arrêter ») coupe le son en retirant le cadre. */
+function renderAmbianceVideoWindow(){
   const host = document.getElementById('ambiance-player-overlay');
-  if(host){ host.classList.add('hidden'); host.innerHTML = ''; }
-  renderLumenPlayer();
-}
-function renderAmbiancePlayerPage(){
-  const host = document.getElementById('ambiance-player-overlay');
-  if(!host || !AMBIANCE_PLAYER_PAGE_OPEN) return;
-  const st = LUMEN_PLAYER_STATE;
+  if(!host) return;
+  if(!AMBIANCE_VIDEO_OPEN){ host.classList.add('hidden'); host.innerHTML = ''; return; }
   host.classList.remove('hidden');
-  host.innerHTML = `
-    <div class="ambiance-player-panel">
-      <div class="ambiance-player-top">
-        <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">←</button>
-        <p class="ambiance-player-title">🎵 Lecteur d'ambiance</p>
-        <div style="width:32px;"></div>
-      </div>
-      <p class="ambiance-player-label">${st.label}</p>
-      <div id="ambiance-player-embed" class="ambiance-player-embed"></div>
-      <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Le son continue pendant que vous naviguez dans l'application — cette page n'est que la vue agrandie.</p>
-      <div class="ambiance-player-controls">
-        <button class="btn btn-ghost btn-sm" id="ambiance-player-toggle">${st.paused ? '▶ Reprendre' : '⏸ Pause'}</button>
-        ${AMBIANCE_SHUFFLE_MODE ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Titre suivant</button>` : ''}
-        <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
-      </div>
-    </div>`;
-  syncYtWidgetPosition();
-  document.getElementById('ambiance-player-back').onclick = closeAmbiancePlayerPage;
-  document.getElementById('ambiance-player-toggle').onclick = ()=>{
-    LUMEN_PLAYER_STATE.paused = !LUMEN_PLAYER_STATE.paused;
-    if(LUMEN_PLAYER_STATE.paused && YT_PLAYER && YT_PLAYER.pauseVideo) YT_PLAYER.pauseVideo();
-    else if(!LUMEN_PLAYER_STATE.paused && YT_PLAYER && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
-    renderAmbiancePlayerPage();
-  };
+  if(BG_SPOTIFY_ACTIVE){
+    host.innerHTML = `
+      <div class="ambiance-player-panel">
+        <div class="ambiance-player-top">
+          <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
+          <p class="ambiance-player-title">🟢 Spotify</p>
+          <div style="width:32px;"></div>
+        </div>
+        <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
+        <div class="ambiance-player-embed"><iframe src="${BG_SPOTIFY_ACTIVE}" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+        <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Choisissez un titre à jouer dans le lecteur Spotify.</p>
+        <div class="ambiance-player-controls"><button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Fermer</button></div>
+      </div>`;
+  } else if(BG_YT_VIDEO_ID){
+    host.innerHTML = `
+      <div class="ambiance-player-panel">
+        <div class="ambiance-player-top">
+          <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
+          <p class="ambiance-player-title">🎵 Lecteur d'ambiance</p>
+          <div style="width:32px;"></div>
+        </div>
+        <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
+        <div class="ambiance-player-embed"><iframe src="https://www.youtube.com/embed/${BG_YT_VIDEO_ID}?autoplay=1" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="${AMBIANCE_VIDEO_LABEL.replace(/"/g,'&quot;')}"></iframe></div>
+        <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Utilisez les contrôles de la vidéo pour mettre en pause ou régler le volume.<br>Vidéo qui ne s'affiche pas ? <a href="https://www.youtube.com/watch?v=${BG_YT_VIDEO_ID}" target="_blank" rel="noopener">Ouvrir directement sur YouTube ↗</a></p>
+        <div class="ambiance-player-controls">
+          ${AMBIANCE_SHUFFLE_MODE ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Titre suivant</button>` : ''}
+          <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
+        </div>
+      </div>`;
+  }
+  const backBtn = document.getElementById('ambiance-player-back');
+  if(backBtn) backBtn.onclick = ()=>{ stopAllAmbiance(); };
   const nextBtn = document.getElementById('ambiance-player-next');
   if(nextBtn) nextBtn.onclick = ()=>{ playRandomAmbiance(true); };
-  document.getElementById('ambiance-player-stop').onclick = ()=>{ stopAllAmbiance(); lumenPlayerHide(); };
-}
-/* Beaucoup de titres de la playlist appartiennent à des chaînes qui
-   interdisent la lecture intégrée sur un autre site (erreur YouTube 150 —
-   une restriction posée par l'auteur de la vidéo, indépendante de notre
-   code : la vidéo se lit très bien sur youtube.com, jamais ici). Plutôt que
-   de faire défiler la liste en boucle à chaque fois (ce qui pouvait échouer
-   en silence sur plusieurs titres d'affilée et donner l'impression que rien
-   ne marche), on essaie une seule autre piste, puis on ouvre directement la
-   vidéo sur YouTube dans un nouvel onglet — ça fonctionne toujours. */
-function openYoutubeDirectly(videoId, label){
-  stopAllAmbiance();
-  lumenPlayerHide();
-  showToast('🎵 Ce titre ne peut pas être joué directement dans l’application (restriction posée par son auteur) — ouverture sur YouTube…');
-  window.open('https://www.youtube.com/watch?v=' + videoId, '_blank', 'noopener');
+  const stopBtn = document.getElementById('ambiance-player-stop');
+  if(stopBtn) stopBtn.onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); };
 }
 function playBgYoutube(videoId, label, opts){
   opts = opts || {};
-  const attempt = opts._attempt || 0;
   stopLoop();
   AMBIANCE_SHUFFLE_MODE = false;
   BG_YT_VIDEO_ID = videoId;
   BG_SPOTIFY_ACTIVE = false;
-  createYtPlayer(videoId, true, function(errCode){
-    if(!ytErrorIsUnplayable(errCode)) return;
-    const pool = opts.pool;
-    if(pool && pool.length > 1 && attempt < 1){
-      const alternatives = pool.filter(t => t.videoId !== videoId);
-      const next = alternatives[Math.floor(Math.random()*alternatives.length)];
-      showToast('🎵 Cette vidéo n’est pas disponible ici, on essaie une autre…');
-      playBgYoutube(next.videoId, next.title + ' — ' + next.artist, Object.assign({}, opts, {_attempt: attempt+1}));
-    } else {
-      openYoutubeDirectly(videoId, label);
-    }
-  });
-  const widget = document.getElementById('bg-youtube-widget');
-  if(widget) widget.classList.remove('hidden');
-  lumenPlayerShow('🎵 ' + label, 'yt');
+  AMBIANCE_VIDEO_OPEN = true;
+  AMBIANCE_VIDEO_LABEL = label;
+  lumenPlayerHide();
+  renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
   if(!opts.silent) showToast('🎵 ' + label + '…');
 }
@@ -8152,28 +8271,19 @@ function pickRandomAmbianceTrack(){
   while(AMBIANCE_SHUFFLE_LAST && pick.videoId === AMBIANCE_SHUFFLE_LAST.videoId);
   return pick;
 }
-function playRandomAmbiance(isAutoAdvance, retryCount){
-  retryCount = retryCount || 0;
+function playRandomAmbiance(isAutoAdvance){
   const pick = pickRandomAmbianceTrack();
   if(!pick) return;
   AMBIANCE_SHUFFLE_LAST = pick;
   stopLoop();
   BG_SPOTIFY_ACTIVE = false;
   BG_YT_VIDEO_ID = pick.videoId;
-  createYtPlayer(pick.videoId, false, function(errCode){
-    if(!ytErrorIsUnplayable(errCode)) return;
-    if(!AMBIANCE_SHUFFLE_MODE) return;
-    if(retryCount < 1){
-      playRandomAmbiance(true, retryCount+1);
-    } else {
-      openYoutubeDirectly(pick.videoId, pick.title + ' — ' + pick.artist);
-    }
-  });
-  const widget = document.getElementById('bg-youtube-widget');
-  if(widget) widget.classList.remove('hidden');
-  lumenPlayerShow('🔀 ' + pick.title + ' — ' + pick.artist, 'yt');
+  AMBIANCE_VIDEO_OPEN = true;
+  AMBIANCE_VIDEO_LABEL = '🔀 ' + pick.title + ' — ' + pick.artist;
+  lumenPlayerHide();
+  renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
-  if(!isAutoAdvance) showToast('🔀 Lecture aléatoire activée — la musique enchaîne toute seule. Arrêtez à tout moment avec ✕.');
+  if(!isAutoAdvance) showToast('🔀 Lecture aléatoire — touchez « Titre suivant » pour changer de morceau.');
 }
 function startAmbianceShuffle(){
   AMBIANCE_SHUFFLE_MODE = true;
@@ -8183,18 +8293,19 @@ function playBgSpotify(spotifyArtistId, label){
   stopLoop();
   AMBIANCE_SHUFFLE_MODE = false;
   BG_YT_VIDEO_ID = null;
-  BG_SPOTIFY_ACTIVE = true;
-  destroyYtPlayer();
-  const holder = document.getElementById('bg-youtube-holder');
-  holder.innerHTML = `<iframe src="https://open.spotify.com/embed/artist/${spotifyArtistId}?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" frameborder="0"></iframe>`;
-  const widget = document.getElementById('bg-youtube-widget');
-  if(widget) widget.classList.remove('hidden');
-  lumenPlayerShow('🟢 ' + label, 'yt');
+  BG_SPOTIFY_ACTIVE = `https://open.spotify.com/embed/artist/${spotifyArtistId}?utm_source=generator&theme=0`;
+  AMBIANCE_VIDEO_OPEN = true;
+  AMBIANCE_VIDEO_LABEL = label;
+  lumenPlayerHide();
+  renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
-  showToast('🟢 ' + label + ' — choisissez un titre à jouer dans le lecteur Spotify.');
 }
 function playBgLoop(key, label){
-  stopBgYoutube();
+  BG_YT_VIDEO_ID = null;
+  BG_SPOTIFY_ACTIVE = false;
+  AMBIANCE_VIDEO_OPEN = false;
+  const host = document.getElementById('ambiance-player-overlay');
+  if(host){ host.classList.add('hidden'); host.innerHTML = ''; }
   startLoop(key);
   lumenPlayerShow('🎵 ' + label, 'loop');
   syncBgAmbianceIcon();
@@ -8519,9 +8630,11 @@ function rosaryTopIconsHTML(opts){
   opts = opts || {};
   const fav = {type:'vreader-text', title:'Chapelet — '+(opts.title||''), reference:opts.sub||'', text:opts.text||''};
   return `<div class="rosary-top-icons">
+    ${opts.noBack ? '' : `<button type="button" class="rosary-icon-btn" id="rosary-back-btn" title="Étape précédente" aria-label="Revenir à l'étape précédente">←</button>`}
     ${opts.noFav ? '' : favStarHTML(fav).replace('fav-star', 'fav-star rosary-icon-btn')}
     <button type="button" class="rosary-icon-btn" id="rosary-mode-btn" title="Mode d'affichage" aria-label="Changer le mode d'affichage">🕯️</button>
     <button type="button" class="rosary-icon-btn" id="rosary-settings-btn" title="Réglages" aria-label="Réglages du chapelet">⚙️</button>
+    ${opts.noQuit ? '' : `<button type="button" class="rosary-icon-btn" id="rosary-quit-btn" title="Quitter le chapelet" aria-label="Quitter le chapelet">✕</button>`}
   </div>`;
 }
 function rosaryVariantMeta(id){
@@ -8760,6 +8873,25 @@ function wireRosaryEvents(){
   });
   const backCat = document.getElementById('rosary-back-catalogue');
   if(backCat) backCat.onclick = ()=>{ ROSARY_STATE.phase='catalogue'; render(); };
+  const rosaryBackBtn = document.getElementById('rosary-back-btn');
+  if(rosaryBackBtn) rosaryBackBtn.onclick = ()=>{
+    const mi = ROSARY_STATE.mysteryIdx;
+    if(ROSARY_STATE.phase==='overview'){ ROSARY_STATE.phase = ROSARY_STATE.variantId==='defunts' ? 'catalogue' : 'select'; }
+    else if(ROSARY_STATE.phase==='medit'){
+      if(mi>0){ ROSARY_STATE.mysteryIdx = mi-1; ROSARY_STATE.aveCount = 10; ROSARY_STATE.phase='gloria'; }
+      else { ROSARY_STATE.phase='overview'; }
+    }
+    else if(ROSARY_STATE.phase==='pater'){ ROSARY_STATE.phase='medit'; }
+    else if(ROSARY_STATE.phase==='ave'){ ROSARY_STATE.phase='pater'; }
+    else if(ROSARY_STATE.phase==='gloria'){ ROSARY_STATE.aveCount = 9; ROSARY_STATE.phase='ave'; }
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    render();
+  };
+  const rosaryQuitBtn = document.getElementById('rosary-quit-btn');
+  if(rosaryQuitBtn) rosaryQuitBtn.onclick = ()=>{
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    goTo('devotions','accueil-devotions');
+  };
   document.querySelectorAll('.chip[data-set]').forEach(c=> c.onclick = ()=>{ ROSARY_STATE.setKey = c.dataset.set; render(); });
   const listBtn = document.getElementById('rosary-list-btn');
   if(listBtn) listBtn.onclick = ()=>{ ROSARY_STATE.showList = !ROSARY_STATE.showList; render(); };
@@ -12881,7 +13013,6 @@ async function startApp(){
   document.getElementById('search-overlay').onclick = (e)=>{ if(e.target.id==='search-overlay') closeSearch(); };
   document.getElementById('theme-btn').onclick = toggleTheme;
   document.getElementById('bg-ambiance-btn').onclick = toggleBgAmbiance;
-  document.getElementById('bg-yt-close').onclick = ()=>{ stopBgYoutube(); lumenPlayerHide(); syncBgAmbianceIcon(); showToast('Ambiance arrêtée'); };
   document.getElementById('ambiance-picker-close').onclick = closeAmbiancePicker;
   document.getElementById('video-modal-close').onclick = closeVideoModal;
   document.getElementById('video-modal-overlay').onclick = (e)=>{ if(e.target.id==='video-modal-overlay') closeVideoModal(); };
