@@ -4044,18 +4044,14 @@ function homePage1HTML(){
   if(hourNow >= 18 || hourNow < 5) saluTime = 'Bonsoir';
   else if(hourNow >= 12) saluTime = 'Bon après-midi';
   const inProgress = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
+  const {saint:dayFeastSaint, isFeast:dayIsFeast} = getSaintOfDay();
 
   return `
-    <figure class="home-hero" id="home-hero-wrap">
-      <img id="home-hero-img" src="${['https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=1200','https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden_Eagle_soaring_overhead.jpg?width=1200'][dayOfYear()%3]}" alt="" onerror="this.onerror=null;this.src='https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=1200';">
-      <div class="home-hero-duotone"></div>
-      <div class="home-hero-scrim"></div>
-      <figcaption>
-        <p class="home-hero-kicker"><span class="home-hero-kicker-pill">${saluTime}${USER_NAME ? ', '+USER_NAME : ''}</span></p>
-        <p class="home-hero-line">que la paix soit avec vous.</p>
-        <p class="home-hero-sub">Un moment avec Dieu pour aujourd'hui.</p>
-      </figcaption>
-    </figure>
+    <div class="home-plain-header">
+      ${dayIsFeast ? `<p class="home-plain-date">✦ Fête de ${dayFeastSaint.name}</p>` : ''}
+      <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>que la paix soit avec vous.</h1>
+      <p class="home-plain-sub">Un moment avec Dieu pour aujourd'hui.</p>
+    </div>
     ${USER_NAME ? '' : `
       <div class="home-name-prompt" style="margin:10px 0 2px;">
         <input type="text" id="home-name-input" placeholder="Comment souhaitez-vous qu'on vous appelle ?">
@@ -4063,15 +4059,15 @@ function homePage1HTML(){
       </div>`}
 
     ${homeTitleHTML('☀️','Évangile du jour','linear-gradient(160deg, #D9A35C, #B8863B)')}
-    <div class="card hoz-card" id="home-evangile-card">
-      <div class="hoz-card-img" style="background:#B8863B;">
-        <img src="./images/gospel.svg" alt="" loading="lazy" onerror="this.style.display='none'">
-      </div>
-      <div class="hoz-card-body">
-        <p class="studio-note">Chargement des lectures du jour…</p>
-        <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>
-      </div>
-    </div>
+    <figure class="evangile-hero" id="home-evangile-card">
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=900" alt="" loading="lazy" onerror="this.style.display='none'">
+      <div class="evangile-hero-scrim"></div>
+      <figcaption class="evangile-hero-body">
+        <p class="evangile-ref" id="home-evangile-ref"></p>
+        <p class="evangile-quote" id="home-evangile-quote">Chargement des lectures du jour…</p>
+        <div style="text-align:right;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>
+      </figcaption>
+    </figure>
 
     ${homeTitleRowHTML('🔥','Mes raccourcis','linear-gradient(160deg, #D9A35C, #B8863B)', 'Personnaliser ⊞', 'home-personalize-btn')}
     <div class="home-shortcuts-grid">${HOME_SHORTCUTS.map(s=>`
@@ -4119,8 +4115,9 @@ function homePage1HTML(){
 }
 function loadHomeEvangileCard(){
   fetchAelfDuJour().then(json=>{
-    const body = document.querySelector('#home-evangile-card .hoz-card-body');
-    if(!body) return;
+    const ref = document.getElementById('home-evangile-ref');
+    const quote = document.getElementById('home-evangile-quote');
+    if(!quote) return;
     const messe = json && json.messes && json.messes[0];
     const lectures = messe ? (messe.lectures||[]) : [];
     const evangile = lectures.find(l=>{
@@ -4128,15 +4125,13 @@ function loadHomeEvangileCard(){
       return t.includes('evangile') && !t.includes('verset');
     });
     if(!evangile){
-      body.innerHTML = `<p class="studio-note">Les lectures d'aujourd'hui vous attendent.</p>
-        <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>`;
+      if(ref) ref.textContent = '';
+      quote.textContent = 'Les lectures d’aujourd’hui vous attendent.';
     } else {
       const cleaned = aelfCleanText(evangile.contenu||evangile.texte||'');
-      const snippet = cleaned.length>170 ? cleaned.slice(0,170).trim()+'…' : cleaned;
-      body.innerHTML = `
-        ${evangile.ref ? `<p class="eyebrow" style="color:var(--gold);">${evangile.ref}</p>` : ''}
-        <p class="verset-text">« ${snippet} »</p>
-        <div style="text-align:right; margin-top:8px;"><button class="btn btn-primary btn-sm" id="home-evangile-cta">Lire et méditer →</button></div>`;
+      const snippet = cleaned.length>150 ? cleaned.slice(0,150).trim()+'…' : cleaned;
+      if(ref) ref.textContent = evangile.ref || '';
+      quote.textContent = `« ${snippet} »`;
     }
     const cta = document.getElementById('home-evangile-cta');
     if(cta) cta.onclick = ()=> goTo('prier','textes-du-jour');
@@ -4179,7 +4174,7 @@ function wireHomePage1(){
 /* ---------- Accueil, page 2 : saint, méditation, lecture rapide, guide, découvertes ---------- */
 function homePage2HTML(){
   const {saint, isFeast} = getSaintOfDay();
-  const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'./images/saints.svg'};
+  const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/St.%20Ignatius%20of%20Loyola%20by%20Peter%20Paul%20Rubens.jpg?width=700'};
   const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
   const v = VERSETS_DU_JOUR[weekNumber() % VERSETS_DU_JOUR.length];
   const quick = [
@@ -4259,7 +4254,7 @@ function homePage2HTML(){
 }
 function wireHomePage2(){
   const {saint, isFeast} = getSaintOfDay();
-  const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'./images/saints.svg'};
+  const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/St.%20Ignatius%20of%20Loyola%20by%20Peter%20Paul%20Rubens.jpg?width=700'};
   const saintBtn = document.getElementById('p2-saint-cta');
   if(saintBtn){
     saintBtn.onclick = ()=>{
