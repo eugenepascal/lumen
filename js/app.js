@@ -8080,15 +8080,12 @@ function renderRosary(){
       <div class="bible-reader-hero-scrim"></div>
       <button class="bible-reader-hero-btn rosary-immersive-hero-btn" id="rosary-immersive-btn" aria-label="Mode immersif">🕯️</button>
     </figure>`;
-    html += `<div class="bible-reader-nav">
-      <button class="bible-reader-nav-arrow" id="mystery-prev" ${mi<=0?'disabled':''} aria-label="Mystère précédent">‹</button>
+    html += `<div class="bible-reader-nav" style="justify-content:center;">
       <div class="bible-reader-nav-title">
         <p class="bible-reader-book">${mi+1}${mi===0?'er':'e'} mystère</p>
         <p class="bible-reader-chapter">${myst.title}</p>
       </div>
-      <button class="bible-reader-nav-arrow" id="mystery-next-arrow" ${mi>=4?'disabled':''} aria-label="Mystère suivant">›</button>
     </div>`;
-    html += `<div class="step-progress">${set.mysteres.map((_,i)=>`<span class="${i<mi?'done':i===mi?'current':''}"></span>`).join('')}</div>`;
     html += `<div class="bible-reader-tabs">${['texte','meditation','audio'].map(t=>
       `<button class="bible-reader-tab ${ROSARY_TAB===t?'active':''}" data-rtab="${t}">${t==='texte'?'Texte':t==='meditation'?'Méditation':'Audio'}</button>`
     ).join('')}</div>`;
@@ -8102,9 +8099,15 @@ function renderRosary(){
         <p class="saint-prayer" style="margin-bottom:10px;">${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}</p>
         <p class="entry-detail-text">Gloire au Père (à la fin de la dizaine)</p>
         <p class="saint-prayer">${CHAPLET_PRAYER_TEXTS['Gloire au Père']}</p>
-        <div class="real-chaplet-wrap">${realChapletArcHTML(ROSARY_STATE.beadCount, 10)}</div>
+        <div class="rosary-bead-row" role="group" aria-label="Compteur de dizaine">
+          ${Array.from({length:10}).map((_,i)=>`<button type="button" class="rosary-bead-dot ${i<ROSARY_STATE.beadCount?'lit':''}" data-bead-idx="${i}" aria-label="Perle ${i+1}"></button>`).join('')}
+        </div>
         <p class="studio-note" style="text-align:center;">${ROSARY_STATE.beadCount} / 10 — touchez la perle suivante</p>
-        <div style="text-align:center; margin-top:8px;"><button class="btn btn-primary btn-sm" id="mystery-next" ${ROSARY_STATE.beadCount<10?'disabled':''}>${mi<4?'Mystère suivant →':'Terminer →'}</button></div>
+      </div>
+      <div class="rosary-bottom-nav">
+        <button class="bible-reader-nav-arrow" id="mystery-prev" ${mi<=0?'disabled':''} aria-label="Mystère précédent">‹</button>
+        <button class="btn btn-primary" id="mystery-next" ${ROSARY_STATE.beadCount<10?'disabled':''}>${mi<4?'Mystère suivant →':'Terminer →'}</button>
+        <button class="bible-reader-nav-arrow" id="mystery-next-arrow" ${mi>=4?'disabled':''} aria-label="Mystère suivant">›</button>
       </div>`;
     } else if(ROSARY_TAB === 'meditation'){
       html += `<div class="bible-meditation">
@@ -8142,7 +8145,7 @@ function renderRosary(){
   document.querySelectorAll('.chip').forEach(c=> c.onclick = ()=>{ ROSARY_STATE.setKey = c.dataset.set; render(); });
   const startBtn = document.getElementById('rosary-start');
   if(startBtn) startBtn.onclick = ()=>{ ROSARY_STATE.phase='mystery'; ROSARY_TAB='texte'; render(); };
-  document.querySelectorAll('.real-chaplet-bead[data-bead-idx]').forEach(bead=>{
+  document.querySelectorAll('.rosary-bead-dot[data-bead-idx]').forEach(bead=>{
     bead.onclick = ()=>{
       const idx = parseInt(bead.dataset.beadIdx,10);
       if(idx === ROSARY_STATE.beadCount && ROSARY_STATE.beadCount < 10){ ROSARY_STATE.beadCount++; render(); }

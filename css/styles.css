@@ -844,6 +844,11 @@
   .rosary-set-pill{ font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--wine-dark); background:rgba(107,37,69,0.08); border-radius:999px; padding:6px 14px; }
   .rosary-mystery-hero{ height:170px; border-radius:18px; margin:10px 0 2px; }
   .rosary-immersive-hero-btn{ right:12px; left:auto; }
+  .rosary-bead-row{ display:flex; justify-content:center; gap:7px; flex-wrap:wrap; margin:14px 0 6px; }
+  .rosary-bead-dot{ width:16px; height:16px; border-radius:50%; border:2px solid var(--wine); background:transparent; padding:0; cursor:pointer; }
+  .rosary-bead-dot.lit{ background:var(--wine); }
+  .rosary-bottom-nav{ display:flex; align-items:center; justify-content:center; gap:12px; margin:16px 0 8px; }
+  .rosary-bottom-nav .btn-primary{ flex:1; max-width:220px; }
   #aelf-office-body, #aelf-bible-body{ max-width:560px; margin:0 auto; }
   .aelf-office-section{ margin-bottom:18px; }
   .aelf-office-heading{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--wine-dark); margin:0 0 6px; padding-bottom:4px; border-bottom:1px solid var(--hairline); }
