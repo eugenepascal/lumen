@@ -9055,32 +9055,31 @@ function renderAelfOfficeViewer(){
   const activeGroup = AELF_OFFICE_GROUPS.find(g=> g.keys.includes(office.key)) || AELF_OFFICE_GROUPS[0];
   document.getElementById('screen').innerHTML = `
     <div class="bible-reader">
-      <figure class="bible-reader-hero">
+      <div style="padding:18px 18px 0;">
+        <div class="office-head-row">
+          <button class="back-link" id="aelf-office-back" style="margin:0;">← Prière des Heures</button>
+          <button class="vreader-icon-btn" id="aelf-office-reading-btn" aria-label="Mode lecture" style="width:32px; height:32px;">🕯️</button>
+        </div>
+        <h2 class="section-title" style="margin:2px 0 10px;">${office.label}</h2>
+        <div class="chip-row" id="aelf-office-groups">${AELF_OFFICE_GROUPS.map(g=>
+          `<button class="chip ${g===activeGroup?'active':''}" data-office-group="${g.label}">${g.label}</button>`
+        ).join('')}</div>
+        ${(()=>{
+          const autresGroup = AELF_OFFICE_GROUPS.find(g=>g.label==='Autres');
+          if(activeGroup.label!=='Autres' && !AELF_OFFICE_GROUP_OPEN) return '';
+          return `<div class="chip-row" id="aelf-office-subchips" style="padding-top:6px;">${autresGroup.keys.map(k=>{
+            const o = AELF_OFFICES.find(x=>x.key===k);
+            return `<button class="chip ${o.key===office.key?'active':''}" data-aelf-office="${o.key}">${o.label}</button>`;
+          }).join('')}</div>`;
+        })()}
+        <div class="bible-reader-tabs" style="padding:10px 0 0;">${['texte','audio','guide'].map(t=>
+          `<button class="bible-reader-tab ${AELF_OFFICE_TAB===t?'active':''}" data-office-tab="${t}">${t==='texte'?'Texte':t==='audio'?'Audio':'Guide'}</button>`
+        ).join('')}</div>
+      </div>
+      <figure class="bible-reader-hero" style="margin:12px 18px 0; border-radius:18px; width:auto;">
         <img src="${office.img}" alt="" onerror="this.style.display='none'">
         <div class="bible-reader-hero-scrim"></div>
-        <button class="bible-reader-hero-btn bible-reader-hero-back" id="aelf-office-back" aria-label="Retour">←</button>
-        <button class="bible-reader-hero-btn bible-reader-hero-fav" id="aelf-office-reading-btn" aria-label="Mode lecture">🕯️</button>
       </figure>
-      <div class="bible-reader-nav" style="padding-bottom:0;">
-        <div class="bible-reader-nav-title" style="text-align:left;">
-          <p class="bible-reader-book">Prière des Heures</p>
-          <p class="bible-reader-chapter">${office.label}</p>
-        </div>
-      </div>
-      <div class="chip-row" id="aelf-office-groups" style="padding:8px 18px 0;">${AELF_OFFICE_GROUPS.map(g=>
-        `<button class="chip ${g===activeGroup?'active':''}" data-office-group="${g.label}">${g.label}</button>`
-      ).join('')}</div>
-      ${(()=>{
-        const autresGroup = AELF_OFFICE_GROUPS.find(g=>g.label==='Autres');
-        if(activeGroup.label!=='Autres' && !AELF_OFFICE_GROUP_OPEN) return '';
-        return `<div class="chip-row" id="aelf-office-subchips" style="padding:6px 18px 0;">${autresGroup.keys.map(k=>{
-          const o = AELF_OFFICES.find(x=>x.key===k);
-          return `<button class="chip ${o.key===office.key?'active':''}" data-aelf-office="${o.key}">${o.label}</button>`;
-        }).join('')}</div>`;
-      })()}
-      <div class="bible-reader-tabs">${['texte','audio','guide'].map(t=>
-        `<button class="bible-reader-tab ${AELF_OFFICE_TAB===t?'active':''}" data-office-tab="${t}">${t==='texte'?'Texte':t==='audio'?'Audio':'Guide'}</button>`
-      ).join('')}</div>
       <div class="bible-reader-body" id="aelf-office-body"><p class="studio-note" style="text-align:center;">Chargement du texte…</p></div>
       <div class="bible-reader-toolbar">
         <button class="vreader-icon-btn" id="aelf-office-reader-btn" aria-label="Modes d'affichage">🎨</button>
@@ -10781,7 +10780,7 @@ function openVerseReader(opts){
     title: opts.title||'', subtitle: opts.subtitle||'', text: opts.text||'', reference: opts.reference||'',
     images: (opts.images && opts.images.length) ? opts.images : VREADER_DEFAULT_IMAGES,
     explication: opts.explication || PRAYER_EXPLICATIONS[opts.title] || '',
-    showExplication: false,
+    vtab: 'texte',
     mode: 'lumiere', fontBig: false, cardIdx: 0, playing: false
   };
   renderVerseReader();
@@ -10826,6 +10825,7 @@ function verseReaderParts(){
 function renderVerseReader(){
   if(!READER_STATE) return;
   const st = READER_STATE;
+  if(!st.vtab) st.vtab = 'texte';
   const host = document.getElementById('verse-reader-overlay');
   const parts = verseReaderParts();
   if(st.cardIdx >= parts.length) st.cardIdx = parts.length-1;
@@ -10835,6 +10835,7 @@ function renderVerseReader(){
   if(st.mode==='focus') displayText = parts[st.cardIdx];
   if(st.mode==='carte') displayText = parts[st.cardIdx];
   const canPage = st.mode==='focus' || st.mode==='carte';
+  const vtabs = ['texte','audio']; if(st.explication) vtabs.push('explication');
   host.innerHTML = `
     <div class="vreader vreader--${st.mode}">
       ${img ? `<img class="vreader-bg" src="${img}" alt="" onerror="this.remove();">` : ''}
@@ -10845,35 +10846,49 @@ function renderVerseReader(){
         <button class="vreader-icon-btn" id="vreader-font" aria-label="Taille du texte">Aa</button>
         <button class="vreader-icon-btn" id="vreader-share" aria-label="Partager">📤</button>
         <button class="vreader-icon-btn" id="vreader-fav" aria-label="Enregistrer">${isFavorited({type:'vreader-text', title:st.title, subtitle:st.subtitle, reference:st.reference})?'✓':'🔖'}</button>
-        ${st.explication ? `<button class="vreader-icon-btn ${st.showExplication?'active':''}" id="vreader-explication" aria-label="Explication">💡</button>` : ''}
+      </div>
+      <div class="vreader-tabs-row">
+        ${vtabs.map(t=>`<button class="vreader-tab-btn ${st.vtab===t?'active':''}" data-vtab="${t}">${t==='texte'?'Texte':t==='audio'?'Audio':'Explication'}</button>`).join('')}
       </div>
       <div class="vreader-body">
-        ${canPage ? `<p class="vreader-pageno">${st.cardIdx+1} / ${parts.length}</p>` : ''}
-        ${st.mode==='carte' ? `<div class="vreader-card-stack">` : ''}
-        <div class="vreader-text-wrap ${st.mode==='carte' ? 'vreader-card' : ''}">
+        <div class="vreader-text-wrap">
           <p class="vreader-title">${st.title}</p>
           ${st.subtitle ? `<p class="vreader-subtitle">${st.subtitle}</p>` : ''}
-          ${st.explication && st.showExplication ? `<div class="vreader-explication"><p class="eyebrow" style="color:var(--gold);">💡 Pour comprendre</p><p>${st.explication}</p></div>` : `<p class="vreader-text ${st.fontBig?'vreader-text--big':''}">${displayText}</p>`}
-          ${st.reference && !(st.explication && st.showExplication) ? `<p class="vreader-ref">${st.reference}</p>` : ''}
         </div>
-        ${st.mode==='carte' ? `</div>` : ''}
+        ${st.vtab==='texte' ? `
+          ${canPage ? `<p class="vreader-pageno">${st.cardIdx+1} / ${parts.length}</p>` : ''}
+          ${st.mode==='carte' ? `<div class="vreader-card-stack">` : ''}
+          <div class="vreader-text-wrap ${st.mode==='carte' ? 'vreader-card' : ''}">
+            <p class="vreader-text ${st.fontBig?'vreader-text--big':''}">${displayText}</p>
+            ${st.reference ? `<p class="vreader-ref">${st.reference}</p>` : ''}
+          </div>
+          ${st.mode==='carte' ? `</div>` : ''}
+          ${canPage ? `<div class="vreader-controls" style="margin-top:14px;">
+            <button class="vreader-nav-btn" id="vreader-prev" ${st.cardIdx>0 ? '' : 'disabled'}>‹</button>
+            <button class="vreader-nav-btn" id="vreader-next" ${st.cardIdx<parts.length-1 ? '' : 'disabled'}>›</button>
+          </div>` : ''}
+        ` : st.vtab==='audio' ? `
+          <div class="vreader-audio-row" style="margin-top:18px;">
+            <span class="vreader-audio-time" id="vreader-audio-elapsed">0:00</span>
+            <div class="vreader-audio-track"><div class="vreader-audio-fill" id="vreader-audio-fill" style="width:0%"></div></div>
+            <span class="vreader-audio-time" id="vreader-audio-total">${formatMinSec(estimateReadSeconds(st.text))}</span>
+          </div>
+          <div class="vreader-controls">
+            <button class="vreader-play-btn" id="vreader-play" aria-label="Écouter">${st.playing ? '❚❚' : '▶'}</button>
+          </div>
+          <p class="studio-note" style="text-align:center; margin-top:10px;">Lecture vocale générée par votre navigateur.</p>
+        ` : `
+          <div class="vreader-explication"><p class="eyebrow" style="color:var(--gold);">💡 Pour comprendre</p><p>${st.explication}</p></div>
+        `}
       </div>
-      <div class="vreader-audio-row">
-        <span class="vreader-audio-time" id="vreader-audio-elapsed">0:00</span>
-        <div class="vreader-audio-track"><div class="vreader-audio-fill" id="vreader-audio-fill" style="width:0%"></div></div>
-        <span class="vreader-audio-time" id="vreader-audio-total">${formatMinSec(estimateReadSeconds(displayText))}</span>
-      </div>
-      <div class="vreader-controls">
-        <button class="vreader-nav-btn" id="vreader-prev" ${canPage && st.cardIdx>0 ? '' : 'disabled'}>‹</button>
-        <button class="vreader-play-btn" id="vreader-play" aria-label="Écouter">${st.playing ? '❚❚' : '▶'}</button>
-        <button class="vreader-nav-btn" id="vreader-next" ${canPage && st.cardIdx<parts.length-1 ? '' : 'disabled'}>›</button>
-      </div>
+      ${st.vtab==='texte' ? `
       <div class="vreader-modes">
         ${VREADER_MODES.map(m=>`<button class="vreader-mode-btn ${st.mode===m.key?'active':''}" data-mode="${m.key}">
           <span class="vreader-mode-icon">${m.icon}</span><span class="vreader-mode-label">${m.label}</span>
         </button>`).join('')}
       </div>
       <p class="vreader-mode-desc">${(VREADER_MODES.find(m=>m.key===st.mode)||{}).desc||''}</p>
+      ` : ''}
     </div>`;
   wireVerseReader(parts, displayText);
 }
@@ -10891,8 +10906,12 @@ function wireVerseReader(parts, displayText){
     e.target.textContent = isFavorited(favObj) ? '✓' : '🔖';
   };
   document.getElementById('vreader-share').onclick = ()=>{ copyForSocial(st.title, st.text); };
-  const explicationBtn = document.getElementById('vreader-explication');
-  if(explicationBtn) explicationBtn.onclick = ()=>{ st.showExplication = !st.showExplication; renderVerseReader(); };
+  document.querySelectorAll('.vreader-tab-btn[data-vtab]').forEach(btn=>{
+    btn.onclick = ()=>{
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+      st.playing = false; st.vtab = btn.dataset.vtab; renderVerseReader();
+    };
+  });
   document.querySelectorAll('.vreader-mode-btn').forEach(btn=>{
     btn.onclick = ()=>{
       try{ window.speechSynthesis.cancel(); }catch(e){}
@@ -10901,16 +10920,17 @@ function wireVerseReader(parts, displayText){
   });
   const prevBtn = document.getElementById('vreader-prev');
   const nextBtn = document.getElementById('vreader-next');
-  prevBtn.onclick = ()=>{ if(st.cardIdx>0){ try{ window.speechSynthesis.cancel(); }catch(e){} st.playing=false; st.cardIdx--; renderVerseReader(); } };
-  nextBtn.onclick = ()=>{ if(st.cardIdx<parts.length-1){ try{ window.speechSynthesis.cancel(); }catch(e){} st.playing=false; st.cardIdx++; renderVerseReader(); } };
-  document.getElementById('vreader-play').onclick = ()=>{
+  if(prevBtn) prevBtn.onclick = ()=>{ if(st.cardIdx>0){ try{ window.speechSynthesis.cancel(); }catch(e){} st.playing=false; st.cardIdx--; renderVerseReader(); } };
+  if(nextBtn) nextBtn.onclick = ()=>{ if(st.cardIdx<parts.length-1){ try{ window.speechSynthesis.cancel(); }catch(e){} st.playing=false; st.cardIdx++; renderVerseReader(); } };
+  const playBtn0 = document.getElementById('vreader-play');
+  if(playBtn0) playBtn0.onclick = ()=>{
     if(st.playing){
       try{ window.speechSynthesis.cancel(); }catch(e){}
       st.playing = false;
       const btn = document.getElementById('vreader-play'); if(btn) btn.textContent = '▶';
       return;
     }
-    const textToSpeak = displayText || st.text;
+    const textToSpeak = st.text;
     const total = estimateReadSeconds(textToSpeak);
     st.playing = true;
     const playBtn = document.getElementById('vreader-play'); if(playBtn) playBtn.textContent = '❚❚';
