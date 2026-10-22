@@ -8609,12 +8609,33 @@ function renderMesseDimanche(){
   document.getElementById('screen').innerHTML = html;
 }
 const AELF_OFFICES = [
-  {key:'laudes', label:'Laudes'}, {key:'tierce', label:'Tierce'}, {key:'sexte', label:'Sexte'},
-  {key:'none', label:'None'}, {key:'vepres', label:'Vêpres'}, {key:'complies', label:'Complies'},
-  {key:'lectures', label:'Office des lectures'}
+  {key:'laudes', label:'Laudes', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden%20sunrise.jpg?width=900'},
+  {key:'tierce', label:'Tierce', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Utrechts-Psalter%20PSALM-67%20instruments.jpg?width=900'},
+  {key:'sexte', label:'Sexte', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900'},
+  {key:'none', label:'None', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900'},
+  {key:'vepres', label:'Vêpres', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=900'},
+  {key:'complies', label:'Complies', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lantern%20and%20candle%20at%20one%20of%20the%20shrines%20at%20Fushimi%20Inari%20%2848885117018%29.jpg?width=900'},
+  {key:'lectures', label:'Office des lectures', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900'}
+];
+const AELF_OFFICE_GROUPS = [
+  {label:'Laudes', keys:['laudes']},
+  {label:'Vêpres', keys:['vepres']},
+  {label:'Complies', keys:['complies']},
+  {label:'Autres', keys:['tierce','sexte','none','lectures']}
 ];
 let AELF_OFFICE_CACHE = {};
 let AELF_OFFICE_VIEW = 'laudes';
+let AELF_OFFICE_TAB = 'texte';
+let AELF_OFFICE_GROUP_OPEN = false;
+const AELF_OFFICE_GUIDES = {
+  laudes: "Laudes est la prière du matin de l'Église, qui ouvre la journée en tournant le regard vers le Christ ressuscité, lumière du monde. Elle unit louange et offrande de la journée qui commence.",
+  tierce: "Tierce est une courte prière du milieu de matinée, qui rappelle la descente de l'Esprit Saint sur les Apôtres à la Pentecôte et aide à garder le cap au cœur du travail.",
+  sexte: "Sexte se prie vers midi, au cœur du jour, pour faire une pause et se tourner vers Dieu au milieu des occupations, comme une respiration dans la journée.",
+  none: "None se prie en milieu d'après-midi, à l'heure où le Christ est mort sur la croix selon la tradition, pour unir les fatigues de la journée à son sacrifice.",
+  vepres: "Vêpres est la grande prière du soir, qui rend grâce pour la journée écoulée à la lumière déclinante, et se tourne vers Marie par le cantique du Magnificat.",
+  complies: "Complies est la dernière prière du jour avant le repos, un examen paisible de la journée et une remise de la nuit entre les mains de Dieu.",
+  lectures: "L'Office des lectures nourrit l'intelligence de la foi par un long temps de méditation : un psaume approfondi, une lecture biblique et un texte des Pères de l'Église ou d'un saint."
+};
 async function fetchAelfOffice(officeKey, date){
   const cacheKey = officeKey+'|'+date;
   if(AELF_OFFICE_CACHE[cacheKey] !== undefined) return AELF_OFFICE_CACHE[cacheKey];
@@ -9010,49 +9031,140 @@ function renderActualitesVatican(){
       </a>`).join('') + `<p class="studio-note" style="text-align:center; margin-top:12px;">Source : <a href="https://www.vaticannews.va/fr.html" target="_blank" rel="noopener">Vatican News</a></p>`;
   });
 }
+let AELF_OFFICE_LAST_PLAIN_TEXT = '';
 function renderAelfOfficeViewer(){
   const date = todayISO();
   const office = AELF_OFFICES.find(o=>o.key===AELF_OFFICE_VIEW) || AELF_OFFICES[0];
   const aelfUrl = `https://www.aelf.org/${date}/romain/${office.key}`;
+  const activeGroup = AELF_OFFICE_GROUPS.find(g=> g.keys.includes(office.key)) || AELF_OFFICE_GROUPS[0];
   document.getElementById('screen').innerHTML = `
-    <button class="back-link" id="aelf-office-back">← Les offices</button>
-    <h2 class="section-title">📖 ${office.label} — texte officiel AELF</h2>
-    <p class="section-desc">Le texte complet de l'office, tel que publié par l'AELF, fournisseur officiel des textes liturgiques en français.</p>
-    <div class="chip-row" id="aelf-office-tabs">${AELF_OFFICES.map(o=>`<button class="chip ${o.key===office.key?'active':''}" data-aelf-office="${o.key}">${o.label}</button>`).join('')}</div>
-    <div class="entry-link-row" style="gap:8px; flex-wrap:wrap; margin:10px 0 0;">
-      <button class="btn btn-ghost btn-sm" id="aelf-office-reading-btn">🕯️ Mode lecture</button>
-      <button class="btn btn-ghost btn-sm" id="aelf-office-reader-btn">🎨 Modes d'affichage</button>
+    <div class="bible-reader">
+      <figure class="bible-reader-hero">
+        <img src="${office.img}" alt="" onerror="this.style.display='none'">
+        <div class="bible-reader-hero-scrim"></div>
+        <button class="bible-reader-hero-btn bible-reader-hero-back" id="aelf-office-back" aria-label="Retour">←</button>
+        <button class="bible-reader-hero-btn bible-reader-hero-fav" id="aelf-office-reading-btn" aria-label="Mode lecture">🕯️</button>
+      </figure>
+      <div class="bible-reader-nav" style="padding-bottom:0;">
+        <div class="bible-reader-nav-title" style="text-align:left;">
+          <p class="bible-reader-book">Prière des Heures</p>
+          <p class="bible-reader-chapter">${office.label}</p>
+        </div>
+      </div>
+      <div class="chip-row" id="aelf-office-groups" style="padding:8px 18px 0;">${AELF_OFFICE_GROUPS.map(g=>
+        `<button class="chip ${g===activeGroup?'active':''}" data-office-group="${g.label}">${g.label}</button>`
+      ).join('')}</div>
+      ${(()=>{
+        const autresGroup = AELF_OFFICE_GROUPS.find(g=>g.label==='Autres');
+        if(activeGroup.label!=='Autres' && !AELF_OFFICE_GROUP_OPEN) return '';
+        return `<div class="chip-row" id="aelf-office-subchips" style="padding:6px 18px 0;">${autresGroup.keys.map(k=>{
+          const o = AELF_OFFICES.find(x=>x.key===k);
+          return `<button class="chip ${o.key===office.key?'active':''}" data-aelf-office="${o.key}">${o.label}</button>`;
+        }).join('')}</div>`;
+      })()}
+      <div class="bible-reader-tabs">${['texte','audio','guide'].map(t=>
+        `<button class="bible-reader-tab ${AELF_OFFICE_TAB===t?'active':''}" data-office-tab="${t}">${t==='texte'?'Texte':t==='audio'?'Audio':'Guide'}</button>`
+      ).join('')}</div>
+      <div class="bible-reader-body" id="aelf-office-body"><p class="studio-note" style="text-align:center;">Chargement du texte…</p></div>
+      <div class="bible-reader-toolbar">
+        <button class="vreader-icon-btn" id="aelf-office-reader-btn" aria-label="Modes d'affichage">🎨</button>
+        <button class="vreader-icon-btn" id="aelf-office-share" aria-label="Partager">📤</button>
+      </div>
+      <p style="text-align:center; margin:0 0 14px;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ouvrir sur AELF.org ↗</a></p>
     </div>
-    <div id="aelf-office-body"><p class="studio-note" style="text-align:center;">Chargement du texte…</p></div>
-    <p style="text-align:center; margin:14px 0 0;"><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ouvrir sur AELF.org ↗</a></p>
   `;
   document.getElementById('aelf-office-back').onclick = ()=> goTo('prier','office');
   document.getElementById('aelf-office-reading-btn').onclick = enableReadingMode;
   document.getElementById('aelf-office-reader-btn').onclick = ()=>{
-    const body = document.getElementById('aelf-office-body');
-    const plain = body ? body.innerText.trim() : '';
+    const plain = AELF_OFFICE_LAST_PLAIN_TEXT;
     if(!plain){ showToast('Patientez que le texte soit chargé.'); return; }
     openTextCover('letter', office.label, 'Texte officiel AELF du ' + date.split('-').reverse().join('/'), ()=>{
       openVerseReader({ title: office.label, subtitle: 'Texte officiel AELF du ' + date.split('-').reverse().join('/'), text: plain });
     });
   };
-  document.querySelectorAll('[data-aelf-office]').forEach(btn=>{
-    btn.onclick = ()=>{ AELF_OFFICE_VIEW = btn.dataset.aelfOffice; renderAelfOfficeViewer(); };
+  document.getElementById('aelf-office-share').onclick = ()=> copyForSocial(office.label, AELF_OFFICE_LAST_PLAIN_TEXT || office.label);
+  document.querySelectorAll('[data-office-group]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const g = AELF_OFFICE_GROUPS.find(x=>x.label===btn.dataset.officeGroup);
+      if(g.label==='Autres'){ AELF_OFFICE_GROUP_OPEN = !AELF_OFFICE_GROUP_OPEN; renderAelfOfficeViewer(); return; }
+      AELF_OFFICE_GROUP_OPEN = false;
+      AELF_OFFICE_VIEW = g.keys[0];
+      AELF_OFFICE_TAB = 'texte';
+      renderAelfOfficeViewer();
+    };
   });
+  document.querySelectorAll('[data-aelf-office]').forEach(btn=>{
+    btn.onclick = ()=>{ AELF_OFFICE_VIEW = btn.dataset.aelfOffice; AELF_OFFICE_TAB = 'texte'; renderAelfOfficeViewer(); };
+  });
+  document.querySelectorAll('[data-office-tab]').forEach(btn=>{
+    btn.onclick = ()=>{ AELF_OFFICE_TAB = btn.dataset.officeTab; try{ window.speechSynthesis.cancel(); }catch(e){} renderAelfOfficeBody(); document.querySelectorAll('[data-office-tab]').forEach(b=> b.classList.toggle('active', b===btn)); };
+  });
+  renderAelfOfficeBody();
+}
+function renderAelfOfficeBody(){
+  const date = todayISO();
+  const office = AELF_OFFICES.find(o=>o.key===AELF_OFFICE_VIEW) || AELF_OFFICES[0];
+  const aelfUrl = `https://www.aelf.org/${date}/romain/${office.key}`;
+  const body = document.getElementById('aelf-office-body');
+  if(!body) return;
+  if(AELF_OFFICE_TAB === 'guide'){
+    body.innerHTML = `<div class="bible-meditation">
+      <p class="eyebrow" style="color:var(--gold);">${office.label}</p>
+      <p class="section-desc">${AELF_OFFICE_GUIDES[office.key] || ''}</p>
+    </div>`;
+    return;
+  }
+  if(AELF_OFFICE_TAB === 'audio'){
+    const plain = AELF_OFFICE_LAST_PLAIN_TEXT;
+    if(!plain){
+      body.innerHTML = `<p class="studio-note" style="text-align:center;">Patientez que le texte soit chargé, puis revenez sur cet onglet.</p>`;
+      return;
+    }
+    const total = estimateReadSeconds(plain);
+    body.innerHTML = `<div class="bible-audio-pane">
+      <p class="eyebrow" style="color:var(--gold); text-align:center;">${office.label}</p>
+      <div class="vreader-audio-row" style="margin:14px 0;">
+        <span class="vreader-audio-time" id="office-audio-elapsed">0:00</span>
+        <div class="vreader-audio-track"><div class="vreader-audio-fill" id="office-audio-fill" style="width:0%"></div></div>
+        <span class="vreader-audio-time">${formatMinSec(total)}</span>
+      </div>
+      <div style="text-align:center;"><button class="vreader-play-btn" id="office-audio-play" aria-label="Écouter">▶</button></div>
+      <p class="studio-note" style="text-align:center; margin-top:10px;">Lecture vocale générée par votre navigateur.</p>
+    </div>`;
+    const playBtn = document.getElementById('office-audio-play');
+    if(playBtn){
+      let playing = false;
+      playBtn.onclick = ()=>{
+        if(playing){ try{ window.speechSynthesis.cancel(); }catch(e){} playing=false; playBtn.textContent='▶'; return; }
+        playing = true; playBtn.textContent = '❚❚';
+        speakWithProgress(plain, total, (ratio)=>{
+          const fill = document.getElementById('office-audio-fill');
+          const elapsed = document.getElementById('office-audio-elapsed');
+          if(fill) fill.style.width = Math.round(ratio*100)+'%';
+          if(elapsed) elapsed.textContent = formatMinSec(ratio*total);
+        }, ()=>{ playing=false; if(playBtn) playBtn.textContent='▶'; });
+      };
+    }
+    return;
+  }
+  // texte
+  body.innerHTML = `<p class="studio-note" style="text-align:center;">Chargement du texte…</p>`;
   const requestedOffice = office.key;
   fetchAelfOffice(office.key, date).then(json=>{
     if(AELF_OFFICE_VIEW !== requestedOffice) return; // user switched office while loading
-    const body = document.getElementById('aelf-office-body');
-    if(!body) return;
+    const bodyEl = document.getElementById('aelf-office-body');
+    if(!bodyEl || AELF_OFFICE_TAB !== 'texte') return;
     const html = aelfOfficeHTML(office.key, json);
     if(!html){
-      body.innerHTML = `<div class="card empty-state" style="text-align:left;">
+      AELF_OFFICE_LAST_PLAIN_TEXT = '';
+      bodyEl.innerHTML = `<div class="card empty-state" style="text-align:left;">
         Ce texte n'a pas pu être chargé ici pour le moment.
         <br><a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px;">Le lire sur AELF.org ↗</a>
       </div>`;
       return;
     }
-    body.innerHTML = html + `<p class="studio-note" style="text-align:center; margin-top:8px;">Source : <a href="${aelfUrl}" target="_blank" rel="noopener">AELF</a>, fournisseur officiel des textes liturgiques.</p>`;
+    bodyEl.innerHTML = html + `<p class="studio-note" style="text-align:center; margin-top:8px;">Source : <a href="${aelfUrl}" target="_blank" rel="noopener">AELF</a>, fournisseur officiel des textes liturgiques.</p>`;
+    AELF_OFFICE_LAST_PLAIN_TEXT = bodyEl.innerText.trim();
   });
 }
 let AELF_CACHE = {date:null, data:null, failed:false};
