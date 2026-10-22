@@ -1470,8 +1470,19 @@
   .home-shortcut-label{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-align:center; color:var(--ink); line-height:1.25; }
 
   .home-progress-scroll{ display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; }
-  .home-progress-item{ flex:0 0 82%; max-width:300px; scroll-snap-align:start; }
-  @media (min-width:520px){ .home-progress-item{ flex-basis:48%; } }
+  .home-progress-item{ flex:0 0 49%; max-width:220px; scroll-snap-align:start; }
+
+  /* Carte compacte « Ma progression » : vignette carrée + titre + barre de progression,
+     comme dans la maquette (les deux cartes tiennent côte à côte sur un téléphone). */
+  .home-progress-card{ padding:10px; display:flex; flex-direction:column; gap:8px; cursor:pointer; height:100%; box-sizing:border-box; }
+  .home-progress-card-img{ width:100%; aspect-ratio:1.5/1; border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .home-progress-card-img img{ width:100%; height:100%; object-fit:cover; }
+  .home-progress-card-body{ display:flex; flex-direction:column; gap:3px; flex:1; }
+  .home-progress-card-title{ font-family:'Fraunces',serif; font-weight:600; font-size:13.5px; margin:0; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .home-progress-card-sub{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); margin:0; }
+  .home-progress-bar{ height:5px; border-radius:999px; background:var(--hairline); overflow:hidden; margin:2px 0 1px; }
+  .home-progress-bar-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg, var(--gold), var(--wine)); }
+  .home-progress-card .btn{ margin-top:auto; align-self:flex-start; padding:6px 12px; font-size:11.5px; }
 
   .home-intentions-block{ padding:2px 0 4px; }
 

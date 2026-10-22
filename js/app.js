@@ -4078,25 +4078,33 @@ function homePage1HTML(){
 
     ${homeTitleRowHTML('🔥','Ma progression','linear-gradient(160deg, #AFC2D6, #6E8FAE)', 'Voir tout →', 'home-progress-all-btn')}
     <div class="home-progress-scroll">
-      ${inProgress.length ? inProgress.map(({n,info})=>`<div class="home-progress-item">${novenaCardHTML(n, info)}</div>`).join('') : `<div class="home-progress-item"><div class="card hoz-card"><div class="hoz-card-img" style="background:#5C6E58;"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Joseph%20with%20the%20Infant%20Jesus%20by%20Guido%20Reni%2C%20c%201635.jpg?width=600" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="hoz-card-body"><p class="eyebrow" style="color:var(--gold);">🕯️ Neuvaine</p><p class="hoz-card-sub" style="-webkit-line-clamp:unset;">Vous n'avez pas encore commencé de neuvaine — même un seul jour est un bon début.</p><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="neuvaines" style="margin-top:4px;">Découvrir →</button></div></div></div>`}
+      ${inProgress.length ? inProgress.map(({n,info})=>{
+        const art = lumenNovenaDedicatedArt({id:n.id, name:n.title, summary:n.sub});
+        return `<div class="home-progress-item">${homeProgressCardHTML({
+          img: art ? art.url : '', icon: NOVENA_ICONS[n.id]||'🕯️', bg:n.color,
+          title: n.title, sub: info.done ? 'Neuvaine terminée' : `Jour ${info.currentDay} sur 9`,
+          current: info.currentDay, total: 9,
+          ctaLabel: info.done ? 'Revoir →' : 'Reprendre →',
+          extraClass:'novena-card', attrs: `data-id="${n.id}"`
+        })}</div>`;
+      }).join('') : `<div class="home-progress-item">${homeProgressCardHTML({
+          img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Joseph%20with%20the%20Infant%20Jesus%20by%20Guido%20Reni%2C%20c%201635.jpg?width=400', icon:'🕯️', bg:'#5C6E58',
+          title:'Neuvaine', sub:'Vous n’avez pas encore commencé — même un seul jour est un bon début.',
+          current:0, total:0,
+          ctaLabel:'Découvrir →', attrs:'data-goto-primary="prier" data-goto-sub="neuvaines"'
+        })}</div>`}
       ${(()=>{
         const setKey = todaysRosarySet();
         const set = ROSARY_SETS[setKey];
         const midSession = ROSARY_STATE && ROSARY_STATE.setKey === setKey && ROSARY_STATE.phase !== 'intro';
         const mysteryNow = midSession ? ROSARY_STATE.mysteryIdx+1 : 0;
-        return `<div class="home-progress-item">
-          <div class="card hoz-card">
-            <div class="hoz-card-img" style="background:#6B2545;">
-              <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Zurbar%C3%A1n%20%28atribuido%29-John%20of%20the%20Cross-1656.jpg?width=600" alt="" loading="lazy" onerror="this.style.display='none'">
-              <span class="hoz-card-progress-pill">${midSession ? `Mystère ${mysteryNow}/5` : 'Chapelet du jour'}</span>
-            </div>
-            <div class="hoz-card-body">
-              <p class="hoz-card-title">Chapelet — ${set.label}</p>
-              <p class="hoz-card-sub">${midSession ? `${ROSARY_STATE.beadCount} / 10 perles sur ce mystère` : 'Prier un chapelet aujourd’hui'}</p>
-              <button class="btn btn-gold btn-sm" data-goto-primary="devotions" data-goto-sub="chapelet" style="margin-top:6px;">${midSession ? 'Continuer →' : 'Commencer →'}</button>
-            </div>
-          </div>
-        </div>`;
+        return `<div class="home-progress-item">${homeProgressCardHTML({
+          img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Zurbar%C3%A1n%20%28atribuido%29-John%20of%20the%20Cross-1656.jpg?width=400', icon:'📿', bg:'#6B2545',
+          title:`Chapelet — ${set.label}`, sub: midSession ? `Mystère ${mysteryNow} sur 5` : 'Prier un chapelet aujourd’hui',
+          current: mysteryNow, total: midSession ? 5 : 0,
+          ctaLabel: midSession ? 'Continuer →' : 'Commencer →',
+          attrs:'data-goto-primary="devotions" data-goto-sub="chapelet"'
+        })}</div>`;
       })()}
     </div>
 
@@ -4488,6 +4496,23 @@ function carnetBoxesHTML(text, kind){
   ).join('') + `</div>`;
 }
 
+/* Carte compacte « Ma progression » de l'accueil : petite vignette carrée à
+   gauche + titre, sous-titre et vraie barre de progression à droite — comme
+   dans la maquette (plus compacte que les cartes-photo pleine largeur). */
+function homeProgressCardHTML({img, icon, bg, title, sub, current, total, ctaLabel, extraClass, attrs}){
+  const pct = total ? Math.max(4, Math.round(100*current/total)) : 0;
+  return `<div class="card home-progress-card ${extraClass||''}" ${attrs||''}>
+    <div class="home-progress-card-img" style="background:${bg||'var(--gold-pale)'};">
+      ${img ? `<img src="${img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${icon||'🕯️'}'">` : (icon||'🕯️')}
+    </div>
+    <div class="home-progress-card-body">
+      <p class="home-progress-card-title">${title}</p>
+      <p class="home-progress-card-sub">${sub}</p>
+      ${total ? `<div class="home-progress-bar"><div class="home-progress-bar-fill" style="width:${pct}%;"></div></div>` : ''}
+      <button class="btn btn-primary btn-sm">${ctaLabel}</button>
+    </div>
+  </div>`;
+}
 function novenaPrayerCount(n){
   let h = 0; for(const c of n.id) h = (h*31 + c.charCodeAt(0)) % 99999;
   return 300 + (h % 28000);
