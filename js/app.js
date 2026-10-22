@@ -4623,6 +4623,7 @@ function renderNovenas(){
 
 let NOVENA_FULLTEXT = false;
 let NOVENA_OPEN_DAY = null;
+let NOVENA_STEP_INDEX = null; // étape courante (0..5) dans le déroulement du jour — façon maquette, un écran par étape
 let NOVENA_DAY_DONE_SCREEN = null; // {novenaId, dayIndex} — écran de validation après un jour prié
 let NOVENA_DAY_AUDIO_PLAYING = null;
 const ORDINAL_DAYS = ['Premier','Deuxième','Troisième','Quatrième','Cinquième','Sixième','Septième','Huitième','Neuvième'];
@@ -4857,16 +4858,12 @@ function renderNovenaDetail(id){
   const ctaLabel = info.done ? '✓ Revoir ma neuvaine' : (info.currentDay>1 ? 'Continuer la neuvaine' : 'Commencer la neuvaine');
   let html = `<div class="detail-wrap">
     <button class="back-link" id="back-btn">← Toutes les neuvaines</button>
-    <div class="novena-community-banner" ${heroArt ? '' : `style="background:${n.color};"`}>
+    <div class="novena-hero-plain" ${heroArt ? '' : `style="background:${n.color};"`}>
       ${heroArt ? `<img src="${heroArt.url}" alt="${n.title}" onerror="this.parentElement.style.background='${n.color}'; this.remove();">` : ''}
-      <div class="novena-community-scrim"></div>
-      <div class="novena-community-copy">
-        <span class="novena-community-tag">${n.tag}</span>
-        <h1 class="novena-community-title">${n.title}</h1>
-      </div>
-      <span class="novena-community-progress">${info.done ? '✓ Terminée' : `Jour ${info.currentDay} / 9`}</span>
     </div>
-    <p style="font-size:13.5px; color:var(--ink-soft); margin-top:10px;">${n.sub}</p>
+    <p class="novena-hero-tag">${n.tag}${info.done ? ' · ✓ Terminée' : (info.currentDay>1 ? ` · Jour ${info.currentDay}/9` : '')}</p>
+    <h1 class="novena-hero-title">${n.title}</h1>
+    <p class="novena-hero-desc">${n.sub}</p>
     <div class="novena-info-chips">
       <span class="novena-info-chip">📅 9 jours</span>
       <span class="novena-info-chip">⏱️ ~5 min/jour</span>
@@ -4969,7 +4966,7 @@ function renderNovenaParcours(n, info){
   wireNovenaBeadSequences();
   wireNovenaPresentationHeader(n);
   document.querySelectorAll('.novena-parcours-row').forEach(row=>{
-    row.onclick = ()=>{ NOVENA_OPEN_DAY = parseInt(row.dataset.openDay,10); render(); };
+    row.onclick = ()=>{ NOVENA_OPEN_DAY = parseInt(row.dataset.openDay,10); NOVENA_STEP_INDEX = 0; render(); };
   });
   const restartBtn = document.getElementById('restart-btn');
   if(restartBtn){
@@ -5017,113 +5014,93 @@ function novenaDaySteps(n, d, dedicatedArt){
     {key:'final', icon:'🕯️', img:(dedicatedArt && dedicatedArt.url) || NOVENA_STEP_ART.final.url, label:'Prière finale', theme:'candle', title:'Prière finale', subtitle:n.title, text:novenaClosingPrayerText(n)}
   ];
 }
+/* Le déroulement du jour, comme dans la maquette : un écran par étape
+   (méditation, prière, Notre Père, 10 Je vous salue Marie, Gloire au Père,
+   prière finale), qu'on traverse avec « Étape suivante → » plutôt qu'une
+   liste unique à déplier. */
 function renderNovenaDayPage(n, info, dayIndex){
   const d = n.days[dayIndex];
   const dayDone = info.completed[dayIndex];
   const counterId = n.id+'-day'+dayIndex;
   const aveCounterId = counterId+'-ave';
-  const playing = NOVENA_DAY_AUDIO_PLAYING === counterId;
   const art = lumenNovenaDedicatedArt({id:n.id, name:n.title, summary:n.sub});
   const steps = novenaDaySteps(n, d, art);
-  const aveCount = SIMPLE_BEAD_COUNTS[aveCounterId] || 0;
+  const stepIdx = Math.min(Math.max(NOVENA_STEP_INDEX||0, 0), steps.length-1);
+  const step = steps[stepIdx];
+  const isLastStep = stepIdx === steps.length-1;
+  const playing = NOVENA_DAY_AUDIO_PLAYING === counterId+'-'+step.key;
+
+  let bodyHtml;
+  if(step.counter){
+    bodyHtml = simpleBeadCounterHTML(aveCounterId, CHAPLET_PRAYER_TEXTS['Je vous salue Marie']);
+  } else {
+    bodyHtml = `
+      <div class="hoz-podcast-card">
+        <button class="hoz-podcast-btn" id="novena-step-audio-btn">
+          <span class="hoz-podcast-play-icon">${playing ? '⏸' : '▶'}</span>
+          <span>${playing ? 'Pause' : 'Écouter ce texte'}</span>
+        </button>
+        <p class="novena-audio-note">Lecture vocale générée par votre navigateur — pas un enregistrement audio préexistant.</p>
+      </div>
+      <div class="card" style="margin-top:10px;">
+        <p class="entry-detail-text" style="white-space:pre-line;">${step.text||''}</p>
+      </div>`;
+  }
+
   let html = `<div class="detail-wrap">
     <button class="back-link" id="back-to-timeline-btn">← ${n.title}</button>
-
-    <div class="novena-candle-row" aria-label="Progression de la neuvaine">
-      ${Array.from({length:9}).map((_,i)=>`<span class="novena-candle ${info.completed[i]?'lit':i===dayIndex?'current':''}">🕯️</span>`).join('')}
-    </div>
-
-    <p class="eyebrow" style="color:${n.color}; text-align:center;">${ORDINAL_DAYS[dayIndex]} jour${dayDone?' · ✓ prié':''}</p>
-    <h1 class="day-title" style="margin-top:2px; text-align:center;">${d.title}</h1>
-
-    ${art ? `<figure class="novena-day-figure">
-      <img src="${art.url}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'">
-    </figure>` : ''}
-    <div class="novena-day-quote">
-      <p>« ${d.medit} »</p>
-    </div>
-
-    <div class="hoz-podcast-card">
-      <p class="hoz-podcast-label">🎧 Écouter tout le déroulement du jour</p>
-      <button class="hoz-podcast-btn" id="hoz-podcast-play">
-        <span class="hoz-podcast-play-icon">${playing ? '⏸' : '▶'}</span>
-        <span>${playing ? 'Pause' : "Écouter l'audio"}</span>
-      </button>
-      <p class="novena-audio-note">Lecture vocale générée par votre navigateur — pas un enregistrement audio préexistant.</p>
-    </div>
-
-    <p class="section-desc" style="margin-top:14px;">Le déroulement complet de ce jour, prière après prière — touchez une étape pour en lire le texte intégral.</p>
-    <div class="novena-day-steps">
-      ${steps.map(s=>`
-        <div class="novena-day-step" data-day-step="${s.key}">
-          <span class="novena-day-step-thumb-wrap">
-            <img class="novena-day-step-thumb" src="${s.img}" alt="" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <span class="novena-day-step-icon" style="display:none;">${s.icon}</span>
-          </span>
-          <span class="novena-day-step-label">${s.label}</span>
-          ${s.counter ? `<span class="novena-day-step-count" data-step-count-for="${aveCounterId}">${aveCount}/10</span>` : ''}
-          <span class="novena-day-step-caret">›</span>
-        </div>
-        ${s.counter ? `<div class="novena-day-step-panel hidden" id="novena-ave-panel">${simpleBeadCounterHTML(aveCounterId, CHAPLET_PRAYER_TEXTS['Je vous salue Marie'])}</div>` : ''}
-      `).join('')}
-    </div>
-
-    <div style="text-align:center; margin:16px 0;">
-      <button class="btn ${dayDone?'btn-ghost':'btn-primary'}" id="day-mark-prayed-btn" ${dayDone?'disabled':''}>
-        ${dayDone ? "Prié ce jour ✓" : "J'ai prié ce jour"}
+    <p class="eyebrow" style="color:${n.color}; text-align:center;">Jour ${dayIndex+1} sur 9 · Étape ${stepIdx+1}/${steps.length}${dayDone?' · ✓ prié':''}</p>
+    <figure class="novena-day-figure" style="height:190px;">
+      <img src="${step.img}" alt="" loading="lazy" onerror="this.style.display='none'">
+    </figure>
+    <h1 class="day-title" style="margin-top:4px; text-align:center;">${step.title || step.label}</h1>
+    ${step.subtitle ? `<p style="text-align:center; font-size:12.5px; color:var(--ink-soft); margin:-4px 0 10px;">${step.subtitle}</p>` : ''}
+    ${bodyHtml}
+    <div style="display:flex; gap:8px; margin:16px 0; align-items:center;">
+      ${stepIdx>0 ? `<button class="btn btn-ghost btn-sm" id="step-prev-btn">‹ Précédente</button>` : ''}
+      <button class="btn btn-primary" id="step-next-btn" style="flex:1;">
+        ${isLastStep ? (dayDone ? '✓ Voir le récapitulatif' : "J'ai prié ce jour ✓") : 'Étape suivante ›'}
       </button>
     </div>
   </div>`;
 
   document.getElementById('screen').innerHTML = html;
-  document.getElementById('back-to-timeline-btn').onclick = ()=>{ NOVENA_OPEN_DAY = null; render(); };
-  wireSimpleBeadCounters();
+  document.getElementById('back-to-timeline-btn').onclick = ()=>{ NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null; window.speechSynthesis && window.speechSynthesis.cancel(); render(); };
+  if(step.counter) wireSimpleBeadCounters();
 
-  document.querySelectorAll('[data-day-step]').forEach(row=>{
-    const step = steps.find(s=>s.key===row.dataset.dayStep);
-    if(!step) return;
-    row.onclick = ()=>{
-      if(step.counter){
-        const panel = document.getElementById('novena-ave-panel');
-        if(panel) panel.classList.toggle('hidden');
-        return;
-      }
-      openTextCover(step.theme, step.title, step.subtitle||'', ()=>{
-        openVerseReader({ title: step.title, subtitle: step.subtitle||'', text: step.text||'' });
-      });
-    };
-  });
+  const prevBtn = document.getElementById('step-prev-btn');
+  if(prevBtn) prevBtn.onclick = ()=>{ window.speechSynthesis && window.speechSynthesis.cancel(); NOVENA_STEP_INDEX = stepIdx-1; render(); };
 
-  const playBtn = document.getElementById('hoz-podcast-play');
-  if(playBtn){
-    playBtn.onclick = ()=>{
-      if(NOVENA_DAY_AUDIO_PLAYING === counterId){
+  document.getElementById('step-next-btn').onclick = async ()=>{
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    if(!isLastStep){ NOVENA_STEP_INDEX = stepIdx+1; render(); return; }
+    if(dayDone){ NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null; NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex}; render(); return; }
+    if(!PROGRESS[n.id]) PROGRESS[n.id] = {completed:[false,false,false,false,false,false,false,false,false]};
+    PROGRESS[n.id].completed[dayIndex] = true;
+    await saveProgress(PROGRESS);
+    if(PROGRESS[n.id].completed.every(Boolean)) fireCelebration();
+    NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null;
+    NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex};
+    render();
+  };
+
+  const audioBtn = document.getElementById('novena-step-audio-btn');
+  if(audioBtn){
+    audioBtn.onclick = ()=>{
+      const playId = counterId+'-'+step.key;
+      if(NOVENA_DAY_AUDIO_PLAYING === playId){
         window.speechSynthesis.cancel();
         NOVENA_DAY_AUDIO_PLAYING = null;
         render();
         return;
       }
       window.speechSynthesis.cancel();
-      const fullText = steps.map(s=> s.counter ? `Dix fois : ${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}` : (s.text||'')).join(' ');
-      const u = new SpeechSynthesisUtterance(fullText);
+      const u = new SpeechSynthesisUtterance(step.text||'');
       u.lang = 'fr-FR';
       applyNaturalVoice(u);
-      u.onend = ()=>{ if(NOVENA_DAY_AUDIO_PLAYING === counterId){ NOVENA_DAY_AUDIO_PLAYING = null; render(); } };
-      NOVENA_DAY_AUDIO_PLAYING = counterId;
+      u.onend = ()=>{ if(NOVENA_DAY_AUDIO_PLAYING === playId){ NOVENA_DAY_AUDIO_PLAYING = null; render(); } };
+      NOVENA_DAY_AUDIO_PLAYING = playId;
       window.speechSynthesis.speak(u);
-      render();
-    };
-  }
-
-  const markBtn = document.getElementById('day-mark-prayed-btn');
-  if(markBtn){
-    markBtn.onclick = async ()=>{
-      if(!PROGRESS[n.id]) PROGRESS[n.id] = {completed:[false,false,false,false,false,false,false,false,false]};
-      const wasAlreadyDone = PROGRESS[n.id].completed[dayIndex];
-      PROGRESS[n.id].completed[dayIndex] = true;
-      await saveProgress(PROGRESS);
-      if(PROGRESS[n.id].completed.every(Boolean)) fireCelebration();
-      if(!wasAlreadyDone){ NOVENA_OPEN_DAY = null; NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex}; }
       render();
     };
   }
@@ -5161,6 +5138,7 @@ function renderNovenaDayDoneScreen(n, dayIndex){
   document.getElementById('novena-done-next-btn').onclick = ()=>{
     NOVENA_DAY_DONE_SCREEN = null;
     NOVENA_OPEN_DAY = isLastDay ? null : (dayIndex + 1);
+    NOVENA_STEP_INDEX = 0;
     NOVENA_FULLTEXT = isLastDay;
     render();
   };
@@ -6258,7 +6236,7 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
     const scNovena = document.getElementById('saint-sc-neuvaine');
     if(scNovena) scNovena.onclick = ()=>{
       if(!nov) return;
-      ENTRY_OPEN = null; OPEN_NOVENA = nov.id; NOVENA_OPEN_DAY = 0; NOVENA_FULLTEXT = true;
+      ENTRY_OPEN = null; OPEN_NOVENA = nov.id; NOVENA_OPEN_DAY = 0; NOVENA_STEP_INDEX = 0; NOVENA_FULLTEXT = true;
       PRIMARY = 'prier'; SUBTAB.prier = 'neuvaines';
       render();
     };
@@ -6379,7 +6357,7 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
     const nov2 = findNovenaEntryForSaint(entry);
     linkNeuvaine.onclick = ()=>{
       if(!nov2) return;
-      ENTRY_OPEN = null; OPEN_NOVENA = nov2.id; NOVENA_OPEN_DAY = 0; NOVENA_FULLTEXT = true;
+      ENTRY_OPEN = null; OPEN_NOVENA = nov2.id; NOVENA_OPEN_DAY = 0; NOVENA_STEP_INDEX = 0; NOVENA_FULLTEXT = true;
       PRIMARY = 'prier'; SUBTAB.prier = 'neuvaines';
       render();
     };

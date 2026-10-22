@@ -1371,13 +1371,13 @@
   .novena-card-img img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; }
   .novena-icon-fallback{ font-size:38px; }
   .novena-card-tag{ position:absolute; top:8px; left:8px; color:#fff; font-family:'Inter',sans-serif; font-size:10px; font-weight:700; padding:3px 9px; border-radius:999px; text-shadow:0 1px 2px rgba(0,0,0,0.3); }
-  .novena-community-banner{ position:relative; height:190px; border-radius:16px; overflow:hidden; }
-  .novena-community-banner img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 20%; }
-  .novena-community-scrim{ position:absolute; inset:0; background:linear-gradient(0deg, rgba(20,10,10,0.78) 0%, rgba(20,10,10,0.2) 60%); }
-  .novena-community-copy{ position:absolute; left:16px; right:16px; bottom:14px; z-index:1; }
-  .novena-community-tag{ font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#fff; opacity:0.9; }
-  .novena-community-title{ font-family:'Fraunces',serif; font-size:21px; font-weight:600; color:#fff; margin:3px 0 0; text-shadow:0 1px 6px rgba(0,0,0,0.4); }
-  .novena-community-progress{ position:absolute; top:12px; right:12px; z-index:1; background:rgba(255,255,255,0.92); color:var(--wine-dark); font-family:'Inter',sans-serif; font-size:11px; font-weight:700; padding:5px 11px; border-radius:999px; }
+  /* présentation d'une neuvaine, façon maquette : image pleine, puis titre
+     et description en dessous sur fond clair (pas de texte incrusté). */
+  .novena-hero-plain{ height:230px; border-radius:16px; overflow:hidden; background:var(--gold-pale); display:flex; align-items:center; justify-content:center; }
+  .novena-hero-plain img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; }
+  .novena-hero-tag{ text-align:center; font-family:'Inter',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--wine); margin:14px 0 2px; }
+  .novena-hero-title{ text-align:center; font-family:'Fraunces',serif; font-size:23px; font-weight:600; color:var(--ink); margin:0 0 8px; }
+  .novena-hero-desc{ text-align:center; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink-soft); margin:0 0 4px; padding:0 8px; }
   /* --- Hozana-style cards --- */
   .hoz-card{ padding:0; overflow:hidden; cursor:pointer; }
   .hoz-card-img{ position:relative; height:132px; background:var(--gold-pale); display:flex; align-items:center; justify-content:center; }
