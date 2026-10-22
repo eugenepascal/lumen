@@ -6084,6 +6084,26 @@ const SAINT_QUOTE = {
   "Sainte Teresa de Calcutta (Mère Teresa)": {text:"Nous ne pouvons pas faire de grandes choses, seulement de petites choses avec un grand amour.", ref:"Parole attribuée"},
   "Saint Jean-Paul II": {text:"N'ayez pas peur !", ref:"Homélie d'inauguration du pontificat, 22 octobre 1978"}
 };
+/* Apparitions et dévotions particulières — uniquement pour les saints où un fait
+   de ce type est réellement rapporté par la tradition ou l'histoire. Formulé au
+   conditionnel / en rapportant le témoignage, sans affirmer les faits comme
+   établis scientifiquement. Absent pour tous les autres saints, volontairement. */
+const SAINT_DEVOTION = {
+  "Sainte Bernadette Soubirous": "En 1858, à Lourdes, Bernadette rapporte avoir vu la Vierge Marie à plusieurs reprises dans la grotte de Massabielle. Ces apparitions, reconnues par l'Église, sont à l'origine du sanctuaire de Lourdes, aujourd'hui l'un des lieux de pèlerinage les plus visités au monde.",
+  "Sainte Jeanne d'Arc": "Jeanne témoigne avoir entendu, dès l'âge de treize ans, des voix qu'elle identifie à saint Michel, sainte Catherine et sainte Marguerite, l'appelant à délivrer la France. Elle maintient ce témoignage jusqu'à son procès.",
+  "Saint François d'Assise": "En 1224, sur le mont Alverne, la tradition rapporte que François reçut les stigmates — les plaies du Christ crucifié — à la suite d'une vision. Il est le premier saint pour lequel ce phénomène est rapporté dans l'histoire chrétienne.",
+  "Saint Pio de Pietrelcina (Padre Pio)": "À partir de 1918, Padre Pio porte lui aussi les stigmates, visibles durant cinquante ans — un fait documenté par ses supérieurs et de nombreux témoins, sans explication médicale établie à ce jour.",
+  "Sainte Catherine de Sienne": "La tradition lui attribue des stigmates restés invisibles ainsi que des expériences mystiques profondes, qu'elle décrit elle-même dans ses lettres et ses écrits.",
+  "Sainte Thérèse de Lisieux": "Avant sa mort, Thérèse promet de « passer son ciel à faire du bien sur la terre » et d'y laisser tomber « une pluie de roses ». Cette promesse est à l'origine d'une dévotion populaire très répandue."
+};
+/* Images d'iconographie supplémentaires — uniquement lorsqu'une œuvre distincte et
+   bien identifiée (résultat direct sur Wikimedia Commons) a été trouvée, en plus de
+   l'image principale. Absent pour les saints où aucune seconde image fiable n'a été
+   trouvée, plutôt que de réutiliser la même image ou d'en inventer une. */
+const SAINT_EXTRA_ART = {
+  "Saint François d'Assise": [{url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Giotto%20-%20Saint%20Francis%20Receiving%20the%20Stigmata.jpg?width=600', credit:'Saint François recevant les stigmates · Giotto · domaine public'}],
+  "Saint Jean-Paul II": [{url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bernard%20Gotfryd%20%E2%80%93%20Pope%20John%20Paul%20II%20%281983%29.jpg?width=600', credit:'Saint Jean-Paul II, 1983 · photographie Bernard Gotfryd · domaine public'}]
+};
 function allSaintEntries(groups){
   const list = [];
   groups.forEach(g=> g.entries.forEach((e,idx)=> list.push({entry:e, groupId:g.id, idx})));
@@ -6316,19 +6336,29 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
   } else if(SAINT_PROFILE_TAB === 'plus'){
     const quote = SAINT_QUOTE[entry.name];
     const patronage = SAINT_PATRONAGE[entry.name];
+    const devotion = SAINT_DEVOTION[entry.name];
+    const iconImages = [];
+    if(imgUrl) iconImages.push({url:imgUrl, credit: art ? art.credit : ''});
+    (SAINT_EXTRA_ART[entry.name]||[]).forEach(x=> iconImages.push(x));
     body = `${quote ? `<div class="card">
       <p class="eyebrow" style="color:var(--gold);">💬 Citation</p>
       <p class="saint-prayer" style="margin:4px 0 2px;">« ${quote.text} »</p>
       <p class="studio-note">${quote.ref}</p>
     </div>` : ''}
-    ${imgUrl ? `<div class="card" style="margin-top:12px;">
+    ${iconImages.length ? `<div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">🖼️ Iconographie</p>
-      <figure class="saint-midfigure" style="margin:8px 0 2px;"><img src="${imgUrl}" alt="" onerror="this.closest('figure').remove();"></figure>
-      ${art ? `<p class="studio-note">${art.credit}</p>` : ''}
+      <div class="saint-icono-row">
+        ${iconImages.map((img,i)=>`<img class="saint-icono-thumb" src="${img.url}" alt="" loading="lazy" data-icono-idx="${i}" onerror="this.remove();">`).join('')}
+      </div>
+      <p class="studio-note" style="margin-top:8px;">${iconImages[0].credit||''}</p>
     </div>` : ''}
     ${patronage ? `<div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">🛡️ Patronage</p>
       <p class="entry-detail-text" style="margin:4px 0 0;">${patronage}</p>
+    </div>` : ''}
+    ${devotion ? `<div class="card" style="margin-top:12px;">
+      <p class="eyebrow" style="color:var(--gold);">✨ Apparitions et dévotions</p>
+      <p class="entry-detail-text" style="margin:4px 0 0;">${devotion}</p>
     </div>` : ''}
     <div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">📅 Fête et célébration liturgique</p>
@@ -6354,6 +6384,9 @@ function renderSaintDetail(entry, group, idx, groups, compKey){
   wireCommon();
   document.querySelectorAll('[data-saint-tab]').forEach(b=>{
     b.onclick = ()=>{ SAINT_PROFILE_TAB = b.dataset.saintTab; render(); };
+  });
+  document.querySelectorAll('.saint-icono-thumb').forEach(t=>{
+    t.onclick = ()=> openSaintImageZoom(t.src, entry.name);
   });
   wireSpeakShare();
   const linkNeuvaine = document.getElementById('saint-link-neuvaine');

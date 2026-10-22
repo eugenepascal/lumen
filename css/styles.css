@@ -1974,6 +1974,8 @@
   .saint-teach-card{ display:flex; gap:12px; align-items:flex-start; }
   .saint-teach-icon{ font-size:22px; flex-shrink:0; }
   .saint-teach-title{ font-family:'Fraunces',serif; font-weight:600; font-size:14.5px; color:var(--wine-dark); margin:0 0 3px; }
+  .saint-icono-row{ display:flex; gap:8px; margin-top:8px; }
+  .saint-icono-thumb{ flex:1; height:84px; border-radius:10px; object-fit:cover; cursor:zoom-in; }
 
   /* ===== saints: image zoom overlay ===== */
   .saint-zoom-overlay{ position:fixed; inset:0; background:rgba(10,6,8,0.9); display:flex; align-items:center; justify-content:center; z-index:9999; opacity:0; pointer-events:none; transition:opacity 0.2s; }
