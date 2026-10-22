@@ -4193,10 +4193,10 @@ function homePage2HTML(){
   const medit = MEDITATIONS[dayOfYear() % MEDITATIONS.length];
   const v = VERSETS_DU_JOUR[weekNumber() % VERSETS_DU_JOUR.length];
   const quick = [
-    {label:'Psaume du jour', icon:'📜', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Image%20Th%C3%A9r%C3%A8se%20Lisieux.jpg?width=400', primary:'ecritures', sub:'psaumes'},
-    {label:'Laudes du jour', icon:'☀️', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20Saint%20Francis%20in%20ecstasy%20-%20Google%20Art%20Project.jpg?width=400', primary:'prier', sub:'laudes'},
-    {label:'Prière du matin', icon:'🌅', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/St%20Catherine.%20San%20Domenico.jpg?width=400', primary:'prier', sub:'laudes'},
-    {label:'Prière du soir', icon:'🌙', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Sandro%20Botticelli%20-%20St%20Augustin%20dans%20son%20cabinet%20de%20travail.jpg?width=400', primary:'prier', sub:'compline'}
+    {label:'Psaume du jour', icon:'📜', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Utrechts-Psalter%20PSALM-67%20instruments.jpg?width=400', primary:'ecritures', sub:'psaumes'},
+    {label:'Laudes du jour', icon:'☀️', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Golden%20sunrise.jpg?width=400', primary:'prier', sub:'laudes'},
+    {label:'Prière du matin', icon:'🌅', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/A%20small%20cup%20of%20coffee.JPG?width=400', primary:'prier', sub:'laudes'},
+    {label:'Prière du soir', icon:'🌙', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lantern%20and%20candle%20at%20one%20of%20the%20shrines%20at%20Fushimi%20Inari%20%2848885117018%29.jpg?width=400', primary:'prier', sub:'compline'}
   ];
   const discover = [
     {label:'Neuvaine à Notre-Dame', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lady%20of%20Guadalupe.jpg?width=300', novena:'marie-confiance'},
