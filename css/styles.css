@@ -1401,6 +1401,15 @@
   .hoz-timeline-meta{ display:flex; gap:10px; font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); margin-bottom:8px; }
   .hoz-timeline-read-btn{ margin-bottom:4px; }
   /* --- Hozana-style podcast player --- */
+  /* Ligne de bougies de progression + image/citation du jour, comme la maquette */
+  .novena-candle-row{ display:flex; justify-content:center; gap:5px; margin:4px 0 10px; flex-wrap:wrap; }
+  .novena-candle{ font-size:16px; opacity:0.3; filter:grayscale(1); transition:opacity 0.2s ease, filter 0.2s ease; }
+  .novena-candle.lit{ opacity:1; filter:none; }
+  .novena-candle.current{ opacity:1; filter:none; transform:scale(1.25); }
+  .novena-day-figure{ margin:12px 0 10px; border-radius:16px; overflow:hidden; height:150px; }
+  .novena-day-figure img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .novena-day-quote{ text-align:center; padding:0 10px; margin-bottom:12px; }
+  .novena-day-quote p{ font-family:'Fraunces',serif; font-style:italic; font-size:14.5px; color:var(--ink-soft); line-height:1.45; margin:0; }
   .hoz-podcast-card{ background:var(--gold-pale); border-radius:16px; padding:16px; text-align:center; margin-top:10px; }
   .hoz-podcast-label{ font-family:'Inter',sans-serif; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--wine-dark); margin:0 0 10px; }
   .hoz-podcast-btn{ display:inline-flex; align-items:center; gap:8px; background:var(--wine); color:#fff; border:none; border-radius:999px; padding:10px 22px; font-family:'Inter',sans-serif; font-weight:700; font-size:13.5px; cursor:pointer; }

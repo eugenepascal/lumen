@@ -5029,10 +5029,23 @@ function renderNovenaDayPage(n, info, dayIndex){
   const playing = NOVENA_DAY_AUDIO_PLAYING === counterId;
   const steps = novenaDaySteps(n, d);
   const aveCount = SIMPLE_BEAD_COUNTS[aveCounterId] || 0;
+  const art = lumenNovenaDedicatedArt({id:n.id, name:n.title, summary:n.sub});
   let html = `<div class="detail-wrap">
     <button class="back-link" id="back-to-timeline-btn">← ${n.title}</button>
-    <p class="eyebrow" style="color:${n.color};">${ORDINAL_DAYS[dayIndex]} jour${dayDone?' · ✓ prié':''}</p>
-    <h1 class="day-title" style="margin-top:2px;">${d.title}</h1>
+
+    <div class="novena-candle-row" aria-label="Progression de la neuvaine">
+      ${Array.from({length:9}).map((_,i)=>`<span class="novena-candle ${info.completed[i]?'lit':i===dayIndex?'current':''}">🕯️</span>`).join('')}
+    </div>
+
+    <p class="eyebrow" style="color:${n.color}; text-align:center;">${ORDINAL_DAYS[dayIndex]} jour${dayDone?' · ✓ prié':''}</p>
+    <h1 class="day-title" style="margin-top:2px; text-align:center;">${d.title}</h1>
+
+    ${art ? `<figure class="novena-day-figure">
+      <img src="${art.url}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'">
+    </figure>` : ''}
+    <div class="novena-day-quote">
+      <p>« ${d.medit} »</p>
+    </div>
 
     <div class="hoz-podcast-card">
       <p class="hoz-podcast-label">🎧 Écouter tout le déroulement du jour</p>
