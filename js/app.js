@@ -4688,15 +4688,15 @@ function renderPrierHub(){
     </div>
     <h2 class="section-title">🙏 Prier</h2>
     <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui.</p>
-    <div class="prier-hub-grid">${PRIER_HUB_CATEGORIES.map((c,i)=>`
-      <div class="prier-hub-card" data-hub-goto="${c.goto}" data-hub-index="${i}">
-        <div class="prier-hub-card-img" style="background:${c.color};"><span class="prier-hub-card-emoji">${c.icon}</span></div>
-        <div class="prier-hub-card-body">
-          <p class="prier-hub-card-title">${c.label}</p>
-          <p class="prier-hub-card-desc">${c.desc}</p>
-          <span class="prier-hub-card-cta">Explorer →</span>
-        </div>
-      </div>`).join('')}</div>`;
+    <div class="rubric-list">${PRIER_HUB_CATEGORIES.map((c,i)=>`
+      <button type="button" class="rubric-row" data-hub-goto="${c.goto}" data-hub-index="${i}">
+        <span class="rubric-row-icon" style="background:${c.color};">${c.icon}</span>
+        <span class="rubric-row-text">
+          <span class="rubric-row-title">${c.label}</span>
+          <span class="rubric-row-desc">${c.desc}</span>
+        </span>
+        <span class="rubric-row-chevron">›</span>
+      </button>`).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('[data-hub-goto]').forEach(card=>{
     card.onclick = ()=>{
@@ -4715,15 +4715,15 @@ function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, he
     </div>` : ''}
     <h2 class="section-title">${title}</h2>
     <p class="section-desc">${desc}</p>
-    <div class="prier-hub-grid">${categories.map((c,i)=>`
-      <div class="prier-hub-card" data-hub-goto="${c.goto||''}" data-hub-index="${i}">
-        <div class="prier-hub-card-img" style="background:${c.color};">${c.icon ? `<span class="prier-hub-card-emoji">${c.icon}</span>` : `<img src="${c.img}" alt="" onerror="this.style.display='none'">`}</div>
-        <div class="prier-hub-card-body">
-          <p class="prier-hub-card-title">${c.label}</p>
-          <p class="prier-hub-card-desc">${c.desc}</p>
-          <span class="prier-hub-card-cta">Explorer →</span>
-        </div>
-      </div>`).join('')}</div>`;
+    <div class="rubric-list">${categories.map((c,i)=>`
+      <button type="button" class="rubric-row" data-hub-goto="${c.goto||''}" data-hub-index="${i}">
+        <span class="rubric-row-icon" style="background:${c.color};">${c.icon ? c.icon : `<img src="${c.img}" alt="" onerror="this.style.display='none'">`}</span>
+        <span class="rubric-row-text">
+          <span class="rubric-row-title">${c.label}</span>
+          <span class="rubric-row-desc">${c.desc}</span>
+        </span>
+        <span class="rubric-row-chevron">›</span>
+      </button>`).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('[data-hub-goto]').forEach(card=>{
     card.onclick = ()=>{
@@ -9948,15 +9948,15 @@ function renderPelerinagesHub(){
   const sites = Object.entries(VIRTUAL_PELERINAGES);
   document.getElementById('screen').innerHTML = `<h2 class="section-title">🧳 Pèlerinages virtuels</h2>
     <p class="section-desc">Un parcours guidé, étape par étape, pour visiter un sanctuaire sans y être — avec une prière à chaque arrêt.</p>
-    <div class="prier-hub-grid">${sites.map(([key,s])=>`
-      <div class="prier-hub-card" data-pelerinage="${key}">
-        <div class="prier-hub-card-img" style="background:#4A3D6B;"><span class="prier-hub-card-emoji">🕯️</span></div>
-        <div class="prier-hub-card-body">
-          <p class="prier-hub-card-title">${s.title}</p>
-          <p class="prier-hub-card-desc">${s.subtitle}</p>
-          <span class="prier-hub-card-cta">Commencer →</span>
-        </div>
-      </div>`).join('')}</div>`;
+    <div class="rubric-list">${sites.map(([key,s])=>`
+      <button type="button" class="rubric-row" data-pelerinage="${key}">
+        <span class="rubric-row-icon" style="background:#4A3D6B;">🕯️</span>
+        <span class="rubric-row-text">
+          <span class="rubric-row-title">${s.title}</span>
+          <span class="rubric-row-desc">${s.subtitle}</span>
+        </span>
+        <span class="rubric-row-chevron">›</span>
+      </button>`).join('')}</div>`;
   document.querySelectorAll('[data-pelerinage]').forEach(card=>{
     card.onclick = ()=>{ PELERINAGE_VIEW = {site:card.dataset.pelerinage, step:0}; render(); };
   });
