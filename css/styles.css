@@ -867,11 +867,12 @@
   .rosary-catalogue-title{ font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:var(--ink); }
   .rosary-catalogue-sub{ font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); }
   .rosary-catalogue-arrow{ color:var(--gold); font-size:18px; }
-  .rosary-select-hero{ height:190px; border-radius:16px; overflow:hidden; margin-top:10px; }
-  .rosary-select-hero img{ width:100%; height:100%; object-fit:cover; }
+  .rosary-select-hero{ height:260px; border-radius:16px; overflow:hidden; margin-top:10px; }
+  .rosary-select-hero img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; }
   .rosary-overview-figure{ display:flex; justify-content:center; margin:6px 0; }
   .rosary-overview-photo{ display:flex; justify-content:center; margin:10px 0 2px; }
-  .rosary-overview-photo img{ width:180px; height:180px; object-fit:contain; filter:drop-shadow(0 6px 14px rgba(60,30,50,0.18)); }
+  .rosary-overview-photo img{ width:200px; height:200px; border-radius:50%; object-fit:cover; object-position:center 22%; border:5px solid var(--gold-pale); box-shadow:0 8px 20px rgba(60,30,50,0.25); }
+  .rosary-overview-photo img.rosary-overview-photo-fallback{ width:160px; height:160px; border-radius:50%; object-fit:contain; padding:16px; box-shadow:none; filter:drop-shadow(0 6px 14px rgba(60,30,50,0.18)); }
   .rosary-expand-toggle{ display:block; width:100%; text-align:center; background:none; border:none; color:var(--wine-dark); font-family:'Inter',sans-serif; font-weight:600; font-size:12.5px; padding:10px 0 2px; cursor:pointer; }
   .real-chaplet-svg{ width:100%; max-width:280px; }
   .real-chaplet-bead{ fill:var(--vellum-light); stroke:var(--rosary-bead-color, var(--wine)); stroke-width:2; }
@@ -879,8 +880,8 @@
   .real-chaplet-bead.next{ stroke-width:3; filter:drop-shadow(0 0 4px var(--gold)); }
   .real-chaplet-pater{ fill:var(--vellum-light); stroke:var(--gold); stroke-width:3; }
   .real-chaplet-pater.lit{ fill:var(--gold); }
-  .rosary-gloria-figure{ display:flex; justify-content:center; margin:14px 0; border-radius:16px; overflow:hidden; }
-  .rosary-gloria-figure img{ width:100%; max-width:280px; height:150px; object-fit:cover; border-radius:16px; box-shadow:var(--shadow-warm); }
+  .rosary-gloria-figure{ display:flex; justify-content:center; margin:14px 0; border-radius:16px; overflow:hidden; background:radial-gradient(circle at 50% 35%, rgba(242,183,94,0.28), transparent 65%); }
+  .rosary-gloria-figure img{ width:100%; max-width:260px; height:220px; object-fit:cover; object-position:center 18%; border-radius:16px; box-shadow:var(--shadow-warm); }
   .rosary-gloria-cross{ width:84px; height:84px; border-radius:50%; background:linear-gradient(160deg, var(--gold-light), var(--gold)); display:flex; align-items:center; justify-content:center; font-size:38px; color:var(--vellum-light); box-shadow:var(--shadow-warm); margin:0 auto; }
   .rosary-done-figure{ border-radius:16px; overflow:hidden; margin-bottom:10px; }
   .rosary-done-figure img{ width:100%; height:170px; object-fit:cover; object-position:center 20%; }

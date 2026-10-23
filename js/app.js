@@ -8690,7 +8690,7 @@ function chapletOverviewHTML(){
     <span class="rosary-set-pill">🔗 ${set.label}</span>
     ${rosaryTopIconsHTML({title:set.label, sub:'Ouverture du chapelet'})}
   </div>
-  <figure class="rosary-overview-photo"><img src="./images/rosary.svg" alt="Un chapelet" loading="lazy"></figure>
+  <figure class="rosary-overview-photo"><img src="${set.image}" alt="" loading="lazy" onerror="this.src='./images/rosary.svg'; this.classList.add('rosary-overview-photo-fallback');"></figure>
   <h1 class="day-title" style="text-align:center; margin-top:6px;">${set.label}</h1>
   <div class="card">
     <p class="eyebrow" style="color:var(--gold);">✝️ Signe de croix</p>
@@ -8766,9 +8766,7 @@ function chapletAveHTML(){
   <h1 class="day-title" style="text-align:center;">Je vous salue Marie</h1>
   <p class="section-desc" style="text-align:center;">${n+1} sur 10</p>
   ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}</p></div>` : ''}
-  <div class="rosary-bead-row" role="group" aria-label="Dizaine en cours">
-    ${Array.from({length:10}).map((_,i)=>`<button type="button" class="rosary-bead-dot ${i<n?'lit':''}" data-bead-idx="${i}" aria-label="Perle ${i+1}" style="--rosary-bead-color:${ROSARY_BEAD_COLORS[ROSARY_SETTINGS.beadColor]||ROSARY_BEAD_COLORS.wine};"></button>`).join('')}
-  </div>
+  <div class="real-chaplet-wrap" role="group" aria-label="Dizaine en cours">${realChapletArcHTML(n, 10)}</div>
   <p class="studio-note" style="text-align:center;">${n} / 10${ROSARY_SETTINGS.guided ? ' — touchez la perle suivante pour avancer' : ''}</p>
   ${rosaryAudioBlockHTML(CHAPLET_PRAYER_TEXTS['Je vous salue Marie'], 'ave')}`;
 }
@@ -8910,7 +8908,7 @@ function wireRosaryEvents(){
   if(afterMedit) afterMedit.onclick = ()=>{ ROSARY_STATE.phase='pater'; try{ window.speechSynthesis.cancel(); }catch(e){} render(); };
   const afterPater = document.getElementById('rosary-after-pater');
   if(afterPater) afterPater.onclick = ()=>{ ROSARY_STATE.phase='ave'; ROSARY_STATE.aveCount=0; try{ window.speechSynthesis.cancel(); }catch(e){} render(); };
-  document.querySelectorAll('.rosary-bead-dot[data-bead-idx]').forEach(bead=>{
+  document.querySelectorAll('.real-chaplet-bead[data-bead-idx]').forEach(bead=>{
     bead.onclick = ()=>{
       const idx = parseInt(bead.dataset.beadIdx,10);
       if(idx === (ROSARY_STATE.aveCount||0) && ROSARY_STATE.aveCount < 10){
