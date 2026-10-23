@@ -2106,6 +2106,37 @@
   }
   .heatmap-cell.heatmap-on{ background:linear-gradient(155deg, var(--gold-light), var(--gold)); color:#fff; border-color:var(--gold); font-weight:700; }
 
+  /* ===== récapitulatif d'activité ===== */
+  .activity-nav-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:14px 0; }
+  .activity-nav-label{ flex:1; text-align:center; }
+  .activity-period-title{ font-family:'Fraunces',serif; font-size:16px; font-weight:700; color:var(--wine-dark); margin:0; text-transform:capitalize; }
+  .activity-bars{ padding-bottom:10px; }
+  .activity-bar-row{ display:flex; align-items:flex-end; justify-content:space-between; gap:6px; height:120px; }
+  .activity-bar-row-year{ gap:3px; }
+  .activity-bar-col{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .activity-bar-track{ flex:1; width:100%; max-width:22px; display:flex; align-items:flex-end; }
+  .activity-bar-fill{ width:100%; min-height:0; border-radius:5px 5px 2px 2px; background:linear-gradient(180deg, var(--gold-light), var(--gold)); transition:height 0.3s ease; }
+  .activity-bar-num{ font-family:'Inter',sans-serif; font-size:10px; color:var(--ink-soft); margin-top:4px; min-height:13px; }
+  .activity-bar-label{ font-family:'Inter',sans-serif; font-size:10px; color:var(--ink-soft); text-transform:capitalize; margin-top:2px; }
+  .activity-bar-label.activity-bar-today{ color:var(--wine-dark); font-weight:700; }
+  .activity-month-weekdays{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px; }
+  .activity-month-weekdays span{ text-align:center; font-family:'Inter',sans-serif; font-size:10px; color:var(--ink-soft); text-transform:uppercase; }
+  .activity-month-grid{ grid-template-columns:repeat(7,1fr); }
+  .activity-cell-empty{ background:transparent; border-color:transparent; }
+  .heatmap-cell.activity-cell-today{ border-color:var(--wine); border-width:2px; }
+  .activity-breakdown{ padding:6px 14px; }
+  .activity-breakdown-row{ display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--hairline); }
+  .activity-breakdown-row:last-child{ border-bottom:none; }
+  .activity-breakdown-icon{ font-size:17px; width:24px; text-align:center; }
+  .activity-breakdown-label{ flex:1; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); }
+  .activity-breakdown-num{ font-family:'Fraunces',serif; font-weight:700; color:var(--wine-dark); font-size:15px; }
+  .activity-day-list{ padding:4px 14px; }
+  .activity-day-row{ display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--hairline); }
+  .activity-day-row:last-child{ border-bottom:none; }
+  .activity-day-icon{ font-size:15px; width:22px; text-align:center; }
+  .activity-day-label{ flex:1; font-family:'Inter',sans-serif; font-size:13px; color:var(--ink); }
+  .activity-day-time{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); white-space:nowrap; }
+
   /* ===== verset tirage ===== */
   .verset-card{ text-align:center; }
   .verset-text{ font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:var(--wine-dark); line-height:1.5; margin-bottom:8px; }

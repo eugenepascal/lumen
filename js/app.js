@@ -3711,6 +3711,12 @@ async function loadPrayedDates(){
 async function savePrayedDates(list){
   try{ await window.storage.set('prayed-dates', JSON.stringify(list), false); }catch(e){}
 }
+async function loadActivityLog(){
+  try{ const r = await window.storage.get('activity-log', false); return r ? JSON.parse(r.value) : []; }catch(e){ return []; }
+}
+async function saveActivityLog(list){
+  try{ await window.storage.set('activity-log', JSON.stringify(list), false); }catch(e){}
+}
 async function loadHomeLayout(){
   try{ const r = await window.storage.get('home-layout', false); return r ? JSON.parse(r.value) : null; }catch(e){ return null; }
 }
@@ -3777,6 +3783,7 @@ let SOUVENIRS = [];
 let MY_PRAYER_IMAGES = [];
 let LAST_CONFESSION = '';
 let PRAYED_DATES = [];
+let ACTIVITY_LOG = [];
 let HOME_LAYOUT = null;
 let PRAYER_GROUP_CODE = '';
 let GROUP_INTENTIONS = [];
@@ -3804,7 +3811,7 @@ const SUBNAV = {
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
   sagesse: [ {key:'spiritualite', label:'💡 Vie spirituelle'}, {key:'enseignements', label:'🎓 Enseignements'}, {key:'sacrements', label:'✨ Sacrements'}, {key:'lexique', label:'🔤 Lexique'}, {key:'quiz', label:'❓ Quiz'} ],
   combat: [],
-  espace: [ {key:'compte', label:'👤 Mon compte'}, {key:'parcours', label:'🗺️ Parcours 7 jours'}, {key:'journal', label:'✍️ Journal'}, {key:'histoire', label:'📖 Mon histoire'}, {key:'gratitude', label:'✨ Carnet de grâces'}, {key:'souvenirs', label:'📸 Mes souvenirs'}, {key:'images-priere', label:'🖼️ Images de prière'}, {key:'reconfort', label:'🕊️ Réconfort guidé'}, {key:'anniversaires', label:'🎂 Anniversaires spirituels'}, {key:'objectifs', label:'🎯 Objectifs'}, {key:'memorial', label:'🕯️ Mémorial'}, {key:'favoris', label:'⭐ Favoris'}, {key:'studio', label:'🎶 Louanges'}, {key:'reglages', label:'🔔 Rappels'}, {key:'stats', label:'📊 Statistiques'}, {key:'apropos', label:'ℹ️ À propos'}, {key:'faq', label:'❓ FAQ'} ]
+  espace: [ {key:'compte', label:'👤 Mon compte'}, {key:'parcours', label:'🗺️ Parcours 7 jours'}, {key:'journal', label:'✍️ Journal'}, {key:'histoire', label:'📖 Mon histoire'}, {key:'gratitude', label:'✨ Carnet de grâces'}, {key:'souvenirs', label:'📸 Mes souvenirs'}, {key:'images-priere', label:'🖼️ Images de prière'}, {key:'reconfort', label:'🕊️ Réconfort guidé'}, {key:'anniversaires', label:'🎂 Anniversaires spirituels'}, {key:'objectifs', label:'🎯 Objectifs'}, {key:'memorial', label:'🕯️ Mémorial'}, {key:'favoris', label:'⭐ Favoris'}, {key:'studio', label:'🎶 Louanges'}, {key:'reglages', label:'🔔 Rappels'}, {key:'stats', label:'📊 Statistiques'}, {key:'activite', label:'🗓️ Mon activité'}, {key:'apropos', label:'ℹ️ À propos'}, {key:'faq', label:'❓ FAQ'} ]
 };
 
 /* 5 onglets visibles : les anciennes rubriques (Dévotions, Jésus, Église,
@@ -3924,7 +3931,7 @@ const DEVOTIONS_SUBNAV_GROUPS = [
   {label:'⚔️ Combat spirituel', keys:['armure','prieres-combat','temoins','meditations-combat','versets-armure']}
 ];
 const ESPACE_SUBNAV_GROUPS = [
-  {label:'📝 Mon parcours', keys:['compte','parcours','objectifs','stats']},
+  {label:'📝 Mon parcours', keys:['compte','parcours','objectifs','stats','activite']},
   {label:'✍️ Mon journal intérieur', keys:['journal','histoire','gratitude','souvenirs']},
   {label:'🕊️ Soutien', keys:['reconfort','memorial','anniversaires']},
   {label:'⚙️ Outils', keys:['favoris','studio','reglages']},
@@ -5701,7 +5708,7 @@ function openPrayerTimer(minutes){
       playBell();
       document.getElementById('timer-status').textContent = '✦ Le temps de silence est terminé. Amen.';
       fireCelebration();
-      markPrayedToday();
+      markPrayedToday('silence', 'Temps de silence');
     }
   }, 1000);
   pauseBtn.onclick = ()=>{
@@ -5787,7 +5794,7 @@ function wireEntryDetailExtras(entry, usageKey){
     markBtn.onclick = async ()=>{
       PRAYER_USAGE[usageKey] = (PRAYER_USAGE[usageKey]||0) + 1;
       await savePrayerUsage(PRAYER_USAGE);
-      await markPrayedToday();
+      await markPrayedToday('priere', 'Prière');
       showToast('🙏 Amen.');
       render();
     };
@@ -7543,7 +7550,7 @@ function renderMesPrieresCompose(){
     if(mpMode==='image' && !MP_VIEW.imageData){ showToast('Choisissez une image'); return; }
     MES_PRIERES.unshift({id:'mp-'+Date.now(), title:titleEl.value.trim(), category:catEl.value, text: mpMode==='text' ? textEl.value.trim() : '', image: mpMode==='image' ? MP_VIEW.imageData : null, createdAt:Date.now()});
     await saveMesPrieres(MES_PRIERES);
-    await markPrayedToday();
+    await markPrayedToday('creation', 'Carte de prière créée');
     showToast('✦ Votre carte de prière a été créée');
     fireCelebration();
     MP_VIEW.composing = false; MP_VIEW.folder = catEl.value; MP_VIEW.imageData = null;
@@ -7589,7 +7596,7 @@ function renderHistoire(){
     if(!text) { textEl.focus(); return; }
     HISTOIRE_ENTRIES.unshift({id:'h-'+Date.now(), titre:titreEl.value.trim(), text, createdAt:Date.now()});
     await saveHistoire(HISTOIRE_ENTRIES);
-    await markPrayedToday();
+    await markPrayedToday('creation', 'Récit personnel');
     showToast('Récit ajouté à votre histoire 📖');
     renderHistoire();
   };
@@ -7895,7 +7902,7 @@ function renderGratitude(){
       if(items.length === 0){ document.getElementById('grat-1').focus(); return; }
       GRATITUDE_ENTRIES.unshift({date:todayISO(), items});
       await saveGratitude(GRATITUDE_ENTRIES);
-      await markPrayedToday();
+      await markPrayedToday('gratitude', 'Gratitude');
       showToast('Merci a été dit ✨');
       renderGratitude();
     };
@@ -8098,10 +8105,33 @@ function addToRecent(f){
   savePrefs();
 }
 
+/* ================= journal d'activité (récapitulatif jour/semaine/mois/année) ================= */
+const ACTIVITY_TYPE_META = {
+  priere:       {icon:'🙏', label:'Prière'},
+  chapelet:     {icon:'📿', label:'Chapelet'},
+  office:       {icon:'⛪', label:'Liturgie des Heures'},
+  lectio:       {icon:'📖', label:'Lectio Divina'},
+  lecture:      {icon:'📚', label:'Lecture'},
+  examen:       {icon:'🕯️', label:'Examen de conscience'},
+  gratitude:    {icon:'✨', label:'Gratitude'},
+  silence:      {icon:'🤍', label:'Temps de silence'},
+  'chemin-croix':{icon:'✝️', label:'Chemin de croix'},
+  careme:       {icon:'✝️', label:'Carême'},
+  avent:        {icon:'🌟', label:'Avent'},
+  parcours:     {icon:'🧭', label:'Parcours'},
+  creation:     {icon:'✍️', label:'Création personnelle'}
+};
+function logActivity(type, label){
+  ACTIVITY_LOG.push({date: todayISO(), type: type||'priere', label: label||'Prière', ts: Date.now()});
+  if(ACTIVITY_LOG.length > 3000) ACTIVITY_LOG = ACTIVITY_LOG.slice(-3000);
+  saveActivityLog(ACTIVITY_LOG);
+}
+
 /* ================= streak ================= */
 function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-async function markPrayedToday(){
+async function markPrayedToday(type, label){
   const t = todayISO();
+  logActivity(type || 'priere', label || 'Prière');
   if(STREAK.lastDate === t){
     if(!PRAYED_DATES.includes(t)){ PRAYED_DATES.push(t); await savePrayedDates(PRAYED_DATES); }
     return;
@@ -8136,7 +8166,7 @@ function streakCardHTML(){
 }
 function wireStreakButton(){
   const btn = document.getElementById('prayed-today-btn');
-  if(btn) btn.onclick = async ()=>{ await markPrayedToday(); render(); };
+  if(btn) btn.onclick = async ()=>{ await markPrayedToday('priere', 'Prière'); render(); };
 }
 
 /* ================= text-to-speech & share ================= */
@@ -8222,35 +8252,86 @@ let AMBIANCE_SHUFFLE_MODE = false;
 let AMBIANCE_SHUFFLE_LAST = null;
 let AMBIANCE_VIDEO_OPEN = false;
 let AMBIANCE_VIDEO_LABEL = '';
-/* Détection des vidéos YouTube indisponibles (ID invalide, vidéo retirée,
-   intégration désactivée par son propriétaire...) : on écoute simplement
-   les messages postMessage que le lecteur natif envoie lui-même grâce à
-   enablejsapi=1, SANS jamais instancier l'API JS YT.Player() sur le cadre
-   déjà affiché. Appeler `new YT.Player()` sur un <iframe> existant peut
-   amener l'API à recréer/réinitialiser ce cadre, ce qui coupait la lecture
-   ou empêchait le son de démarrer — c'est très probablement la cause des
-   « sons d'ambiance qui ne se chargent plus ». Cette version plus légère
-   ne touche jamais à l'iframe : elle se contente d'écouter. */
+/* Intégration directe de l'API YouTube IFrame Player (youtube.com/iframe_api) :
+   on crée un vrai lecteur YT.Player() piloté par JavaScript plutôt qu'un simple
+   <iframe src="...embed..."> livré à lui-même. Cela donne des évènements fiables
+   (onReady, onStateChange, onError) pour détecter une vidéo indisponible,
+   relancer la lecture, et enchaîner automatiquement le morceau suivant à la
+   fin d'une piste — ce que le simple postMessage ne permettait pas de façon
+   fiable. Le script de l'API n'est chargé qu'à la demande (premier son joué),
+   une seule fois, et le lecteur est toujours créé sur un <div> vide dédié
+   (jamais en instanciant l'API par-dessus un <iframe> déjà affiché), pour
+   éviter toute recréation/interruption du cadre existant. */
 let AMBIANCE_CURRENT_POOL = null;
 let AMBIANCE_ERROR_ATTEMPTS = 0;
-window.addEventListener('message', (ev)=>{
-  if(typeof ev.data !== 'string') return;
-  let data;
-  try{ data = JSON.parse(ev.data); }catch(e){ return; }
-  if(data && data.event === 'onError') handleAmbianceYoutubeError();
-  else if(data && data.event === 'onReady') AMBIANCE_ERROR_ATTEMPTS = 0;
-});
-function wireYoutubeErrorDetection(){
-  const el = document.getElementById('ambiance-yt-iframe');
-  if(!el) return;
-  // Demande au lecteur de nous signaler ses évènements (play/pause/erreur…)
-  // par postMessage — fonctionne dès lors que l'iframe a enablejsapi=1,
-  // sans dépendre du script externe youtube.com/iframe_api.
-  const tellListening = ()=>{ try{ el.contentWindow.postMessage(JSON.stringify({event:'listening', id:'ambiance-yt-iframe'}), '*'); }catch(e){} };
-  if(el.dataset.listeningWired) return;
-  el.dataset.listeningWired = '1';
-  el.addEventListener('load', tellListening);
-  tellListening();
+let AMBIANCE_YT_PLAYER = null;
+let AMBIANCE_YT_API_READY = false;
+let AMBIANCE_YT_API_LOADING = false;
+let AMBIANCE_PENDING_VIDEO_ID = null;
+function ensureYoutubeIframeApi(){
+  if(window.YT && window.YT.Player){ AMBIANCE_YT_API_READY = true; if(AMBIANCE_PENDING_VIDEO_ID) createAmbianceYoutubePlayer(AMBIANCE_PENDING_VIDEO_ID); return; }
+  if(AMBIANCE_YT_API_LOADING) return;
+  AMBIANCE_YT_API_LOADING = true;
+  const prevReady = window.onYouTubeIframeAPIReady;
+  window.onYouTubeIframeAPIReady = function(){
+    AMBIANCE_YT_API_READY = true;
+    AMBIANCE_YT_API_LOADING = false;
+    if(typeof prevReady === 'function'){ try{ prevReady(); }catch(e){} }
+    if(AMBIANCE_PENDING_VIDEO_ID) createAmbianceYoutubePlayer(AMBIANCE_PENDING_VIDEO_ID);
+  };
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+}
+function createAmbianceYoutubePlayer(videoId){
+  AMBIANCE_PENDING_VIDEO_ID = null;
+  const el = document.getElementById('ambiance-yt-player');
+  if(!el || !window.YT || !window.YT.Player) return;
+  try{
+    AMBIANCE_YT_PLAYER = new YT.Player('ambiance-yt-player', {
+      videoId: videoId,
+      width: '100%',
+      height: '100%',
+      playerVars: {autoplay:1, playsinline:1, rel:0, origin:location.origin},
+      events: {
+        onReady: function(e){ AMBIANCE_ERROR_ATTEMPTS = 0; try{ e.target.playVideo(); }catch(err){} },
+        onStateChange: handleAmbianceYtStateChange,
+        onError: handleAmbianceYoutubeError
+      }
+    });
+  }catch(err){ AMBIANCE_YT_PLAYER = null; }
+}
+function destroyAmbianceYoutubePlayer(){
+  if(AMBIANCE_YT_PLAYER && typeof AMBIANCE_YT_PLAYER.destroy === 'function'){
+    try{ AMBIANCE_YT_PLAYER.destroy(); }catch(err){}
+  }
+  AMBIANCE_YT_PLAYER = null;
+  AMBIANCE_PENDING_VIDEO_ID = null;
+}
+function loadAmbianceVideo(videoId){
+  if(!AMBIANCE_YT_API_READY){
+    AMBIANCE_PENDING_VIDEO_ID = videoId;
+    ensureYoutubeIframeApi();
+    return;
+  }
+  if(AMBIANCE_YT_PLAYER && typeof AMBIANCE_YT_PLAYER.loadVideoById === 'function'){
+    try{ AMBIANCE_YT_PLAYER.loadVideoById(videoId); return; }catch(err){ AMBIANCE_YT_PLAYER = null; }
+  }
+  createAmbianceYoutubePlayer(videoId);
+}
+function handleAmbianceYtStateChange(e){
+  if(!window.YT || !window.YT.PlayerState) return;
+  if(e.data === YT.PlayerState.PLAYING){ AMBIANCE_ERROR_ATTEMPTS = 0; return; }
+  if(e.data !== YT.PlayerState.ENDED) return;
+  // Fin de piste : on enchaîne automatiquement, comme avec « Titre suivant ».
+  if(AMBIANCE_SHUFFLE_MODE){ playRandomAmbiance(true); return; }
+  const pool = AMBIANCE_CURRENT_POOL;
+  if(pool && pool.length){
+    let pick, tries = 0;
+    do { pick = pool[Math.floor(Math.random()*pool.length)]; tries++; }
+    while(pick.videoId === BG_YT_VIDEO_ID && tries < 10 && pool.length > 1);
+    playBgYoutube(pick.videoId, pick.title + ' — ' + pick.artist, {pool, silent:true});
+  }
 }
 function handleAmbianceYoutubeError(){
   if(!AMBIANCE_VIDEO_OPEN || !BG_YT_VIDEO_ID) return;
@@ -8273,6 +8354,7 @@ function syncBgAmbianceIcon(){
 }
 function stopAllAmbiance(){
   stopLoop();
+  destroyAmbianceYoutubePlayer();
   AMBIANCE_CURRENT_POOL = null;
   AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_YT_VIDEO_ID = null;
@@ -8355,9 +8437,10 @@ function wireLumenPlayer(){
 function renderAmbianceVideoWindow(){
   const host = document.getElementById('ambiance-player-overlay');
   if(!host) return;
-  if(!AMBIANCE_VIDEO_OPEN){ host.classList.add('hidden'); host.innerHTML = ''; return; }
+  if(!AMBIANCE_VIDEO_OPEN){ destroyAmbianceYoutubePlayer(); host.classList.add('hidden'); host.innerHTML = ''; return; }
   host.classList.remove('hidden');
   if(BG_SPOTIFY_ACTIVE){
+    destroyAmbianceYoutubePlayer();
     host.innerHTML = `
       <div class="ambiance-player-panel">
         <div class="ambiance-player-top">
@@ -8371,6 +8454,7 @@ function renderAmbianceVideoWindow(){
         <div class="ambiance-player-controls"><button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Fermer</button></div>
       </div>`;
   } else if(BG_YT_VIDEO_ID){
+    destroyAmbianceYoutubePlayer();
     host.innerHTML = `
       <div class="ambiance-player-panel">
         <div class="ambiance-player-top">
@@ -8379,7 +8463,7 @@ function renderAmbianceVideoWindow(){
           <div style="width:32px;"></div>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
-        <div class="ambiance-player-embed"><iframe id="ambiance-yt-iframe" src="https://www.youtube.com/embed/${BG_YT_VIDEO_ID}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(location.origin)}" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="${AMBIANCE_VIDEO_LABEL.replace(/"/g,'&quot;')}"></iframe></div>
+        <div class="ambiance-player-embed"><div id="ambiance-yt-player"></div></div>
         <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Utilisez les contrôles de la vidéo pour mettre en pause ou régler le volume.<br>Vidéo qui ne s'affiche pas ? <a href="https://www.youtube.com/watch?v=${BG_YT_VIDEO_ID}" target="_blank" rel="noopener">Ouvrir directement sur YouTube ↗</a></p>
         <div class="ambiance-player-controls">
           ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Titre suivant</button>` : ''}
@@ -8402,7 +8486,7 @@ function renderAmbianceVideoWindow(){
   };
   const stopBtn = document.getElementById('ambiance-player-stop');
   if(stopBtn) stopBtn.onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); };
-  if(BG_YT_VIDEO_ID) wireYoutubeErrorDetection();
+  if(BG_YT_VIDEO_ID) loadAmbianceVideo(BG_YT_VIDEO_ID);
 }
 function playBgYoutube(videoId, label, opts){
   opts = opts || {};
@@ -8459,6 +8543,7 @@ function playBgSpotify(spotifyArtistId, label){
   syncBgAmbianceIcon();
 }
 function playBgLoop(key, label){
+  destroyAmbianceYoutubePlayer();
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_VIDEO_OPEN = false;
@@ -9107,7 +9192,7 @@ function wireRosaryEvents(){
   if(afterGloria) afterGloria.onclick = async ()=>{
     const set = rosaryCurrentSet();
     if(ROSARY_STATE.mysteryIdx < 4){ ROSARY_STATE.mysteryIdx++; ROSARY_STATE.aveCount=0; ROSARY_TAB='meditation'; ROSARY_STATE.phase='medit'; }
-    else { ROSARY_STATE.phase='done'; await markPrayedToday(); fireCelebration(); }
+    else { ROSARY_STATE.phase='done'; await markPrayedToday('chapelet', 'Chapelet'); fireCelebration(); }
     render();
   };
   const restartBtn = document.getElementById('rosary-restart');
@@ -9200,7 +9285,7 @@ function renderExamen(){
     if(notesEl) EXAMEN_STATE.notes = notesEl.value;
     if(EXAMEN_STATE.step < steps.length-1){ EXAMEN_STATE.step++; render(); }
     else {
-      await markPrayedToday();
+      await markPrayedToday('examen', 'Examen de conscience');
       if(EXAMEN_STATE.notes.trim()){
         const label = EXAMEN_MODE==='matin' ? "☀️ Examen du matin — " : "🌙 Examen du soir — ";
         JOURNAL.unshift({id:'j-'+Date.now(), text:label+EXAMEN_STATE.notes.trim(), createdAt:Date.now()});
@@ -9248,7 +9333,7 @@ function renderLectio(){
   if(prevBtn) prevBtn.onclick = ()=>{ LECTIO_STATE.step--; render(); };
   document.getElementById('lectio-next').onclick = async ()=>{
     if(LECTIO_STATE.step<3){ LECTIO_STATE.step++; render(); }
-    else { await markPrayedToday(); showToast('Lectio Divina terminée 📕'); LECTIO_STATE=null; render(); }
+    else { await markPrayedToday('lectio', 'Lectio Divina'); showToast('Lectio Divina terminée 📕'); LECTIO_STATE=null; render(); }
   };
   document.getElementById('lectio-new').onclick = ()=>{ LECTIO_STATE=null; render(); };
 }
@@ -9304,7 +9389,7 @@ function renderMisericorde(){
   const nextBtn = document.getElementById('decade-next');
   if(nextBtn) nextBtn.onclick = async ()=>{
     if(MISERICORDE_STATE.decadeIdx<4){ MISERICORDE_STATE.decadeIdx++; MISERICORDE_STATE.beadCount=0; }
-    else { MISERICORDE_STATE.phase='done'; await markPrayedToday(); }
+    else { MISERICORDE_STATE.phase='done'; await markPrayedToday('chapelet', 'Chapelet de la Miséricorde'); }
     render();
   };
   const restartBtn = document.getElementById('misericorde-restart');
@@ -9446,6 +9531,7 @@ function renderStats(){
 
     <h2 class="section-title">📅 Les 30 derniers jours</h2>
     ${prayerHeatmapHTML()}
+    <div style="text-align:center; margin:4px 0 18px;"><button class="btn btn-gold btn-sm" id="goto-activite-btn">🗓️ Voir le récapitulatif détaillé (jour / semaine / mois / année)</button></div>
 
     <h2 class="section-title">🏆 Mes succès (${unlockedBadges.length}/${BADGES.length})</h2>
     <div class="badge-grid">${BADGES.map(b=>{
@@ -9468,8 +9554,9 @@ function renderStats(){
       <button class="btn btn-gold btn-sm" id="import-btn">⬆️ Réimporter mes données</button>
     </div>`;
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('goto-activite-btn').onclick = ()=>{ SUBTAB.espace = 'activite'; render(); };
   document.getElementById('export-btn').onclick = ()=>{
-    const data = { journal:JOURNAL, favorites:FAVORITES, progress:PROGRESS, streak:STREAK, privateIntentions:PRIVATE_INTENTIONS, exportedAt:new Date().toISOString() };
+    const data = { journal:JOURNAL, favorites:FAVORITES, progress:PROGRESS, streak:STREAK, privateIntentions:PRIVATE_INTENTIONS, activityLog:ACTIVITY_LOG, exportedAt:new Date().toISOString() };
     const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -9490,6 +9577,7 @@ function renderStats(){
       if(data.progress){ PROGRESS = data.progress; await saveProgress(PROGRESS); }
       if(data.streak){ STREAK = data.streak; await savePrefs(); }
       if(Array.isArray(data.privateIntentions)){ PRIVATE_INTENTIONS = data.privateIntentions; await savePrivateIntentions(PRIVATE_INTENTIONS); }
+      if(Array.isArray(data.activityLog)){ ACTIVITY_LOG = data.activityLog; await saveActivityLog(ACTIVITY_LOG); }
       showToast('Données réimportées ⬆️');
       renderStats();
     }catch(e){
@@ -9564,6 +9652,161 @@ function prayerHeatmapHTML(){
     <div class="heatmap-grid">${days.map(d=>`<div class="heatmap-cell ${d.prayed?'heatmap-on':''}" title="${d.iso}">${d.label}</div>`).join('')}</div>
     <p class="studio-note" style="margin-top:8px;">${PRAYED_DATES.filter(d=>days.some(x=>x.iso===d)).length} jour(s) de prière sur les 30 derniers.</p>
   </div>`;
+}
+
+/* ================= récapitulatif d'activité (jour / semaine / mois / année) =================
+   S'appuie sur ACTIVITY_LOG, alimenté par logActivity() à chaque action marquante
+   (prière, chapelet, office, lecture, journal...) — voir markPrayedToday(). */
+let ACTIVITY_PERIOD = 'semaine';
+let ACTIVITY_OFFSET = 0;
+function isoFromDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function startOfWeekDate(d){
+  const r = new Date(d);
+  const day = (r.getDay()+6)%7; // lundi = 0
+  r.setDate(r.getDate()-day);
+  r.setHours(0,0,0,0);
+  return r;
+}
+function activityEntriesInRange(fromKey, toKey){
+  return ACTIVITY_LOG.filter(e=> e.date >= fromKey && e.date <= toKey);
+}
+function activityBreakdownHTML(entries){
+  if(!entries.length) return `<div class="card"><p class="studio-note" style="text-align:center; margin:4px 0;">Aucune activité sur cette période.</p></div>`;
+  const counts = {};
+  entries.forEach(e=>{ counts[e.type] = (counts[e.type]||0)+1; });
+  const rows = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([type,n])=>{
+    const meta = ACTIVITY_TYPE_META[type] || {icon:'🙏', label:type};
+    return `<div class="activity-breakdown-row">
+      <span class="activity-breakdown-icon">${meta.icon}</span>
+      <span class="activity-breakdown-label">${meta.label}</span>
+      <span class="activity-breakdown-num">${n}</span>
+    </div>`;
+  }).join('');
+  return `<div class="card activity-breakdown">${rows}</div>`;
+}
+function activityListHTML(entries, cap){
+  if(!entries.length) return '';
+  const sorted = [...entries].sort((a,b)=> b.ts - a.ts);
+  const shown = cap ? sorted.slice(0, cap) : sorted;
+  const rows = shown.map(e=>{
+    const meta = ACTIVITY_TYPE_META[e.type] || {icon:'🙏'};
+    const time = new Date(e.ts).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    const dateLabel = new Date(e.ts).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+    return `<div class="activity-day-row">
+      <span class="activity-day-icon">${meta.icon}</span>
+      <span class="activity-day-label">${e.label}</span>
+      <span class="activity-day-time">${cap!==undefined ? dateLabel+' · ' : ''}${time}</span>
+    </div>`;
+  }).join('');
+  const more = cap && sorted.length > cap ? `<p class="studio-note" style="text-align:center; margin-top:6px;">+ ${sorted.length-cap} autre(s)</p>` : '';
+  return `<div class="card activity-day-list">${rows}</div>${more}`;
+}
+function renderActivite(){
+  const now = new Date();
+  const periodTabs = [['jour','Jour'],['semaine','Semaine'],['mois','Mois'],['annee','Année']];
+  let html = `<h2 class="section-title">🗓️ Mon activité</h2>
+    <p class="section-desc">Tout ce que vous avez prié, lu ou écrit dans Lumen — jour par jour, semaine par semaine, mois par mois, année par année.</p>
+    <div class="chip-row" id="activity-period-tabs">${periodTabs.map(([p,l])=>
+      `<button class="chip ${ACTIVITY_PERIOD===p?'active':''}" data-period="${p}">${l}</button>`).join('')}</div>`;
+
+  let periodLabel = '', entries = [], extraHTML = '';
+
+  if(ACTIVITY_PERIOD === 'jour'){
+    const d = new Date(now); d.setDate(d.getDate()+ACTIVITY_OFFSET);
+    const key = isoFromDate(d);
+    entries = ACTIVITY_LOG.filter(e=>e.date===key);
+    periodLabel = d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  } else if(ACTIVITY_PERIOD === 'semaine'){
+    const base = new Date(now); base.setDate(base.getDate()+ACTIVITY_OFFSET*7);
+    const start = startOfWeekDate(base);
+    const end = new Date(start); end.setDate(end.getDate()+6);
+    const fromKey = isoFromDate(start), toKey = isoFromDate(end);
+    entries = activityEntriesInRange(fromKey, toKey);
+    periodLabel = `Semaine du ${start.toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} au ${end.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}`;
+    const days = [];
+    for(let i=0;i<7;i++){
+      const dd = new Date(start); dd.setDate(dd.getDate()+i);
+      const k = isoFromDate(dd);
+      days.push({label: dd.toLocaleDateString('fr-FR',{weekday:'short'}).replace('.',''), n: entries.filter(e=>e.date===k).length, isToday: k===isoFromDate(now)});
+    }
+    const maxN = Math.max(1, ...days.map(d=>d.n));
+    extraHTML = `<div class="card activity-bars">
+      <div class="activity-bar-row">${days.map(d=>`
+        <div class="activity-bar-col">
+          <div class="activity-bar-track"><div class="activity-bar-fill" style="height:${d.n?Math.max(10,(d.n/maxN)*100):0}%"></div></div>
+          <span class="activity-bar-num">${d.n||''}</span>
+          <span class="activity-bar-label ${d.isToday?'activity-bar-today':''}">${d.label}</span>
+        </div>`).join('')}</div>
+    </div>`;
+  } else if(ACTIVITY_PERIOD === 'mois'){
+    const base = new Date(now.getFullYear(), now.getMonth()+ACTIVITY_OFFSET, 1);
+    const year = base.getFullYear(), month = base.getMonth();
+    const first = new Date(year, month, 1);
+    const last = new Date(year, month+1, 0);
+    const fromKey = isoFromDate(first), toKey = isoFromDate(last);
+    entries = activityEntriesInRange(fromKey, toKey);
+    periodLabel = base.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+    const leading = (first.getDay()+6)%7;
+    const cells = [];
+    for(let i=0;i<leading;i++) cells.push(null);
+    for(let day=1; day<=last.getDate(); day++){
+      const dd = new Date(year, month, day);
+      const k = isoFromDate(dd);
+      const n = entries.filter(e=>e.date===k).length;
+      cells.push({day, n, isToday:k===isoFromDate(now)});
+    }
+    extraHTML = `<div class="card">
+      <div class="activity-month-weekdays">${['L','M','M','J','V','S','D'].map(w=>`<span>${w}</span>`).join('')}</div>
+      <div class="heatmap-grid activity-month-grid">${cells.map(c=> c ? `<div class="heatmap-cell ${c.n?'heatmap-on':''} ${c.isToday?'activity-cell-today':''}" title="${c.n} activité(s)">${c.day}</div>` : `<div class="heatmap-cell activity-cell-empty"></div>`).join('')}</div>
+    </div>`;
+  } else {
+    const year = now.getFullYear()+ACTIVITY_OFFSET;
+    const fromKey = year+'-01-01', toKey = year+'-12-31';
+    entries = activityEntriesInRange(fromKey, toKey);
+    periodLabel = String(year);
+    const months = [];
+    for(let m=0;m<12;m++){
+      const mk = year+'-'+String(m+1).padStart(2,'0');
+      months.push({label: MONTH_NAMES_FR[m].slice(0,3), n: entries.filter(e=>e.date.startsWith(mk)).length});
+    }
+    const maxN = Math.max(1, ...months.map(m=>m.n));
+    extraHTML = `<div class="card activity-bars">
+      <div class="activity-bar-row activity-bar-row-year">${months.map(m=>`
+        <div class="activity-bar-col">
+          <div class="activity-bar-track"><div class="activity-bar-fill" style="height:${m.n?Math.max(10,(m.n/maxN)*100):0}%"></div></div>
+          <span class="activity-bar-num">${m.n||''}</span>
+          <span class="activity-bar-label">${m.label}</span>
+        </div>`).join('')}</div>
+    </div>`;
+  }
+
+  const totalCount = entries.length;
+  html += `<div class="activity-nav-row">
+      <button class="icon-btn" id="activity-prev" aria-label="Période précédente">‹</button>
+      <div class="activity-nav-label">
+        <p class="activity-period-title">${periodLabel.charAt(0).toUpperCase()+periodLabel.slice(1)}</p>
+        <p class="studio-note" style="margin:2px 0 0;">${totalCount} activité${totalCount>1?'s':''}</p>
+      </div>
+      <button class="icon-btn" id="activity-next" aria-label="Période suivante" ${ACTIVITY_OFFSET>=0?'disabled':''}>›</button>
+    </div>
+    ${extraHTML}
+    <h2 class="section-title" style="margin-top:18px;">Répartition</h2>
+    ${activityBreakdownHTML(entries)}`;
+
+  if(ACTIVITY_PERIOD === 'jour'){
+    html += `<h2 class="section-title" style="margin-top:18px;">Détail</h2>${activityListHTML(entries) || '<div class="card"><p class="studio-note" style="text-align:center; margin:4px 0;">Rien enregistré ce jour-là.</p></div>'}`;
+  } else if(totalCount){
+    html += `<h2 class="section-title" style="margin-top:18px;">Détail</h2>${activityListHTML(entries, 60)}`;
+  }
+
+  document.getElementById('screen').innerHTML = html;
+  document.querySelectorAll('#activity-period-tabs .chip').forEach(c=>{
+    c.onclick = ()=>{ ACTIVITY_PERIOD = c.dataset.period; ACTIVITY_OFFSET = 0; render(); };
+  });
+  const prevBtn = document.getElementById('activity-prev');
+  if(prevBtn) prevBtn.onclick = ()=>{ ACTIVITY_OFFSET--; render(); };
+  const nextBtn = document.getElementById('activity-next');
+  if(nextBtn) nextBtn.onclick = ()=>{ if(ACTIVITY_OFFSET<0){ ACTIVITY_OFFSET++; render(); } };
 }
 
 /* ================= upcoming novenas & liturgical color (home helpers) ================= */
@@ -10020,7 +10263,7 @@ function renderFamilyIntentions(){
       btn.onclick = async ()=>{
         const list2 = await loadFamilyIntentions();
         const item = list2.find(x=>x.id===btn.dataset.familyPray);
-        if(item){ item.prayers = (item.prayers||0)+1; await saveFamilyIntentions(list2); await markPrayedToday(); renderFamilyIntentions(); }
+        if(item){ item.prayers = (item.prayers||0)+1; await saveFamilyIntentions(list2); await markPrayedToday('priere', 'Intention familiale'); renderFamilyIntentions(); }
       };
     });
   });
@@ -10374,7 +10617,7 @@ function renderTextesDuJour(){
   `;
   document.getElementById('screen').innerHTML = html;
   document.getElementById('textes-jour-fait-btn').onclick = async ()=>{
-    await markPrayedToday();
+    await markPrayedToday('lecture', 'Textes du jour');
     showToast('📖 Amen.');
     fireCelebration();
   };
@@ -10750,7 +10993,7 @@ function renderBiblePlan(){
       if(!completed.includes(activeIdx)) completed.push(activeIdx);
       BIBLE_PLAN_PROGRESS.completedDays = completed;
       await saveBiblePlanProgress(BIBLE_PLAN_PROGRESS);
-      await markPrayedToday();
+      await markPrayedToday('lecture', 'Plan de lecture biblique');
       if(completed.length >= BIBLE_PLAN_365.length) fireCelebration();
       showToast('Un chapitre de plus 📖');
       renderBiblePlan();
@@ -11044,7 +11287,7 @@ function renderOfficeDuJour(){
       await saveIntentions(INTENTIONS);
     }
     if(OFFICE_STATE.step<4){ OFFICE_STATE.step++; render(); }
-    else { await markPrayedToday(); OFFICE_STATE=null; showToast('Office terminé ✦'); render(); }
+    else { await markPrayedToday('office', 'Office'); OFFICE_STATE=null; showToast('Office terminé ✦'); render(); }
   };
 }
 
@@ -11067,7 +11310,7 @@ function renderCompline(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('compline-next').onclick = async ()=>{
     if(COMPLINE_STATE < COMPLINE_STEPS.length-1){ COMPLINE_STATE++; render(); }
-    else { await markPrayedToday(); COMPLINE_STATE=null; showToast('Bonne nuit 🌌'); render(); }
+    else { await markPrayedToday('office', 'Complies'); COMPLINE_STATE=null; showToast('Bonne nuit 🌌'); render(); }
   };
 }
 
@@ -11090,7 +11333,7 @@ function renderLaudes(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('laudes-next').onclick = async ()=>{
     if(LAUDES_STATE < LAUDES_STEPS.length-1){ LAUDES_STATE++; render(); }
-    else { await markPrayedToday(); LAUDES_STATE=null; showToast('Belle journée ☀️'); render(); }
+    else { await markPrayedToday('office', 'Laudes'); LAUDES_STATE=null; showToast('Belle journée ☀️'); render(); }
   };
 }
 
@@ -11113,7 +11356,7 @@ function renderTierce(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('tierce-next').onclick = async ()=>{
     if(TIERCE_STATE < TIERCE_STEPS.length-1){ TIERCE_STATE++; render(); }
-    else { await markPrayedToday(); TIERCE_STATE=null; showToast('Bonne matinée 🕘'); render(); }
+    else { await markPrayedToday('office', 'Tierce'); TIERCE_STATE=null; showToast('Bonne matinée 🕘'); render(); }
   };
 }
 let SEXTE_STATE = null;
@@ -11134,7 +11377,7 @@ function renderSexte(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('sexte-next').onclick = async ()=>{
     if(SEXTE_STATE < SEXTE_STEPS.length-1){ SEXTE_STATE++; render(); }
-    else { await markPrayedToday(); SEXTE_STATE=null; showToast('Bon après-midi ☀️'); render(); }
+    else { await markPrayedToday('office', 'Sexte'); SEXTE_STATE=null; showToast('Bon après-midi ☀️'); render(); }
   };
 }
 let NONE_STATE = null;
@@ -11155,7 +11398,7 @@ function renderNoneOffice(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('none-next').onclick = async ()=>{
     if(NONE_STATE < NONE_STEPS.length-1){ NONE_STATE++; render(); }
-    else { await markPrayedToday(); NONE_STATE=null; showToast('Bonne fin de journée 🕒'); render(); }
+    else { await markPrayedToday('office', 'None'); NONE_STATE=null; showToast('Bonne fin de journée 🕒'); render(); }
   };
 }
 const OFFICES_LIST = [
@@ -11208,7 +11451,7 @@ function renderMidi(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('midi-next').onclick = async ()=>{
     if(MIDI_STATE < MIDI_STEPS.length-1){ MIDI_STATE++; render(); }
-    else { await markPrayedToday(); MIDI_STATE=null; showToast('Bon reste de journée 🔔'); render(); }
+    else { await markPrayedToday('office', 'Office du milieu du jour'); MIDI_STATE=null; showToast('Bon reste de journée 🔔'); render(); }
   };
 }
 
@@ -11230,7 +11473,7 @@ function renderVepres(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('vepres-next').onclick = async ()=>{
     if(VEPRES_STATE < VEPRES_STEPS.length-1){ VEPRES_STATE++; render(); }
-    else { await markPrayedToday(); VEPRES_STATE=null; showToast('Bonne soirée 🌆'); render(); }
+    else { await markPrayedToday('office', 'Vêpres'); VEPRES_STATE=null; showToast('Bonne soirée 🌆'); render(); }
   };
 }
 
@@ -11254,7 +11497,7 @@ function renderCheminDeCroix(){
   document.getElementById('screen').innerHTML = html;
   document.getElementById('croix-next').onclick = async ()=>{
     if(CROIX_STATE < CHEMIN_DE_CROIX.length-1){ CROIX_STATE++; render(); }
-    else { await markPrayedToday(); CROIX_STATE=null; showToast('Chemin de croix terminé ✝️'); render(); }
+    else { await markPrayedToday('chemin-croix', 'Chemin de croix'); CROIX_STATE=null; showToast('Chemin de croix terminé ✝️'); render(); }
   };
 }
 
@@ -11335,7 +11578,7 @@ function renderParcours(){
       if(!completed.includes(activeIdx)) completed.push(activeIdx);
       PARCOURS_PROGRESS.completedDays = completed;
       await saveParcoursProgress(PARCOURS_PROGRESS);
-      await markPrayedToday();
+      await markPrayedToday('parcours', 'Étape de parcours');
       showToast('Bravo, une étape de plus 🕯️');
       renderParcours();
     };
@@ -11411,7 +11654,7 @@ function renderCareme40(){
       if(!completed.includes(activeIdx)) completed.push(activeIdx);
       CAREME_PROGRESS.completedDays = completed;
       await saveCaremeProgress(CAREME_PROGRESS);
-      await markPrayedToday();
+      await markPrayedToday('careme', 'Jour de Carême');
       showToast('Un jour de plus sur le chemin ✝️');
       if(completed.length >= CAREME_JOURS.length) fireCelebration();
       renderCareme40();
@@ -11580,7 +11823,7 @@ function renderAventCareme(){
       ADVENT_PROGRESS[i] = true;
       ADVENT_PROGRESS._open = i;
       await saveAdventProgress(ADVENT_PROGRESS);
-      await markPrayedToday();
+      await markPrayedToday('avent', "Calendrier de l'Avent");
       render();
     };
   });
@@ -12991,6 +13234,7 @@ function renderScreen(){
     if(sub === 'studio') return renderStudio();
     if(sub === 'reglages') return renderReglages();
     if(sub === 'stats') return renderStats();
+    if(sub === 'activite') return renderActivite();
     if(sub === 'apropos') return renderApropos();
     if(sub === 'guide-complet') return renderAppGuide();
     if(sub === 'faq') return renderFAQ();
@@ -13065,7 +13309,7 @@ function render(){
 /* ---------- init ---------- */
 async function startApp(){
   document.getElementById('screen').innerHTML = '<div class="loading"><svg class="loading-emblem" viewBox="0 0 24 24"><defs><linearGradient id="flameGrad3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#7C1F2E"/><stop offset="55%" stop-color="#B8863B"/><stop offset="100%" stop-color="#FFF3C4"/></linearGradient></defs><path fill="url(#flameGrad3)" d="M12 2c-2.2 4-6 6.2-6 11a6 6 0 0 0 12 0c0-2.1-1-3.4-2-4.4.4 2-1 3-1 3 .6-3.2-1.1-5.4-3-9.6z"/></svg>Un instant, on allume les lumières…</div>';
-  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages, novenaIntentions, novenaReminders, rosaryState] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages(), loadNovenaIntentions(), loadNovenaReminders(), loadRosaryState()]);
+  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages, novenaIntentions, novenaReminders, rosaryState, activityLog] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages(), loadNovenaIntentions(), loadNovenaReminders(), loadRosaryState(), loadActivityLog()]);
   PROGRESS = p;
   if(rosaryState && rosaryState.variantId && rosaryState.phase && rosaryState.phase !== 'catalogue'){ ROSARY_STATE = rosaryState; }
   INTENTIONS = ints;
@@ -13091,6 +13335,7 @@ async function startApp(){
   BIBLE_PLAN_PROGRESS = biblePlanProg || { completedDays: [] };
   LAST_CONFESSION = confessionDate || '';
   PRAYED_DATES = prayedDates || [];
+  ACTIVITY_LOG = activityLog || [];
   HOME_LAYOUT = homeLayout;
   PRAYER_GROUP_CODE = groupCode || '';
   if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); }
