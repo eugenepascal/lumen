@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#8A3A1E"/>
+    <stop offset="1" stop-color="#4A1C0E"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="50%" cy="34%" r="60%">
+    <stop stop-color="#FFE2A0" stop-opacity=".6"/>
+    <stop offset="1" stop-color="#FFE2A0" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="#FFEAB0"/>
+    <stop offset="0.55" stop-color="#F0B64D"/>
+    <stop offset="1" stop-color="#C9731E"/>
+  </linearGradient>
+</defs>
+<rect width="900" height="900" fill="url(#bg)"/>
+<circle cx="450" cy="360" r="320" fill="url(#glow)"/>
+<path d="M450 180 C520 290 560 360 540 450 C530 500 480 540 450 560 C420 540 370 500 360 450 C340 360 380 290 450 180 Z" fill="url(#flame)"/>
+<path d="M450 320 C480 380 495 420 485 470 C480 495 460 515 450 525 C440 515 420 495 415 470 C405 420 420 380 450 320 Z" fill="#8A3A1E" fill-opacity=".55"/>
+<circle cx="450" cy="382" r="190" fill="none" stroke="#FFE2A0" stroke-opacity=".3" stroke-width="3"/>
+</svg>

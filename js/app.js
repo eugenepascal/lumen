@@ -4433,7 +4433,7 @@ const LUMEN_SACRED_ART = [
   {keys:['charbel','sharbel','makhlouf'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint_Charbel_Makhlouf.jpg?width=900', credit:'Saint Charbel · Wikimedia Commons'},
   {keys:['thérèse','therese','lisieux'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Image%20Th%C3%A9r%C3%A8se%20Lisieux.jpg?width=900', credit:'Sainte Thérèse · domaine public'},
   {keys:['guadalupe'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lady%20of%20Guadalupe.jpg?width=900', credit:'Notre-Dame de Guadalupe · domaine public'},
-  {keys:['sacré-cœur','sacre coeur','sacré coeur','sacred heart','jésus','jesus','christ'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900', credit:'Sacré-Cœur · Pompeo Batoni · CC0'},
+  {keys:['sacré-cœur','sacre coeur','sacré coeur','sacred heart','jésus','jesus','christ'], generic:true, url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900', credit:'Sacré-Cœur · Pompeo Batoni · CC0'},
   {keys:['bon pasteur','good shepherd'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=900', credit:'Le Bon Pasteur · James Tissot · domaine public'},
   // Grandes figures de l'Ancien Testament (Bible & Histoire) — mots-clés choisis
   // pour éviter toute confusion avec d'autres traditions religieuses présentes
@@ -4488,18 +4488,26 @@ const LUMEN_CONTEXT_ART = [
 
 
 
-function lumenSacredArtFor(entry){
+function lumenSacredArtFor(entry, opts){
   // Cherche une correspondance précise (mot entier, pas une simple sous-chaîne) entre
   // le nom/texte de l'entrée et les mots-clés de LUMEN_SACRED_ART. On garde la
   // correspondance la plus spécifique (la plus longue) pour éviter qu'un nom comme
   // « Jean-Paul II » ne matche à tort sur la seule clé « paul ». Si rien de fiable
   // n'est trouvé, on retourne null et l'entrée garde son emoji — jamais d'image au hasard.
   if(!entry) return null;
-  const rawText = ((entry.name||'') + ' ' + (entry.summary||'')).trim();
+  // nameOnly : pour les figures de « Bible & Histoire », de nombreux résumés citent
+  // d'autres personnages (« André, frère de Simon-Pierre », « ... selon la promesse
+  // faite à Jésus »...) — chercher dans le résumé entier ferait à tort apparaître le
+  // portrait d'une tout autre personne, ou l'image générique du Sacré-Cœur sur
+  // presque toutes les fiches qui mentionnent Jésus. On ne regarde donc que le nom
+  // propre de l'entrée elle-même dans ce contexte.
+  const nameOnly = opts && opts.nameOnly;
+  const rawText = nameOnly ? (entry.name||'').trim() : ((entry.name||'') + ' ' + (entry.summary||'')).trim();
   if(!rawText) return null;
   const text = ' ' + normalizeForMatch(rawText).join(' ') + ' ';
   let best = null, bestLen = 0;
   for(const item of LUMEN_SACRED_ART){
+    if(nameOnly && item.generic) continue;
     // requireAlso : pour un prénom ambigu partagé par plusieurs figures (ex. « Joseph »,
     // à la fois saint époux de Marie et patriarche fils de Jacob dans l'Ancien Testament),
     // on exige la présence d'un second mot distinctif avant de retenir la correspondance,
@@ -6470,6 +6478,39 @@ const HISTORY_TAG_META = {
   mauvais: {label:'Roi infidèle', icon:'⚠️'},
   mitige: {label:'Règne mitigé', icon:'◐'}
 };
+/* Quand aucun portrait vérifié n'existe pour une figure (voir LUMEN_SACRED_ART,
+   qui ne retourne jamais une image au hasard), on illustre quand même la carte
+   par une image thématique parlante — plutôt qu'un simple emoji — selon ce que
+   raconte le groupe ou l'étiquette de l'entrée : tables de la Loi pour les
+   origines/le Pentateuque, couronne pour les rois, flamme pour les prophètes,
+   épée pour les juges/tribus/conquête, poisson pour le Nouveau Testament,
+   rayonnement doré pour les portraits de charisme et de beauté. */
+const HISTORY_THEME_ART = {
+  origines: {url:'./images/history-tablets.svg', credit:'Illustration Lumen dédiée'},
+  rois: {url:'./images/history-crown.svg', credit:'Illustration Lumen dédiée'},
+  prophetes: {url:'./images/history-flame.svg', credit:'Illustration Lumen dédiée'},
+  juges: {url:'./images/history-sword.svg', credit:'Illustration Lumen dédiée'},
+  apotres: {url:'./images/history-fish.svg', credit:'Illustration Lumen dédiée'},
+  aura: {url:'./images/history-aura.svg', credit:'Illustration Lumen dédiée'}
+};
+const HISTORY_TAG_THEME = {
+  bon:'rois', mauvais:'rois', mitige:'rois',
+  Fondateurs:'origines', Pentateuque:'origines',
+  Libérateurs:'juges', Tribu:'juges', Conquête:'juges', Juge:'juges',
+  Rois:'rois', 'Prophètes':'prophetes'
+};
+const HISTORY_GROUP_THEME = {
+  'figures-genese':'origines', 'grands-portraits':'origines', 'livres-de-moise':'origines',
+  'monarchie-unifiee':'rois', 'royaume-nord':'rois', 'royaume-sud':'rois',
+  'grands-prophetes':'prophetes', 'petits-prophetes':'prophetes',
+  'douze-apotres':'apotres',
+  'avant-les-juges':'juges', 'chronique-des-juges':'juges', 'douze-tribus-israel':'juges',
+  'aura-puissance-beaute':'aura', 'beaute-dans-bible':'aura'
+};
+function historyThemeArtFor(entry, groupId){
+  const themeKey = (entry && entry.tag && HISTORY_TAG_THEME[entry.tag]) || HISTORY_GROUP_THEME[groupId];
+  return themeKey ? HISTORY_THEME_ART[themeKey] : null;
+}
 function allHistoryEntries(groups){
   const list = [];
   groups.forEach(g=> g.entries.forEach((e,idx)=> list.push({entry:e, groupId:g.id, idx})));
@@ -6477,8 +6518,9 @@ function allHistoryEntries(groups){
 }
 function historyCardHTML(entry, groupId, idx){
   const tagMeta = entry.tag && HISTORY_TAG_META[entry.tag];
-  const art = lumenSacredArtFor(entry);
-  const imgUrl = entry.img || (art ? art.url : null);
+  const art = lumenSacredArtFor(entry, {nameOnly:true});
+  const themeArt = historyThemeArtFor(entry, groupId);
+  const imgUrl = entry.img || (art ? art.url : null) || (themeArt ? themeArt.url : null);
   const thumb = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📜').replace(/'/g,"\\'")}'">` : (entry.avatar || '📜');
   return `<div class="card saint-grid-card" data-group="${groupId}" data-idx="${idx}">
     <div class="entry-avatar entry-avatar-photo saint-grid-avatar">${thumb}</div>
@@ -6555,8 +6597,10 @@ function renderFigureDetail(entry, group, idx, groups, compKey){
   const favMeta = {primary:PRIMARY, sub:SUBTAB[PRIMARY], compKey, groupId:group.id};
   const fav = {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey, groupId:group.id, idx, name:entry.name, avatar:entry.avatar, summary:(entry.summary||'').slice(0,90)};
   const tagMeta = entry.tag && HISTORY_TAG_META[entry.tag];
-  const art = lumenSacredArtFor(entry);
-  const imgUrl = entry.img || (art ? art.url : null);
+  const art = lumenSacredArtFor(entry, {nameOnly:true});
+  const themeArt = historyThemeArtFor(entry, group.id);
+  const displayArt = art || themeArt;
+  const imgUrl = entry.img || (displayArt ? displayArt.url : null);
 
   function wireCommon(){
     const backBtn = document.getElementById('history-back-btn');
@@ -6587,7 +6631,7 @@ function renderFigureDetail(entry, group, idx, groups, compKey){
       </div>
     </div>
     <div class="saint-portrait">
-      ${art ? `<p class="saint-img-credit">🔍 ${art.credit}</p>` : ''}
+      ${displayArt ? `<p class="saint-img-credit">🔍 ${displayArt.credit}</p>` : ''}
       <div class="saint-info-row">
         <span>📅 Repère : ${entry.dates||'—'}</span>
         ${tagMeta ? `<span>${tagMeta.icon} ${tagMeta.label}</span>` : ''}

@@ -1,16 +1,16 @@
 
   :root{
-    --vellum: #F5EFE4;
-    --vellum-light: #FCF8EF;
+    --vellum: #EADFBD;
+    --vellum-light: #F4EBD2;
     --ink: #2E2A3D;
     --ink-soft: #6B6480;
     --wine: #6B2545;
     --wine-dark: #3F1530;
     --gold: #C08A3E;
     --gold-light: #EAC77E;
-    --gold-pale: #F6E7C4;
+    --gold-pale: #F0E0B4;
     --sage: #5C6E58;
-    --hairline: #E3D6C0;
+    --hairline: #D9C396;
     --shadow: 0 6px 18px rgba(60,30,50,0.08);
     --shadow-warm: 0 10px 30px rgba(107,37,69,0.18);
     --glow-gold: 0 0 18px rgba(234,199,126,0.5);
@@ -19,8 +19,8 @@
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(232,204,126,0.25), transparent 55%),
-      linear-gradient(180deg, #E9E2CB 0%, #D2C4A0 100%);
+      radial-gradient(circle at 50% 0%, rgba(192,138,62,0.28), transparent 55%),
+      linear-gradient(180deg, #DBC797 0%, #B2935B 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
@@ -1843,24 +1843,25 @@
   }
   .flourish-divider{ text-align:center; color:var(--gold); font-size:13px; letter-spacing:6px; margin:18px 0; opacity:0.7; }
 
-  /* ===== mode sombre : "Ambre sombre" — bleu nuit profond et doux, l'ambre en accent discret ===== */
+  /* ===== mode sombre : "Ambre sombre" — ambre sablé très sombre, doux et feutré,
+     avec le bleu nuit gardé en accent discret pour la navigation ===== */
   body[data-theme="dark"]{
-    --vellum: #121824;
-    --vellum-light: #19202E;
-    --ink: #DCE2EA;
-    --ink-soft: #8591A4;
+    --vellum: #1B150C;
+    --vellum-light: #251D11;
+    --ink: #E7DFCF;
+    --ink-soft: #9C9075;
     --wine: #6E8CAE;
     --wine-dark: #526E8E;
     --gold: #C7A472;
     --gold-light: #D9BE93;
-    --gold-pale: #1C222E;
-    --hairline: #222A38;
-    --shadow-warm: 0 10px 30px rgba(0,0,0,0.55);
-    --glow-gold: 0 0 16px rgba(110,140,174,0.3);
+    --gold-pale: #241C10;
+    --hairline: #332A16;
+    --shadow-warm: 0 10px 30px rgba(0,0,0,0.6);
+    --glow-gold: 0 0 16px rgba(199,164,114,0.3);
   }
-  body[data-theme="dark"]{ background: linear-gradient(180deg, #0C1018 0%, #06080D 100%); }
+  body[data-theme="dark"]{ background: linear-gradient(180deg, #150F08 0%, #0A0704 100%); }
   body[data-theme="dark"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23C7A472' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%2306080D'/%3E%3Cg fill='%236E8CAE' fill-opacity='0.45'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23C7A472' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230A0704'/%3E%3Cg fill='%236E8CAE' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;
   }
   body[data-theme="dark"] #app{ box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
@@ -1870,7 +1871,7 @@
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
   body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0A0E16 0%, #121A27 45%, #1A2535 100%); border-bottom-color: rgba(110,140,174,0.22); color: #E4E9F0; }
   body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #E4E9F0; }
-  body[data-theme="dark"] #tabbar{ background: #121824; border-color: var(--hairline); }
+  body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 
   /* ===== topbar toolbar ===== */
   .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
