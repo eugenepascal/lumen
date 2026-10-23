@@ -4428,13 +4428,18 @@ const LUMEN_SACRED_ART = [
   {keys:['michel','michael'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/SAINT%20MICHAEL%20THE%20ARCHANGEL.PNG?width=900', credit:'Saint Michel · domaine public'},
   {keys:['gabriel'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Archangel%20Gabriel%20from%20an%20Annunciation%20-%20Google%20Art%20Project.jpg?width=900', credit:'Saint Gabriel · domaine public'},
   {keys:['raphaël','raphael'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Rembrandt%20De%20aartsengel%20verlaat%20Tobias%20en%20zijn%20gezin.%201637.jpg?width=900', credit:'Raphaël · Rembrandt · domaine public'},
-  {keys:['joseph'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Joseph%20with%20the%20Infant%20Jesus%20by%20Guido%20Reni%2C%20c%201635.jpg?width=900', credit:'Saint Joseph · Guido Reni · domaine public'},
+  {keys:['joseph'], requireAlso:'marie', url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Joseph%20with%20the%20Infant%20Jesus%20by%20Guido%20Reni%2C%20c%201635.jpg?width=900', credit:'Saint Joseph · Guido Reni · domaine public'},
   {keys:['marie','vierge marie','virgin mary','notre-dame','sainte vierge'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20The-Madonna-and-Child-128.jpg?width=900', credit:'Vierge Marie · Duccio di Buoninsegna · domaine public'},
   {keys:['charbel','sharbel','makhlouf'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint_Charbel_Makhlouf.jpg?width=900', credit:'Saint Charbel · Wikimedia Commons'},
   {keys:['thérèse','therese','lisieux'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Image%20Th%C3%A9r%C3%A8se%20Lisieux.jpg?width=900', credit:'Sainte Thérèse · domaine public'},
   {keys:['guadalupe'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lady%20of%20Guadalupe.jpg?width=900', credit:'Notre-Dame de Guadalupe · domaine public'},
   {keys:['sacré-cœur','sacre coeur','sacré coeur','sacred heart','jésus','jesus','christ'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900', credit:'Sacré-Cœur · Pompeo Batoni · CC0'},
-  {keys:['bon pasteur','good shepherd'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=900', credit:'Le Bon Pasteur · James Tissot · domaine public'}
+  {keys:['bon pasteur','good shepherd'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=900', credit:'Le Bon Pasteur · James Tissot · domaine public'},
+  // Grandes figures de l'Ancien Testament (Bible & Histoire) — mots-clés choisis
+  // pour éviter toute confusion avec d'autres traditions religieuses présentes
+  // dans l'application (ex. « Abraham » et « Adam » apparaissent aussi dans des
+  // enseignements sur la tradition coranique : volontairement exclus d'ici).
+  {keys:['moïse','moise','moses'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Rembrandt%20-%20Moses%20with%20the%20Ten%20Commandments%20-%20Google%20Art%20Project.jpg?width=900', credit:'Moïse et les Tables de la Loi · Rembrandt · domaine public'}
 ];
 
 
@@ -4495,6 +4500,14 @@ function lumenSacredArtFor(entry){
   const text = ' ' + normalizeForMatch(rawText).join(' ') + ' ';
   let best = null, bestLen = 0;
   for(const item of LUMEN_SACRED_ART){
+    // requireAlso : pour un prénom ambigu partagé par plusieurs figures (ex. « Joseph »,
+    // à la fois saint époux de Marie et patriarche fils de Jacob dans l'Ancien Testament),
+    // on exige la présence d'un second mot distinctif avant de retenir la correspondance,
+    // plutôt que de risquer d'afficher le mauvais portrait sur la mauvaise figure.
+    if(item.requireAlso){
+      const normAlso = normalizeForMatch(item.requireAlso).join(' ');
+      if(normAlso && !text.includes(' ' + normAlso + ' ')) continue;
+    }
     for(const key of item.keys){
       const normKey = normalizeForMatch(key).join(' ');
       if(!normKey) continue;
@@ -5552,6 +5565,25 @@ function renderGuides(){
 }
 
 /* ================= generic entry sections (Bible, Saints, Jésus, Prières, etc.) ================= */
+// Variante "sommaire de livre" : une rangée plate (icône/miniature + titre +
+// courte référence + chevron) au lieu d'une carte en grille — utilisée pour les
+// sous-parties de la section Écritures (Psaumes, Récits fondateurs, Repères)
+// afin de présenter sections/chapitres comme un sommaire de livre.
+function entryRowHTML(entry, idx){
+  const art = lumenSacredArtFor(entry);
+  const imgUrl = entry.img || (art ? art.url : null);
+  const iconHTML = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📖').replace(/'/g,"\\'")}'">` : (entry.avatar || '📖');
+  const desc = entry.ref || entry.dates || entry.summary || '';
+  return `<div class="rubric-row entry-card" data-idx="${idx}">
+    <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${iconHTML}</div>
+    <div class="rubric-row-text">
+      <span class="rubric-row-title">${entry.name}</span>
+      ${desc ? `<span class="rubric-row-desc">${desc}</span>` : ''}
+    </div>
+    <span class="rubric-row-chevron">›</span>
+  </div>`;
+}
+
 function entryCardHTML(entry, idx, halo){
   const art = lumenSacredArtFor(entry);
   const imgUrl = entry.img || (art ? art.url : null);
@@ -5785,16 +5817,22 @@ function wireEntryDetailExtras(entry, usageKey){
 }
 
 function renderGenealogyTimeline(){
-  let html = `<p class="section-desc" style="margin-top:0;">La lignée principale (trait plein) descend de génération en génération ; les frères et sœurs ou branches parallèles (↳) s'en détachent sans la poursuivre.</p><div class="card gen-tree">`;
+  let html = `<p class="section-desc" style="margin-top:0;">La lignée principale descend, génération après génération, le long du tronc central ; les frères et sœurs ou branches parallèles se détachent sur le côté sans la poursuivre.</p><div class="card gen-tree2">`;
   GENEALOGY.forEach(item=>{
-    if(item.era){ html += `<p class="gen-tree-era gen-era">${item.era}</p>`; return; }
-    if(item.divider){ html += `<div class="gen-tree-divider">⛓️ ${item.note||''}</div>`; return; }
-    html += `<div class="gen-tree-node${item.dashed?' dashed':''}${item.final?' final':''}">
-      <p class="gen-tree-label">${item.label}</p>
-      ${item.note ? `<p class="gen-tree-note">${item.note}</p>` : ''}
+    if(item.era){ html += `<div class="gen-tree2-era-row"><span class="gen-tree2-era">${item.era}</span></div>`; return; }
+    if(item.divider){ html += `<div class="gen-tree2-divider-row"><span class="gen-tree2-divider">⛓️ ${item.note||''}</span></div>`; return; }
+    html += `<div class="gen-tree2-row">
+      <div class="gen-tree2-slot"></div>
+      <div class="gen-tree2-box${item.dashed?' dashed':''}${item.final?' final':''}">
+        <p class="gen-tree2-name">${item.label}</p>
+        ${item.note ? `<p class="gen-tree2-note">${item.note}</p>` : ''}
+      </div>
+      <div class="gen-tree2-slot">${item.branch ? `
+        <span class="gen-tree2-elbow"></span>
+        <div class="gen-tree2-box sibling"><p class="gen-tree2-name">↳ ${item.branch}</p></div>` : ''}
+      </div>
     </div>`;
-    if(item.branch) html += `<div class="gen-tree-branch">${item.branch}</div>`;
-    if(item.gap) html += `<div class="gen-tree-gap">${item.gap}</div>`;
+    if(item.gap) html += `<div class="gen-tree2-gap-row"><span class="gen-tree2-gap">⋮ ${item.gap}</span></div>`;
   });
   html += `</div>`;
   return html;
@@ -6439,8 +6477,11 @@ function allHistoryEntries(groups){
 }
 function historyCardHTML(entry, groupId, idx){
   const tagMeta = entry.tag && HISTORY_TAG_META[entry.tag];
+  const art = lumenSacredArtFor(entry);
+  const imgUrl = entry.img || (art ? art.url : null);
+  const thumb = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📜').replace(/'/g,"\\'")}'">` : (entry.avatar || '📜');
   return `<div class="card saint-grid-card" data-group="${groupId}" data-idx="${idx}">
-    <div class="entry-avatar entry-avatar-photo saint-grid-avatar">${entry.avatar||'📜'}</div>
+    <div class="entry-avatar entry-avatar-photo saint-grid-avatar">${thumb}</div>
     <p class="entry-name" style="margin-top:8px;">${entry.name}</p>
     <p class="studio-note" style="margin:2px 0;">${entry.dates||''}</p>
     ${tagMeta ? `<p class="saint-grid-tag">${tagMeta.icon} ${tagMeta.label}</p>` : ''}
@@ -6514,6 +6555,8 @@ function renderFigureDetail(entry, group, idx, groups, compKey){
   const favMeta = {primary:PRIMARY, sub:SUBTAB[PRIMARY], compKey, groupId:group.id};
   const fav = {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey, groupId:group.id, idx, name:entry.name, avatar:entry.avatar, summary:(entry.summary||'').slice(0,90)};
   const tagMeta = entry.tag && HISTORY_TAG_META[entry.tag];
+  const art = lumenSacredArtFor(entry);
+  const imgUrl = entry.img || (art ? art.url : null);
 
   function wireCommon(){
     const backBtn = document.getElementById('history-back-btn');
@@ -6522,22 +6565,29 @@ function renderFigureDetail(entry, group, idx, groups, compKey){
       else { ENTRY_OPEN = null; render(); }
     };
     wireFavStars();
+    const zoom = document.getElementById('history-hero-img');
+    if(zoom && imgUrl) zoom.onclick = ()=> openSaintImageZoom(imgUrl, entry.name);
   }
 
   if(!HISTORY_PROFILE_TAB){
-    let html = `<div class="saint-portrait-hero no-img">
+    const heroInner = imgUrl
+      ? `<img id="history-hero-img" src="${imgUrl}" alt="" onerror="this.closest('.saint-portrait-hero').classList.add('no-img');">`
+      : '';
+    let html = `<div class="saint-portrait-hero ${imgUrl?'':'no-img'}">
+      ${heroInner}
       <div class="saint-portrait-hero-scrim"></div>
       <div class="saint-portrait-hero-top">
         <button class="back-link saint-hero-back" id="history-back-btn">← ${group.title}</button>
         ${favStarHTML(fav)}
       </div>
-      <div class="halo-wrap" style="width:96px; height:96px; margin:0 auto;"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo" style="font-size:44px;">${entry.avatar||'📜'}</div></div>
+      ${!imgUrl ? `<div class="halo-wrap" style="width:96px; height:96px; margin:0 auto;"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo" style="font-size:44px;">${entry.avatar||'📜'}</div></div>` : ''}
       <div class="saint-portrait-hero-bottom">
         <p class="saint-portrait-name">${entry.name}</p>
         <p class="saint-portrait-sub">${entry.ref||''}</p>
       </div>
     </div>
     <div class="saint-portrait">
+      ${art ? `<p class="saint-img-credit">🔍 ${art.credit}</p>` : ''}
       <div class="saint-info-row">
         <span>📅 Repère : ${entry.dates||'—'}</span>
         ${tagMeta ? `<span>${tagMeta.icon} ${tagMeta.label}</span>` : ''}
@@ -6573,6 +6623,7 @@ function renderFigureDetail(entry, group, idx, groups, compKey){
     body = `<div class="card">
       <p class="eyebrow" style="color:var(--gold);">Son histoire</p>
       <p class="entry-detail-text">${entry.summary}</p>
+      ${imgUrl ? `<figure class="saint-midfigure"><img src="${imgUrl}" alt="" onerror="this.closest('figure').remove();"></figure>` : ''}
       <p class="eyebrow" style="color:var(--gold); margin-top:14px;">Repères</p>
       <div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">📅 Période</span><br><span class="gen-note">${entry.dates||'non précisée'}</span></div>
       ${entry.ref ? `<div class="gen-item" style="border-left-color:var(--gold);"><span class="gen-label">📖 Référence</span><br><span class="gen-note">${entry.ref}</span></div>` : ''}
@@ -6791,7 +6842,10 @@ function renderGenericSection(groups, compKey, sectionLabel){
     return;
   }
 
-  html += `<div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
+  const BOOK_LIST_COMPKEYS = ['ecritures:psaumes', 'ecritures:recits', 'ecritures:reperes'];
+  html += BOOK_LIST_COMPKEYS.includes(compKey)
+    ? `<div class="rubric-list">${group.entries.map((e,i)=>entryRowHTML(e,i)).join('')}</div>`
+    : `<div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   wireGroupChips(compKey);
   const monthToggle = document.getElementById('neuvaine-month-toggle');
@@ -8125,49 +8179,34 @@ let AMBIANCE_SHUFFLE_LAST = null;
 let AMBIANCE_VIDEO_OPEN = false;
 let AMBIANCE_VIDEO_LABEL = '';
 /* Détection des vidéos YouTube indisponibles (ID invalide, vidéo retirée,
-   intégration désactivée par son propriétaire...) : on attache l'API JS
-   YouTube au cadre déjà affiché (mêmes contrôles natifs, rien ne change
-   visuellement) uniquement pour écouter l'évènement onError et, si un
-   groupe de morceaux est actif, enchaîner automatiquement sur un autre
-   titre au lieu de laisser l'utilisateur face à un lecteur figé. */
-let YT_API_READY = false;
-let YT_API_LOADING = false;
-let AMBIANCE_YT_PLAYER = null;
+   intégration désactivée par son propriétaire...) : on écoute simplement
+   les messages postMessage que le lecteur natif envoie lui-même grâce à
+   enablejsapi=1, SANS jamais instancier l'API JS YT.Player() sur le cadre
+   déjà affiché. Appeler `new YT.Player()` sur un <iframe> existant peut
+   amener l'API à recréer/réinitialiser ce cadre, ce qui coupait la lecture
+   ou empêchait le son de démarrer — c'est très probablement la cause des
+   « sons d'ambiance qui ne se chargent plus ». Cette version plus légère
+   ne touche jamais à l'iframe : elle se contente d'écouter. */
 let AMBIANCE_CURRENT_POOL = null;
 let AMBIANCE_ERROR_ATTEMPTS = 0;
-function ensureYoutubeApi(cb){
-  if(window.YT && window.YT.Player){ YT_API_READY = true; cb(); return; }
-  window.__ytApiCallbacks = window.__ytApiCallbacks || [];
-  window.__ytApiCallbacks.push(cb);
-  if(YT_API_LOADING) return;
-  YT_API_LOADING = true;
-  const prevReady = window.onYouTubeIframeAPIReady;
-  window.onYouTubeIframeAPIReady = function(){
-    YT_API_READY = true;
-    if(typeof prevReady === 'function') prevReady();
-    (window.__ytApiCallbacks||[]).forEach(f=>{ try{ f(); }catch(e){} });
-    window.__ytApiCallbacks = [];
-  };
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
-}
+window.addEventListener('message', (ev)=>{
+  if(typeof ev.data !== 'string') return;
+  let data;
+  try{ data = JSON.parse(ev.data); }catch(e){ return; }
+  if(data && data.event === 'onError') handleAmbianceYoutubeError();
+  else if(data && data.event === 'onReady') AMBIANCE_ERROR_ATTEMPTS = 0;
+});
 function wireYoutubeErrorDetection(){
   const el = document.getElementById('ambiance-yt-iframe');
   if(!el) return;
-  ensureYoutubeApi(()=>{
-    // la fenêtre a pu être fermée pendant le chargement de l'API
-    if(!document.getElementById('ambiance-yt-iframe')) return;
-    try{ if(AMBIANCE_YT_PLAYER && AMBIANCE_YT_PLAYER.destroy) AMBIANCE_YT_PLAYER.destroy(); }catch(e){}
-    try{
-      AMBIANCE_YT_PLAYER = new YT.Player('ambiance-yt-iframe', {
-        events:{
-          onReady: ()=>{ AMBIANCE_ERROR_ATTEMPTS = 0; },
-          onError: (e)=>{ handleAmbianceYoutubeError(e && e.data); }
-        }
-      });
-    }catch(err){}
-  });
+  // Demande au lecteur de nous signaler ses évènements (play/pause/erreur…)
+  // par postMessage — fonctionne dès lors que l'iframe a enablejsapi=1,
+  // sans dépendre du script externe youtube.com/iframe_api.
+  const tellListening = ()=>{ try{ el.contentWindow.postMessage(JSON.stringify({event:'listening', id:'ambiance-yt-iframe'}), '*'); }catch(e){} };
+  if(el.dataset.listeningWired) return;
+  el.dataset.listeningWired = '1';
+  el.addEventListener('load', tellListening);
+  tellListening();
 }
 function handleAmbianceYoutubeError(){
   if(!AMBIANCE_VIDEO_OPEN || !BG_YT_VIDEO_ID) return;
@@ -8190,8 +8229,6 @@ function syncBgAmbianceIcon(){
 }
 function stopAllAmbiance(){
   stopLoop();
-  try{ if(AMBIANCE_YT_PLAYER && AMBIANCE_YT_PLAYER.destroy) AMBIANCE_YT_PLAYER.destroy(); }catch(e){}
-  AMBIANCE_YT_PLAYER = null;
   AMBIANCE_CURRENT_POOL = null;
   AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_YT_VIDEO_ID = null;
@@ -10599,15 +10636,20 @@ function renderBibleReader(){
     const pct = Math.round(readCount/t.books.length*100);
     html += `<h2 class="section-title" style="font-size:16px;">${t.title} — ${readCount}/${t.books.length}</h2>
       <div class="bible-progress-bar"><div class="bible-progress-fill" style="width:${pct}%;"></div></div>
-      <div class="grid">`;
-    t.books.forEach(b=>{
+      <div class="rubric-list book-toc-list">`;
+    t.books.forEach((b,i)=>{
       const [fr, en] = b.split('|');
       const url = "https://www.biblegateway.com/passage/?search=" + encodeURIComponent(en+" 1") + "&version=LSG";
       const isRead = BIBLE_PROGRESS.includes(fr);
-      html += `<div class="card entry-card" style="align-items:center;">
-        <input type="checkbox" class="bible-check" data-book="${fr}" ${isRead?'checked':''}>
-        <div class="entry-avatar">📖</div>
-        <div class="entry-body" style="flex:1;"><p class="entry-name">${fr}</p><a href="${url}" target="_blank" rel="noopener" class="entry-summary" style="display:block;">Lire sur Bible Gateway (Louis Segond) ↗</a></div>
+      html += `<div class="rubric-row book-toc-row">
+        <label class="book-toc-check" title="Marquer comme lu">
+          <input type="checkbox" class="bible-check" data-book="${fr}" ${isRead?'checked':''}>
+        </label>
+        <a href="${url}" target="_blank" rel="noopener" class="rubric-row-text book-toc-link">
+          <span class="rubric-row-title">${i+1}. ${fr}</span>
+          <span class="rubric-row-desc">Lire sur Bible Gateway (Louis Segond)</span>
+        </a>
+        <span class="rubric-row-chevron">↗</span>
       </div>`;
     });
     html += `</div>`;

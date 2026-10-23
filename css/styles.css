@@ -60,6 +60,37 @@
   body:not([data-theme="dark"]) .bg-star{ display:none; }
   #bg-particles{ display:none; }
 
+  /* ===== Lumen — lueur de lumière vivante, en arrière-plan de toute l'appli =====
+     Deux rais de lumière très doux, qui dérivent et respirent lentement, comme la
+     lumière d'un vitrail ou d'une bougie plutôt qu'un simple motif statique. Le
+     nom de l'application est « Lumen » : cette lueur en est le fil conducteur
+     visuel, derrière chaque écran. */
+  #bg-glow{ position:absolute; inset:0; z-index:-1; pointer-events:none; overflow:hidden; opacity:0.8; }
+  .bg-glow-ray{
+    position:absolute; border-radius:50%; filter:blur(5px);
+    background:radial-gradient(circle, rgba(232,204,126,0.55) 0%, rgba(232,204,126,0.18) 45%, transparent 72%);
+    mix-blend-mode:screen;
+  }
+  .bg-glow-ray-1{ width:280px; height:280px; top:16%; left:-18%; animation: glowDrift1 26s ease-in-out infinite; }
+  .bg-glow-ray-2{ width:240px; height:240px; bottom:18%; right:-16%; animation: glowDrift2 32s ease-in-out infinite; }
+  @keyframes glowDrift1{
+    0%,100%{ transform:translate(0,0) scale(1); opacity:0.55; }
+    50%{ transform:translate(10%,8%) scale(1.15); opacity:0.85; }
+  }
+  @keyframes glowDrift2{
+    0%,100%{ transform:translate(0,0) scale(1); opacity:0.5; }
+    50%{ transform:translate(-8%,-10%) scale(1.2); opacity:0.8; }
+  }
+  body[data-theme="dark"] .bg-glow-ray{
+    background:radial-gradient(circle, rgba(110,140,174,0.55) 0%, rgba(110,140,174,0.16) 45%, transparent 72%);
+  }
+  body[data-theme="dark"] .bg-glow-ray-2{
+    background:radial-gradient(circle, rgba(199,164,114,0.4) 0%, rgba(199,164,114,0.12) 45%, transparent 72%);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .bg-glow-ray{ animation:none; }
+  }
+
   /* ===== Lumen — poussière de lumière, visible en permanence ===== */
   #lumen-dust{ position:absolute; inset:0; z-index:5; pointer-events:none; overflow:hidden; }
   .dust-mote{
@@ -319,8 +350,14 @@
   .lent-goal-check input{ width:16px; height:16px; accent-color:var(--wine); }
   .aelf-embed-wrap{ max-width:600px; margin:0 auto; border-radius:14px; overflow:hidden; border:1px solid var(--hairline); background:#fff; }
   .aelf-embed-wrap iframe{ width:100%; height:520px; border:none; display:block; }
-  .aelf-bible-list{ display:flex; flex-direction:column; gap:4px; margin-top:6px; }
-  .aelf-bible-row{ text-align:left; padding:10px 12px; border-radius:10px; border:1px solid var(--hairline); background:var(--vellum-light); color:var(--ink); font-family:'Inter',sans-serif; font-size:12.5px; cursor:pointer; }
+  /* Sommaire façon livre : une rangée plate par livre/chapitre, séparée par un
+     simple filet, avec un chevron — pas d'encadré de carte (voir .rubric-row,
+     même esprit visuel que les écrans "hub"). */
+  .aelf-bible-list{ display:flex; flex-direction:column; margin-top:6px; }
+  .aelf-bible-row{ display:flex; align-items:center; gap:10px; text-align:left; width:100%; padding:11px 2px; border:none; border-bottom:1px solid var(--hairline); background:none; color:var(--ink); font-family:'Fraunces',serif; font-size:14.5px; cursor:pointer; }
+  .aelf-bible-list .aelf-bible-row:last-child{ border-bottom:none; }
+  .aelf-bible-row::after{ content:'›'; margin-left:auto; font-size:18px; color:var(--ink-soft); opacity:0.55; font-family:'Inter',sans-serif; }
+  @media (hover:hover){ .aelf-bible-row:hover{ color:var(--wine); } }
   .aelf-chapter-nav{ display:flex; justify-content:space-between; gap:8px; }
 
   /* Lecteur biblique natif (texte + méditation + audio), comme la maquette */
@@ -940,6 +977,17 @@
   .rubric-row-desc{ display:block; font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .rubric-row-chevron{ flex-shrink:0; font-size:20px; color:var(--ink-soft); opacity:0.55; }
   @media (hover:hover){ .rubric-row:hover .rubric-row-title{ color:var(--wine); } }
+  /* Variante "sommaire de livre" : une case à cocher à gauche plutôt qu'une
+     icône ronde, le reste de la ligne ouvrant la lecture. */
+  .book-toc-row{ cursor:default; }
+  .book-toc-check{ flex-shrink:0; display:flex; align-items:center; justify-content:center; width:24px; cursor:pointer; }
+  .book-toc-check input{ width:19px; height:19px; accent-color:var(--wine); cursor:pointer; }
+  a.book-toc-link, a.rubric-row-text{ text-decoration:none; }
+  /* Même rangée "sommaire", mais avec une vraie miniature photo (ou l'emoji de
+     secours) à gauche plutôt qu'un pictogramme — utilisée pour les listes
+     d'entrées (Psaumes par thème, Récits fondateurs, Repères) afin que les
+     portraits/images ne soient pas réduits en pictogramme monochrome. */
+  .rubric-row-photo-icon{ width:46px; height:46px; margin:0; font-size:20px; }
   .hub-hero-banner{ position:relative; height:110px; border-radius:16px; overflow:hidden; margin-bottom:14px; display:flex; align-items:center; justify-content:center; }
   .hub-hero-banner img:not(.hub-hero-banner-img){ width:52px; height:52px; filter:brightness(0) invert(1); opacity:0.9; }
   .hub-hero-banner-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 22%; }
@@ -1599,22 +1647,46 @@
   /* genealogy as a clear visual tree : trunk line per node, dot markers,
      distinct styling for side branches, omitted generations and the final
      figure (Jésus) */
-  .gen-tree{ padding-top:2px; }
-  .gen-tree-era.gen-era{ margin-left:0; }
-  .gen-tree-node{ position:relative; padding:9px 0 9px 20px; margin-left:6px; border-left:2px solid var(--hairline); }
-  .gen-tree-node::before{ content:''; position:absolute; left:-7px; top:15px; width:12px; height:12px; border-radius:50%; background:var(--wine); border:2px solid var(--vellum-light); box-shadow:0 0 0 1px var(--hairline); }
-  .gen-tree-node .gen-tree-label{ font-weight:700; font-size:14.5px; color:var(--ink); }
-  .gen-tree-node .gen-tree-note{ font-size:12px; color:var(--ink-soft); margin-top:1px; }
-  .gen-tree-node.final{ border-left-color:var(--gold); }
-  .gen-tree-node.final::before{ width:17px; height:17px; left:-9.5px; top:11px; background:var(--gold); box-shadow:0 0 0 2px var(--gold-pale), 0 0 10px rgba(192,138,62,0.55); }
-  .gen-tree-node.final .gen-tree-label{ color:var(--wine-dark); font-size:16.5px; }
-  .gen-tree-node.dashed{ border-left-style:dashed; }
-  .gen-tree-node.dashed::before{ background:var(--vellum-light); border:2px dashed var(--ink-soft); box-shadow:none; }
-  .gen-tree-node.dashed .gen-tree-label{ color:var(--ink-soft); font-style:italic; font-weight:600; }
-  .gen-tree-branch{ position:relative; margin:0 0 6px 26px; padding:3px 0 3px 18px; font-size:12px; color:var(--ink-soft); border-left:1px dashed var(--hairline); }
-  .gen-tree-branch::before{ content:'↳'; position:absolute; left:-3px; top:1px; color:var(--hairline); font-size:12px; }
-  .gen-tree-gap{ margin:0 0 4px 26px; padding:2px 0 2px 18px; font-size:11px; font-style:italic; color:var(--gold); border-left:1px dotted var(--gold); opacity:0.85; }
-  .gen-tree-divider{ margin:16px 0 16px 6px; padding:9px 14px; border-radius:10px; background:linear-gradient(90deg, rgba(124,31,46,0.09), rgba(124,31,46,0.02)); border-left:3px solid var(--wine); font-family:'Inter',sans-serif; font-size:12px; font-weight:600; color:var(--wine-dark); }
+  /* ===== Arbre généalogique : un vrai tronc central reliant chaque
+     génération, avec les frères/sœurs ou branches parallèles accrochés sur le
+     côté par un coude — plutôt qu'une simple frise verticale. ===== */
+  .gen-tree2{ position:relative; padding:4px 0 2px; }
+  .gen-tree2::before{
+    content:''; position:absolute; left:50%; top:4px; bottom:4px; width:2px;
+    background:linear-gradient(180deg, var(--hairline) 0%, var(--wine) 12%, var(--wine) 88%, var(--hairline) 100%);
+    opacity:0.55; transform:translateX(-50%); z-index:0;
+  }
+  .gen-tree2-row{ position:relative; z-index:1; display:grid; grid-template-columns:1fr 168px 1fr; align-items:center; column-gap:0; min-height:0; }
+  .gen-tree2-slot{ display:flex; align-items:center; min-height:1px; }
+  .gen-tree2-row .gen-tree2-slot:last-child{ justify-content:flex-start; }
+  .gen-tree2-box{
+    position:relative; width:100%; margin:5px 0; padding:8px 12px; border-radius:12px; text-align:center;
+    background:var(--vellum-light); border:1px solid var(--hairline); box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  }
+  .gen-tree2-box::before, .gen-tree2-box::after{
+    content:''; position:absolute; left:50%; width:7px; height:7px; border-radius:50%;
+    background:var(--wine); transform:translate(-50%,-50%); box-shadow:0 0 0 2px var(--vellum-light);
+  }
+  .gen-tree2-box::before{ top:0; }
+  .gen-tree2-box::after{ bottom:0; transform:translate(-50%,50%); }
+  .gen-tree2-name{ font-family:'Fraunces',serif; font-weight:700; font-size:14px; color:var(--ink); margin:0; line-height:1.25; }
+  .gen-tree2-note{ font-family:'Inter',sans-serif; font-size:10.5px; color:var(--ink-soft); margin:2px 0 0; }
+  .gen-tree2-box.final{ background:linear-gradient(145deg, var(--gold-light), var(--gold)); border-color:var(--gold); box-shadow:0 4px 14px rgba(192,138,62,0.4); }
+  .gen-tree2-box.final::before, .gen-tree2-box.final::after{ background:var(--gold); width:11px; height:11px; box-shadow:0 0 0 3px var(--gold-pale), 0 0 10px rgba(192,138,62,0.55); }
+  .gen-tree2-box.final .gen-tree2-name{ color:var(--wine-dark); font-size:16px; }
+  .gen-tree2-box.dashed{ background:none; border-style:dashed; border-color:var(--ink-soft); }
+  .gen-tree2-box.dashed .gen-tree2-name{ color:var(--ink-soft); font-style:italic; font-weight:600; font-size:12.5px; }
+  .gen-tree2-box.dashed::before, .gen-tree2-box.dashed::after{ background:var(--vellum-light); border:2px dashed var(--ink-soft); box-shadow:none; }
+  .gen-tree2-box.sibling{ background:none; border:1px dashed var(--hairline); box-shadow:none; padding:5px 10px; }
+  .gen-tree2-box.sibling::before, .gen-tree2-box.sibling::after{ content:none; }
+  .gen-tree2-box.sibling .gen-tree2-name{ font-size:11.5px; font-weight:600; font-style:italic; color:var(--ink-soft); }
+  .gen-tree2-elbow{ flex-shrink:0; width:14px; height:2px; background:var(--hairline); margin-right:-1px; }
+  .gen-tree2-era-row, .gen-tree2-divider-row{ position:relative; z-index:1; display:flex; justify-content:center; margin:14px 0; }
+  .gen-tree2-era{ font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--wine-dark); background:var(--vellum-light); padding:5px 16px; border-radius:20px; border:1px solid var(--hairline); }
+  .gen-tree2-divider{ font-family:'Inter',sans-serif; font-size:11.5px; font-weight:600; color:var(--wine-dark); background:linear-gradient(90deg, rgba(124,31,46,0.12), rgba(124,31,46,0.05)); padding:8px 16px; border-radius:10px; border:1px solid var(--hairline); text-align:center; max-width:78%; }
+  .gen-tree2-gap-row{ position:relative; z-index:1; display:flex; justify-content:center; margin:2px 0; }
+  .gen-tree2-gap{ font-family:'Inter',sans-serif; font-size:10px; font-style:italic; color:var(--gold); background:var(--vellum-light); padding:2px 10px; border-radius:10px; border:1px dotted var(--gold); opacity:0.9; }
+  @media (max-width:360px){ .gen-tree2-row{ grid-template-columns:0.4fr 140px 1fr; } .gen-tree2-box.sibling .gen-tree2-name{ font-size:10.5px; } }
 
   /* liturgical / news banners */
   .info-banner{
@@ -1771,24 +1843,24 @@
   }
   .flourish-divider{ text-align:center; color:var(--gold); font-size:13px; letter-spacing:6px; margin:18px 0; opacity:0.7; }
 
-  /* ===== mode sombre : "Ambre sombre" — bleu nuit sobre, accents ambre discrets ===== */
+  /* ===== mode sombre : "Ambre sombre" — bleu nuit profond et doux, l'ambre en accent discret ===== */
   body[data-theme="dark"]{
-    --vellum: #141A23;
-    --vellum-light: #1C2430;
-    --ink: #E7E2D6;
-    --ink-soft: #92A0B2;
-    --wine: #C99A5E;
-    --wine-dark: #A67A42;
-    --gold: #D4B377;
-    --gold-light: #E6CB9C;
-    --gold-pale: #26211A;
-    --hairline: #29323E;
-    --shadow-warm: 0 10px 30px rgba(0,0,0,0.5);
-    --glow-gold: 0 0 16px rgba(212,179,119,0.25);
+    --vellum: #121824;
+    --vellum-light: #19202E;
+    --ink: #DCE2EA;
+    --ink-soft: #8591A4;
+    --wine: #6E8CAE;
+    --wine-dark: #526E8E;
+    --gold: #C7A472;
+    --gold-light: #D9BE93;
+    --gold-pale: #1C222E;
+    --hairline: #222A38;
+    --shadow-warm: 0 10px 30px rgba(0,0,0,0.55);
+    --glow-gold: 0 0 16px rgba(110,140,174,0.3);
   }
-  body[data-theme="dark"]{ background: linear-gradient(180deg, #10141B 0%, #090C10 100%); }
+  body[data-theme="dark"]{ background: linear-gradient(180deg, #0C1018 0%, #06080D 100%); }
   body[data-theme="dark"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D4B377' fill-opacity='0.2'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%23090C10'/%3E%3Cg fill='%23D4B377' fill-opacity='0.45'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23C7A472' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%2306080D'/%3E%3Cg fill='%236E8CAE' fill-opacity='0.45'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;
   }
   body[data-theme="dark"] #app{ box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
@@ -1796,9 +1868,9 @@
   /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en bleu nuit, pas en bordeaux.
      Le texte du bandeau utilise par défaut --vellum-light, qui devient une couleur sombre (fond de
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
-  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0E1420 0%, #1A2435 45%, #233349 100%); border-bottom-color: rgba(212,179,119,0.22); color: #F0E6D4; }
-  body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F0E6D4; }
-  body[data-theme="dark"] #tabbar{ background: #171E28; border-color: var(--hairline); }
+  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0A0E16 0%, #121A27 45%, #1A2535 100%); border-bottom-color: rgba(110,140,174,0.22); color: #E4E9F0; }
+  body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #E4E9F0; }
+  body[data-theme="dark"] #tabbar{ background: #121824; border-color: var(--hairline); }
 
   /* ===== topbar toolbar ===== */
   .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
