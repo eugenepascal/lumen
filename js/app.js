@@ -8603,6 +8603,7 @@ function wireSpeakShare(){
 const ROSARY_BEAD_COLORS = { wine:'#6B2545', gold:'#C08A3E', navy:'#2C4A6B', olive:'#5C6E58' };
 const ROSARY_CRUCIFIX_IMG = "https://commons.wikimedia.org/wiki/Special:Redirect/file/Cristo%20crucificado.jpg?width=500";
 const ROSARY_MARIE_IMG = "https://commons.wikimedia.org/wiki/Special:Redirect/file/Bartolom%C3%A9%20Esteban%20Murillo%20-%20The%20Immaculate%20Conception%20of%20the%20Escorial.jpg?width=600";
+const ROSARY_PATERNOSTER_IMG = "https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Lord%27s%20Prayer%20%28Le%20Pater%20Noster%29%20-%20James%20Tissot.jpg?width=600";
 let CHAPLET_CAT_TAB = 'tous';
 let ROSARY_SETTINGS_OPEN = false;
 let ROSARY_SETTINGS = { audio:true, speed:1, guided:true, vibration:false, showText:true, textScale:1, beadColor:'wine', mode:'classique' };
@@ -8752,6 +8753,7 @@ function chapletPaterHTML(){
   return `<div class="rosary-head-row"><span class="rosary-set-pill">🔗 ${set.label}</span>${rosaryTopIconsHTML({title:'Notre Père', noFav:true})}</div>
   <p class="eyebrow" style="color:var(--gold); text-align:center;">${mi+1}${mi===0?'er':'e'} mystère · ${set.mysteres[mi].title}</p>
   <h1 class="day-title" style="text-align:center;">Notre Père</h1>
+  <figure class="rosary-gloria-figure"><img src="${ROSARY_PATERNOSTER_IMG}" alt="" loading="lazy" onerror="this.style.display='none'"></figure>
   ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Notre Père']}</p></div>` : ''}
   ${rosaryAudioBlockHTML(CHAPLET_PRAYER_TEXTS['Notre Père'], 'pater')}
   <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary" id="rosary-after-pater">Je vous salue Marie →</button></div>`;
