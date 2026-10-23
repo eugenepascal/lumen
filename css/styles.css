@@ -1362,6 +1362,9 @@
   .ambiance-player-title{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--wine-dark); margin:0; }
   .ambiance-player-label{ font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--ink); text-align:center; margin:0 0 12px; }
   .ambiance-player-embed{ width:100%; height:220px; border-radius:12px; background:#000; }
+  .ambiance-player-embed iframe{ width:100%; height:100%; border:none; border-radius:12px; }
+  .aelf-iframe-embed{ width:100%; height:62vh; min-height:420px; max-height:640px; border-radius:14px; overflow:hidden; border:1px solid var(--gold-pale); background:#fff; }
+  .aelf-iframe-embed iframe{ width:100%; height:100%; border:none; }
   .ambiance-player-controls{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
   .sumry-streak{ text-align:center; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; color:var(--wine-dark); margin:12px 0; padding:8px; background:var(--gold-pale); border-radius:12px; }
   .mp-folders-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }

@@ -10176,12 +10176,7 @@ function renderAelfOfficeBody(){
     const html = aelfOfficeHTML(office.key, json);
     if(!html){
       AELF_OFFICE_LAST_PLAIN_TEXT = '';
-      bodyEl.innerHTML = `<div class="card empty-state" style="text-align:left;">
-        Les serveurs de l'AELF sont momentanément indisponibles : impossible de charger ce texte ici pour le moment.
-        <br>
-        <button class="btn btn-ghost btn-sm" id="aelf-office-retry-btn" style="margin-top:8px;">↻ Réessayer</button>
-        <a href="${aelfUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px; margin-left:8px;">Le lire sur AELF.org ↗</a>
-      </div>`;
+      bodyEl.innerHTML = aelfIframeFallbackHTML(aelfUrl, office.label, 'aelf-office-retry-btn');
       const retryBtn = document.getElementById('aelf-office-retry-btn');
       if(retryBtn) retryBtn.onclick = ()=>{ renderAelfOfficeBody(); };
       return;
@@ -10189,6 +10184,20 @@ function renderAelfOfficeBody(){
     bodyEl.innerHTML = html + `<p class="studio-note" style="text-align:center; margin-top:8px;">Source : <a href="${aelfUrl}" target="_blank" rel="noopener">AELF</a>, fournisseur officiel des textes liturgiques.</p>`;
     AELF_OFFICE_LAST_PLAIN_TEXT = bodyEl.innerText.trim();
   });
+}
+/* Quand l'API JSON de l'AELF échoue (503 intermittents côté AELF), on
+   affiche directement l'interface du site aelf.org dans un cadre intégré
+   à l'application plutôt que de renvoyer l'utilisateur vers un onglet
+   externe : le site reste fiable même quand son API ne l'est pas. */
+function aelfIframeFallbackHTML(url, label, retryBtnId){
+  return `<div class="card" style="text-align:left; padding:12px;">
+    <p class="studio-note" style="margin:0 0 10px;">Nos serveurs sont momentanément indisponibles : voici directement ${label ? `« ${label} »` : 'le texte'} depuis le site officiel de l'AELF.</p>
+    <div class="aelf-iframe-embed"><iframe src="${url}" title="${(label||'AELF').replace(/"/g,'&quot;')} — AELF.org" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    <div style="text-align:center; margin-top:10px;">
+      ${retryBtnId ? `<button class="btn btn-ghost btn-sm" id="${retryBtnId}">↻ Réessayer l'affichage habituel</button>` : ''}
+      <a href="${url}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ouvrir dans un onglet ↗</a>
+    </div>
+  </div>`;
 }
 let AELF_CACHE = {date:null, data:null, failed:false};
 async function fetchAelfDuJour(){
@@ -10308,10 +10317,9 @@ function renderTextesDuJour(){
     if(!body) return;
     const cardHtml = aelfReadingCardHTML(json);
     if(!cardHtml){
-      body.innerHTML = `<div class="card empty-state" style="text-align:left;">
-        Les lectures du jour n'ont pas pu être chargées ici.
-        <br><a href="${messeUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px;">Les lire sur AELF.org ↗</a>
-      </div>`;
+      body.innerHTML = aelfIframeFallbackHTML(messeUrl, 'Textes du jour', 'textes-jour-retry-btn');
+      const retryBtn = document.getElementById('textes-jour-retry-btn');
+      if(retryBtn) retryBtn.onclick = ()=>{ renderTextesDuJour(); };
       return;
     }
     body.innerHTML = cardHtml;
