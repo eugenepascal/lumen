@@ -1385,7 +1385,7 @@ const PRIERES = [
     entries:[
       {name:"Notre Père (Pater Noster)", dates:"", tag:null, ref:"Matthieu 6:9-13 ; Luc 11:2-4", avatar:"🙏", summary:"Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd'hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation, mais délivre-nous du mal. Amen."},
       {name:"Je vous salue Marie (Ave Maria)", dates:"", tag:null, ref:"D'après Luc 1:28 et 1:42", avatar:"🌹", summary:"Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes, et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l'heure de notre mort. Amen."},
-      {name:"Gloire au Père (Doxologie)", dates:"", tag:null, ref:"Formule liturgique traditionnelle", avatar:"✨", summary:"Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, pour les siècles des siècles. Amen."},
+      {name:"Gloire au Père (Doxologie)", dates:"", tag:null, ref:"Formule liturgique traditionnelle", avatar:"✨", summary:"Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen."},
       {name:"Je crois en Dieu (Symbole des Apôtres)", dates:"", tag:null, ref:"Formulé dès les premiers siècles du christianisme", avatar:"📜", summary:"Je crois en Dieu, le Père tout-puissant, Créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen."},
       {name:"Acte de contrition", dates:"", tag:null, ref:"Prière de repentance", avatar:"💧", summary:"Mon Dieu, j'ai un très grand regret de vous avoir offensé, parce que vous êtes infiniment bon et que le péché vous déplaît. Je prends la ferme résolution, avec le secours de votre sainte grâce, de ne plus vous offenser et de faire pénitence. Amen."},
       {name:"L'Angélus", dates:"", tag:null, ref:"Prière traditionnellement dite matin, midi et soir", avatar:"🔔", summary:"L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit. Je vous salue Marie... Voici la servante du Seigneur, qu'il me soit fait selon votre parole. Je vous salue Marie... Et le Verbe s'est fait chair, et il a habité parmi nous. Je vous salue Marie... Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ. Prions : que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Par le même Jésus-Christ notre Seigneur. Amen."},
@@ -5321,7 +5321,7 @@ function wireSimpleBeadCounters(){
 const CHAPLET_PRAYER_TEXTS = {
   'Notre Père': "Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd'hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation, mais délivre-nous du mal. Amen.",
   'Je vous salue Marie': "Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes, et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l'heure de notre mort. Amen.",
-  'Gloire au Père': "Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, pour les siècles des siècles. Amen.",
+  'Gloire au Père': "Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen.",
   'Je crois en Dieu': "Je crois en Dieu, le Père tout-puissant, créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.",
   'Salve Regina': "Salut, ô Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève, exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous vos regards miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie !"
 };
@@ -8647,7 +8647,7 @@ function rosaryCurrentSet(){
 /* ---- écran 1 : choix du chapelet (catalogue) ---- */
 function chapletCatalogueHTML(){
   const list = CHAPLET_CATALOGUE.filter(c=> CHAPLET_CAT_TAB==='tous' || (CHAPLET_CAT_TAB==='classiques'&&c.cat==='classique') || (CHAPLET_CAT_TAB==='thematiques'&&c.cat==='thematique'));
-  return `<h2 class="section-title">📿 Le chapelet</h2>
+  return `<h2 class="section-title">Le chapelet</h2>
     <p class="section-desc">Un temps de prière avec Marie pour confier votre vie à Dieu.</p>
     <div class="chip-row">
       <button class="chip ${CHAPLET_CAT_TAB==='tous'?'active':''}" data-cattab="tous">Tous</button>
@@ -8658,7 +8658,7 @@ function chapletCatalogueHTML(){
       ${list.map(c=>`<button type="button" class="rosary-catalogue-row" data-chaplet="${c.id}">
         <img src="${c.img}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="rosary-catalogue-info">
-          <span class="rosary-catalogue-title">${c.avatar} ${c.title}</span>
+          <span class="rosary-catalogue-title">${c.title}</span>
           <span class="rosary-catalogue-sub">${c.sub}</span>
         </span>
         <span class="rosary-catalogue-arrow">›</span>
@@ -8669,14 +8669,14 @@ function chapletCatalogueHTML(){
 function chapletSelectHTML(){
   const set = ROSARY_SETS[ROSARY_STATE.setKey];
   return `<button class="back-link" id="rosary-back-catalogue">← Le chapelet</button>
-    <div class="chip-row">${Object.keys(ROSARY_SETS).map(k=>
+    <div class="chip-row">${['joyeux','lumineux','douloureux','glorieux'].map(k=>
       `<button class="chip ${ROSARY_STATE.setKey===k?'active':''}" data-set="${k}">${ROSARY_SETS[k].label}</button>`
     ).join('')}</div>
     <figure class="rosary-select-hero">
       <img src="${set.image}" alt="" loading="lazy" onerror="this.style.display='none'">
     </figure>
     <h1 class="day-title" style="text-align:center; margin-top:10px;">${set.label}</h1>
-    <p class="section-desc" style="text-align:center;">${set.summary} — ${set.days.toLowerCase()}.</p>
+    <p class="section-desc" style="text-align:center;">${set.summary}</p>
     <div class="card" style="text-align:center;"><p class="vreader-text" style="font-style:italic;">« ${set.quote} »</p></div>
     <div style="text-align:center; margin:14px 0 8px;"><button class="btn btn-primary" id="rosary-start-btn">Commencer</button></div>
     <div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="rosary-list-btn">Voir les mystères</button></div>
@@ -8743,7 +8743,7 @@ function chapletMeditHTML(){
       <p class="day-title" style="margin:4px 0;">${myst.fruit}</p>
       <p class="section-desc">Demandez cette grâce à Dieu en méditant ce mystère.</p>
     </div>`}
-  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary" id="rosary-after-medit">Prière du mystère →</button></div>`;
+  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary" id="rosary-after-medit">Prière du mystère suivant →</button></div>`;
 }
 /* ---- écran intermédiaire : Notre Père ---- */
 function chapletPaterHTML(){
@@ -8786,7 +8786,7 @@ function chapletGloriaHTML(){
   ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="text-align:center; font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${text}</p></div>` : ''}
   <div class="card" style="text-align:center;">
     <p class="day-title" style="margin:0;">✓ Dizaine terminée !</p>
-    <button class="btn btn-primary btn-sm" id="rosary-after-gloria" style="margin-top:10px;">${mi<4 ? 'Passer à la méditation →' : 'Terminer le chapelet →'}</button>
+    <button class="btn btn-primary btn-sm" id="rosary-after-gloria" style="margin-top:10px;">${mi<4 ? 'Passer à la méditation' : 'Terminer le chapelet →'}</button>
   </div>`;
 }
 /* ---- écran 7 : fin du chapelet ---- */
