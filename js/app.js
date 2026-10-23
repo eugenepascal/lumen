@@ -8669,7 +8669,13 @@ function chapletCatalogueHTML(){
 /* ---- écran 2 : sélection des mystères ---- */
 function chapletSelectHTML(){
   const set = ROSARY_SETS[ROSARY_STATE.setKey];
-  return `<button class="back-link" id="rosary-back-catalogue">← Le chapelet</button>
+  const variant = rosaryVariantMeta(ROSARY_STATE.variantId||'traditionnel');
+  const fav = {type:'vreader-text', title:'Chapelet — '+variant.title, reference:variant.sub||'', text:set.quote||''};
+  return `<div class="rosary-select-head">
+      <button type="button" class="rosary-icon-btn" id="rosary-back-catalogue" aria-label="Retour au chapelet">←</button>
+      <h2 class="rosary-select-head-title">${variant.title}</h2>
+      ${favStarHTML(fav).replace('fav-star', 'fav-star rosary-icon-btn')}
+    </div>
     <div class="chip-row">${['joyeux','lumineux','douloureux','glorieux'].map(k=>
       `<button class="chip ${ROSARY_STATE.setKey===k?'active':''}" data-set="${k}">${ROSARY_SETS[k].label}</button>`
     ).join('')}</div>
@@ -8687,12 +8693,21 @@ function chapletSelectHTML(){
 function chapletOverviewHTML(){
   const set = rosaryCurrentSet();
   const expanded = !!ROSARY_STATE.openExpand;
+  const pi = ROSARY_STATE.previewIdx||0;
+  const pm = set.mysteres[pi];
   return `<div class="rosary-head-row">
     <span class="rosary-set-pill">🔗 ${set.label}</span>
     ${rosaryTopIconsHTML({title:set.label, sub:'Ouverture du chapelet'})}
   </div>
-  <figure class="rosary-overview-photo"><img src="${set.image}" alt="" loading="lazy" onerror="this.src='./images/rosary.svg'; this.classList.add('rosary-overview-photo-fallback');"></figure>
-  <h1 class="day-title" style="text-align:center; margin-top:6px;">${set.label}</h1>
+  <p class="eyebrow" style="color:var(--gold); text-align:center; margin-top:8px;">${set.label}</p>
+  <h1 class="day-title" style="text-align:center; margin-top:2px;">${pi+1}${pi===0?'er':'e'} mystère • ${pm.title}</h1>
+  <p class="section-desc" style="text-align:center;">${pi+1} sur ${set.mysteres.length}</p>
+  <figure class="rosary-overview-photo"><img src="${pm.img||set.image}" alt="" loading="lazy" onerror="this.src='./images/rosary.svg'; this.classList.add('rosary-overview-photo-fallback');"></figure>
+  <div class="rosary-preview-pager">
+    <button type="button" class="bible-reader-nav-arrow" id="rosary-preview-prev" aria-label="Mystère précédent">‹</button>
+    <div class="rosary-preview-dots">${set.mysteres.map((_,i)=>`<span class="rosary-preview-dot ${i===pi?'active':''}" data-preview-idx="${i}"></span>`).join('')}</div>
+    <button type="button" class="bible-reader-nav-arrow" id="rosary-preview-next" aria-label="Mystère suivant">›</button>
+  </div>
   <div class="card">
     <p class="eyebrow" style="color:var(--gold);">✝️ Signe de croix</p>
     <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">Au nom du Père, et du Fils, et du Saint-Esprit. Amen.</p>
@@ -8844,7 +8859,7 @@ function rosarySettingsPanelHTML(){
 }
 function renderRosary(){
   if(!ROSARY_STATE){
-    ROSARY_STATE = { variantId:null, setKey: todaysRosarySet(), phase:'catalogue', mysteryIdx:0, aveCount:0, openExpand:false, showList:false };
+    ROSARY_STATE = { variantId:null, setKey: todaysRosarySet(), phase:'catalogue', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, previewIdx:0 };
   }
   let html = (ROSARY_STATE.phase==='catalogue') ? chapletCatalogueHTML()
     : (ROSARY_STATE.phase==='select') ? chapletSelectHTML()
@@ -8867,7 +8882,7 @@ function wireRosaryEvents(){
       const id = b.dataset.chaplet;
       const meta = rosaryVariantMeta(id);
       if(meta.gotoSub){ ROSARY_STATE = null; goTo('devotions', meta.gotoSub); return; }
-      ROSARY_STATE = { variantId:id, setKey: todaysRosarySet(), phase: id==='defunts' ? 'overview' : 'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false };
+      ROSARY_STATE = { variantId:id, setKey: todaysRosarySet(), phase: id==='defunts' ? 'overview' : 'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, previewIdx:0 };
       render();
     };
   });
@@ -8899,6 +8914,16 @@ function wireRosaryEvents(){
   if(startBtn) startBtn.onclick = ()=>{ ROSARY_STATE.phase='overview'; render(); };
   const openExpandBtn = document.getElementById('rosary-open-expand');
   if(openExpandBtn) openExpandBtn.onclick = ()=>{ ROSARY_STATE.openExpand = !ROSARY_STATE.openExpand; render(); };
+  const previewPrev = document.getElementById('rosary-preview-prev');
+  const previewNext = document.getElementById('rosary-preview-next');
+  if(previewPrev || previewNext){
+    const total = rosaryCurrentSet().mysteres.length;
+    if(previewPrev) previewPrev.onclick = ()=>{ ROSARY_STATE.previewIdx = ((ROSARY_STATE.previewIdx||0) - 1 + total) % total; render(); };
+    if(previewNext) previewNext.onclick = ()=>{ ROSARY_STATE.previewIdx = ((ROSARY_STATE.previewIdx||0) + 1) % total; render(); };
+  }
+  document.querySelectorAll('.rosary-preview-dot[data-preview-idx]').forEach(dot=>{
+    dot.onclick = ()=>{ ROSARY_STATE.previewIdx = parseInt(dot.dataset.previewIdx,10); render(); };
+  });
   const doneCloseBtn = document.getElementById('rosary-done-close');
   if(doneCloseBtn) doneCloseBtn.onclick = ()=>{ ROSARY_STATE = null; render(); };
   const beginMysteries = document.getElementById('rosary-begin-mysteries');
@@ -8928,7 +8953,7 @@ function wireRosaryEvents(){
     render();
   };
   const restartBtn = document.getElementById('rosary-restart');
-  if(restartBtn) restartBtn.onclick = ()=>{ const v=ROSARY_STATE.variantId; ROSARY_STATE = { variantId:v, setKey: todaysRosarySet(), phase: v==='defunts'?'overview':'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false }; ROSARY_TAB='meditation'; render(); };
+  if(restartBtn) restartBtn.onclick = ()=>{ const v=ROSARY_STATE.variantId; ROSARY_STATE = { variantId:v, setKey: todaysRosarySet(), phase: v==='defunts'?'overview':'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, previewIdx:0 }; ROSARY_TAB='meditation'; render(); };
   const changeChapletBtn = document.getElementById('rosary-change-chaplet');
   if(changeChapletBtn) changeChapletBtn.onclick = ()=>{ ROSARY_STATE = null; render(); };
   const shareBtn = document.getElementById('rosary-share');
@@ -9072,10 +9097,12 @@ function renderLectio(){
 
 /* ================= chapelet de la Divine Miséricorde ================= */
 let MISERICORDE_STATE = null;
+const MISERICORDE_IMG = "https://commons.wikimedia.org/wiki/Special:FilePath/Kazimirowski_Eugeniusz,_Divine_Mercy,_1934.jpg?width=600";
 function renderMisericorde(){
   if(!MISERICORDE_STATE){ MISERICORDE_STATE = { phase:'intro', decadeIdx:0, beadCount:0 }; }
   let html = `<h2 class="section-title">❤️ Chapelet de la Miséricorde</h2>
-    <p class="section-desc">Traditionnellement prié à 15h, l'heure de la miséricorde, sur un chapelet ordinaire.</p>`;
+    <p class="section-desc">Traditionnellement prié à 15h, l'heure de la miséricorde, sur un chapelet ordinaire.</p>
+    <figure class="rosary-gloria-figure"><img src="${MISERICORDE_IMG}" alt="" loading="lazy" onerror="this.style.display='none'"></figure>`;
   if(MISERICORDE_STATE.phase === 'intro'){
     html += `<div class="card">
       <p class="entry-detail-text">Signe de croix, un Notre Père, un Je vous salue Marie, le Je crois en Dieu. Puis, sur les gros grains : « ${MISERICORDE_TEXTS.eternel} »</p>
