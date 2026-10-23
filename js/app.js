@@ -2895,10 +2895,10 @@ const ROSARY_SETS = {
     quote:"En méditant ces mystères avec Marie, nous contemplons la joie de l'Incarnation.",
     mysteres:[
       {title:"L'Annonciation à Marie", ref:"Luc 1, 26-38", quote:"Réjouis-toi, comblée de grâce, le Seigneur est avec toi.", medit:"L'ange Gabriel est envoyé par Dieu dans une ville de Galilée, appelée Nazareth, à une jeune fille promise à Joseph. Il lui annonce qu'elle sera la mère du Fils de Dieu. Marie accueille avec foi et humilité la volonté du Seigneur : « Voici la servante du Seigneur ; que tout m'advienne selon ta parole. »", fruit:"L'humilité", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20053.jpg?width=900", imgCredit:"Duccio di Buoninsegna, L'Annonciation — Wikimedia Commons, domaine public"},
-      {title:"La Visitation à sa cousine Élisabeth", ref:"Luc 1, 39-45", quote:"Tu es bénie entre toutes les femmes, et le fruit de tes entrailles est béni.", medit:"Marie se met en route sans tarder vers la montagne, pour servir sa cousine âgée et enceinte elle aussi. Dès son arrivée, l'enfant tressaille de joie dans le sein d'Élisabeth, remplie de l'Esprit Saint.", fruit:"La charité envers le prochain", img:"./images/mystery-visitation.svg", imgCredit:"Illustration symbolique Lumen"},
+      {title:"La Visitation à sa cousine Élisabeth", ref:"Luc 1, 39-45", quote:"Tu es bénie entre toutes les femmes, et le fruit de tes entrailles est béni.", medit:"Marie se met en route sans tarder vers la montagne, pour servir sa cousine âgée et enceinte elle aussi. Dès son arrivée, l'enfant tressaille de joie dans le sein d'Élisabeth, remplie de l'Esprit Saint.", fruit:"La charité envers le prochain", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Albertinelli%20Visitation.jpg?width=900", imgCredit:"Mariotto Albertinelli, La Visitation — Wikimedia Commons, domaine public"},
       {title:"La Nativité de Jésus à Bethléem", ref:"Luc 2, 1-7", quote:"Elle mit au monde son fils premier-né, l'enveloppa de langes et le coucha dans une mangeoire.", medit:"À l'occasion d'un recensement, Joseph et Marie se rendent à Bethléem. Faute de place à l'auberge, Jésus naît dans une étable et est déposé dans une mangeoire — le Fils de Dieu choisit la pauvreté dès son premier instant parmi nous.", fruit:"L'esprit de pauvreté et le détachement", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Gerard%20van%20Honthorst%20-%20Adoration%20of%20the%20Shepherds%20(1622).jpg?width=900", imgCredit:"Gerard van Honthorst, L'Adoration des bergers (1622) — Wikimedia Commons, domaine public"},
-      {title:"La Présentation de Jésus au Temple", ref:"Luc 2, 22-35", quote:"Ils amenèrent l'enfant à Jérusalem pour le présenter au Seigneur.", medit:"Selon la Loi de Moïse, Marie et Joseph portent l'enfant au Temple. Le vieillard Siméon le reconnaît comme le salut attendu et annonce à Marie qu'une épée transpercera son âme.", fruit:"L'obéissance et la pureté du cœur", img:"./images/mystery-presentation.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"Le Recouvrement de Jésus au Temple", ref:"Luc 2, 41-50", quote:"Ils le trouvèrent dans le Temple, assis au milieu des docteurs, les écoutant et les interrogeant.", medit:"À douze ans, Jésus reste à Jérusalem sans que ses parents le sachent. Après trois jours de recherche angoissée, ils le retrouvent au Temple, et tous s'étonnent de son intelligence.", fruit:"La joie de retrouver et de chercher Jésus", img:"./images/mystery-recouvrement.svg", imgCredit:"Illustration symbolique Lumen"}
+      {title:"La Présentation de Jésus au Temple", ref:"Luc 2, 22-35", quote:"Ils amenèrent l'enfant à Jérusalem pour le présenter au Seigneur.", medit:"Selon la Loi de Moïse, Marie et Joseph portent l'enfant au Temple. Le vieillard Siméon le reconnaît comme le salut attendu et annonce à Marie qu'une épée transpercera son âme.", fruit:"L'obéissance et la pureté du cœur", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Fra%20Angelico%20017.jpg?width=900", imgCredit:"Fra Angelico, La Présentation au Temple — Wikimedia Commons, domaine public"},
+      {title:"Le Recouvrement de Jésus au Temple", ref:"Luc 2, 41-50", quote:"Ils le trouvèrent dans le Temple, assis au milieu des docteurs, les écoutant et les interrogeant.", medit:"À douze ans, Jésus reste à Jérusalem sans que ses parents le sachent. Après trois jours de recherche angoissée, ils le retrouvent au Temple, et tous s'étonnent de son intelligence.", fruit:"La joie de retrouver et de chercher Jésus", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20-%20Disputation%20with%20the%20Doctors%20-%20WGA06768.jpg?width=900", imgCredit:"Duccio di Buoninsegna, Jésus parmi les docteurs — Wikimedia Commons, domaine public"}
     ]},
   douloureux: {label:"Mystères douloureux", days:"Mardi et vendredi", color:"#6B2545",
     image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Cristo%20crucificado.jpg?width=900",
@@ -2906,10 +2906,10 @@ const ROSARY_SETS = {
     summary:"À méditer le mardi et le vendredi, et pendant le Carême.",
     quote:"En méditant ces mystères avec Marie, nous contemplons l'amour du Christ qui s'offre pour nous.",
     mysteres:[
-      {title:"L'Agonie de Jésus à Gethsémani", ref:"Matthieu 26, 36-39", quote:"Mon Père, s'il est possible, que cette coupe passe loin de moi ! Cependant, non pas ce que je veux, mais ce que tu veux.", medit:"Jésus prie seul au jardin de Gethsémani, saisi de tristesse et d'angoisse devant la Passion qui approche. Dans son abandon, il accepte librement la volonté du Père.", fruit:"Le repentir et l'union à la volonté de Dieu", img:"./images/mystery-agonie.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"La Flagellation de Jésus", ref:"Matthieu 27, 26", quote:"Alors Pilate leur relâcha Barabbas ; quant à Jésus, après l'avoir fait flageller, il le livra pour être crucifié.", medit:"Pour satisfaire la foule, Pilate fait battre Jésus de verges avant de le livrer au supplice. Le corps du Seigneur est meurtri pour guérir nos propres blessures.", fruit:"La pureté et la maîtrise des sens", img:"./images/mystery-flagellation.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"Le Couronnement d'épines", ref:"Matthieu 27, 27-29", quote:"Les soldats tressèrent une couronne d'épines, la posèrent sur sa tête et le revêtirent d'un manteau de pourpre.", medit:"Les soldats se moquent de Jésus comme d'un roi dérisoire, lui enfonçant une couronne d'épines. Il reçoit l'humiliation en silence, roi véritable d'un règne qui n'est pas de ce monde.", fruit:"Le courage et le mépris du jugement du monde", img:"./images/mystery-couronne-epines.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"Le Portement de la Croix", ref:"Marc 15, 21-22", quote:"Ils réquisitionnèrent, pour porter sa croix, un passant, Simon de Cyrène.", medit:"Jésus chemine vers le Golgotha, chargé de sa croix. Simon de Cyrène est requis pour l'aider à la porter — figure de tous ceux qui acceptent de porter la croix d'un autre.", fruit:"La patience dans l'épreuve", img:"./images/mystery-portement-croix.svg", imgCredit:"Illustration symbolique Lumen"},
+      {title:"L'Agonie de Jésus à Gethsémani", ref:"Matthieu 26, 36-39", quote:"Mon Père, s'il est possible, que cette coupe passe loin de moi ! Cependant, non pas ce que je veux, mais ce que tu veux.", medit:"Jésus prie seul au jardin de Gethsémani, saisi de tristesse et d'angoisse devant la Passion qui approche. Dans son abandon, il accepte librement la volonté du Père.", fruit:"Le repentir et l'union à la volonté de Dieu", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Bellini%2CGiovanni%20-%20Agony%20in%20the%20Garden%20-%20National%20Gallery.jpg?width=900", imgCredit:"Giovanni Bellini, L'Agonie au jardin — Wikimedia Commons, domaine public"},
+      {title:"La Flagellation de Jésus", ref:"Matthieu 27, 26", quote:"Alors Pilate leur relâcha Barabbas ; quant à Jésus, après l'avoir fait flageller, il le livra pour être crucifié.", medit:"Pour satisfaire la foule, Pilate fait battre Jésus de verges avant de le livrer au supplice. Le corps du Seigneur est meurtri pour guérir nos propres blessures.", fruit:"La pureté et la maîtrise des sens", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Caravaggio%20-%20La%20Flagellazione%20di%20Cristo.jpg?width=900", imgCredit:"Caravage, La Flagellation du Christ — Wikimedia Commons, domaine public"},
+      {title:"Le Couronnement d'épines", ref:"Matthieu 27, 27-29", quote:"Les soldats tressèrent une couronne d'épines, la posèrent sur sa tête et le revêtirent d'un manteau de pourpre.", medit:"Les soldats se moquent de Jésus comme d'un roi dérisoire, lui enfonçant une couronne d'épines. Il reçoit l'humiliation en silence, roi véritable d'un règne qui n'est pas de ce monde.", fruit:"Le courage et le mépris du jugement du monde", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Titian%20-%20Crowning%20with%20Thorns%20-%20WGA22845.jpg?width=900", imgCredit:"Titien, Le Couronnement d'épines — Wikimedia Commons, domaine public"},
+      {title:"Le Portement de la Croix", ref:"Marc 15, 21-22", quote:"Ils réquisitionnèrent, pour porter sa croix, un passant, Simon de Cyrène.", medit:"Jésus chemine vers le Golgotha, chargé de sa croix. Simon de Cyrène est requis pour l'aider à la porter — figure de tous ceux qui acceptent de porter la croix d'un autre.", fruit:"La patience dans l'épreuve", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20Christ%20Carrying%20the%20Cross%20-%20WGA10559.jpg?width=900", imgCredit:"Le Greco, Le Portement de la Croix — Wikimedia Commons, domaine public"},
       {title:"Jésus est crucifié et meurt sur la Croix", ref:"Luc 23, 32-46", quote:"Père, entre tes mains je remets mon esprit. Et, ayant dit cela, il expira.", medit:"Jésus est crucifié entre deux malfaiteurs et demande au Père le pardon pour ses bourreaux. Il meurt en confiant son esprit, achevant par amour l'œuvre de notre rédemption.", fruit:"Le pardon des offenses et la persévérance finale", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Cristo%20crucificado.jpg?width=900", imgCredit:"Diego Velázquez, Christ en croix — Wikimedia Commons, domaine public"}
     ]},
   glorieux: {label:"Mystères glorieux", days:"Mercredi et dimanche", color:"#5C6E58",
@@ -2919,10 +2919,10 @@ const ROSARY_SETS = {
     quote:"En méditant ces mystères avec Marie, nous contemplons la victoire du Christ sur la mort.",
     mysteres:[
       {title:"La Résurrection de Jésus", ref:"Luc 24, 1-6", quote:"Il n'est pas ici, car il est ressuscité, comme il l'avait dit.", medit:"Le premier jour de la semaine, de grand matin, les femmes se rendent au sépulcre et le trouvent vide. L'ange leur annonce que le Christ est vivant, vainqueur de la mort.", fruit:"La foi", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Peter%20Paul%20Rubens%20-%20The%20Resurrection%20of%20Christ%20-%20WGA20209.jpg?width=900", imgCredit:"Pierre Paul Rubens, La Résurrection du Christ — Wikimedia Commons, domaine public"},
-      {title:"L'Ascension du Seigneur au ciel", ref:"Marc 16, 19", quote:"Le Seigneur Jésus, après leur avoir parlé, fut enlevé au ciel et s'assit à la droite de Dieu.", medit:"Jésus s'élève au ciel sous le regard des apôtres, non pour les abandonner mais pour leur ouvrir le chemin et intercéder pour eux auprès du Père.", fruit:"L'espérance et le désir du ciel", img:"./images/mystery-ascension.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"La descente du Saint-Esprit au Cénacle", ref:"Actes 2, 1-4", quote:"Ils furent tous remplis de l'Esprit Saint et se mirent à parler en d'autres langues.", medit:"Réunis au Cénacle avec Marie, les disciples reçoivent l'Esprit Saint dans le bruit d'un vent violent et des langues de feu. Naît alors l'Église, envoyée annoncer l'Évangile à toutes les nations.", fruit:"La sagesse et les dons de l'Esprit Saint", img:"./images/mystery-pentecote.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"L'Assomption de Marie au Ciel", ref:"Luc 1, 48-49", quote:"Désormais tous les âges me diront bienheureuse. Le Puissant fit pour moi des merveilles.", medit:"Marie, préservée du péché, est élevée corps et âme auprès de son Fils au terme de sa vie terrestre — premier fruit de la résurrection promise à tous les croyants.", fruit:"La grâce d'une sainte mort et la confiance en Marie", img:"./images/mystery-assomption.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"Marie est couronnée Reine du ciel et de la terre", ref:"Apocalypse 12, 1", quote:"Un signe grandiose apparut dans le ciel : une Femme, ayant le soleil pour manteau.", medit:"Marie est honorée comme Reine auprès de son Fils, intercédant sans cesse pour ses enfants encore en chemin sur la terre.", fruit:"La persévérance et la confiance en l'intercession de Marie", img:"./images/mystery-couronnement-marie.svg", imgCredit:"Illustration symbolique Lumen"}
+      {title:"L'Ascension du Seigneur au ciel", ref:"Marc 16, 19", quote:"Le Seigneur Jésus, après leur avoir parlé, fut enlevé au ciel et s'assit à la droite de Dieu.", medit:"Jésus s'élève au ciel sous le regard des apôtres, non pour les abandonner mais pour leur ouvrir le chemin et intercéder pour eux auprès du Père.", fruit:"L'espérance et le désir du ciel", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Wga%20Garofalo%20Ascension%20of%20Christ.jpg?width=900", imgCredit:"Garofalo, L'Ascension du Christ — Wikimedia Commons, domaine public"},
+      {title:"La descente du Saint-Esprit au Cénacle", ref:"Actes 2, 1-4", quote:"Ils furent tous remplis de l'Esprit Saint et se mirent à parler en d'autres langues.", medit:"Réunis au Cénacle avec Marie, les disciples reçoivent l'Esprit Saint dans le bruit d'un vent violent et des langues de feu. Naît alors l'Église, envoyée annoncer l'Évangile à toutes les nations.", fruit:"La sagesse et les dons de l'Esprit Saint", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Restout%20-%20La%20Pentec%C3%B4te%2001.jpg?width=900", imgCredit:"Jean Restout, La Pentecôte — Wikimedia Commons, domaine public"},
+      {title:"L'Assomption de Marie au Ciel", ref:"Luc 1, 48-49", quote:"Désormais tous les âges me diront bienheureuse. Le Puissant fit pour moi des merveilles.", medit:"Marie, préservée du péché, est élevée corps et âme auprès de son Fils au terme de sa vie terrestre — premier fruit de la résurrection promise à tous les croyants.", fruit:"La grâce d'une sainte mort et la confiance en Marie", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Tizian%20041.jpg?width=900", imgCredit:"Titien, L'Assomption de la Vierge — Wikimedia Commons, domaine public"},
+      {title:"Marie est couronnée Reine du ciel et de la terre", ref:"Apocalypse 12, 1", quote:"Un signe grandiose apparut dans le ciel : une Femme, ayant le soleil pour manteau.", medit:"Marie est honorée comme Reine auprès de son Fils, intercédant sans cesse pour ses enfants encore en chemin sur la terre.", fruit:"La persévérance et la confiance en l'intercession de Marie", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Diego%20Vel%C3%A1zquez%20-%20Coronation%20of%20the%20Virgin%20-%20Prado.jpg?width=900", imgCredit:"Diego Vélasquez, Le Couronnement de la Vierge — Wikimedia Commons, domaine public"}
     ]},
   lumineux: {label:"Mystères lumineux", days:"Jeudi", color:"#3B8199",
     image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Piero%20della%20Francesca%20-%20Baptism%20of%20Christ%20-%20WGA17595.jpg?width=900",
@@ -2931,10 +2931,10 @@ const ROSARY_SETS = {
     quote:"En méditant ces mystères avec Marie, nous contemplons la vie publique du Christ.",
     mysteres:[
       {title:"Le Baptême de Jésus au Jourdain", ref:"Matthieu 3, 16-17", quote:"Celui-ci est mon Fils bien-aimé, en qui j'ai mis toute ma joie.", medit:"Jésus, sans péché, descend dans les eaux du Jourdain et s'y fait baptiser par Jean. L'Esprit descend sur lui comme une colombe et la voix du Père le proclame Fils bien-aimé.", fruit:"La fidélité aux promesses de notre baptême", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Piero%20della%20Francesca%20-%20Baptism%20of%20Christ%20-%20WGA17595.jpg?width=900", imgCredit:"Piero della Francesca, Le Baptême du Christ — Wikimedia Commons, domaine public"},
-      {title:"Les Noces de Cana", ref:"Jean 2, 1-11", quote:"Faites tout ce qu'il vous dira.", medit:"Lors d'un mariage en Galilée, le vin vient à manquer. Marie intercède auprès de son Fils, qui change l'eau en vin — premier signe, à la demande de sa mère, qui manifeste sa gloire.", fruit:"La confiance en l'intercession de Marie", img:"./images/mystery-cana.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"L'Annonce du Royaume de Dieu et l'appel à la conversion", ref:"Marc 1, 14-15", quote:"Le temps est accompli, le règne de Dieu est tout proche. Convertissez-vous et croyez à l'Évangile.", medit:"Jésus parcourt la Galilée, annonçant la Bonne Nouvelle et appelant chacun à changer de vie pour accueillir le règne de Dieu déjà proche.", fruit:"Le désir de conversion et de sainteté", img:"./images/mystery-annonce-royaume.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"La Transfiguration", ref:"Matthieu 17, 1-5", quote:"Celui-ci est mon Fils bien-aimé, écoutez-le.", medit:"Sur une haute montagne, devant Pierre, Jacques et Jean, le visage de Jésus devient resplendissant comme le soleil — un avant-goût de gloire donné pour affermir leur foi avant l'épreuve de la Passion.", fruit:"Le courage dans les épreuves et le désir de sainteté", img:"./images/mystery-transfiguration.svg", imgCredit:"Illustration symbolique Lumen"},
-      {title:"L'Institution de l'Eucharistie", ref:"Matthieu 26, 26-28", quote:"Ceci est mon corps. Prenez, mangez : ceci est mon corps.", medit:"Au soir de la Cène, Jésus prend le pain, le bénit, le rompt et le donne à ses disciples, instituant le mémorial de son sacrifice et se donnant lui-même en nourriture jusqu'à la fin des temps.", fruit:"L'amour eucharistique et l'adoration", img:"./images/mystery-eucharistie.svg", imgCredit:"Illustration symbolique Lumen"}
+      {title:"Les Noces de Cana", ref:"Jean 2, 1-11", quote:"Faites tout ce qu'il vous dira.", medit:"Lors d'un mariage en Galilée, le vin vient à manquer. Marie intercède auprès de son Fils, qui change l'eau en vin — premier signe, à la demande de sa mère, qui manifeste sa gloire.", fruit:"La confiance en l'intercession de Marie", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Paolo%20Veronese%20008.jpg?width=900", imgCredit:"Paul Véronèse, Les Noces de Cana — Wikimedia Commons, domaine public"},
+      {title:"L'Annonce du Royaume de Dieu et l'appel à la conversion", ref:"Marc 1, 14-15", quote:"Le temps est accompli, le règne de Dieu est tout proche. Convertissez-vous et croyez à l'Évangile.", medit:"Jésus parcourt la Galilée, annonçant la Bonne Nouvelle et appelant chacun à changer de vie pour accueillir le règne de Dieu déjà proche.", fruit:"Le désir de conversion et de sainteté", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Jan%20Brueghel%20the%20Elder%20-%20The%20Sermon%20on%20the%20Mount%20-%20Google%20Art%20Project.jpg?width=900", imgCredit:"Jan Brueghel l'Ancien, Le Sermon sur la montagne — Wikimedia Commons, domaine public"},
+      {title:"La Transfiguration", ref:"Matthieu 17, 1-5", quote:"Celui-ci est mon Fils bien-aimé, écoutez-le.", medit:"Sur une haute montagne, devant Pierre, Jacques et Jean, le visage de Jésus devient resplendissant comme le soleil — un avant-goût de gloire donné pour affermir leur foi avant l'épreuve de la Passion.", fruit:"Le courage dans les épreuves et le désir de sainteté", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Raphael%20-%20The%20Transfiguration%20-%20Google%20Art%20Project.jpg?width=900", imgCredit:"Raphaël, La Transfiguration — Wikimedia Commons, domaine public"},
+      {title:"L'Institution de l'Eucharistie", ref:"Matthieu 26, 26-28", quote:"Ceci est mon corps. Prenez, mangez : ceci est mon corps.", medit:"Au soir de la Cène, Jésus prend le pain, le bénit, le rompt et le donne à ses disciples, instituant le mémorial de son sacrifice et se donnant lui-même en nourriture jusqu'à la fin des temps.", fruit:"L'amour eucharistique et l'adoration", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Giusto%20di%20gand%2C%20pala%20del%20corpus%20domini.JPG?width=900", imgCredit:"Juste de Gand, L'Institution de l'Eucharistie — Wikimedia Commons, domaine public"}
     ]}
 };
 const ROSARY_ETERNAL_REST = "Donnez-leur, Seigneur, le repos éternel, et que la lumière sans déclin luise pour eux. Qu'ils reposent en paix. Amen.";
@@ -8124,6 +8124,65 @@ let AMBIANCE_SHUFFLE_MODE = false;
 let AMBIANCE_SHUFFLE_LAST = null;
 let AMBIANCE_VIDEO_OPEN = false;
 let AMBIANCE_VIDEO_LABEL = '';
+/* Détection des vidéos YouTube indisponibles (ID invalide, vidéo retirée,
+   intégration désactivée par son propriétaire...) : on attache l'API JS
+   YouTube au cadre déjà affiché (mêmes contrôles natifs, rien ne change
+   visuellement) uniquement pour écouter l'évènement onError et, si un
+   groupe de morceaux est actif, enchaîner automatiquement sur un autre
+   titre au lieu de laisser l'utilisateur face à un lecteur figé. */
+let YT_API_READY = false;
+let YT_API_LOADING = false;
+let AMBIANCE_YT_PLAYER = null;
+let AMBIANCE_CURRENT_POOL = null;
+let AMBIANCE_ERROR_ATTEMPTS = 0;
+function ensureYoutubeApi(cb){
+  if(window.YT && window.YT.Player){ YT_API_READY = true; cb(); return; }
+  window.__ytApiCallbacks = window.__ytApiCallbacks || [];
+  window.__ytApiCallbacks.push(cb);
+  if(YT_API_LOADING) return;
+  YT_API_LOADING = true;
+  const prevReady = window.onYouTubeIframeAPIReady;
+  window.onYouTubeIframeAPIReady = function(){
+    YT_API_READY = true;
+    if(typeof prevReady === 'function') prevReady();
+    (window.__ytApiCallbacks||[]).forEach(f=>{ try{ f(); }catch(e){} });
+    window.__ytApiCallbacks = [];
+  };
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+}
+function wireYoutubeErrorDetection(){
+  const el = document.getElementById('ambiance-yt-iframe');
+  if(!el) return;
+  ensureYoutubeApi(()=>{
+    // la fenêtre a pu être fermée pendant le chargement de l'API
+    if(!document.getElementById('ambiance-yt-iframe')) return;
+    try{ if(AMBIANCE_YT_PLAYER && AMBIANCE_YT_PLAYER.destroy) AMBIANCE_YT_PLAYER.destroy(); }catch(e){}
+    try{
+      AMBIANCE_YT_PLAYER = new YT.Player('ambiance-yt-iframe', {
+        events:{
+          onReady: ()=>{ AMBIANCE_ERROR_ATTEMPTS = 0; },
+          onError: (e)=>{ handleAmbianceYoutubeError(e && e.data); }
+        }
+      });
+    }catch(err){}
+  });
+}
+function handleAmbianceYoutubeError(){
+  if(!AMBIANCE_VIDEO_OPEN || !BG_YT_VIDEO_ID) return;
+  AMBIANCE_ERROR_ATTEMPTS++;
+  const pool = AMBIANCE_CURRENT_POOL;
+  if(AMBIANCE_ERROR_ATTEMPTS > 5 || !pool || !pool.length){
+    showToast('🎵 Cette vidéo n\'est pas disponible. Choisissez un autre titre dans la liste.');
+    return;
+  }
+  showToast('🎵 Vidéo indisponible — lecture du morceau suivant…');
+  let pick, tries = 0;
+  do { pick = pool[Math.floor(Math.random()*pool.length)]; tries++; }
+  while(pick.videoId === BG_YT_VIDEO_ID && tries < 10 && pool.length > 1);
+  playBgYoutube(pick.videoId, (AMBIANCE_SHUFFLE_MODE ? '🔀 ' : '') + pick.title + ' — ' + pick.artist, {pool, silent:true, keepAttempts:true});
+}
 function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID || BG_SPOTIFY_ACTIVE; }
 function syncBgAmbianceIcon(){
   const btn = document.getElementById('bg-ambiance-btn');
@@ -8131,6 +8190,10 @@ function syncBgAmbianceIcon(){
 }
 function stopAllAmbiance(){
   stopLoop();
+  try{ if(AMBIANCE_YT_PLAYER && AMBIANCE_YT_PLAYER.destroy) AMBIANCE_YT_PLAYER.destroy(); }catch(e){}
+  AMBIANCE_YT_PLAYER = null;
+  AMBIANCE_CURRENT_POOL = null;
+  AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_SHUFFLE_MODE = false;
@@ -8235,10 +8298,10 @@ function renderAmbianceVideoWindow(){
           <div style="width:32px;"></div>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
-        <div class="ambiance-player-embed"><iframe src="https://www.youtube.com/embed/${BG_YT_VIDEO_ID}?autoplay=1" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="${AMBIANCE_VIDEO_LABEL.replace(/"/g,'&quot;')}"></iframe></div>
+        <div class="ambiance-player-embed"><iframe id="ambiance-yt-iframe" src="https://www.youtube.com/embed/${BG_YT_VIDEO_ID}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(location.origin)}" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="${AMBIANCE_VIDEO_LABEL.replace(/"/g,'&quot;')}"></iframe></div>
         <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Utilisez les contrôles de la vidéo pour mettre en pause ou régler le volume.<br>Vidéo qui ne s'affiche pas ? <a href="https://www.youtube.com/watch?v=${BG_YT_VIDEO_ID}" target="_blank" rel="noopener">Ouvrir directement sur YouTube ↗</a></p>
         <div class="ambiance-player-controls">
-          ${AMBIANCE_SHUFFLE_MODE ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Titre suivant</button>` : ''}
+          ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Titre suivant</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
         </div>
       </div>`;
@@ -8246,14 +8309,26 @@ function renderAmbianceVideoWindow(){
   const backBtn = document.getElementById('ambiance-player-back');
   if(backBtn) backBtn.onclick = ()=>{ stopAllAmbiance(); };
   const nextBtn = document.getElementById('ambiance-player-next');
-  if(nextBtn) nextBtn.onclick = ()=>{ playRandomAmbiance(true); };
+  if(nextBtn) nextBtn.onclick = ()=>{
+    if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
+    else if(AMBIANCE_CURRENT_POOL && AMBIANCE_CURRENT_POOL.length){
+      const pool = AMBIANCE_CURRENT_POOL;
+      let pick, tries=0;
+      do { pick = pool[Math.floor(Math.random()*pool.length)]; tries++; }
+      while(pick.videoId === BG_YT_VIDEO_ID && tries < 10 && pool.length > 1);
+      playBgYoutube(pick.videoId, pick.title + ' — ' + pick.artist, {pool});
+    }
+  };
   const stopBtn = document.getElementById('ambiance-player-stop');
   if(stopBtn) stopBtn.onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); };
+  if(BG_YT_VIDEO_ID) wireYoutubeErrorDetection();
 }
 function playBgYoutube(videoId, label, opts){
   opts = opts || {};
   stopLoop();
   AMBIANCE_SHUFFLE_MODE = false;
+  AMBIANCE_CURRENT_POOL = opts.pool || null;
+  if(!opts.keepAttempts) AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_YT_VIDEO_ID = videoId;
   BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_VIDEO_OPEN = true;
@@ -8276,6 +8351,8 @@ function playRandomAmbiance(isAutoAdvance){
   if(!pick) return;
   AMBIANCE_SHUFFLE_LAST = pick;
   stopLoop();
+  AMBIANCE_CURRENT_POOL = LOUANGES_VIDEOS;
+  AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_SPOTIFY_ACTIVE = false;
   BG_YT_VIDEO_ID = pick.videoId;
   AMBIANCE_VIDEO_OPEN = true;
@@ -9100,7 +9177,14 @@ let MISERICORDE_STATE = null;
 const MISERICORDE_IMG = "https://commons.wikimedia.org/wiki/Special:FilePath/Kazimirowski_Eugeniusz,_Divine_Mercy,_1934.jpg?width=600";
 function renderMisericorde(){
   if(!MISERICORDE_STATE){ MISERICORDE_STATE = { phase:'intro', decadeIdx:0, beadCount:0 }; }
-  let html = `<h2 class="section-title">❤️ Chapelet de la Miséricorde</h2>
+  let html = `<div class="rosary-head-row">
+      <span class="rosary-set-pill">❤️ Miséricorde</span>
+      <div class="rosary-top-icons">
+        ${MISERICORDE_STATE.phase==='intro' ? '' : `<button type="button" class="rosary-icon-btn" id="misericorde-back-btn" title="Étape précédente" aria-label="Revenir à l'étape précédente">←</button>`}
+        <button type="button" class="rosary-icon-btn" id="misericorde-quit-btn" title="Quitter le chapelet" aria-label="Quitter le chapelet">✕</button>
+      </div>
+    </div>
+    <h2 class="section-title">❤️ Chapelet de la Miséricorde</h2>
     <p class="section-desc">Traditionnellement prié à 15h, l'heure de la miséricorde, sur un chapelet ordinaire.</p>
     <figure class="rosary-gloria-figure"><img src="${MISERICORDE_IMG}" alt="" loading="lazy" onerror="this.style.display='none'"></figure>`;
   if(MISERICORDE_STATE.phase === 'intro'){
@@ -9144,6 +9228,18 @@ function renderMisericorde(){
   };
   const restartBtn = document.getElementById('misericorde-restart');
   if(restartBtn) restartBtn.onclick = ()=>{ MISERICORDE_STATE = { phase:'intro', decadeIdx:0, beadCount:0 }; render(); };
+  const backBtn = document.getElementById('misericorde-back-btn');
+  if(backBtn) backBtn.onclick = ()=>{
+    if(MISERICORDE_STATE.phase==='decade'){
+      if(MISERICORDE_STATE.decadeIdx>0){ MISERICORDE_STATE.decadeIdx--; MISERICORDE_STATE.beadCount=10; }
+      else { MISERICORDE_STATE.phase='intro'; }
+    } else if(MISERICORDE_STATE.phase==='done'){
+      MISERICORDE_STATE.phase='decade'; MISERICORDE_STATE.decadeIdx=4; MISERICORDE_STATE.beadCount=10;
+    }
+    render();
+  };
+  const quitBtn = document.getElementById('misericorde-quit-btn');
+  if(quitBtn) quitBtn.onclick = ()=>{ goTo('devotions','accueil-devotions'); };
 }
 
 /* ================= pilgrimage sites ================= */
