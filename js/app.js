@@ -12440,36 +12440,7 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
   {key:'light', label:'Ambre', icon:'🕯️', swatches:['#F5EFE4','#6B2545','#C08A3E']},
-  {key:'rayons-lumiere', label:'Rayons de lumière', icon:'☀️', swatches:['#1A140C','#8A6A2E','#F2D98A'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Sunray%20from%20clouds.jpg?width=300'},
-  {key:'vitrail', label:'Vitrail', icon:'🪟', swatches:['#120E1A','#5A3A6E','#D9A85C'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Cathedral%20window%20inside.jpg?width=300'},
-  {key:'dark', label:'Nocturne', icon:'🌙', swatches:['#221D22','#C9707E','#D9B776']},
-  {key:'christ', label:'Christ', icon:'✝️', swatches:['#100C08','#8A5A2E','#D9A85C'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Paolo_Veronese_-_Christ_in_the_Garden_of_Gethsemane_-_WGA24847.jpg?width=300'},
-  {key:'marie', label:'Marie', icon:'🌹', swatches:['#0E1420','#3D5A7A','#C9D6E4'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Vierge_en_oraison_(Il_Sassoferrato).jpg?width=300'},
-  {key:'annonciation', label:'Annonciation', icon:'🕊️', swatches:['#160E18','#8A6A9E','#E8C97C'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Fra_Angelico_-_The_Annunciation_-_WGA0455.jpg?width=300'},
-  {key:'sacrecoeur', label:'Sacré-Cœur', icon:'❤️', swatches:['#180C0C','#8A3030','#D9A85C'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=300'},
-  {key:'aigle-royal', label:'Aigle Royal', icon:'🦅', swatches:['#141814','#5A6E3A','#C9B87E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Golden_Eagle_soaring_overhead.jpg?width=300'},
-  {key:'agneau', label:'Agneau de Dieu', icon:'🐑', swatches:['#181614','#7A6A4E','#E8DCC4'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Agnus_Dei_(The_Lamb_of_God)_by_Zurbar%C3%A1n,_San_Diego_Museum_of_Art.JPG?width=300'},
-  {key:'misericorde-divine', label:'Miséricorde Divine', icon:'🌅', swatches:['#141018','#7A4A6E','#E8A85C'], photo:"https://commons.wikimedia.org/wiki/Special:FilePath/Kazimirowski_Eugeniusz,_Divine_Mercy,_1934.jpg?width=300"},
-  {key:'archange-michel', label:'Archange Michel', icon:'⚔️', swatches:['#14100C','#6E5A2E','#D9BE6E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/SAINT%20MICHAEL%20THE%20ARCHANGEL.PNG?width=300'},
-  {key:'archange-gabriel', label:'Archange Gabriel', icon:'📯', swatches:['#140E18','#6E4E8A','#D9A8E8'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Archangel%20Gabriel%20from%20an%20Annunciation%20-%20Google%20Art%20Project.jpg?width=300'},
-  {key:'archange-raphael', label:'Archange Raphaël', icon:'🐟', swatches:['#0E1410','#3D7A5A','#A8D9BE'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt%20De%20aartsengel%20verlaat%20Tobias%20en%20zijn%20gezin.%201637.jpg?width=300'},
-  {key:'madone-sixtine', label:'Madone Sixtine', icon:'👑', swatches:['#10141C','#4A5A7A','#D4C9A8'], photo:"https://commons.wikimedia.org/wiki/Special:FilePath/'The_Sistine_Madonna'_by_Raphael,_1512.jpg?width=300"},
-  {key:'cosmos', label:'Céleste', icon:'🌌', swatches:['#1A1420','#D4823C','#F2B75E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Messier51.jpg?width=300'},
-  {key:'nebuleuse', label:'Nébuleuse', icon:'✨', swatches:['#160C10','#C06A4E','#E8A87C'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Carina_Nebula.jpg?width=300'},
-  {key:'piliers', label:'Piliers de la Création', icon:'🌌', swatches:['#12100E','#7A5230','#D4B27E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=300'},
-  {key:'voielactee', label:'Voie Lactée', icon:'🌠', swatches:['#0D1220','#4A3D6B','#C9A66B'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Milky_Way_rising_over_Tomaree_Mountain.jpg?width=300'},
-  {key:'lune-photo', label:'Lune', icon:'🌕', swatches:['#0B0E16','#7A8CA6','#D9E2ED'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/A_Crescent_Moon_over_the_VLTI.jpg?width=300'},
-  {key:'plage', label:'Horizon', icon:'🏖️', swatches:['#2A1A14','#E0692E','#F5A64B'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Sunset_ocean.jpg?width=300'},
-  {key:'foret', label:'Sylve', icon:'🌲', swatches:['#131D14','#3E7A4A','#8FBE7E'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Old_growth_forest_scenic.jpg?width=300'},
-  {key:'montagne', label:'Cime', icon:'⛰️', swatches:['#1B222B','#4C7A9E','#9FC5DE'], photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Mountains_images.jpg?width=300'},
-  {key:'minuit', label:'Éclipse', icon:'🌑', swatches:['#0E0C10','#A9556A','#A88A4E']},
-  {key:'soleil', label:'Aurore', icon:'☀️', swatches:['#FDF6E7','#D97D3A','#E8B23D']},
-  {key:'nature', label:'Feuillage', icon:'🌿', swatches:['#F1F3E9','#5C7A44','#94A857']},
-  {key:'ocean', label:'Marée', icon:'🌊', swatches:['#EBF2F3','#3B8199','#6BB4C0']},
-  {key:'croix-lumiere', label:'Croix de Lumière', icon:'✝️', swatches:['#1A1410','#8A5A2E','#F2C879']},
-  {key:'colombe', label:'Colombe', icon:'🕊️', swatches:['#101820','#5A7A9E','#F5EBD4']},
-  {key:'vitrail', label:'Vitrail', icon:'🌈', swatches:['#120E1A','#7A2E4A','#3E6E9E']},
-  {key:'contraste', label:'Contraste élevé', icon:'◐', swatches:['#000000','#FFFFFF','#FFD700']}
+  {key:'dark', label:'Ambre sombre', icon:'🌙', swatches:['#161B24','#5C7DA6','#D9A85C']}
 ];
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
@@ -12481,40 +12452,22 @@ const BG_PATTERN_LIST = [
   {key:'ancre', label:'Ancre (espérance)', icon:'⚓'}
 ];
 let BG_PATTERN = 'croix';
-let THEME_MODE = 'page';
+let THEME_MODE = 'auto';
 let BRIGHTNESS = 100;
 let CUSTOM_ACCENT = '';
 function computeAutoTheme(){
   const h = new Date().getHours();
-  if(h>=5 && h<8) return 'soleil';
-  if(h>=8 && h<17) return 'light';
-  if(h>=17 && h<20) return 'ocean';
-  if(h>=20 && h<23) return 'dark';
-  return 'minuit';
-}
-const PAGE_THEME_MAP = {
-  accueil: 'light',
-  prier: 'sacrecoeur',
-  ecritures: 'annonciation',
-  eglise: 'vitrail',
-  devotions: 'marie',
-  jesus: 'christ',
-  sagesse: 'aigle-royal',
-  combat: 'archange-michel',
-  espace: 'agneau'
-};
-function computePageTheme(){
-  return PAGE_THEME_MAP[PRIMARY] || 'light';
+  return (h>=7 && h<20) ? 'light' : 'dark';
 }
 function applyThemeAndFont(){
   if(THEME_MODE === 'auto') THEME = computeAutoTheme();
-  else if(THEME_MODE === 'page') THEME = computePageTheme();
+  if(!THEMES_LIST.some(t=>t.key===THEME)) THEME = 'light';
   document.body.setAttribute('data-theme', THEME);
   document.body.setAttribute('data-pattern', BG_PATTERN);
   document.body.setAttribute('data-theme-mode', THEME_MODE);
   const current = THEMES_LIST.find(t=>t.key===THEME) || THEMES_LIST[0];
   const btn = document.getElementById('theme-btn');
-  if(btn){ const iconEl = btn.querySelector('.tool-btn-icon'); if(iconEl) iconEl.textContent = THEME_MODE === 'auto' ? '🔄' : (THEME_MODE === 'page' ? '📖' : current.icon); }
+  if(btn){ const iconEl = btn.querySelector('.tool-btn-icon'); if(iconEl) iconEl.textContent = THEME_MODE === 'auto' ? '🔄' : current.icon; }
   const app = document.getElementById('app');
   app.classList.remove('font-sm','font-md','font-lg');
   app.classList.add('font-'+FONT_SIZE);
@@ -12544,7 +12497,6 @@ function shadeColor(hex, percent){
   return '#' + (0x1000000 + r*0x10000 + g*0x100 + b).toString(16).slice(1);
 }
 setInterval(()=>{ if(THEME_MODE === 'auto') applyThemeAndFont(); }, 5*60*1000);
-let LAST_PAGE_THEME_SECTION = null;
 function toggleTheme(){
   openThemePicker();
 }
@@ -12553,54 +12505,31 @@ function openThemePicker(){
   const overlay = document.getElementById('ambiance-picker-overlay');
   const titleEl = overlay.querySelector('.search-input-row p');
   const descEl = document.getElementById('ambiance-picker-desc');
-  if(titleEl) titleEl.textContent = '🎨 Choisir une ambiance visuelle';
-  if(descEl) descEl.textContent = "Change les couleurs et le fond de toute l'application.";
-
-  const colorThemes = THEMES_LIST.filter(t => !t.photo && t.key !== 'contraste');
-  const photoThemes = THEMES_LIST.filter(t => t.photo);
-  const accessTheme = THEMES_LIST.filter(t => t.key === 'contraste');
+  if(titleEl) titleEl.textContent = '🎨 Apparence';
+  if(descEl) descEl.textContent = "Le thème Ambre de Lumen, en clair ou en sombre.";
 
   function themeCardHTML(t){
     return `<button class="card theme-swatch-btn ${THEME_MODE==='manual' && THEME===t.key?'theme-active':''}" data-theme-key="${t.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding-top:10px;">
-        ${t.photo
-          ? `<img src="${t.photo}" alt="${t.label}" style="width:100%; height:64px; object-fit:cover; border-radius:8px; margin-bottom:8px; display:block;">`
-          : `<div style="display:flex; justify-content:center; gap:4px; margin-bottom:8px;">
-               ${t.swatches.map(c=>`<span style="display:inline-block; width:20px; height:20px; border-radius:50%; background:${c}; box-shadow:0 0 0 1px rgba(0,0,0,0.1);"></span>`).join('')}
-             </div>`
-        }
+        <div style="display:flex; justify-content:center; gap:4px; margin-bottom:8px;">
+          ${t.swatches.map(c=>`<span style="display:inline-block; width:20px; height:20px; border-radius:50%; background:${c}; box-shadow:0 0 0 1px rgba(0,0,0,0.1);"></span>`).join('')}
+        </div>
         <span style="font-size:20px;">${t.icon}</span>
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:4px 0 0; color:var(--ink);">${t.label}</p>
-        ${t.photo ? `<p style="font-family:'Inter',sans-serif; font-size:9.5px; color:var(--ink-soft); margin:2px 0 0;">📷 Photo réelle</p>` : ''}
       </button>`;
   }
 
   list.innerHTML = `
-    <button class="card theme-swatch-btn ${THEME_MODE==='auto'?'theme-active':''}" id="theme-auto-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:10px;">
+    <button class="card theme-swatch-btn ${THEME_MODE==='auto'?'theme-active':''}" id="theme-auto-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:14px;">
       <span style="font-size:22px;">🔄</span>
       <span>
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Automatique</p>
-        <p class="section-desc" style="margin:2px 0 0;">Change seule selon l'heure : Aurore le matin, Ambre le jour, Marée au crépuscule, Nocturne le soir, Éclipse la nuit.</p>
-      </span>
-    </button>
-    <button class="card theme-swatch-btn ${THEME_MODE==='page'?'theme-active':''}" id="theme-page-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:14px;">
-      <span style="font-size:22px;">📖</span>
-      <span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Par page — recommandé</p>
-        <p class="section-desc" style="margin:2px 0 0;">Une image de fond différente selon la section visitée (Prier, Jésus, Église...), en plein écran derrière le contenu.</p>
+        <p class="section-desc" style="margin:2px 0 0;">Ambre clair le jour, Ambre sombre le soir et la nuit.</p>
       </span>
     </button>
 
-    <h2 class="section-title" style="font-size:14px;">🎨 Couleurs douces</h2>
-    <p class="section-desc" style="margin-top:-6px;">Des ambiances de couleurs, légères et rapides à afficher partout, y compris hors ligne.</p>
-    <div class="grid">${colorThemes.map(themeCardHTML).join('')}</div>
-
-    <h2 class="section-title" style="font-size:14px;">📷 Photos réelles</h2>
-    <p class="section-desc" style="margin-top:-6px;">De vraies photographies (NASA, ESO) et œuvres de maîtres, toutes dans le domaine public. Nécessitent une connexion internet pour s'afficher.</p>
-    <div class="grid">${photoThemes.map(themeCardHTML).join('')}</div>
-
-    <h2 class="section-title" style="font-size:14px;">♿ Accessibilité</h2>
-    <p class="section-desc" style="margin-top:-6px;">Un contraste renforcé pour une lecture plus facile.</p>
-    <div class="grid">${accessTheme.map(themeCardHTML).join('')}</div>
+    <h2 class="section-title" style="font-size:14px;">🕯️ Mode clair ou sombre</h2>
+    <p class="section-desc" style="margin-top:-6px;">Choisissez le mode qui vous convient le mieux.</p>
+    <div class="grid">${THEMES_LIST.map(themeCardHTML).join('')}</div>
 
     <h2 class="section-title" style="font-size:14px;">🕊️ Motif spirituel de fond</h2>
     <p class="section-desc" style="margin-top:-6px;">Un discret motif en filigrane, visible derrière le contenu. S'applique aux thèmes de couleur (pas aux photos).</p>
@@ -12626,14 +12555,7 @@ function openThemePicker(){
     applyThemeAndFont();
     await savePrefs();
     closeAmbiancePicker();
-    showToast('🔄 Thème automatique activé');
-  };
-  document.getElementById('theme-page-btn').onclick = async ()=>{
-    THEME_MODE = 'page';
-    applyThemeAndFont();
-    await savePrefs();
-    closeAmbiancePicker();
-    showToast('📖 Image de fond par page activée');
+    showToast('🔄 Mode automatique activé');
   };
   list.querySelectorAll('[data-theme-key]').forEach(btn=>{
     btn.onclick = async ()=>{
@@ -13005,10 +12927,6 @@ function maybeAutoNarrate(){
 }
 function render(){
   document.body.dataset.section = PRIMARY;
-  if(THEME_MODE === 'page' && LAST_PAGE_THEME_SECTION !== PRIMARY){
-    LAST_PAGE_THEME_SECTION = PRIMARY;
-    applyThemeAndFont();
-  }
   document.getElementById('date-line').textContent = frenchDate();
   renderTabbar();
   renderScreen();
@@ -13100,7 +13018,7 @@ async function startApp(){
   RECENT = prefs.recent || [];
   STREAK = prefs.streak || {count:0,lastDate:null};
   THEME = prefs.theme || 'light';
-  THEME_MODE = prefs.themeMode || 'page';
+  THEME_MODE = (prefs.themeMode === 'manual') ? 'manual' : 'auto';
   BG_PATTERN = prefs.bgPattern || 'croix';
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);

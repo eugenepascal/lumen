@@ -48,13 +48,7 @@
   body::after{
     content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0;
   }
-  body[data-theme="soleil"]::after{
-    background: radial-gradient(circle at 50% 5%, rgba(242,183,5,0.35), transparent 45%);
-    animation: sunPulse 6s ease-in-out infinite;
-  }
-  @keyframes sunPulse{ 0%,100%{ opacity:0.5; } 50%{ opacity:1; } }
-
-  /* ===== animated background layers: stars & floating particles ===== */
+  /* ===== animated background layer: stars (dark mode) ===== */
   #bg-stars, #bg-particles{ position:absolute; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
   .bg-star{
     position:absolute; width:3px; height:3px; border-radius:50%;
@@ -62,24 +56,9 @@
     opacity:0; animation: starTwinkle 3.2s ease-in-out infinite;
   }
   @keyframes starTwinkle{ 0%,100%{ opacity:0; transform:scale(0.6); } 50%{ opacity:0.9; transform:scale(1.3); } }
-  body[data-theme="dark"] .bg-star, body[data-theme="minuit"] .bg-star{ display:block; }
-  body:not([data-theme="dark"]):not([data-theme="minuit"]) .bg-star{ display:none; }
-
-  .bg-particle{
-    position:absolute; top:-5%; width:8px; height:8px; border-radius:50%;
-    background: var(--gold-light); opacity:0.35;
-    animation-name: particleFall; animation-timing-function: linear; animation-iteration-count: infinite;
-  }
-  @keyframes particleFall{
-    0%{ transform: translateY(-5vh) translateX(0) rotate(0deg); opacity:0; }
-    10%{ opacity:0.4; }
-    90%{ opacity:0.3; }
-    100%{ transform: translateY(105vh) translateX(30px) rotate(200deg); opacity:0; }
-  }
+  body[data-theme="dark"] .bg-star{ display:block; }
+  body:not([data-theme="dark"]) .bg-star{ display:none; }
   #bg-particles{ display:none; }
-  body[data-theme="nature"] #bg-particles{ display:block; }
-  body[data-theme="nature"] .bg-particle{ background:var(--sage, #8FA13F); border-radius:2px 10px 2px 10px; width:9px; height:6px; }
-  body[data-theme="ocean"] #bg-particles{ display:block; }
 
   /* ===== Lumen — poussière de lumière, visible en permanence ===== */
   #lumen-dust{ position:absolute; inset:0; z-index:5; pointer-events:none; overflow:hidden; }
@@ -95,16 +74,6 @@
     90%{ opacity:0.15; }
     100%{ transform:translateY(-95vh) translateX(-10px); opacity:0; }
   }
-  body[data-theme="ocean"] .bg-particle{ background:rgba(79,170,184,0.5); border-radius:50%; }
-  body[data-theme="ocean"] .bg-particle{ animation-name: particleRise; }
-  @keyframes particleRise{
-    0%{ transform: translateY(10vh) translateX(0); opacity:0; }
-    10%{ opacity:0.5; }
-    90%{ opacity:0.3; }
-    100%{ transform: translateY(-105vh) translateX(-20px); opacity:0; }
-  }
-  body[data-theme="soleil"] #bg-particles{ display:block; }
-  body[data-theme="soleil"] .bg-particle{ background:var(--gold-light); width:5px; height:5px; box-shadow:0 0 8px 1px rgba(242,183,5,0.6); }
 
   #app::before{
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='%23B8863B' fill-opacity='0.08'%3E%3Cpath d='M60 20 L63 55 L98 60 L63 65 L60 100 L57 65 L22 60 L57 55 Z'/%3E%3C/g%3E%3C/svg%3E");
@@ -135,468 +104,6 @@
     background-size: 140px 140px;
   }
   body[data-pattern="aucun"] #app::before{ background-image:none; }
-
-  /* ===== theme: soleil (soft, warm daylight) ===== */
-  body[data-theme="soleil"]{
-    --vellum: #FDF6E7; --vellum-light: #FFFCF4; --ink: #4A3720; --ink-soft: #8C7048;
-    --wine: #D97D3A; --wine-dark: #AD5F22; --gold: #E8B23D; --gold-light: #F5D28A; --gold-pale: #FBEAC4;
-    --hairline: #EEDFB8; --shadow-warm: 0 10px 30px rgba(217,125,58,0.18); --glow-gold: 0 0 18px rgba(232,178,61,0.4);
-  }
-  body[data-theme="soleil"]{ background: radial-gradient(circle at 50% -10%, #FBE6BC, transparent 62%), linear-gradient(180deg, #FBEACB 0%, #E9C48A 100%); }
-  body[data-theme="soleil"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 320'%3E%3Cg stroke='%23F2C355' stroke-opacity='0.55' stroke-width='7' stroke-linecap='round'%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(0 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(30 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(60 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(90 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(120 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(150 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(180 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(210 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(240 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(270 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(300 250 140)'/%3E%3Cline x1='250' y1='65' x2='250' y2='15' transform='rotate(330 250 140)'/%3E%3C/g%3E%3Ccircle cx='250' cy='140' r='70' fill='%23FFDD7A' fill-opacity='0.5'/%3E%3Ccircle cx='250' cy='140' r='40' fill='%23FFF3C4' fill-opacity='0.6'/%3E%3Cg fill='%23FFFFFF' fill-opacity='0.22'%3E%3Cellipse cx='95' cy='235' rx='55' ry='19'/%3E%3Cellipse cx='138' cy='224' rx='38' ry='15'/%3E%3Cellipse cx='415' cy='255' rx='58' ry='21'/%3E%3Cellipse cx='452' cy='244' rx='34' ry='13'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 480px 300px; background-position: 50% 0%;
-  }
-
-  /* ===== theme: nature (soft forest) ===== */
-  body[data-theme="nature"]{
-    --vellum: #F1F3E9; --vellum-light: #F9FAF3; --ink: #35401F; --ink-soft: #6B7A52;
-    --wine: #5C7A44; --wine-dark: #3D5A2C; --gold: #94A857; --gold-light: #C9D6A0; --gold-pale: #E6EDCD;
-    --hairline: #DAE2C4; --shadow-warm: 0 10px 30px rgba(92,122,68,0.16); --glow-gold: 0 0 18px rgba(148,168,87,0.4);
-  }
-  body[data-theme="nature"]{ background: radial-gradient(circle at 50% 0%, rgba(148,168,87,0.2), transparent 58%), linear-gradient(180deg, #E9EEDA 0%, #C9D3AE 100%); }
-  body[data-theme="nature"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 260'%3E%3Ccircle cx='400' cy='60' r='38' fill='%2394A857' fill-opacity='0.3'/%3E%3Cpath d='M0 260 L0 190 L60 150 L110 190 L160 140 L500 140 L500 260 Z' fill='%237A9560' fill-opacity='0.2'/%3E%3Cpath d='M0 260 L0 200 L50 165 L90 200 L130 155 L175 200 L215 160 L260 200 L300 155 L340 200 L385 165 L425 200 L470 170 L500 200 L500 260 Z' fill='%235C7A44' fill-opacity='0.32'/%3E%3Cg fill='none' stroke='%235C7A44' stroke-opacity='0.4' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M60 40 q8 -8 16 0 q8 -8 16 0'/%3E%3Cpath d='M120 65 q6 -6 12 0 q6 -6 12 0'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 100% 260px; background-position: center bottom;
-  }
-
-  /* ===== theme: océan (soft blues) ===== */
-  body[data-theme="ocean"]{
-    --vellum: #EBF2F3; --vellum-light: #F7FBFC; --ink: #223B44; --ink-soft: #5C7982;
-    --wine: #3B8199; --wine-dark: #245C70; --gold: #6BB4C0; --gold-light: #A9DBE2; --gold-pale: #DCF0F3;
-    --hairline: #CBE2E6; --shadow-warm: 0 10px 30px rgba(59,129,153,0.16); --glow-gold: 0 0 18px rgba(107,180,192,0.4);
-  }
-  body[data-theme="ocean"]{ background: radial-gradient(circle at 50% 0%, rgba(107,180,192,0.2), transparent 58%), linear-gradient(180deg, #E1EEF0 0%, #B4D2D8 100%); }
-  body[data-theme="ocean"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 260'%3E%3Ccircle cx='400' cy='70' r='34' fill='%236BB4C0' fill-opacity='0.32'/%3E%3Cg fill='none' stroke='%233B8199' stroke-opacity='0.38' stroke-width='6'%3E%3Cpath d='M0 190 Q60 165 120 190 T240 190 T360 190 T500 190'/%3E%3Cpath d='M0 215 Q60 195 120 215 T240 215 T360 215 T500 215'/%3E%3Cpath d='M0 240 Q60 222 120 240 T240 240 T360 240 T500 240'/%3E%3C/g%3E%3Cg fill='%233B8199' fill-opacity='0.28'%3E%3Cpath d='M100 185 L110 138 L122 185 Z'/%3E%3Crect x='90' y='185' width='38' height='10'/%3E%3C/g%3E%3Cg fill='none' stroke='%233B8199' stroke-opacity='0.35' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M300 50 q6 -6 12 0 q6 -6 12 0'/%3E%3Cpath d='M330 65 q5 -5 10 0 q5 -5 10 0'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 100% 260px; background-position: center bottom;
-  }
-
-  /* ===== theme: minuit (very dark, minimal, restful) ===== */
-  body[data-theme="minuit"]{
-    --vellum: #0E0C10; --vellum-light: #17141A; --ink: #E4DEDB; --ink-soft: #8C8590;
-    --wine: #A9556A; --wine-dark: #D98CA0; --gold: #A88A4E; --gold-light: #C9AE72; --gold-pale: #8C7647;
-    --hairline: #2A262E; --shadow-warm: 0 10px 34px rgba(0,0,0,0.7); --glow-gold: 0 0 14px rgba(168,138,78,0.3);
-  }
-  body[data-theme="minuit"]{ background: radial-gradient(circle at 50% 0%, rgba(168,138,78,0.08), transparent 60%), linear-gradient(180deg, #0A0810 0%, #030204 100%); }
-  body[data-theme="minuit"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 320'%3E%3Ccircle cx='390' cy='70' r='42' fill='%23A88A4E' fill-opacity='0.2'/%3E%3Ccircle cx='407' cy='57' r='36' fill='%23030204'/%3E%3Cline x1='60' y1='30' x2='140' y2='70' stroke='%23A88A4E' stroke-opacity='0.4' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%23A88A4E' fill-opacity='0.6'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3Ccircle cx='90' cy='210' r='1.3'/%3E%3Ccircle cx='260' cy='60' r='1.5'/%3E%3Ccircle cx='450' cy='140' r='1.6'/%3E%3Ccircle cx='480' cy='220' r='1.3'/%3E%3Ccircle cx='20' cy='250' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 460px 320px; background-position: 50% 0%; background-repeat:no-repeat;
-  }
-  body[data-theme="minuit"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.85), 0 0 0 1px rgba(168,138,78,0.12); }
-  body[data-theme="minuit"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.4); }
-
-  /* ===== theme: galaxie (real NASA/Hubble photo, public domain) ===== */
-  body[data-theme="rayons-lumiere"]{
-    --vellum: #2A2010; --vellum-light: #342815; --ink: #FFF6DE; --ink-soft: #E8D4A0;
-    --wine: #C9933C; --wine-dark: #8A5A1F; --gold: #F2D98A; --gold-light: #FFF0C2; --gold-pale: #FFE9B0;
-    --hairline: #4A3A1E; --shadow-warm: 0 10px 34px rgba(0,0,0,0.5); --glow-gold: 0 0 20px rgba(242,217,138,0.6);
-  }
-  body[data-theme="rayons-lumiere"]{ background: linear-gradient(180deg, #2A2010 0%, #1A1408 100%); }
-  body[data-theme="rayons-lumiere"] #app::before{
-    background-image:
-      linear-gradient(rgba(20,14,6,0.35), rgba(20,14,6,0.62)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Sunray%20from%20clouds.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="rayons-lumiere"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 0 1px rgba(242,217,138,0.2); }
-  body[data-theme="rayons-lumiere"] .card{ background: linear-gradient(165deg, rgba(52,40,21,0.9) 0%, rgba(42,32,16,0.9) 100%); backdrop-filter: blur(2px); }
-
-  body[data-theme="vitrail"]{
-    --vellum: #1E1628; --vellum-light: #281E34; --ink: #F2E6D8; --ink-soft: #C4AED0;
-    --wine: #B85A8A; --wine-dark: #7A3A5E; --gold: #D9A85C; --gold-light: #F2C98A; --gold-pale: #F2D9B0;
-    --hairline: #3E2E4E; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 20px rgba(217,168,92,0.5);
-  }
-  body[data-theme="vitrail"]{ background: linear-gradient(180deg, #1E1628 0%, #120E1A 100%); }
-  body[data-theme="vitrail"] #app::before{
-    background-image:
-      linear-gradient(rgba(18,14,24,0.4), rgba(18,14,24,0.68)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Cathedral%20window%20inside.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="vitrail"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(217,168,92,0.2); }
-  body[data-theme="vitrail"] .card{ background: linear-gradient(165deg, rgba(40,30,52,0.9) 0%, rgba(30,22,40,0.9) 100%); backdrop-filter: blur(2px); }
-
-  body[data-theme="cosmos"]{
-    --vellum: #1A1420; --vellum-light: #241C2E; --ink: #F0E6D8; --ink-soft: #B8A8C0;
-    --wine: #D4823C; --wine-dark: #8A4A1F; --gold: #F2B75E; --gold-light: #FFD98A; --gold-pale: #FFEBC2;
-    --hairline: #3A2E42; --shadow-warm: 0 10px 34px rgba(0,0,0,0.6); --glow-gold: 0 0 18px rgba(242,183,94,0.4);
-  }
-  body[data-theme="cosmos"]{ background: linear-gradient(180deg, #0D0812 0%, #1A0F08 100%); }
-  body[data-theme="cosmos"] #app::before{
-    background-image:
-      linear-gradient(rgba(12,8,16,0.6), rgba(12,8,16,0.8)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Messier51.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="cosmos"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.7), 0 0 0 1px rgba(242,183,94,0.15); }
-  body[data-theme="cosmos"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="cosmos"] .card{ background: linear-gradient(165deg, rgba(36,28,46,0.92) 0%, rgba(26,20,32,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: plage (real Wikimedia photo, public domain) ===== */
-  body[data-theme="plage"]{
-    --vellum: #2A1A14; --vellum-light: #351F17; --ink: #FBEEE0; --ink-soft: #D8B79C;
-    --wine: #E0692E; --wine-dark: #A8451A; --gold: #F5A64B; --gold-light: #FFCE8A; --gold-pale: #FFE4B8;
-    --hairline: #4A2E20; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(245,166,75,0.45);
-  }
-  body[data-theme="plage"]{ background: linear-gradient(180deg, #1C1108 0%, #2E1A0C 100%); }
-  body[data-theme="plage"] #app::before{
-    background-image:
-      linear-gradient(rgba(20,10,4,0.5), rgba(20,10,4,0.75)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Sunset_ocean.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="plage"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,166,75,0.15); }
-  body[data-theme="plage"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="plage"] .card{ background: linear-gradient(165deg, rgba(53,31,23,0.92) 0%, rgba(42,26,20,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: sylve (real Wikimedia forest photo) ===== */
-  body[data-theme="foret"]{
-    --vellum: #131D14; --vellum-light: #1C291D; --ink: #E9F0E5; --ink-soft: #A8C0A0;
-    --wine: #3E7A4A; --wine-dark: #235430; --gold: #8FBE7E; --gold-light: #C3E0B4; --gold-pale: #7CA86E;
-    --hairline: #2E4030; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(143,190,126,0.4);
-  }
-  body[data-theme="foret"]{ background: linear-gradient(180deg, #0D140E 0%, #1A2A1B 100%); }
-  body[data-theme="foret"] #app::before{
-    background-image:
-      linear-gradient(rgba(8,14,9,0.45), rgba(8,14,9,0.75)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Old_growth_forest_scenic.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="foret"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(143,190,126,0.15); }
-  body[data-theme="foret"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="foret"] .card{ background: linear-gradient(165deg, rgba(28,41,29,0.92) 0%, rgba(19,29,20,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: cime (real Wikimedia mountain photo) ===== */
-  body[data-theme="montagne"]{
-    --vellum: #1B222B; --vellum-light: #262F3A; --ink: #EAF0F5; --ink-soft: #A9B9C6;
-    --wine: #4C7A9E; --wine-dark: #2E5674; --gold: #9FC5DE; --gold-light: #CBE2EE; --gold-pale: #7FA9C4;
-    --hairline: #38455280; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(159,197,222,0.4);
-  }
-  body[data-theme="montagne"]{ background: linear-gradient(180deg, #10151C 0%, #1E2836 100%); }
-  body[data-theme="montagne"] #app::before{
-    background-image:
-      linear-gradient(rgba(10,14,20,0.45), rgba(10,14,20,0.75)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Mountains_images.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="montagne"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(159,197,222,0.15); }
-  body[data-theme="montagne"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="montagne"] .card{ background: linear-gradient(165deg, rgba(38,47,58,0.92) 0%, rgba(27,34,43,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: nébuleuse (real ESO/Wikimedia photo, CC-BY) ===== */
-  body[data-theme="nebuleuse"]{
-    --vellum: #160C10; --vellum-light: #211318; --ink: #F5E8DE; --ink-soft: #C4A08E;
-    --wine: #C06A4E; --wine-dark: #8A472F; --gold: #E8A87C; --gold-light: #F5C9A8; --gold-pale: #B37E5E;
-    --hairline: #3A2620; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(232,168,124,0.4);
-  }
-  body[data-theme="nebuleuse"]{ background: linear-gradient(180deg, #0D0709 0%, #1A0F12 100%); }
-  body[data-theme="nebuleuse"] #app::before{
-    background-image:
-      linear-gradient(rgba(10,6,8,0.55), rgba(10,6,8,0.8)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Carina_Nebula.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="nebuleuse"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(232,168,124,0.15); }
-  body[data-theme="nebuleuse"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="nebuleuse"] .card{ background: linear-gradient(165deg, rgba(33,19,24,0.92) 0%, rgba(22,12,16,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: piliers de la création (NASA/ESA Hubble, domaine public) ===== */
-  body[data-theme="piliers"]{
-    --vellum: #12100E; --vellum-light: #1D1815; --ink: #F5EBDC; --ink-soft: #C9AD8C;
-    --wine: #7A5230; --wine-dark: #52351E; --gold: #D4B27E; --gold-light: #EAD1A6; --gold-pale: #A88752;
-    --hairline: #362A1E; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(212,178,126,0.4);
-  }
-  body[data-theme="piliers"]{ background: linear-gradient(180deg, #0D0B09 0%, #1A1512 100%); }
-  body[data-theme="piliers"] #app::before{
-    background-image:
-      linear-gradient(rgba(8,6,5,0.5), rgba(8,6,5,0.78)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="piliers"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,178,126,0.15); }
-  body[data-theme="piliers"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="piliers"] .card{ background: linear-gradient(165deg, rgba(29,24,21,0.92) 0%, rgba(18,16,14,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: voie lactée (real photo, CC-BY/CC-BY-SA via Wikimedia) ===== */
-  body[data-theme="voielactee"]{
-    --vellum: #0D1220; --vellum-light: #171D30; --ink: #EDEAF5; --ink-soft: #A99FC2;
-    --wine: #4A3D6B; --wine-dark: #2E2647; --gold: #C9A66B; --gold-light: #E4C896; --gold-pale: #9B8150;
-    --hairline: #2A2A45; --shadow-warm: 0 10px 34px rgba(0,0,0,0.6); --glow-gold: 0 0 18px rgba(201,166,107,0.4);
-  }
-  body[data-theme="voielactee"]{ background: linear-gradient(180deg, #070A14 0%, #121828 100%); }
-  body[data-theme="voielactee"] #app::before{
-    background-image:
-      linear-gradient(rgba(5,7,14,0.55), rgba(5,7,14,0.8)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Milky_Way_rising_over_Tomaree_Mountain.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="voielactee"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(201,166,107,0.15); }
-  body[data-theme="voielactee"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="voielactee"] .card{ background: linear-gradient(165deg, rgba(23,29,48,0.92) 0%, rgba(13,18,32,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: christ (Paolo Veronese, XVIe siècle, domaine public) ===== */
-  body[data-theme="christ"]{
-    --vellum: #100C08; --vellum-light: #1B140D; --ink: #F5E9D6; --ink-soft: #C9AD84;
-    --wine: #8A5A2E; --wine-dark: #5E3A1A; --gold: #D9A85C; --gold-light: #EFCB8E; --gold-pale: #A87F4C;
-    --hairline: #3A2C1A; --shadow-warm: 0 10px 34px rgba(0,0,0,0.6); --glow-gold: 0 0 18px rgba(217,168,92,0.4);
-  }
-  body[data-theme="christ"]{ background: linear-gradient(180deg, #0A0705 0%, #17110A 100%); }
-  body[data-theme="christ"] #app::before{
-    background-image:
-      linear-gradient(rgba(8,6,4,0.55), rgba(8,6,4,0.8)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Paolo_Veronese_-_Christ_in_the_Garden_of_Gethsemane_-_WGA24847.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="christ"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(217,168,92,0.15); }
-  body[data-theme="christ"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="christ"] .card{ background: linear-gradient(165deg, rgba(27,20,13,0.92) 0%, rgba(16,12,8,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: marie (Sassoferrato, XVIIe siècle, domaine public) ===== */
-  body[data-theme="marie"]{
-    --vellum: #0E1420; --vellum-light: #182130; --ink: #EAF0F6; --ink-soft: #A6BAC9;
-    --wine: #3D5A7A; --wine-dark: #263D54; --gold: #C9D6E4; --gold-light: #E3ECF3; --gold-pale: #9BB0C2;
-    --hairline: #263042; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(201,214,228,0.35);
-  }
-  body[data-theme="marie"]{ background: linear-gradient(180deg, #070A10 0%, #121A26 100%); }
-  body[data-theme="marie"] #app::before{
-    background-image:
-      linear-gradient(rgba(5,7,10,0.5), rgba(5,7,10,0.78)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Vierge_en_oraison_(Il_Sassoferrato).jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="marie"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,214,228,0.15); }
-  body[data-theme="marie"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="marie"] .card{ background: linear-gradient(165deg, rgba(24,33,48,0.92) 0%, rgba(14,20,32,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: annonciation (Fra Angelico, XVe siècle, domaine public) ===== */
-  body[data-theme="annonciation"]{
-    --vellum: #160E18; --vellum-light: #211526; --ink: #F3E8F0; --ink-soft: #C4A8CC;
-    --wine: #8A6A9E; --wine-dark: #5E4470; --gold: #E8C97C; --gold-light: #F5DFA6; --gold-pale: #B89E5C;
-    --hairline: #3A2C42; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(232,201,124,0.4);
-  }
-  body[data-theme="annonciation"]{ background: linear-gradient(180deg, #0D0810 0%, #1A1220 100%); }
-  body[data-theme="annonciation"] #app::before{
-    background-image:
-      linear-gradient(rgba(10,6,12,0.5), rgba(10,6,12,0.78)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Fra_Angelico_-_The_Annunciation_-_WGA0455.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="annonciation"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(232,201,124,0.15); }
-  body[data-theme="annonciation"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="annonciation"] .card{ background: linear-gradient(165deg, rgba(33,21,38,0.92) 0%, rgba(22,14,24,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: sacré-cœur (Pompeo Batoni, XVIIIe siècle, domaine public) ===== */
-  body[data-theme="sacrecoeur"]{
-    --vellum: #180C0C; --vellum-light: #251312; --ink: #F5E5DC; --ink-soft: #C99B8E;
-    --wine: #8A3030; --wine-dark: #5E1E1E; --gold: #D9A85C; --gold-light: #EFCB8E; --gold-pale: #A87F4C;
-    --hairline: #3A2020; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(217,168,92,0.4);
-  }
-  body[data-theme="sacrecoeur"]{ background: linear-gradient(180deg, #0E0707 0%, #1C0F0E 100%); }
-  body[data-theme="sacrecoeur"] #app::before{
-    background-image:
-      linear-gradient(rgba(10,5,5,0.5), rgba(10,5,5,0.78)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="sacrecoeur"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(217,168,92,0.15); }
-  body[data-theme="sacrecoeur"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="sacrecoeur"] .card{ background: linear-gradient(165deg, rgba(37,19,18,0.92) 0%, rgba(24,12,12,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: aigle royal (photo réelle, licence CC-BY 4.0 via Wikimedia) ===== */
-  body[data-theme="aigle-royal"]{
-    --vellum: #141814; --vellum-light: #1E241D; --ink: #F0F3EA; --ink-soft: #ADC2A0;
-    --wine: #5A6E3A; --wine-dark: #3C4B26; --gold: #C9B87E; --gold-light: #E4D8A8; --gold-pale: #9C8F5E;
-    --hairline: #2C3428; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(201,184,126,0.4);
-  }
-  body[data-theme="aigle-royal"]{ background: linear-gradient(180deg, #0D110D 0%, #171E15 100%); }
-  body[data-theme="aigle-royal"] #app::before{
-    background-image:
-      linear-gradient(rgba(8,10,8,0.45), rgba(8,10,8,0.75)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Golden_Eagle_soaring_overhead.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="aigle-royal"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,184,126,0.15); }
-  body[data-theme="aigle-royal"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="aigle-royal"] .card{ background: linear-gradient(165deg, rgba(30,36,29,0.92) 0%, rgba(20,24,20,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: agneau de dieu (Zurbarán, XVIIe siècle, domaine public) ===== */
-  body[data-theme="agneau"]{
-    --vellum: #181614; --vellum-light: #221F1B; --ink: #F5EFE2; --ink-soft: #C4B79C;
-    --wine: #7A6A4E; --wine-dark: #524634; --gold: #E8DCC4; --gold-light: #F5EEDC; --gold-pale: #B8A984;
-    --hairline: #38322A; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(232,220,196,0.35);
-  }
-  body[data-theme="agneau"]{ background: linear-gradient(180deg, #100E0C 0%, #1C1814 100%); }
-  body[data-theme="agneau"] #app::before{
-    background-image:
-      linear-gradient(rgba(10,8,6,0.45), rgba(10,8,6,0.75)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Agnus_Dei_(The_Lamb_of_God)_by_Zurbar%C3%A1n,_San_Diego_Museum_of_Art.JPG?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="agneau"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(232,220,196,0.15); }
-  body[data-theme="agneau"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="agneau"] .card{ background: linear-gradient(165deg, rgba(34,31,27,0.92) 0%, rgba(24,22,20,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: miséricorde divine (Kazimirowski, 1934, domaine public) ===== */
-  body[data-theme="misericorde-divine"]{
-    --vellum: #141018; --vellum-light: #201924; --ink: #F5E9E4; --ink-soft: #C9A8B8;
-    --wine: #7A4A6E; --wine-dark: #522F4A; --gold: #E8A85C; --gold-light: #F5C98E; --gold-pale: #B37E42;
-    --hairline: #362A38; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(232,168,92,0.4);
-  }
-  body[data-theme="misericorde-divine"]{ background: linear-gradient(180deg, #0D0A10 0%, #1A1420 100%); }
-  body[data-theme="misericorde-divine"] #app::before{
-    background-image:
-      linear-gradient(rgba(10,8,12,0.45), rgba(10,8,12,0.75)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Kazimirowski_Eugeniusz,_Divine_Mercy,_1934.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="misericorde-divine"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(232,168,92,0.15); }
-  body[data-theme="misericorde-divine"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="misericorde-divine"] .card{ background: linear-gradient(165deg, rgba(32,25,36,0.92) 0%, rgba(20,16,24,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: madone sixtine (Raphaël, 1512, domaine public) ===== */
-  body[data-theme="madone-sixtine"]{
-    --vellum: #10141C; --vellum-light: #1B2028; --ink: #EEF0F4; --ink-soft: #ADB6C4;
-    --wine: #4A5A7A; --wine-dark: #303C54; --gold: #D4C9A8; --gold-light: #E9E1C8; --gold-pale: #A8996E;
-    --hairline: #2C3444; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(212,201,168,0.35);
-  }
-  body[data-theme="madone-sixtine"]{ background: linear-gradient(180deg, #0A0C12 0%, #161B24 100%); }
-  body[data-theme="madone-sixtine"] #app::before{
-    background-image:
-      linear-gradient(rgba(6,8,12,0.45), rgba(6,8,12,0.75)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/'The_Sistine_Madonna'_by_Raphael,_1512.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="madone-sixtine"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,201,168,0.15); }
-  body[data-theme="madone-sixtine"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="madone-sixtine"] .card{ background: linear-gradient(165deg, rgba(27,32,40,0.92) 0%, rgba(16,20,28,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: croix de lumière (illustration originale) ===== */
-  body[data-theme="croix-lumiere"]{
-    --vellum: #1A1410; --vellum-light: #251D16; --ink: #F5EAD6; --ink-soft: #C9AD84;
-    --wine: #8A5A2E; --wine-dark: #5E3A1A; --gold: #F2C879; --gold-light: #FFE3A6; --gold-pale: #B8935A;
-    --hairline: #3A2C1A; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 20px rgba(242,200,121,0.5);
-  }
-  body[data-theme="croix-lumiere"]{ background: radial-gradient(circle at 50% 15%, #3A2A16, transparent 60%), linear-gradient(180deg, #14100C 0%, #0C0906 100%); }
-  body[data-theme="croix-lumiere"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 340'%3E%3Cg stroke='%23F2C879' stroke-opacity='0.3' stroke-width='6' stroke-linecap='round'%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(0 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(24 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(48 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(72 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(96 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(120 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(144 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(168 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(192 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(216 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(240 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(264 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(288 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(312 250 150)'/%3E%3Cline x1='250' y1='55' x2='250' y2='10' transform='rotate(336 250 150)'/%3E%3C/g%3E%3Ccircle cx='250' cy='150' r='60' fill='%23F2C879' fill-opacity='0.14'/%3E%3Cg fill='%23F2C879' fill-opacity='0.55'%3E%3Crect x='233' y='55' width='34' height='230' rx='9'/%3E%3Crect x='150' y='120' width='200' height='34' rx='9'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 480px 320px; background-position: 50% 0%; animation: bgBreathe 16s ease-in-out infinite;
-  }
-  body[data-theme="croix-lumiere"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(242,200,121,0.15); }
-  body[data-theme="croix-lumiere"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="croix-lumiere"] .card{ background: linear-gradient(165deg, rgba(37,29,22,0.92) 0%, rgba(26,20,16,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: colombe (illustration originale — Esprit Saint) ===== */
-  body[data-theme="colombe"]{
-    --vellum: #101820; --vellum-light: #182430; --ink: #EDF3F8; --ink-soft: #A9BFCE;
-    --wine: #5A7A9E; --wine-dark: #3C5570; --gold: #F5EBD4; --gold-light: #FFFAEE; --gold-pale: #C4B790;
-    --hairline: #263542; --shadow-warm: 0 10px 34px rgba(0,0,0,0.5); --glow-gold: 0 0 20px rgba(245,235,212,0.4);
-  }
-  body[data-theme="colombe"]{ background: radial-gradient(circle at 50% 10%, #223244, transparent 60%), linear-gradient(180deg, #0C1218 0%, #070B0F 100%); }
-  body[data-theme="colombe"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 320'%3E%3Ccircle cx='250' cy='120' r='95' fill='%23F5EBD4' fill-opacity='0.12'/%3E%3Cg fill='%235A7A9E' fill-opacity='0.4'%3E%3Cpath d='M250 100 Q170 45 100 90 Q170 100 235 128 Z'/%3E%3Cpath d='M250 100 Q330 45 400 90 Q330 100 265 128 Z'/%3E%3Cellipse cx='250' cy='128' rx='16' ry='26'/%3E%3Ccircle cx='250' cy='92' r='9'/%3E%3Cpath d='M250 84 L262 90 L250 96 Z'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 480px 300px; background-position: 50% 5%; animation: bgBreathe 16s ease-in-out infinite;
-  }
-  body[data-theme="colombe"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,235,212,0.12); }
-  body[data-theme="colombe"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="colombe"] .card{ background: linear-gradient(165deg, rgba(24,36,48,0.92) 0%, rgba(16,24,32,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: vitrail (illustration originale — vitrail géométrique) ===== */
-  body[data-theme="vitrail"]{
-    --vellum: #120E1A; --vellum-light: #1C1526; --ink: #F2ECF5; --ink-soft: #B8A8C4;
-    --wine: #7A2E4A; --wine-dark: #521E31; --gold: #D9A85C; --gold-light: #EFC988; --gold-pale: #A87F42;
-    --hairline: #322540; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(217,168,92,0.4);
-  }
-  body[data-theme="vitrail"]{ background: linear-gradient(180deg, #0D0A14 0%, #171021 100%); }
-  body[data-theme="vitrail"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg stroke='%23120E1A' stroke-opacity='0.7' stroke-width='3'%3E%3Cpolygon points='50,10 90,50 50,90 10,50' fill='%237A2E4A' fill-opacity='0.28'/%3E%3Cpolygon points='150,10 190,50 150,90 110,50' fill='%233E6E9E' fill-opacity='0.28'/%3E%3Cpolygon points='50,110 90,150 50,190 10,150' fill='%23D9A85C' fill-opacity='0.26'/%3E%3Cpolygon points='150,110 190,150 150,190 110,150' fill='%237A2E4A' fill-opacity='0.24'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 220px 220px; animation: bgBreathe 16s ease-in-out infinite;
-  }
-  body[data-theme="vitrail"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(217,168,92,0.15); }
-  body[data-theme="vitrail"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="vitrail"] .card{ background: linear-gradient(165deg, rgba(28,21,38,0.92) 0%, rgba(18,14,26,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: lune (real ESO/Wikimedia photo, CC-BY) ===== */
-  body[data-theme="lune-photo"]{
-    --vellum: #0B0E16; --vellum-light: #151A24; --ink: #EDF1F6; --ink-soft: #9FADBE;
-    --wine: #7A8CA6; --wine-dark: #56667D; --gold: #D9E2ED; --gold-light: #EFF4F9; --gold-pale: #A9BACC;
-    --hairline: #2B3140; --shadow-warm: 0 10px 34px rgba(0,0,0,0.6); --glow-gold: 0 0 18px rgba(217,226,237,0.35);
-  }
-  body[data-theme="lune-photo"]{ background: linear-gradient(180deg, #060810 0%, #10141F 100%); }
-  body[data-theme="lune-photo"] #app::before{
-    background-image:
-      linear-gradient(rgba(4,6,10,0.55), rgba(4,6,10,0.8)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/A_Crescent_Moon_over_the_VLTI.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="lune-photo"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(217,226,237,0.15); }
-  body[data-theme="lune-photo"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="lune-photo"] .card{ background: linear-gradient(165deg, rgba(21,26,36,0.92) 0%, rgba(11,14,22,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: archange Michel (domaine public) ===== */
-  body[data-theme="archange-michel"]{
-    --vellum: #14100C; --vellum-light: #201A14; --ink: #F2ECE0; --ink-soft: #C2B296;
-    --wine: #6E5A2E; --wine-dark: #493B1E; --gold: #D9BE6E; --gold-light: #EFDE9E; --gold-pale: #A8945C;
-    --hairline: #332A1A; --shadow-warm: 0 10px 34px rgba(0,0,0,0.6); --glow-gold: 0 0 18px rgba(217,190,110,0.4);
-  }
-  body[data-theme="archange-michel"]{ background: linear-gradient(180deg, #0A0806 0%, #18140C 100%); }
-  body[data-theme="archange-michel"] #app::before{
-    background-image:
-      linear-gradient(rgba(8,6,4,0.52), rgba(8,6,4,0.8)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/SAINT%20MICHAEL%20THE%20ARCHANGEL.PNG?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="archange-michel"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(217,190,110,0.15); }
-  body[data-theme="archange-michel"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="archange-michel"] .card{ background: linear-gradient(165deg, rgba(32,26,20,0.92) 0%, rgba(20,16,12,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: archange Gabriel (domaine public) ===== */
-  body[data-theme="archange-gabriel"]{
-    --vellum: #140E18; --vellum-light: #201627; --ink: #F0E8F5; --ink-soft: #BCA6CC;
-    --wine: #6E4E8A; --wine-dark: #49325E; --gold: #D9A8E8; --gold-light: #EDCEF5; --gold-pale: #A87FB8;
-    --hairline: #2F2038; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(217,168,232,0.35);
-  }
-  body[data-theme="archange-gabriel"]{ background: linear-gradient(180deg, #0C0810 0%, #1A1220 100%); }
-  body[data-theme="archange-gabriel"] #app::before{
-    background-image:
-      linear-gradient(rgba(8,5,10,0.5), rgba(8,5,10,0.78)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Archangel%20Gabriel%20from%20an%20Annunciation%20-%20Google%20Art%20Project.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="archange-gabriel"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(217,168,232,0.15); }
-  body[data-theme="archange-gabriel"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="archange-gabriel"] .card{ background: linear-gradient(165deg, rgba(32,22,39,0.92) 0%, rgba(20,14,24,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: archange Raphaël (Rembrandt, domaine public) ===== */
-  body[data-theme="archange-raphael"]{
-    --vellum: #0E1410; --vellum-light: #16201A; --ink: #E6F0EA; --ink-soft: #9EC2AC;
-    --wine: #3D7A5A; --wine-dark: #26543C; --gold: #A8D9BE; --gold-light: #CEEFDE; --gold-pale: #7FB89A;
-    --hairline: #20382A; --shadow-warm: 0 10px 34px rgba(0,0,0,0.55); --glow-gold: 0 0 18px rgba(168,217,190,0.35);
-  }
-  body[data-theme="archange-raphael"]{ background: linear-gradient(180deg, #070C09 0%, #121A15 100%); }
-  body[data-theme="archange-raphael"] #app::before{
-    background-image:
-      linear-gradient(rgba(5,8,6,0.5), rgba(5,8,6,0.78)),
-      url("https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt%20De%20aartsengel%20verlaat%20Tobias%20en%20zijn%20gezin.%201637.jpg?width=1600");
-    background-size: cover; background-position: center; animation: none;
-  }
-  body[data-theme="archange-raphael"] #app{ box-shadow: 0 25px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(168,217,190,0.15); }
-  body[data-theme="archange-raphael"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.3); }
-  body[data-theme="archange-raphael"] .card{ background: linear-gradient(165deg, rgba(22,32,26,0.92) 0%, rgba(14,20,16,0.92) 100%); backdrop-filter: blur(2px); }
-
-  /* ===== theme: contraste élevé (accessibilité) ===== */
-  body[data-theme="contraste"]{
-    --vellum: #000000; --vellum-light: #0A0A0A; --ink: #FFFFFF; --ink-soft: #FFD700;
-    --wine: #FFD700; --wine-dark: #FFEA70; --gold: #FFD700; --gold-light: #FFEA70; --gold-pale: #3A3000;
-    --hairline: #FFD700; --shadow-warm: 0 0 0 2px #FFD700; --glow-gold: 0 0 12px rgba(255,215,0,0.8);
-  }
-  body[data-theme="contraste"]{ background: #000000; }
-  body[data-theme="contraste"] #app::before{ background-image:none; animation:none; }
-  body[data-theme="contraste"] #app{ border: 2px solid #FFD700; box-shadow:none; }
-  body[data-theme="contraste"] .card{ background:#000000; border: 2px solid #FFD700; }
-  body[data-theme="contraste"] .btn-primary, body[data-theme="contraste"] .btn-gold{ background:#FFD700; color:#000000; font-weight:800; }
-  body[data-theme="contraste"] .btn-ghost{ border-width:2px; }
-  body[data-theme="contraste"] #topbar{ background:#000000; border-bottom:2px solid #FFD700; }
 
   #app{
     width:100%;
@@ -1437,8 +944,6 @@
   .hub-hero-banner img:not(.hub-hero-banner-img){ width:52px; height:52px; filter:brightness(0) invert(1); opacity:0.9; }
   .hub-hero-banner-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 22%; }
   .hub-hero-scrim{ position:absolute; inset:0; background:linear-gradient(160deg, rgba(20,10,10,0.52) 0%, rgba(20,10,10,0.18) 60%); }
-  /* En mode "fond plein écran par page", le bandeau fait doublon avec le fond — on le retire. */
-  body[data-theme-mode="page"] .hub-hero-banner{ display:none; }
   .hub-hero-emoji{ position:relative; z-index:1; font-size:44px; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35)); }
   .novena-card-img{ position:relative; height:120px; background:var(--gold-pale); display:flex; align-items:center; justify-content:center; }
   .novena-card-img img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; }
@@ -2266,28 +1771,34 @@
   }
   .flourish-divider{ text-align:center; color:var(--gold); font-size:13px; letter-spacing:6px; margin:18px 0; opacity:0.7; }
 
-  /* ===== dark mode ===== */
+  /* ===== mode sombre : "Ambre sombre" — bleu nuit sobre, accents ambre discrets ===== */
   body[data-theme="dark"]{
-    --vellum: #221D22;
-    --vellum-light: #2C262B;
-    --ink: #EFE7D8;
-    --ink-soft: #B9AF9E;
-    --wine: #C9707E;
-    --wine-dark: #E8A9B3;
-    --gold: #D9B776;
-    --gold-light: #EBD8A6;
-    --gold-pale: #F0E2BC;
-    --hairline: #443B3E;
+    --vellum: #141A23;
+    --vellum-light: #1C2430;
+    --ink: #E7E2D6;
+    --ink-soft: #92A0B2;
+    --wine: #C99A5E;
+    --wine-dark: #A67A42;
+    --gold: #D4B377;
+    --gold-light: #E6CB9C;
+    --gold-pale: #26211A;
+    --hairline: #29323E;
     --shadow-warm: 0 10px 30px rgba(0,0,0,0.5);
-    --glow-gold: 0 0 18px rgba(217,183,118,0.35);
+    --glow-gold: 0 0 16px rgba(212,179,119,0.25);
   }
-  body[data-theme="dark"]{ background: linear-gradient(180deg, #171316 0%, #0F0D0F 100%); }
+  body[data-theme="dark"]{ background: linear-gradient(180deg, #10141B 0%, #090C10 100%); }
   body[data-theme="dark"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D9B776' fill-opacity='0.32'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%23171316'/%3E%3Cg fill='%23D9B776' fill-opacity='0.65'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D4B377' fill-opacity='0.2'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%23090C10'/%3E%3Cg fill='%23D4B377' fill-opacity='0.45'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;
   }
   body[data-theme="dark"] #app{ box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
   body[data-theme="dark"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.25); }
+  /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en bleu nuit, pas en bordeaux.
+     Le texte du bandeau utilise par défaut --vellum-light, qui devient une couleur sombre (fond de
+     carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
+  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0E1420 0%, #1A2435 45%, #233349 100%); border-bottom-color: rgba(212,179,119,0.22); color: #F0E6D4; }
+  body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F0E6D4; }
+  body[data-theme="dark"] #tabbar{ background: #171E28; border-color: var(--hairline); }
 
   /* ===== topbar toolbar ===== */
   .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
