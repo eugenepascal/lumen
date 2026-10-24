@@ -18,10 +18,14 @@
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
-    background:
+    background-image:
       radial-gradient(circle at 50% 0%, rgba(192,138,62,0.28), transparent 55%),
-      linear-gradient(180deg, #DBC797 0%, #B2935B 100%);
-    background-attachment: fixed;
+      linear-gradient(180deg, rgba(219,199,151,0.55) 0%, rgba(178,147,91,0.72) 100%),
+      url("../images/wallpaper-light.jpg");
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-position: center, center, center 18%;
+    background-size: auto, auto, cover;
+    background-attachment: fixed, fixed, fixed;
     font-family:'Lora', serif;
     color:var(--ink);
     line-height:1.55;
@@ -151,6 +155,28 @@
     position:relative;
     z-index:1;
     border: 1px solid rgba(255,255,255,0.5);
+  }
+  /* Image de fond (fond d'écran) choisie par l'utilisatrice/l'utilisateur, floutée
+     et teintée pour rester lisible derrière tout le contenu — un calque séparé de
+     #app::before (qui garde, lui, le motif décoratif « croix / colombe / poisson… »
+     choisi dans les réglages). inset négatif + overflow:hidden sur #app : le flou
+     ne laisse jamais de bord visible. */
+  #app::after{
+    content:"";
+    position:absolute; inset:-24px; z-index:-2; pointer-events:none;
+    background-image:
+      linear-gradient(175deg, rgba(234,223,189,0.5) 0%, rgba(244,235,210,0.64) 100%),
+      url("../images/wallpaper-light.jpg");
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, center 18%;
+    background-size: cover, cover;
+    filter: blur(14px);
+  }
+  body[data-theme="dark"] #app::after{
+    background-image:
+      linear-gradient(175deg, rgba(27,21,12,0.56) 0%, rgba(37,29,17,0.7) 100%),
+      url("../images/wallpaper-dark.jpg");
+    background-position: center, center 15%;
   }
   #app::before{
     content:"";
@@ -894,22 +920,36 @@
   #lumen-player-bar .icon-btn{ background:rgba(255,255,255,0.15); color:#fff; border:none; width:28px; height:28px; border-radius:50%; font-size:12px; cursor:pointer; flex-shrink:0; }
   .lumen-player-thumb{ width:38px; height:38px; border-radius:9px; flex-shrink:0; background:rgba(0,0,0,0.3); }
 
-  /* ===== page dédiée au lecteur d'ambiance : le son ne s'arrête jamais en
-     passant ici, on déplace juste le même cadre vidéo dans une vue agrandie,
-     sur sa propre page, au lieu d'une carte flottante par-dessus l'écran. */
-  .ambiance-player-panel{
-    background:var(--vellum-light); border-radius:18px; padding:18px; width:100%; max-width:480px;
-    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  /* ===== lecteur d'ambiance : petite fenêtre flottante sur le côté, pas une
+     fenêtre modale plein écran — on peut continuer à naviguer dans l'appli
+     pendant que le son ou la vidéo joue, et la déplacer où l'on veut. */
+  .ambiance-float{
+    position:fixed; right:14px; bottom:96px; z-index:60;
+    width:208px; max-width:calc(100vw - 28px);
+    touch-action:none;
   }
-  .ambiance-player-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-  .ambiance-player-top .icon-btn{ background:var(--gold-pale); border:none; width:32px; height:32px; border-radius:50%; font-size:15px; cursor:pointer; }
-  .ambiance-player-title{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--wine-dark); margin:0; }
-  .ambiance-player-label{ font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--ink); text-align:center; margin:0 0 12px; }
-  .ambiance-player-embed{ width:100%; height:220px; border-radius:12px; background:#000; }
-  .ambiance-player-embed iframe{ width:100%; height:100%; border:none; border-radius:12px; }
+  .ambiance-float.hidden{ display:none; }
+  .ambiance-float .ambiance-player-panel{
+    background:var(--vellum-light); border-radius:16px; padding:10px;
+    box-shadow:0 14px 36px rgba(0,0,0,0.38); border:1px solid var(--hairline);
+  }
+  .ambiance-player-top{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+    cursor:grab; user-select:none;
+  }
+  .ambiance-player-top:active{ cursor:grabbing; }
+  .ambiance-player-top .icon-btn{ background:var(--gold-pale); border:none; width:26px; height:26px; border-radius:50%; font-size:12px; cursor:pointer; flex-shrink:0; }
+  .ambiance-player-drag-hint{ font-size:13px; color:var(--ink-soft); letter-spacing:1px; pointer-events:none; }
+  .ambiance-player-title{ font-family:'Fraunces',serif; font-weight:600; font-size:12px; color:var(--wine-dark); margin:0; pointer-events:none; }
+  .ambiance-player-label{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--ink); text-align:center; margin:0 0 8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ambiance-player-embed{ width:100%; height:117px; border-radius:10px; background:#000; }
+  .ambiance-player-embed iframe{ width:100%; height:100%; border:none; border-radius:10px; }
   .aelf-iframe-embed{ width:100%; height:62vh; min-height:420px; max-height:640px; border-radius:14px; overflow:hidden; border:1px solid var(--gold-pale); background:#fff; }
   .aelf-iframe-embed iframe{ width:100%; height:100%; border:none; }
-  .ambiance-player-controls{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+  .ambiance-player-controls{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+  .ambiance-float .btn-sm{ font-size:10.5px; padding:6px 9px; }
+  .ambiance-float .studio-note{ font-size:10px; margin:6px 0 0; }
+  .ambiance-float .studio-note a{ display:none; } /* lien "ouvrir sur YouTube" superflu dans la mini-fenêtre */
   .sumry-streak{ text-align:center; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; color:var(--wine-dark); margin:12px 0; padding:8px; background:var(--gold-pale); border-radius:12px; }
   .mp-folders-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
   .mp-folder{ text-align:left; cursor:pointer; border:none; border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:6px; }
@@ -1859,7 +1899,15 @@
     --shadow-warm: 0 10px 30px rgba(0,0,0,0.6);
     --glow-gold: 0 0 16px rgba(199,164,114,0.3);
   }
-  body[data-theme="dark"]{ background: linear-gradient(180deg, #150F08 0%, #0A0704 100%); }
+  body[data-theme="dark"]{
+    background-image:
+      linear-gradient(180deg, rgba(21,15,8,0.72) 0%, rgba(10,7,4,0.85) 100%),
+      url("../images/wallpaper-dark.jpg");
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, center 15%;
+    background-size: auto, cover;
+    background-attachment: fixed, fixed;
+  }
   body[data-theme="dark"] #app::before{
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23C7A472' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230A0704'/%3E%3Cg fill='%236E8CAE' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;

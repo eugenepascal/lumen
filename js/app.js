@@ -8443,30 +8443,29 @@ function renderAmbianceVideoWindow(){
     destroyAmbianceYoutubePlayer();
     host.innerHTML = `
       <div class="ambiance-player-panel">
-        <div class="ambiance-player-top">
-          <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
+        <div class="ambiance-player-top" id="ambiance-player-drag">
+          <span class="ambiance-player-drag-hint" aria-hidden="true">⠿</span>
           <p class="ambiance-player-title">🟢 Spotify</p>
-          <div style="width:32px;"></div>
+          <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
-        <div class="ambiance-player-embed"><iframe src="${BG_SPOTIFY_ACTIVE}" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-        <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Choisissez un titre à jouer dans le lecteur Spotify.</p>
+        <div class="ambiance-player-embed"><iframe src="${BG_SPOTIFY_ACTIVE}" style="width:100%; height:100%; border:none; border-radius:10px;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
         <div class="ambiance-player-controls"><button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Fermer</button></div>
       </div>`;
   } else if(BG_YT_VIDEO_ID){
     destroyAmbianceYoutubePlayer();
     host.innerHTML = `
       <div class="ambiance-player-panel">
-        <div class="ambiance-player-top">
+        <div class="ambiance-player-top" id="ambiance-player-drag">
+          <span class="ambiance-player-drag-hint" aria-hidden="true">⠿</span>
+          <p class="ambiance-player-title">🎵 Ambiance</p>
           <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
-          <p class="ambiance-player-title">🎵 Lecteur d'ambiance</p>
-          <div style="width:32px;"></div>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
         <div class="ambiance-player-embed"><div id="ambiance-yt-player"></div></div>
-        <p class="studio-note" style="text-align:center; margin:10px 0 4px;">Utilisez les contrôles de la vidéo pour mettre en pause ou régler le volume.<br>Vidéo qui ne s'affiche pas ? <a href="https://www.youtube.com/watch?v=${BG_YT_VIDEO_ID}" target="_blank" rel="noopener">Ouvrir directement sur YouTube ↗</a></p>
+        <p class="studio-note" style="text-align:center;">Les commandes de la vidéo (▶⏸, « Passer l'annonce ») restent accessibles dans le cadre.</p>
         <div class="ambiance-player-controls">
-          ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Titre suivant</button>` : ''}
+          ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
         </div>
       </div>`;
@@ -8486,7 +8485,46 @@ function renderAmbianceVideoWindow(){
   };
   const stopBtn = document.getElementById('ambiance-player-stop');
   if(stopBtn) stopBtn.onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); };
+  wireAmbianceFloatDrag();
   if(BG_YT_VIDEO_ID) loadAmbianceVideo(BG_YT_VIDEO_ID);
+}
+/* Fenêtre flottante déplaçable : on saisit la petite poignée ⠿ en haut du
+   cadre pour la glisser n'importe où sur l'écran plutôt que de rester bloqué
+   au centre — l'appli reste utilisable et navigable pendant ce temps, puisque
+   ce n'est plus une fenêtre modale plein écran. */
+function wireAmbianceFloatDrag(){
+  const host = document.getElementById('ambiance-player-overlay');
+  const handle = document.getElementById('ambiance-player-drag');
+  if(!host || !handle || handle.dataset.dragWired) return;
+  handle.dataset.dragWired = '1';
+  let dragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+  const onDown = (e)=>{
+    if(e.target.closest('.icon-btn')) return;
+    dragging = true;
+    const pt = e.touches ? e.touches[0] : e;
+    startX = pt.clientX; startY = pt.clientY;
+    const rect = host.getBoundingClientRect();
+    startLeft = rect.left; startTop = rect.top;
+    host.style.right = 'auto'; host.style.bottom = 'auto';
+    host.style.left = startLeft + 'px'; host.style.top = startTop + 'px';
+  };
+  const onMove = (e)=>{
+    if(!dragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    const dx = pt.clientX - startX, dy = pt.clientY - startY;
+    const w = host.offsetWidth, h = host.offsetHeight;
+    let newLeft = Math.max(6, Math.min(window.innerWidth - w - 6, startLeft + dx));
+    let newTop = Math.max(6, Math.min(window.innerHeight - h - 6, startTop + dy));
+    host.style.left = newLeft + 'px';
+    host.style.top = newTop + 'px';
+  };
+  const onUp = ()=>{ dragging = false; };
+  handle.addEventListener('mousedown', onDown);
+  handle.addEventListener('touchstart', onDown, {passive:true});
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchmove', onMove, {passive:true});
+  window.addEventListener('mouseup', onUp);
+  window.addEventListener('touchend', onUp);
 }
 function playBgYoutube(videoId, label, opts){
   opts = opts || {};
