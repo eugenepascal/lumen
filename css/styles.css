@@ -19,13 +19,12 @@
   html,body{margin:0; padding:0; height:100%;}
   body{
     background-image:
-      radial-gradient(circle at 50% 0%, rgba(192,138,62,0.28), transparent 55%),
-      linear-gradient(180deg, rgba(219,199,151,0.55) 0%, rgba(178,147,91,0.72) 100%),
+      linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(60,42,18,0.18) 100%),
       url("../images/wallpaper-light.jpg");
-    background-repeat: no-repeat, no-repeat, no-repeat;
-    background-position: center, center, center 18%;
-    background-size: auto, auto, cover;
-    background-attachment: fixed, fixed, fixed;
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, center 30%;
+    background-size: auto, cover;
+    background-attachment: fixed, fixed;
     font-family:'Lora', serif;
     color:var(--ink);
     line-height:1.55;
@@ -163,20 +162,20 @@
      ne laisse jamais de bord visible. */
   #app::after{
     content:"";
-    position:absolute; inset:-24px; z-index:-2; pointer-events:none;
+    position:absolute; inset:-6px; z-index:-2; pointer-events:none;
     background-image:
-      linear-gradient(175deg, rgba(234,223,189,0.5) 0%, rgba(244,235,210,0.64) 100%),
+      linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.22) 30%, rgba(60,42,18,0.3) 100%),
       url("../images/wallpaper-light.jpg");
     background-repeat: no-repeat, no-repeat;
-    background-position: center, center 18%;
+    background-position: center, center 30%;
     background-size: cover, cover;
-    filter: blur(14px);
+    filter: blur(2px);
   }
   body[data-theme="dark"] #app::after{
     background-image:
-      linear-gradient(175deg, rgba(27,21,12,0.56) 0%, rgba(37,29,17,0.7) 100%),
+      linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.48) 100%),
       url("../images/wallpaper-dark.jpg");
-    background-position: center, center 15%;
+    background-position: center, center 30%;
   }
   #app::before{
     content:"";
@@ -1901,10 +1900,10 @@
   }
   body[data-theme="dark"]{
     background-image:
-      linear-gradient(180deg, rgba(21,15,8,0.72) 0%, rgba(10,7,4,0.85) 100%),
+      linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.42) 100%),
       url("../images/wallpaper-dark.jpg");
     background-repeat: no-repeat, no-repeat;
-    background-position: center, center 15%;
+    background-position: center, center 30%;
     background-size: auto, cover;
     background-attachment: fixed, fixed;
   }
