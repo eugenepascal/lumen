@@ -18,10 +18,13 @@
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
-    background:
-      radial-gradient(circle at 50% 0%, rgba(192,138,62,0.28), transparent 55%),
-      linear-gradient(180deg, #DBC797 0%, #B2935B 100%);
-    background-attachment: fixed;
+    background-image:
+      linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(60,42,18,0.2) 100%),
+      url("../images/wallpaper-light.jpg");
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, left 30%;
+    background-size: auto, cover;
+    background-attachment: fixed, fixed;
     font-family:'Lora', serif;
     color:var(--ink);
     line-height:1.55;
@@ -33,6 +36,10 @@
     min-height:100vh;
     padding: 18px 0;
     position:relative;
+    /* Le texte repose directement sur le fond d'écran à plusieurs endroits de
+       l'appli, sans carte derrière lui. Ce halo le garde lisible quelle que
+       soit la zone de la photo qui se trouve dessous. */
+    text-shadow: 0 1px 3px rgba(255,255,255,0.75), 0 1px 14px rgba(255,255,255,0.55);
   }
   body::before{
     content:"";
@@ -151,6 +158,26 @@
     position:relative;
     z-index:1;
     border: 1px solid rgba(255,255,255,0.5);
+  }
+  /* Image de fond (fond d'écran) choisie par l'utilisatrice/l'utilisateur — un
+     calque séparé de #app::before (qui garde, lui, le motif décoratif « croix /
+     colombe / poisson… » choisi dans les réglages). */
+  #app::after{
+    content:"";
+    position:absolute; inset:-6px; z-index:-2; pointer-events:none;
+    background-image:
+      linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.18) 35%, rgba(60,42,18,0.26) 100%),
+      url("../images/wallpaper-light.jpg");
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, left 30%;
+    background-size: cover, cover;
+    filter: blur(1.5px);
+  }
+  body[data-theme="dark"] #app::after{
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.22) 35%, rgba(0,0,0,0.42) 100%),
+      url("../images/wallpaper-dark.jpg");
+    background-position: center, center 40%;
   }
   #app::before{
     content:"";
@@ -1873,7 +1900,16 @@
     --shadow-warm: 0 10px 30px rgba(0,0,0,0.6);
     --glow-gold: 0 0 16px rgba(199,164,114,0.3);
   }
-  body[data-theme="dark"]{ background: linear-gradient(180deg, #150F08 0%, #0A0704 100%); }
+  body[data-theme="dark"]{
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.4) 100%),
+      url("../images/wallpaper-dark.jpg");
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, center 40%;
+    background-size: auto, cover;
+    background-attachment: fixed, fixed;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 1px 16px rgba(0,0,0,0.5);
+  }
   body[data-theme="dark"] #app::before{
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23C7A472' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230A0704'/%3E%3Cg fill='%236E8CAE' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;

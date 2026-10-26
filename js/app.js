@@ -1308,6 +1308,22 @@ const SPIRITUALITE = [
       {name:"La colombe", dates:"", avatar:"🕊️", tag:null, ref:"Genèse 8:8-12 ; Matthieu 3:16 ; Cantique des cantiques 2:14", link:"Matthew 3", summary:"La colombe que Noé envoie et qui revient avec un rameau d'olivier (Genèse 8) devient un signe durable de fin d'épreuve et de recommencement possible. Lors du baptême de Jésus, l'Esprit descend « comme une colombe » (Matthieu 3:16), ce qui en fait, dans la tradition chrétienne, l'image la plus répandue pour représenter le Saint-Esprit — douceur et présence discrète plutôt que puissance spectaculaire. Le Cantique des cantiques l'emploie aussi dans un registre plus intime, comme image de tendresse envers la personne aimée."},
       {name:"Les quatre vivants : lion, taureau, aigle et visage d'homme", dates:"", avatar:"🔥", tag:null, ref:"Ézéchiel 1:4-14 ; Apocalypse 4:6-8", link:"Ezekiel 1", summary:"Plusieurs des figures précédentes se retrouvent réunies dans une même vision, d'abord chez le prophète Ézéchiel puis dans l'Apocalypse : quatre êtres vivants entourant le trône de Dieu, chacun porteur de quatre faces — celle d'un homme, d'un lion, d'un taureau et d'un aigle. Le texte les présente comme une image de la création tout entière rendant gloire à Dieu sans relâche, plutôt qu'un simple décor symbolique. Depuis les premiers siècles de l'Église (notamment chez Irénée de Lyon), la tradition chrétienne a mis ces quatre figures en correspondance avec les quatre évangélistes — l'homme pour Matthieu, le lion pour Marc, le taureau pour Luc, l'aigle pour Jean — une lecture traditionnelle postérieure au texte, destinée à exprimer la complémentarité des quatre récits de l'Évangile plutôt qu'une équivalence affirmée par le texte biblique lui-même."}
     ]
+  },
+  {
+    id:"peches-capitaux",
+    title:"Les sept péchés capitaux",
+    desc:"Les sept penchants que la tradition chrétienne désigne comme les racines dont peuvent naître beaucoup d'autres péchés — chacun avec la vertu que lui oppose depuis des siècles la réflexion spirituelle et morale de l'Église.",
+    entries:[
+      {name:"D'où vient cette liste ?", dates:"", avatar:"📜", tag:null, ref:"Tradition chrétienne, du IVe au XIIIe siècle", summary:"La liste ne vient pas d'un seul verset biblique mais d'une longue élaboration spirituelle. Au IVe siècle, le moine Évagre le Pontique dresse une liste de huit « pensées » mauvaises guettant le moine au désert ; Jean Cassien la transmet en Occident. Au VIe siècle, le pape saint Grégoire le Grand la ramène à sept et lui donne sa forme classique. Saint Thomas d'Aquin la systématise enfin au XIIIe siècle dans sa Somme théologique, associant à chacun des sept péchés la vertu qui lui est contraire. Le mot « capital » vient du latin caput, la tête : il ne s'agit pas des péchés les plus graves en eux-mêmes, mais de penchants-sources dont peuvent découler beaucoup d'autres fautes. Le Catéchisme de l'Église catholique reprend cette tradition spirituelle (CEC 1866)."},
+      {name:"L'orgueil (superbia)", dates:"", avatar:"👑", tag:"Vertu opposée : l'humilité", ref:"Proverbes 16:18 ; Siracide 10:14-15 ; CEC 1866", link:"Proverbs 16", summary:"L'amour désordonné de sa propre excellence : le désir d'être admiré, préféré, de ne devoir sa réussite qu'à soi-même, jusqu'à s'affranchir de Dieu et des autres. La tradition — notamment saint Grégoire le Grand — le considère comme la racine de tous les autres péchés capitaux, puisque c'est lui qui, selon elle, a fait chuter les anges rebelles avant même l'humanité. « L'orgueil précède la ruine, et l'esprit altier précède la chute », dit le livre des Proverbes. La vertu qui lui est opposée, l'humilité, ne consiste pas à se mépriser, mais à se voir avec vérité devant Dieu."},
+      {name:"L'avarice (avaritia)", dates:"", avatar:"💰", tag:"Vertu opposée : la générosité", ref:"1 Timothée 6:10 ; Luc 12:15-21 ; CEC 2536", link:"Luke 12", summary:"L'attachement désordonné aux richesses et aux biens matériels : le désir d'en posséder toujours plus, par peur du manque ou par soif de puissance, au point d'en faire une sécurité qui prend la place de Dieu. Jésus l'illustre par la parabole du riche insensé, qui agrandit ses greniers la veille même de sa mort sans avoir rien mis de côté « pour ce qui concerne Dieu ». Saint Paul avertit que « l'amour de l'argent est racine de tous les maux ». La vertu opposée, la générosité (ou libéralité), reçoit les biens comme un don à partager plutôt qu'une possession à accumuler."},
+      {name:"L'envie (invidia)", dates:"", avatar:"😒", tag:"Vertu opposée : la bienveillance", ref:"Genèse 4 ; Galates 5:26 ; CEC 2539-2540", link:"Genesis 4", summary:"La tristesse éprouvée devant le bien, la réussite ou le bonheur d'autrui, et le désir de se l'approprier ou de le voir disparaître. Elle trouve sa première illustration biblique dans le geste de Caïn envers son frère Abel. La tradition spirituelle la juge souvent particulièrement redoutable : à la différence des autres péchés capitaux, qui poursuivent au moins un bien recherché de façon désordonnée, l'envie se réjouit directement du mal d'autrui. Saint Paul met en garde contre le fait de « se défier les uns les autres, de s'envier les uns les autres ». La vertu opposée, la bienveillance, se réjouit au contraire du bien d'autrui comme d'un bien partagé."},
+      {name:"La colère (ira)", dates:"", avatar:"🔥", tag:"Vertu opposée : la patience", ref:"Éphésiens 4:26-27 ; Matthieu 5:22 ; CEC 2302", link:"Ephesians 4", summary:"Le désir désordonné de vengeance : non pas l'indignation légitime face à une injustice, que la tradition chrétienne ne condamne pas en elle-même, mais une émotion qui dégénère en volonté durable de nuire. Dans le Sermon sur la montagne, Jésus associe la colère entretenue contre un frère au commandement « tu ne tueras pas », en radicalisant son exigence jusqu'au cœur même du geste. Saint Paul conseille : « Que le soleil ne se couche pas sur votre colère. » La vertu opposée, la patience, ne supprime pas l'émotion mais empêche qu'elle ne se transforme en désir de faire du mal."},
+      {name:"La luxure (luxuria)", dates:"", avatar:"💔", tag:"Vertu opposée : la chasteté", ref:"Matthieu 5:27-28 ; 1 Corinthiens 6:18-20 ; CEC 2351", link:"Matthew 5", summary:"La recherche désordonnée du plaisir sexuel, détachée de sa vocation au don de soi et à l'union fidèle. Le Catéchisme la définit comme un désir ou une jouissance recherchés pour eux-mêmes, indépendamment des fins voulues par le Créateur. Jésus en déplace lui aussi le lieu : « Quiconque regarde une femme pour la convoiter a déjà commis l'adultère avec elle dans son cœur. » La vertu opposée, la chasteté, n'est pas d'abord une privation mais l'intégration réussie de la sexualité dans l'ensemble de la personne et de sa vocation à aimer."},
+      {name:"La gourmandise (gula)", dates:"", avatar:"🍽️", tag:"Vertu opposée : la tempérance", ref:"Philippiens 3:19 ; Proverbes 23:20-21 ; CEC 1866", link:"Philippians 3", summary:"L'attachement désordonné au plaisir de la table : excès de nourriture ou de boisson, ou recherche raffinée du plaisir gustatif érigée en fin en soi. La tradition ne condamne pas le plaisir de manger, don de Dieu comme les autres, mais le désordre qui en fait un but qui prend toute la place. Saint Paul parle avec tristesse de ceux « dont le dieu, c'est le ventre ». La vertu opposée, la tempérance, permet de goûter les biens créés sans en devenir l'esclave."},
+      {name:"La paresse (acedia)", dates:"", avatar:"😴", tag:"Vertu opposée : la diligence", ref:"Proverbes 6:6-11 ; 2 Thessaloniciens 3:10 ; CEC 2733", link:"Proverbs 6", summary:"Dans son sens spirituel d'origine — l'« acédie » des moines du désert — ce péché n'est pas d'abord l'inaction matérielle, mais un dégoût, une lassitude de l'effort spirituel et du bien à accomplir : un découragement qui détourne peu à peu de la prière et des devoirs de sa propre vocation. Le livre des Proverbes renvoie le paresseux à l'exemple de la fourmi, « qui prépare en été sa nourriture ». La vertu opposée, la diligence (ou le zèle), est la persévérance paisible dans le bien, jour après jour, même sans élan sensible."},
+      {name:"En résumé : les sept péchés et leurs vertus contraires", dates:"", avatar:"🌿", tag:null, ref:"Synthèse traditionnelle", summary:"Orgueil → humilité. Avarice → générosité. Envie → bienveillance. Colère → patience. Luxure → chasteté. Gourmandise → tempérance. Paresse → diligence. Retenir ces sept paires permet de se servir de la liste non comme un simple inventaire de fautes, mais comme un repère concret pour l'examen de conscience : à chaque penchant correspond une direction précise vers laquelle grandir, plutôt qu'un seul interdit à éviter."}
+    ]
   }
 ];
 
@@ -2757,6 +2773,7 @@ const SECTION_ICONS = {
   "douze-apotres":"🕊️", "grands-portraits":"📖", "aura-puissance-beaute":"✨",
   "recit-creation":"🌍", "cycle-schema":"🔄", "douze-juges":"⚔️", "villes-jugees":"🔥",
   "anges-missions":"👼", "fin-des-temps":"📜", "vie-spirituelle":"🕯️", "satan-esprits":"🗡️",
+  "peches-capitaux":"⚖️",
   "comparaison-textes":"📚",
   "enseignements-madiama-fall":"🎓", "enseignements-emilie-faye-cabral":"🕊️",
   "prieres-fondamentales":"📿", "neuvaines":"🕯️",
@@ -8287,12 +8304,19 @@ function createAmbianceYoutubePlayer(videoId){
   AMBIANCE_PENDING_VIDEO_ID = null;
   const el = document.getElementById('ambiance-yt-player');
   if(!el || !window.YT || !window.YT.Player) return;
+  AMBIANCE_YT_UNMUTE_TRIED = false;
   try{
     AMBIANCE_YT_PLAYER = new YT.Player('ambiance-yt-player', {
       videoId: videoId,
       width: '100%',
       height: '100%',
-      playerVars: {autoplay:1, playsinline:1, rel:0, origin:location.origin},
+      /* mute:1 au départ : la plupart des navigateurs (surtout sur mobile/iOS)
+         bloquent silencieusement le son d'une vidéo lancée automatiquement par
+         JavaScript après un chargement réseau — la vidéo « charge mais le son
+         ne vient pas ». Démarrer muet est, lui, toujours autorisé ; on réactive
+         le son juste après, dès que la lecture démarre réellement (voir
+         handleAmbianceYtStateChange), ce qui passe la plupart du temps. */
+      playerVars: {autoplay:1, mute:1, playsinline:1, rel:0, origin:location.origin},
       events: {
         onReady: function(e){ AMBIANCE_ERROR_ATTEMPTS = 0; try{ e.target.playVideo(); }catch(err){} },
         onStateChange: handleAmbianceYtStateChange,
@@ -8301,6 +8325,7 @@ function createAmbianceYoutubePlayer(videoId){
     });
   }catch(err){ AMBIANCE_YT_PLAYER = null; }
 }
+let AMBIANCE_YT_UNMUTE_TRIED = false;
 function destroyAmbianceYoutubePlayer(){
   if(AMBIANCE_YT_PLAYER && typeof AMBIANCE_YT_PLAYER.destroy === 'function'){
     try{ AMBIANCE_YT_PLAYER.destroy(); }catch(err){}
@@ -8321,7 +8346,30 @@ function loadAmbianceVideo(videoId){
 }
 function handleAmbianceYtStateChange(e){
   if(!window.YT || !window.YT.PlayerState) return;
-  if(e.data === YT.PlayerState.PLAYING){ AMBIANCE_ERROR_ATTEMPTS = 0; return; }
+  if(e.data === YT.PlayerState.PLAYING){
+    AMBIANCE_ERROR_ATTEMPTS = 0;
+    // La vidéo joue vraiment (démarrée muette) : on réactive le son maintenant —
+    // les navigateurs autorisent presque toujours de désactiver le muet une fois
+    // la lecture déjà en cours, même sans geste tactile tout nouveau.
+    if(!AMBIANCE_YT_UNMUTE_TRIED){
+      AMBIANCE_YT_UNMUTE_TRIED = true;
+      try{
+        e.target.unMute();
+        e.target.setVolume(100);
+        // Vérification : si malgré tout le lecteur est resté muet (politique du
+        // navigateur), on prévient l'utilisateur plutôt que de laisser un silence
+        // qui ressemble à un bug — il suffit alors de toucher l'icône 🔊 du lecteur.
+        setTimeout(()=>{
+          try{
+            if(AMBIANCE_YT_PLAYER === e.target && e.target.isMuted && e.target.isMuted()){
+              showToast('🔇 Le son est coupé par le navigateur — touchez l\'icône 🔊 dans la vidéo pour l\'activer.');
+            }
+          }catch(err){}
+        }, 600);
+      }catch(err){}
+    }
+    return;
+  }
   if(e.data !== YT.PlayerState.ENDED) return;
   // Fin de piste : on enchaîne automatiquement, comme avec « Titre suivant ».
   if(AMBIANCE_SHUFFLE_MODE){ playRandomAmbiance(true); return; }
