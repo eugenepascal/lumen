@@ -455,7 +455,117 @@ const SAINTS = [
  {d:"12-06", name:"Saint Nicolas", bio:"Évêque connu pour sa générosité discrète envers les plus pauvres, à l'origine lointaine des traditions de ce mois.", prayer:"Saint Nicolas, apprenez-moi à donner sans qu'on sache que c'est moi."},
  {d:"12-13", name:"Sainte Lucie", bio:"Jeune martyre dont le nom signifie \u00ablumière\u00bb, fêtée en plein cœur de l'hiver comme une promesse de clarté qui revient.", prayer:"Sainte Lucie, faites lever une lumière dans ce qui me semble sombre en ce moment."},
  {d:"12-14", name:"Saint Jean de la Croix", bio:"Poète mystique qui a traversé une \u00abnuit obscure\u00bb spirituelle avant d'y trouver une union profonde avec Dieu.", prayer:"Seigneur, reste avec moi dans mes nuits, même quand je ne te sens pas."},
- {d:"12-26", name:"Saint Étienne", bio:"Premier martyr chrétien, lapidé en priant pour ceux qui l'exécutaient — un pardon donné jusque dans la mort.", prayer:"Saint Étienne, apprenez-moi à pardonner même à ceux qui me font du mal."}
+ {d:"12-26", name:"Saint Étienne", bio:"Premier martyr chrétien, lapidé en priant pour ceux qui l'exécutaient — un pardon donné jusque dans la mort.", prayer:"Saint Étienne, apprenez-moi à pardonner même à ceux qui me font du mal."},
+ {d:"01-02", name:"Saints Basile et Grégoire de Nazianze", bio:"Deux amis devenus évêques et docteurs de l'Église, ils ont montré qu'une amitié vraie peut porter du fruit pour toute une vie.", prayer:"Seigneur, merci pour les amitiés qui m'aident à grandir dans la foi."},
+ {d:"01-07", name:"Saint Raymond de Peñafort", bio:"Dominicain canoniste, il a consacré sa science du droit à la miséricorde, notamment envers les captifs et les pécheurs.", prayer:"Seigneur, que la justice que je rends aux autres soit toujours habitée par la miséricorde."},
+ {d:"01-13", name:"Saint Hilaire de Poitiers", bio:"Évêque et docteur de l'Église, il a défendu la foi en la divinité du Christ avec une fermeté tranquille.", prayer:"Saint Hilaire, gardez ma foi ferme quand tout semble la contredire."},
+ {d:"01-20", name:"Saint Sébastien", bio:"Soldat romain devenu martyr, invoqué depuis des siècles comme protecteur dans l'épreuve et la maladie.", prayer:"Saint Sébastien, soutenez ceux qui traversent une épreuve physique aujourd'hui."},
+ {d:"01-22", name:"Saint Vincent de Saragosse", bio:"Diacre martyr, il est resté serein devant la torture, confiant que rien ne pouvait lui arracher sa foi.", prayer:"Seigneur, donnez-moi la paix intérieure même face à ce qui me fait peur."},
+ {d:"01-26", name:"Saints Timothée et Tite", bio:"Disciples et collaborateurs de saint Paul, envoyés fonder et affermir de jeunes communautés chrétiennes.", prayer:"Seigneur, rends-moi utile à ceux qui débutent dans la foi autour de moi."},
+ {d:"01-28", name:"Saint Thomas d'Aquin", bio:"Théologien et docteur de l'Église, il a montré que la raison et la foi peuvent marcher ensemble sans se contredire.", prayer:"Saint Thomas d'Aquin, aidez-moi à chercher la vérité sans jamais renoncer à croire."},
+ {d:"02-05", name:"Sainte Agathe", bio:"Jeune martyre sicilienne, elle a préféré tout perdre plutôt que de renier sa consécration à Dieu.", prayer:"Sainte Agathe, apprenez-moi la fidélité à ce que j'ai promis."},
+ {d:"02-10", name:"Sainte Scholastique", bio:"Sœur de saint Benoît, elle a fondé une vie religieuse féminine marquée par la douceur et la persévérance.", prayer:"Seigneur, donnez-moi la patience de continuer ce que j'ai commencé pour vous."},
+ {d:"02-14", name:"Saints Cyrille et Méthode", bio:"Évangélisateurs des peuples slaves, ils ont inventé un alphabet pour leur donner accès aux Écritures dans leur langue.", prayer:"Seigneur, donnez-moi les mots justes pour parler de vous à ceux qui m'entourent."},
+ {d:"02-21", name:"Saint Pierre Damien", bio:"Moine puis évêque réformateur, il a appelé l'Église de son temps à revenir à plus de simplicité et de vérité.", prayer:"Seigneur, donnez-moi le courage de revenir à l'essentiel quand je m'égare."},
+ {d:"02-22", name:"Chaire de saint Pierre", bio:"Fête de l'unité de l'Église autour du successeur de Pierre, signe visible d'une communion qui traverse les siècles.", prayer:"Seigneur, gardez votre Église unie malgré ses fragilités."},
+ {d:"02-23", name:"Saint Polycarpe", bio:"Évêque de Smyrne et martyr, disciple des apôtres, il a transmis la foi reçue sans la trahir jusqu'au bout.", prayer:"Saint Polycarpe, aidez-moi à transmettre fidèlement ce que j'ai reçu."},
+ {d:"03-04", name:"Saint Casimir", bio:"Prince polonais resté pauvre de cœur malgré son rang, préférant la prière aux honneurs de la cour.", prayer:"Seigneur, gardez-moi simple même dans les responsabilités que je porte."},
+ {d:"03-07", name:"Saintes Perpétue et Félicité", bio:"Jeunes mères martyres à Carthage, elles ont uni l'amour maternel et la fidélité au Christ jusqu'au don total.", prayer:"Seigneur, soutenez les mères qui doivent choisir entre leur foi et la peur."},
+ {d:"03-08", name:"Saint Jean de Dieu", bio:"Ancien soldat devenu infirmier des pauvres, il a fondé des hôpitaux pour accueillir ceux que personne ne voulait soigner.", prayer:"Saint Jean de Dieu, apprenez-moi à voir le Christ dans celui qui souffre."},
+ {d:"03-09", name:"Sainte Françoise Romaine", bio:"Épouse et mère engagée auprès des pauvres de Rome, elle a concilié vie de famille et vie spirituelle intense.", prayer:"Seigneur, aidez-moi à vous rencontrer au cœur même de mes journées ordinaires."},
+ {d:"03-18", name:"Saint Cyrille de Jérusalem", bio:"Évêque et docteur de l'Église, il a patiemment instruit les nouveaux baptisés aux vérités de la foi.", prayer:"Seigneur, approfondissez en moi ce que j'ai reçu au jour de mon baptême."},
+ {d:"03-23", name:"Saint Turibio de Mogrovejo", bio:"Évêque missionnaire au Pérou, il a parcouru d'immenses distances pour rejoindre les communautés les plus isolées.", prayer:"Seigneur, donnez-moi l'énergie d'aller vers ceux qu'on oublie facilement."},
+ {d:"04-02", name:"Saint François de Paule", bio:"Fondateur érémitique connu pour une confiance absolue en la Providence, jusque dans le dénuement le plus total.", prayer:"Seigneur, apprenez-moi à tout recevoir de vous sans rien retenir pour moi seul."},
+ {d:"04-04", name:"Saint Isidore de Séville", bio:"Évêque et savant, il a rassemblé le savoir de son temps pour le mettre au service de la foi et de l'Église.", prayer:"Seigneur, mettez mon intelligence au service de ce qui est bon et vrai."},
+ {d:"04-05", name:"Saint Vincent Ferrier", bio:"Prédicateur dominicain itinérant, il a parcouru l'Europe pour appeler les foules à la conversion et à l'espérance.", prayer:"Seigneur, donnez-moi des mots qui touchent vraiment le cœur des autres."},
+ {d:"04-07", name:"Saint Jean-Baptiste de La Salle", bio:"Prêtre fondateur, il a consacré sa vie à l'éducation gratuite des enfants pauvres, convaincu que chacun méritait d'apprendre.", prayer:"Seigneur, bénissez tous ceux qui éduquent les enfants avec patience et amour."},
+ {d:"04-11", name:"Saint Stanislas", bio:"Évêque polonais martyr, il a défendu la dignité de ses fidèles face à l'arbitraire du pouvoir, au prix de sa vie.", prayer:"Seigneur, donnez du courage à ceux qui défendent les plus faibles aujourd'hui."},
+ {d:"04-21", name:"Saint Anselme", bio:"Moine et docteur de l'Église, il a cherché à «comprendre ce qu'il croyait», sans jamais séparer raison et foi.", prayer:"Seigneur, aidez-moi à mieux comprendre ce que je crois déjà."},
+ {d:"04-24", name:"Saint Fidèle de Sigmaringen", bio:"Avocat devenu capucin et martyr, il a tout quitté pour défendre la foi auprès des plus pauvres.", prayer:"Seigneur, donnez-moi le courage de choisir l'essentiel plutôt que le confortable."},
+ {d:"04-28", name:"Saint Louis-Marie Grignion de Montfort", bio:"Missionnaire et écrivain spirituel, il a profondément lié la dévotion mariale à la vie chrétienne quotidienne.", prayer:"Vierge Marie, conduisez-moi vers votre Fils aujourd'hui."},
+ {d:"04-30", name:"Saint Pie V", bio:"Pape réformateur au temps des grands bouleversements de l'Église, connu pour sa rigueur et sa vie de prière austère.", prayer:"Seigneur, donnez à votre Église les guides dont elle a besoin en ce temps."},
+ {d:"05-02", name:"Saint Athanase", bio:"Évêque et docteur de l'Église, il a défendu seul, pendant des années d'exil, la vraie foi en la divinité du Christ.", prayer:"Seigneur, donnez-moi la persévérance de tenir bon même seul."},
+ {d:"05-03", name:"Saints Philippe et Jacques", bio:"Apôtres du Christ, témoins directs de sa vie et de sa résurrection, envoyés annoncer ce qu'ils avaient vu.", prayer:"Seigneur, rendez-moi témoin crédible de ce que j'ai reçu de vous."},
+ {d:"05-12", name:"Saint Pancrace", bio:"Jeune martyr romain, il a donné sa vie à peine sorti de l'enfance, par fidélité à une foi reçue très tôt.", prayer:"Seigneur, gardez vivante la foi que l'on m'a transmise enfant."},
+ {d:"05-18", name:"Saint Jean Ier", bio:"Pape martyr mort en captivité pour avoir cherché à réconcilier les chrétiens d'Orient et d'Occident.", prayer:"Seigneur, faites de moi un artisan de réconciliation dans mon entourage."},
+ {d:"05-20", name:"Saint Bernardin de Sienne", bio:"Prédicateur franciscain, il a répandu partout la dévotion au Saint Nom de Jésus comme source de paix.", prayer:"Jésus, que votre seul Nom apaise ce qui m'agite aujourd'hui."},
+ {d:"05-22", name:"Sainte Rita de Cascia", bio:"Veuve puis religieuse augustine, invoquée pour les causes difficiles et les situations qui semblent sans issue.", prayer:"Sainte Rita, intercédez pour ce qui me paraît aujourd'hui impossible."},
+ {d:"05-25", name:"Saint Bède le Vénérable", bio:"Moine et savant anglais, il a mis toute son intelligence au service de l'étude de l'Écriture et de l'histoire de l'Église.", prayer:"Seigneur, donnez-moi le goût d'approfondir sans cesse votre Parole."},
+ {d:"05-26", name:"Saint Philippe Néri", bio:"Prêtre joyeux surnommé «l'apôtre de Rome», il a montré qu'on peut être saint sans jamais perdre sa gaieté.", prayer:"Seigneur, donnez-moi une foi joyeuse qui attire plutôt qu'elle n'effraie."},
+ {d:"05-27", name:"Saint Augustin de Cantorbéry", bio:"Moine envoyé évangéliser l'Angleterre, il en est devenu le premier évêque après un long et incertain voyage.", prayer:"Seigneur, donnez-moi la confiance de partir même sans savoir ce qui m'attend."},
+ {d:"05-31", name:"Visitation de la Vierge Marie", bio:"Marie se hâte vers Élisabeth pour partager sa joie — la foi qui se reçoit se donne aussitôt à son tour.", prayer:"Vierge Marie, apprenez-moi à partager ma joie plutôt qu'à la garder pour moi."},
+ {d:"06-01", name:"Saint Justin", bio:"Philosophe devenu chrétien puis martyr, il a montré que la vraie sagesse conduit finalement au Christ.", prayer:"Seigneur, que ma recherche de vérité me conduise toujours plus près de vous."},
+ {d:"06-03", name:"Saint Charles Lwanga et ses compagnons", bio:"Jeunes martyrs ougandais, ils ont préféré la mort au reniement de leur foi récemment reçue.", prayer:"Seigneur, affermissez la foi des chrétiens persécutés aujourd'hui dans le monde."},
+ {d:"06-05", name:"Saint Boniface", bio:"Moine anglais devenu évangélisateur et martyr des peuples germaniques, infatigable malgré les résistances.", prayer:"Seigneur, donnez-moi la persévérance d'annoncer l'Évangile malgré les refus."},
+ {d:"06-06", name:"Saint Norbert", bio:"Fondateur de l'ordre des Prémontrés, converti après un accident qui a bouleversé le cours de sa vie.", prayer:"Seigneur, faites que les épreuves de ma vie deviennent des chemins vers vous."},
+ {d:"06-09", name:"Saint Éphrem", bio:"Diacre syrien et docteur de l'Église, poète inspiré qui a chanté les mystères de la foi avec une tendresse rare.", prayer:"Seigneur, donnez-moi des mots simples pour louer ce que vous faites en moi."},
+ {d:"06-19", name:"Saint Romuald", bio:"Moine réformateur, fondateur des Camaldules, il a cherché toute sa vie un équilibre entre solitude et fraternité.", prayer:"Seigneur, aidez-moi à trouver le juste équilibre entre silence et vie partagée."},
+ {d:"06-22", name:"Saint Thomas More", bio:"Homme d'État anglais martyr, il a préféré perdre sa position et sa vie plutôt que de trahir sa conscience.", prayer:"Seigneur, donnez-moi le courage de rester fidèle à ma conscience, quel qu'en soit le prix."},
+ {d:"06-27", name:"Saint Cyrille d'Alexandrie", bio:"Évêque et docteur de l'Église, défenseur ardent de l'unité du Christ, vrai Dieu et vrai homme.", prayer:"Seigneur, aidez-moi à garder une foi claire au milieu des confusions."},
+ {d:"06-28", name:"Saint Irénée de Lyon", bio:"Évêque et martyr, l'un des premiers grands théologiens, il a défendu l'unité de la foi reçue des apôtres.", prayer:"Seigneur, gardez-moi fidèle à la foi transmise depuis les apôtres."},
+ {d:"07-03", name:"Saint Thomas, apôtre", bio:"Celui qui a douté avant de croire, puis s'est donné sans réserve — la foi n'exclut pas les questions sincères.", prayer:"Seigneur, accueillez mes doutes et conduisez-moi, comme Thomas, à vous reconnaître."},
+ {d:"07-04", name:"Sainte Élisabeth du Portugal", bio:"Reine connue pour sa charité et son rôle de paix entre les royaumes en conflit de son temps.", prayer:"Seigneur, faites de moi un instrument de paix là où je vis des tensions."},
+ {d:"07-06", name:"Sainte Maria Goretti", bio:"Jeune martyre italienne, elle a pardonné à son agresseur avant de mourir, à l'âge de onze ans à peine.", prayer:"Seigneur, donnez-moi la force de pardonner même ce qui me semble impardonnable."},
+ {d:"07-09", name:"Saint Augustin Zhao Rong et ses compagnons", bio:"Martyrs de Chine, témoins d'une Église qui a tenu bon malgré des siècles de persécution par intermittence.", prayer:"Seigneur, soutenez l'Église qui souffre aujourd'hui en silence dans certains pays."},
+ {d:"07-14", name:"Saint Camille de Lellis", bio:"Ancien soldat et joueur devenu fondateur, il a consacré sa vie au soin des malades les plus abandonnés.", prayer:"Seigneur, donnez-moi un regard de tendresse pour les malades que je croise."},
+ {d:"07-15", name:"Saint Bonaventure", bio:"Théologien franciscain et docteur de l'Église, il a su unir la rigueur de la pensée à la ferveur du cœur.", prayer:"Seigneur, unissez en moi l'intelligence et l'amour dans ma façon de vous chercher."},
+ {d:"07-20", name:"Saint Apollinaire", bio:"Premier évêque de Ravenne et martyr, figure fondatrice d'une communauté chrétienne naissante en Italie.", prayer:"Seigneur, bénissez les communautés chrétiennes qui se forment aujourd'hui dans le monde."},
+ {d:"07-21", name:"Saint Laurent de Brindisi", bio:"Prédicateur et diplomate capucin, polyglotte, il a mis ses talents variés tout entiers au service de l'Évangile.", prayer:"Seigneur, prenez tous mes talents, même ceux que je crois ordinaires, et faites-en un service."},
+ {d:"07-23", name:"Sainte Brigitte de Suède", bio:"Épouse, mère puis fondatrice après son veuvage, elle a vécu une vie spirituelle intense marquée par de nombreuses visions.", prayer:"Seigneur, à chaque étape de ma vie, montrez-moi le chemin que vous voulez pour moi."},
+ {d:"07-24", name:"Saint Charbel Makhlouf", bio:"Moine libanais vivant en ermite, sa vie cachée et austère a rayonné bien au-delà de sa petite cellule.", prayer:"Seigneur, que ma vie la plus discrète porte déjà du fruit pour les autres."},
+ {d:"08-01", name:"Saint Alphonse de Liguori", bio:"Fondateur et docteur de l'Église, prédicateur populaire connu pour sa miséricorde envers les pécheurs les plus découragés.", prayer:"Seigneur, ne laissez jamais mon péché me faire désespérer de votre miséricorde."},
+ {d:"08-06", name:"Transfiguration du Seigneur", bio:"Sur la montagne, trois apôtres aperçoivent un instant la gloire cachée du Christ, avant-goût de la Résurrection.", prayer:"Seigneur, laissez-moi apercevoir votre lumière au cœur de mes journées les plus grises."},
+ {d:"08-07", name:"Saint Gaétan de Thiene", bio:"Prêtre réformateur, il a cherché à rendre le clergé de son temps plus proche de la simplicité des premiers apôtres.", prayer:"Seigneur, gardez votre Église toujours proche de l'esprit des origines."},
+ {d:"08-09", name:"Sainte Thérèse-Bénédicte de la Croix", bio:"Philosophe juive convertie, devenue carmélite, elle est morte en déportation, fidèle à sa double appartenance.", prayer:"Seigneur, gardez-moi fidèle à la vérité même quand elle coûte tout."},
+ {d:"08-13", name:"Saints Pontien et Hippolyte", bio:"Pape et prêtre réconciliés avant leur martyre commun, après une longue division au sein de l'Église de Rome.", prayer:"Seigneur, réconciliez ceux qui, dans l'Église, se sont éloignés les uns des autres."},
+ {d:"08-16", name:"Saint Étienne de Hongrie", bio:"Premier roi chrétien de Hongrie, il a organisé son royaume en l'enracinant durablement dans la foi reçue.", prayer:"Seigneur, inspirez les responsables politiques à gouverner selon la justice et la vérité."},
+ {d:"08-19", name:"Saint Jean Eudes", bio:"Fondateur missionnaire, il a œuvré à la formation spirituelle des prêtres et à la dévotion aux Sacrés Cœurs.", prayer:"Seigneur, formez le cœur de tous ceux qui sont appelés à guider votre peuple."},
+ {d:"08-21", name:"Saint Pie X", bio:"Pape surnommé «le pape de l'Eucharistie», il a encouragé une communion fréquente, même pour les plus jeunes.", prayer:"Seigneur, nourrissez-moi souvent de votre présence eucharistique."},
+ {d:"08-22", name:"Marie Reine", bio:"Fête qui couronne le mois de Marie en août, la reconnaissant reine aux côtés du Christ, son Fils et son Seigneur.", prayer:"Marie, notre Reine et notre Mère, priez pour nous maintenant et à l'heure de notre mort."},
+ {d:"08-23", name:"Sainte Rose de Lima", bio:"Première sainte canonisée des Amériques, elle a uni mortification austère et grande tendresse envers les pauvres.", prayer:"Seigneur, donnez-moi un cœur attentif aux plus pauvres autour de moi."},
+ {d:"08-25", name:"Saint Louis, roi de France", bio:"Roi connu pour sa justice et sa piété, il a cherché à gouverner selon l'Évangile plutôt que selon ses seuls intérêts.", prayer:"Seigneur, inspirez à ceux qui gouvernent le souci sincère du bien commun."},
+ {d:"08-29", name:"Martyre de saint Jean-Baptiste", bio:"Celui qui annonçait le Christ meurt pour avoir dénoncé l'injustice, fidèle jusqu'au bout à sa mission de précurseur.", prayer:"Saint Jean-Baptiste, donnez-moi le courage de dire la vérité même quand elle dérange."},
+ {d:"09-03", name:"Saint Grégoire le Grand", bio:"Pape et docteur de l'Église, réformateur pastoral, il a profondément marqué la liturgie et le chant de l'Église.", prayer:"Seigneur, faites de moi un pasteur attentif, à ma mesure, pour ceux qui me sont confiés."},
+ {d:"09-09", name:"Saint Pierre Claver", bio:"Jésuite missionnaire, il a consacré sa vie entière aux esclaves débarqués en Amérique, sans jamais se lasser.", prayer:"Seigneur, donnez-moi un amour qui ne se fatigue pas devant la souffrance des autres."},
+ {d:"09-13", name:"Saint Jean Chrysostome", bio:"Évêque et docteur de l'Église, surnommé «Bouche d'or» pour la force de sa prédication en faveur des pauvres.", prayer:"Seigneur, donnez-moi des mots qui touchent vraiment ceux qui m'écoutent."},
+ {d:"09-16", name:"Saints Corneille et Cyprien", bio:"Pape et évêque martyrs, ils ont défendu ensemble l'unité de l'Église en un temps de grandes divisions.", prayer:"Seigneur, gardez l'unité de votre Église malgré nos divisions humaines."},
+ {d:"09-17", name:"Saint Robert Bellarmin", bio:"Théologien et docteur de l'Église, il a su défendre la foi avec rigueur tout en restant humble et pastoral.", prayer:"Seigneur, donnez-moi la rigueur de penser juste et l'humilité de rester simple."},
+ {d:"09-19", name:"Saint Janvier", bio:"Évêque martyr napolitain, son sang conservé et sa mémoire vénérée rappellent la fidélité jusqu'au sang versé.", prayer:"Seigneur, gardez vivante en moi la mémoire de ceux qui ont tout donné pour vous."},
+ {d:"09-26", name:"Saints Côme et Damien", bio:"Médecins martyrs, ils soignaient gratuitement les malades, unissant le soin du corps à la charité chrétienne.", prayer:"Seigneur, bénissez tous ceux qui soignent les malades avec désintéressement."},
+ {d:"10-05", name:"Sainte Faustine Kowalska", bio:"Religieuse polonaise à qui le Christ a confié le message de la Miséricorde divine pour notre temps.", prayer:"Jésus, j'ai confiance en vous."},
+ {d:"10-06", name:"Saint Bruno", bio:"Fondateur de l'ordre des Chartreux, il a choisi le silence et la solitude comme chemin vers une rencontre plus intime avec Dieu.", prayer:"Seigneur, apprenez-moi à aimer le silence où vous vous faites entendre."},
+ {d:"10-07", name:"Notre-Dame du Rosaire", bio:"Fête qui honore la prière du chapelet, méditation simple et répétée des grands mystères de la vie du Christ avec Marie.", prayer:"Vierge Marie, apprenez-moi à méditer avec vous les mystères de votre Fils."},
+ {d:"10-09", name:"Saint Denis et ses compagnons", bio:"Premier évêque de Paris et martyr, figure fondatrice de l'Église en terre de France.", prayer:"Seigneur, bénissez l'Église qui est en France et ceux qui y annoncent votre nom."},
+ {d:"10-11", name:"Saint Jean XXIII", bio:"Pape surnommé «le bon pape Jean», il a ouvert l'Église de son temps à un dialogue renouvelé avec le monde.", prayer:"Seigneur, donnez à votre Église la joie et l'ouverture du bon pape Jean."},
+ {d:"10-14", name:"Saint Calliste Ier", bio:"Pape martyr, ancien esclave devenu successeur de Pierre, signe que nulle origine ne limite l'appel de Dieu.", prayer:"Seigneur, rappelez-moi qu'aucune de mes limites ne vous empêche de m'appeler."},
+ {d:"10-16", name:"Sainte Marguerite-Marie Alacoque", bio:"Religieuse à qui le Christ a révélé la dévotion au Sacré-Cœur, signe visible d'un amour sans mesure.", prayer:"Cœur sacré de Jésus, faites mon cœur semblable au vôtre."},
+ {d:"10-17", name:"Saint Ignace d'Antioche", bio:"Évêque et martyr, conduit enchaîné vers Rome, il a écrit des lettres d'une ferveur et d'une paix bouleversantes.", prayer:"Seigneur, donnez-moi une paix intérieure plus forte que toute menace extérieure."},
+ {d:"10-19", name:"Saint Paul de la Croix", bio:"Fondateur des Passionistes, il a voué sa prédication entière à méditer la Passion du Christ comme source d'espérance.", prayer:"Seigneur, que votre Passion m'apprenne la valeur de toute souffrance offerte."},
+ {d:"10-20", name:"Saint Pierre d'Alcantara", bio:"Franciscain réformateur, ami de sainte Thérèse d'Avila, connu pour une vie de pénitence et de prière intense.", prayer:"Seigneur, donnez-moi la rigueur nécessaire pour vous chercher sans relâche."},
+ {d:"10-23", name:"Saint Jean de Capistran", bio:"Prédicateur franciscain, il a parcouru l'Europe pour appeler les peuples à la paix et à la réconciliation.", prayer:"Seigneur, faites de moi un artisan de paix là où je sème parfois la division."},
+ {d:"10-24", name:"Saint Antoine-Marie Claret", bio:"Évêque missionnaire et fondateur, infatigable prédicateur malgré une vie marquée par de nombreuses oppositions.", prayer:"Seigneur, donnez-moi la persévérance d'annoncer l'Évangile malgré les résistances."},
+ {d:"10-29", name:"Saint Narcisse", bio:"Évêque de Jérusalem connu pour sa longévité et sa fidélité discrète à sa charge pastorale pendant de longues années.", prayer:"Seigneur, donnez-moi la fidélité à la tâche que vous m'avez confiée, année après année."},
+ {d:"11-03", name:"Saint Martin de Porrès", bio:"Religieux dominicain métis au Pérou, il a servi les plus pauvres de sa ville avec une charité sans distinction.", prayer:"Seigneur, donnez-moi un cœur qui ne distingue personne dans sa charité."},
+ {d:"11-04", name:"Saint Charles Borromée", bio:"Évêque réformateur de Milan, il s'est dépensé sans compter pour ses fidèles, notamment pendant une grande peste.", prayer:"Seigneur, donnez aux pasteurs de l'Église le courage de rester auprès de leur peuple dans l'épreuve."},
+ {d:"11-09", name:"Dédicace de la basilique du Latran", bio:"Fête de la cathédrale de Rome, rappelant que l'Église est aussi une communauté bâtie sur une pierre bien réelle.", prayer:"Seigneur, faites de mon cœur une demeure digne de vous accueillir."},
+ {d:"11-10", name:"Saint Léon le Grand", bio:"Pape et docteur de l'Église, il a défendu avec clarté la foi au Christ vrai Dieu et vrai homme.", prayer:"Seigneur, gardez ma foi claire et simple au milieu des confusions de notre temps."},
+ {d:"11-12", name:"Saint Josaphat", bio:"Évêque martyr, il a œuvré toute sa vie à l'unité entre chrétiens d'Orient et d'Occident, au prix de sa vie.", prayer:"Seigneur, faites grandir l'unité entre tous ceux qui croient en vous."},
+ {d:"11-15", name:"Saint Albert le Grand", bio:"Évêque, docteur de l'Église et maître de saint Thomas d'Aquin, esprit universel passionné par toute la création.", prayer:"Seigneur, donnez-moi un regard émerveillé devant la beauté de votre création."},
+ {d:"11-16", name:"Sainte Gertrude", bio:"Moniale mystique allemande, sa vie intérieure intense l'a conduite à une union profonde avec le Cœur du Christ.", prayer:"Seigneur, attirez-moi toujours plus près de votre Cœur."},
+ {d:"11-21", name:"Présentation de la Vierge Marie", bio:"Fête qui célèbre, selon la tradition, l'enfance de Marie offerte tout entière à Dieu dès son plus jeune âge.", prayer:"Vierge Marie, apprenez-moi à me donner à Dieu sans attendre d'être parfait."},
+ {d:"11-23", name:"Saint Colomban", bio:"Moine irlandais missionnaire, il a fondé de nombreux monastères à travers l'Europe en pleine reconstruction.", prayer:"Seigneur, envoyez des témoins capables de refonder l'espérance là où elle s'est perdue."},
+ {d:"11-24", name:"Saint André Dung-Lac et ses compagnons", bio:"Martyrs du Vietnam, témoins d'une Église locale enracinée au prix d'épreuves très dures.", prayer:"Seigneur, soutenez l'Église d'Asie et tous ceux qui y gardent la foi avec courage."},
+ {d:"11-25", name:"Sainte Catherine d'Alexandrie", bio:"Jeune martyre érudite, vénérée depuis des siècles comme patronne des étudiants et des penseurs.", prayer:"Sainte Catherine, éclairez l'intelligence de tous ceux qui cherchent sincèrement la vérité."},
+ {d:"12-04", name:"Saint Jean Damascène", bio:"Dernier grand docteur de l'Église d'Orient, défenseur du culte des images au péril de sa liberté.", prayer:"Seigneur, aidez-moi à défendre ce qui est beau et vrai, même quand on le conteste."},
+ {d:"12-07", name:"Saint Ambroise", bio:"Évêque de Milan et docteur de l'Église, il a su tenir ferme devant un empereur sans jamais perdre la charité.", prayer:"Seigneur, donnez-moi le courage de dire la vérité aux puissants avec respect."},
+ {d:"12-09", name:"Saint Juan Diego", bio:"Indien mexicain à qui la Vierge de Guadalupe s'est manifestée, signe que Dieu choisit souvent les plus humbles.", prayer:"Vierge de Guadalupe, veillez sur les peuples d'Amérique et sur tous les humbles de la terre."},
+ {d:"12-11", name:"Saint Damase Ier", bio:"Pape qui a œuvré à fixer le canon des Écritures et à honorer la mémoire des martyrs de Rome.", prayer:"Seigneur, gardez vivante en moi la mémoire de ceux qui m'ont précédé dans la foi."},
+ {d:"12-21", name:"Saint Pierre Canisius", bio:"Jésuite et docteur de l'Église, infatigable catéchiste au temps des grandes divisions religieuses en Europe.", prayer:"Seigneur, donnez-moi la patience d'expliquer ma foi simplement à qui me le demande."},
+ {d:"12-23", name:"Saint Jean de Kenty", bio:"Prêtre et professeur, généreux envers les pauvres jusqu'à se dépouiller lui-même de ses propres biens.", prayer:"Seigneur, apprenez-moi à partager plus que ce qui me semble superflu."},
+ {d:"12-27", name:"Saint Jean, apôtre et évangéliste", bio:"Le disciple que Jésus aimait, témoin privilégié resté fidèle jusqu'au pied de la croix.", prayer:"Seigneur, apprenez-moi la fidélité de l'amour, même quand tout semble perdu."},
+ {d:"12-28", name:"Les saints Innocents", bio:"Mémoire des enfants de Bethléem tués par Hérode, premières victimes innocentes liées au mystère de Noël.", prayer:"Seigneur, protégez tous les enfants innocents menacés aujourd'hui dans le monde."},
+ {d:"12-29", name:"Saint Thomas Becket", bio:"Archevêque anglais martyr, assassiné pour avoir refusé de plier devant le pouvoir royal en matière de foi.", prayer:"Seigneur, donnez aux pasteurs de l'Église le courage de ne jamais plier sur l'essentiel."},
+ {d:"12-31", name:"Saint Sylvestre Ier", bio:"Pape dont le long pontificat a marqué la fin des persécutions et la liberté nouvelle de l'Église.", prayer:"Seigneur, merci pour la liberté de pratiquer ma foi, et pour ceux qui n'ont pas cette chance."}
 ];
 
 const NOVENAS = [
@@ -8256,120 +8366,42 @@ function toggleReadPage(){
 }
 
 /* ================= ambiance sonore de fond =================
-   Ancienne configuration restaurée à la demande : une fenêtre affiche
-   directement la vidéo YouTube dans un lecteur natif (ses propres contrôles
-   lecture/pause/volume), au lieu de piloter l'API JS YT.Player et un widget
-   flottant repositionné par-dessus l'écran — source de bugs silencieux
-   (lecture coupée à la navigation, cadre invisible soupçonné de bot par
-   YouTube...). C'est plus simple et plus fiable : fermer la fenêtre arrête
-   le son, la vidéo ne continue pas en fond pendant la navigation. */
+   La vidéo YouTube ne joue plus dans un cadre intégré (iframe/API JS) à
+   l'intérieur de l'appli : ces lecteurs intégrés se heurtaient sans arrêt
+   aux politiques anti-autoplay des navigateurs (« ça charge mais le son
+   ne vient pas »). La musique s'ouvre maintenant directement sur la vraie
+   page YouTube, dans une fenêtre à part (une popup dédiée, pas un nouvel
+   onglet plein écran) : c'est youtube.com lui-même qui joue le son, donc
+   plus aucun blocage possible. Le petit cadre flottant dans l'appli ne
+   sert plus qu'à garder trace du titre en cours et à passer au suivant. */
 let BG_YT_VIDEO_ID = null;
 let BG_SPOTIFY_ACTIVE = false;
 let AMBIANCE_SHUFFLE_MODE = false;
 let AMBIANCE_SHUFFLE_LAST = null;
 let AMBIANCE_VIDEO_OPEN = false;
 let AMBIANCE_VIDEO_LABEL = '';
-/* Intégration directe de l'API YouTube IFrame Player (youtube.com/iframe_api) :
-   on crée un vrai lecteur YT.Player() piloté par JavaScript plutôt qu'un simple
-   <iframe src="...embed..."> livré à lui-même. Cela donne des évènements fiables
-   (onReady, onStateChange, onError) pour détecter une vidéo indisponible,
-   relancer la lecture, et enchaîner automatiquement le morceau suivant à la
-   fin d'une piste — ce que le simple postMessage ne permettait pas de façon
-   fiable. Le script de l'API n'est chargé qu'à la demande (premier son joué),
-   une seule fois, et le lecteur est toujours créé sur un <div> vide dédié
-   (jamais en instanciant l'API par-dessus un <iframe> déjà affiché), pour
-   éviter toute recréation/interruption du cadre existant. */
 let AMBIANCE_CURRENT_POOL = null;
-let AMBIANCE_ERROR_ATTEMPTS = 0;
-let AMBIANCE_YT_PLAYER = null;
-let AMBIANCE_YT_API_READY = false;
-let AMBIANCE_YT_API_LOADING = false;
-let AMBIANCE_PENDING_VIDEO_ID = null;
-function ensureYoutubeIframeApi(){
-  if(window.YT && window.YT.Player){ AMBIANCE_YT_API_READY = true; if(AMBIANCE_PENDING_VIDEO_ID) createAmbianceYoutubePlayer(AMBIANCE_PENDING_VIDEO_ID); return; }
-  if(AMBIANCE_YT_API_LOADING) return;
-  AMBIANCE_YT_API_LOADING = true;
-  const prevReady = window.onYouTubeIframeAPIReady;
-  window.onYouTubeIframeAPIReady = function(){
-    AMBIANCE_YT_API_READY = true;
-    AMBIANCE_YT_API_LOADING = false;
-    if(typeof prevReady === 'function'){ try{ prevReady(); }catch(e){} }
-    if(AMBIANCE_PENDING_VIDEO_ID) createAmbianceYoutubePlayer(AMBIANCE_PENDING_VIDEO_ID);
-  };
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
-}
-function createAmbianceYoutubePlayer(videoId){
-  AMBIANCE_PENDING_VIDEO_ID = null;
-  const el = document.getElementById('ambiance-yt-player');
-  if(!el || !window.YT || !window.YT.Player) return;
+let AMBIANCE_YT_WINDOW = null;
+function openAmbianceYoutubeWindow(videoId){
+  const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId) + '&autoplay=1';
   try{
-    AMBIANCE_YT_PLAYER = new YT.Player('ambiance-yt-player', {
-      videoId: videoId,
-      width: '100%',
-      height: '100%',
-      /* Pas d'autoplay : sur la plupart des navigateurs (surtout mobile/iOS),
-         une vidéo lancée automatiquement par JavaScript après un chargement
-         réseau se retrouve mise en sourdine en silence — « ça charge mais le
-         son ne vient pas ». En laissant le vrai bouton ▶ natif de YouTube
-         (autoplay:0), le son démarre de façon fiable dès que la personne le
-         touche elle-même : c'est un geste direct sur le lecteur, qu'aucun
-         navigateur ne bloque. */
-      playerVars: {autoplay:0, playsinline:1, rel:0, origin:location.origin},
-      events: {
-        onReady: function(e){ AMBIANCE_ERROR_ATTEMPTS = 0; },
-        onStateChange: handleAmbianceYtStateChange,
-        onError: handleAmbianceYoutubeError
-      }
-    });
-  }catch(err){ AMBIANCE_YT_PLAYER = null; }
+    if(AMBIANCE_YT_WINDOW && !AMBIANCE_YT_WINDOW.closed){
+      AMBIANCE_YT_WINDOW.location.href = url;
+      try{ AMBIANCE_YT_WINDOW.focus(); }catch(e){}
+      return;
+    }
+    AMBIANCE_YT_WINDOW = window.open(url, 'lumen_ambiance_yt', 'width=420,height=760,noopener,noreferrer');
+    if(AMBIANCE_YT_WINDOW){ try{ AMBIANCE_YT_WINDOW.focus(); }catch(e){} }
+  }catch(err){ AMBIANCE_YT_WINDOW = null; }
+  if(!AMBIANCE_YT_WINDOW){
+    showToast('🎵 Les fenêtres pop-up semblent bloquées — autorisez-les pour ce site, ou touchez « Ouvrir sur YouTube » dans le cadre.');
+  }
 }
 function destroyAmbianceYoutubePlayer(){
-  if(AMBIANCE_YT_PLAYER && typeof AMBIANCE_YT_PLAYER.destroy === 'function'){
-    try{ AMBIANCE_YT_PLAYER.destroy(); }catch(err){}
+  if(AMBIANCE_YT_WINDOW && !AMBIANCE_YT_WINDOW.closed){
+    try{ AMBIANCE_YT_WINDOW.close(); }catch(err){}
   }
-  AMBIANCE_YT_PLAYER = null;
-  AMBIANCE_PENDING_VIDEO_ID = null;
-}
-function loadAmbianceVideo(videoId){
-  if(!AMBIANCE_YT_API_READY){
-    AMBIANCE_PENDING_VIDEO_ID = videoId;
-    ensureYoutubeIframeApi();
-    return;
-  }
-  if(AMBIANCE_YT_PLAYER && typeof AMBIANCE_YT_PLAYER.loadVideoById === 'function'){
-    try{ AMBIANCE_YT_PLAYER.loadVideoById(videoId); return; }catch(err){ AMBIANCE_YT_PLAYER = null; }
-  }
-  createAmbianceYoutubePlayer(videoId);
-}
-function handleAmbianceYtStateChange(e){
-  if(!window.YT || !window.YT.PlayerState) return;
-  if(e.data === YT.PlayerState.PLAYING){ AMBIANCE_ERROR_ATTEMPTS = 0; return; }
-  if(e.data !== YT.PlayerState.ENDED) return;
-  // Fin de piste : on enchaîne automatiquement, comme avec « Titre suivant ».
-  if(AMBIANCE_SHUFFLE_MODE){ playRandomAmbiance(true); return; }
-  const pool = AMBIANCE_CURRENT_POOL;
-  if(pool && pool.length){
-    let pick, tries = 0;
-    do { pick = pool[Math.floor(Math.random()*pool.length)]; tries++; }
-    while(pick.videoId === BG_YT_VIDEO_ID && tries < 10 && pool.length > 1);
-    playBgYoutube(pick.videoId, pick.title + ' — ' + pick.artist, {pool, silent:true});
-  }
-}
-function handleAmbianceYoutubeError(){
-  if(!AMBIANCE_VIDEO_OPEN || !BG_YT_VIDEO_ID) return;
-  AMBIANCE_ERROR_ATTEMPTS++;
-  const pool = AMBIANCE_CURRENT_POOL;
-  if(AMBIANCE_ERROR_ATTEMPTS > 5 || !pool || !pool.length){
-    showToast('🎵 Cette vidéo n\'est pas disponible. Choisissez un autre titre dans la liste.');
-    return;
-  }
-  showToast('🎵 Vidéo indisponible — lecture du morceau suivant…');
-  let pick, tries = 0;
-  do { pick = pool[Math.floor(Math.random()*pool.length)]; tries++; }
-  while(pick.videoId === BG_YT_VIDEO_ID && tries < 10 && pool.length > 1);
-  playBgYoutube(pick.videoId, (AMBIANCE_SHUFFLE_MODE ? '🔀 ' : '') + pick.title + ' — ' + pick.artist, {pool, silent:true, keepAttempts:true});
+  AMBIANCE_YT_WINDOW = null;
 }
 function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID || BG_SPOTIFY_ACTIVE; }
 function syncBgAmbianceIcon(){
@@ -8380,7 +8412,6 @@ function stopAllAmbiance(){
   stopLoop();
   destroyAmbianceYoutubePlayer();
   AMBIANCE_CURRENT_POOL = null;
-  AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_SHUFFLE_MODE = false;
@@ -8477,7 +8508,6 @@ function renderAmbianceVideoWindow(){
         <div class="ambiance-player-controls"><button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Fermer</button></div>
       </div>`;
   } else if(BG_YT_VIDEO_ID){
-    destroyAmbianceYoutubePlayer();
     host.innerHTML = `
       <div class="ambiance-player-panel">
         <div class="ambiance-player-top" id="ambiance-player-drag">
@@ -8486,9 +8516,9 @@ function renderAmbianceVideoWindow(){
           <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
-        <div class="ambiance-player-embed"><div id="ambiance-yt-player"></div></div>
-        <p class="studio-note" style="text-align:center;">Touchez ▶ dans le cadre pour lancer le son.</p>
+        <p class="studio-note" style="text-align:center;">🔊 Le son joue dans une fenêtre YouTube séparée.</p>
         <div class="ambiance-player-controls">
+          <button class="btn btn-gold btn-sm" id="ambiance-player-reopen">↗ Rouvrir la fenêtre</button>
           ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
         </div>
@@ -8496,6 +8526,8 @@ function renderAmbianceVideoWindow(){
   }
   const backBtn = document.getElementById('ambiance-player-back');
   if(backBtn) backBtn.onclick = ()=>{ stopAllAmbiance(); };
+  const reopenBtn = document.getElementById('ambiance-player-reopen');
+  if(reopenBtn) reopenBtn.onclick = ()=>{ if(BG_YT_VIDEO_ID) openAmbianceYoutubeWindow(BG_YT_VIDEO_ID); };
   const nextBtn = document.getElementById('ambiance-player-next');
   if(nextBtn) nextBtn.onclick = ()=>{
     if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
@@ -8510,7 +8542,6 @@ function renderAmbianceVideoWindow(){
   const stopBtn = document.getElementById('ambiance-player-stop');
   if(stopBtn) stopBtn.onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); };
   wireAmbianceFloatDrag();
-  if(BG_YT_VIDEO_ID) loadAmbianceVideo(BG_YT_VIDEO_ID);
 }
 /* Fenêtre flottante déplaçable : on saisit la petite poignée ⠿ en haut du
    cadre pour la glisser n'importe où sur l'écran plutôt que de rester bloqué
@@ -8555,7 +8586,6 @@ function playBgYoutube(videoId, label, opts){
   stopLoop();
   AMBIANCE_SHUFFLE_MODE = false;
   AMBIANCE_CURRENT_POOL = opts.pool || null;
-  if(!opts.keepAttempts) AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_YT_VIDEO_ID = videoId;
   BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_VIDEO_OPEN = true;
@@ -8563,6 +8593,7 @@ function playBgYoutube(videoId, label, opts){
   lumenPlayerHide();
   renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
+  openAmbianceYoutubeWindow(videoId);
   if(!opts.silent) showToast('🎵 ' + label + '…');
 }
 function pickRandomAmbianceTrack(){
@@ -8579,7 +8610,6 @@ function playRandomAmbiance(isAutoAdvance){
   AMBIANCE_SHUFFLE_LAST = pick;
   stopLoop();
   AMBIANCE_CURRENT_POOL = LOUANGES_VIDEOS;
-  AMBIANCE_ERROR_ATTEMPTS = 0;
   BG_SPOTIFY_ACTIVE = false;
   BG_YT_VIDEO_ID = pick.videoId;
   AMBIANCE_VIDEO_OPEN = true;
@@ -8587,6 +8617,7 @@ function playRandomAmbiance(isAutoAdvance){
   lumenPlayerHide();
   renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
+  openAmbianceYoutubeWindow(pick.videoId);
   if(!isAutoAdvance) showToast('🔀 Lecture aléatoire — touchez « Titre suivant » pour changer de morceau.');
 }
 function startAmbianceShuffle(){
