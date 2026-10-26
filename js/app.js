@@ -8304,28 +8304,27 @@ function createAmbianceYoutubePlayer(videoId){
   AMBIANCE_PENDING_VIDEO_ID = null;
   const el = document.getElementById('ambiance-yt-player');
   if(!el || !window.YT || !window.YT.Player) return;
-  AMBIANCE_YT_UNMUTE_TRIED = false;
   try{
     AMBIANCE_YT_PLAYER = new YT.Player('ambiance-yt-player', {
       videoId: videoId,
       width: '100%',
       height: '100%',
-      /* mute:1 au départ : la plupart des navigateurs (surtout sur mobile/iOS)
-         bloquent silencieusement le son d'une vidéo lancée automatiquement par
-         JavaScript après un chargement réseau — la vidéo « charge mais le son
-         ne vient pas ». Démarrer muet est, lui, toujours autorisé ; on réactive
-         le son juste après, dès que la lecture démarre réellement (voir
-         handleAmbianceYtStateChange), ce qui passe la plupart du temps. */
-      playerVars: {autoplay:1, mute:1, playsinline:1, rel:0, origin:location.origin},
+      /* Pas d'autoplay : sur la plupart des navigateurs (surtout mobile/iOS),
+         une vidéo lancée automatiquement par JavaScript après un chargement
+         réseau se retrouve mise en sourdine en silence — « ça charge mais le
+         son ne vient pas ». En laissant le vrai bouton ▶ natif de YouTube
+         (autoplay:0), le son démarre de façon fiable dès que la personne le
+         touche elle-même : c'est un geste direct sur le lecteur, qu'aucun
+         navigateur ne bloque. */
+      playerVars: {autoplay:0, playsinline:1, rel:0, origin:location.origin},
       events: {
-        onReady: function(e){ AMBIANCE_ERROR_ATTEMPTS = 0; try{ e.target.playVideo(); }catch(err){} },
+        onReady: function(e){ AMBIANCE_ERROR_ATTEMPTS = 0; },
         onStateChange: handleAmbianceYtStateChange,
         onError: handleAmbianceYoutubeError
       }
     });
   }catch(err){ AMBIANCE_YT_PLAYER = null; }
 }
-let AMBIANCE_YT_UNMUTE_TRIED = false;
 function destroyAmbianceYoutubePlayer(){
   if(AMBIANCE_YT_PLAYER && typeof AMBIANCE_YT_PLAYER.destroy === 'function'){
     try{ AMBIANCE_YT_PLAYER.destroy(); }catch(err){}
@@ -8346,30 +8345,7 @@ function loadAmbianceVideo(videoId){
 }
 function handleAmbianceYtStateChange(e){
   if(!window.YT || !window.YT.PlayerState) return;
-  if(e.data === YT.PlayerState.PLAYING){
-    AMBIANCE_ERROR_ATTEMPTS = 0;
-    // La vidéo joue vraiment (démarrée muette) : on réactive le son maintenant —
-    // les navigateurs autorisent presque toujours de désactiver le muet une fois
-    // la lecture déjà en cours, même sans geste tactile tout nouveau.
-    if(!AMBIANCE_YT_UNMUTE_TRIED){
-      AMBIANCE_YT_UNMUTE_TRIED = true;
-      try{
-        e.target.unMute();
-        e.target.setVolume(100);
-        // Vérification : si malgré tout le lecteur est resté muet (politique du
-        // navigateur), on prévient l'utilisateur plutôt que de laisser un silence
-        // qui ressemble à un bug — il suffit alors de toucher l'icône 🔊 du lecteur.
-        setTimeout(()=>{
-          try{
-            if(AMBIANCE_YT_PLAYER === e.target && e.target.isMuted && e.target.isMuted()){
-              showToast('🔇 Le son est coupé par le navigateur — touchez l\'icône 🔊 dans la vidéo pour l\'activer.');
-            }
-          }catch(err){}
-        }, 600);
-      }catch(err){}
-    }
-    return;
-  }
+  if(e.data === YT.PlayerState.PLAYING){ AMBIANCE_ERROR_ATTEMPTS = 0; return; }
   if(e.data !== YT.PlayerState.ENDED) return;
   // Fin de piste : on enchaîne automatiquement, comme avec « Titre suivant ».
   if(AMBIANCE_SHUFFLE_MODE){ playRandomAmbiance(true); return; }
@@ -8511,7 +8487,7 @@ function renderAmbianceVideoWindow(){
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
         <div class="ambiance-player-embed"><div id="ambiance-yt-player"></div></div>
-        <p class="studio-note" style="text-align:center;">Les commandes de la vidéo (▶⏸, « Passer l'annonce ») restent accessibles dans le cadre.</p>
+        <p class="studio-note" style="text-align:center;">Touchez ▶ dans le cadre pour lancer le son.</p>
         <div class="ambiance-player-controls">
           ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
