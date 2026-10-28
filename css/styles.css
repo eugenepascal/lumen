@@ -472,6 +472,7 @@
   .rosary-done-close{ position:absolute; top:12px; right:12px; width:32px; height:32px; border-radius:50%; border:none; background:rgba(0,0,0,0.35); color:#fff; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
   .rosary-done-hero-content{ position:absolute; left:0; right:0; bottom:0; padding:18px 20px 20px; text-align:center; }
   .rosary-settings-overlay{ position:fixed; inset:0; background:rgba(30,20,20,0.45); z-index:400; display:flex; align-items:flex-end; }
+  .rosary-settings-overlay.hidden{ display:none; }
   .rosary-settings-panel{ background:var(--vellum-light); width:100%; border-radius:20px 20px 0 0; padding:18px 18px 28px; max-height:82vh; overflow-y:auto; box-shadow:0 -10px 30px rgba(0,0,0,0.2); }
   .rosary-settings-head{ display:flex; align-items:center; justify-content:space-between; }
   .rosary-settings-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--hairline); font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); }

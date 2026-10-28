@@ -4044,6 +4044,11 @@ function goTo(primary, sub){
   PRIMARY = primary;
   if(sub) SUBTAB[primary] = sub;
   ENTRY_OPEN = null; OPEN_NOVENA = null; NOVENA_OPEN_DAY = null;
+  if(!(primary==='devotions' && sub==='chapelet') && ROSARY_SETTINGS_OPEN){
+    ROSARY_SETTINGS_OPEN = false;
+    const settingsHost = document.getElementById('rosary-settings-overlay');
+    if(settingsHost){ settingsHost.classList.add('hidden'); settingsHost.innerHTML = ''; }
+  }
   render();
 }
 
@@ -9215,8 +9220,7 @@ function rosarySettingsPanelHTML(){
   const speeds = [0.75,1,1.25,1.5];
   const modes = [['classique','Classique'],['lumineux','Lumineux'],['sombre','Sombre']];
   const colors = Object.keys(ROSARY_BEAD_COLORS);
-  return `<div class="rosary-settings-overlay" id="rosary-settings-overlay">
-    <div class="rosary-settings-panel">
+  return `<div class="rosary-settings-panel">
       <div class="rosary-settings-head">
         <p class="day-title" style="margin:0;">Contrôles et options</p>
         <button class="back-link" id="rosary-settings-close">✕</button>
@@ -9233,8 +9237,7 @@ function rosarySettingsPanelHTML(){
       </div>
       <p class="eyebrow" style="color:var(--gold); margin-top:12px;">Couleur des grains</p>
       <div class="rosary-color-row">${colors.map(c=>`<button class="rosary-color-dot ${ROSARY_SETTINGS.beadColor===c?'active':''}" data-beadcolor="${c}" style="background:${ROSARY_BEAD_COLORS[c]};"></button>`).join('')}</div>
-    </div>
-  </div>`;
+    </div>`;
 }
 function renderRosary(){
   if(!ROSARY_STATE){
@@ -9248,8 +9251,17 @@ function renderRosary(){
     : (ROSARY_STATE.phase==='ave') ? chapletAveHTML()
     : (ROSARY_STATE.phase==='gloria') ? chapletGloriaHTML()
     : chapletDoneHTML();
-  if(ROSARY_SETTINGS_OPEN) html += rosarySettingsPanelHTML();
   document.getElementById('screen').innerHTML = `<div class="rosary-wrap rosary-mode-${ROSARY_SETTINGS.mode}">${html}</div>`;
+  const settingsHost = document.getElementById('rosary-settings-overlay');
+  if(settingsHost){
+    if(ROSARY_SETTINGS_OPEN){
+      settingsHost.classList.remove('hidden');
+      settingsHost.innerHTML = rosarySettingsPanelHTML();
+    } else {
+      settingsHost.classList.add('hidden');
+      settingsHost.innerHTML = '';
+    }
+  }
   wireRosaryEvents();
   saveRosaryState(ROSARY_STATE);
 }
