@@ -8410,7 +8410,20 @@ function destroyYtPlayer(){
   if(holder) holder.innerHTML = '';
 }
 function onYtPlayerStateChange(e){
-  if(e.data === 0){ // ENDED
+  if(e.data === 1){ // PLAYING — seul un vrai état confirmé par YouTube fait
+    // passer l'affichage sur « Pause », qu'il vienne de notre bouton ou
+    // d'un appui direct de l'utilisateur sur le lecteur natif.
+    if(!AMBIANCE_YT_STARTED || AMBIANCE_YT_PAUSED){
+      AMBIANCE_YT_STARTED = true;
+      AMBIANCE_YT_PAUSED = false;
+      renderAmbianceYtControls();
+    }
+  } else if(e.data === 2){ // PAUSED
+    if(AMBIANCE_YT_STARTED && !AMBIANCE_YT_PAUSED){
+      AMBIANCE_YT_PAUSED = true;
+      renderAmbianceYtControls();
+    }
+  } else if(e.data === 0){ // ENDED
     if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
   }
 }
@@ -8547,7 +8560,8 @@ function renderAmbianceYtControls(){
   if(!wrap) return;
   if(!AMBIANCE_YT_STARTED){
     wrap.innerHTML = `
-      <button class="btn btn-gold btn-sm" id="ambiance-player-start">▶ Lancer le son</button>
+      <p class="studio-note" style="text-align:center; margin:0 0 8px; width:100%;">👆 Appuyez sur ▶ au centre de la vidéo ci-dessus pour lancer le son.</p>
+      <button class="btn btn-gold btn-sm" id="ambiance-player-start">▶ Essayer de lancer le son</button>
       <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>`;
   } else {
     wrap.innerHTML = `
@@ -8557,11 +8571,11 @@ function renderAmbianceYtControls(){
   }
   const startBtn = document.getElementById('ambiance-player-start');
   if(startBtn) startBtn.onclick = ()=>{
-    AMBIANCE_YT_STARTED = true;
-    AMBIANCE_YT_PAUSED = false;
+    // On tente l'appel API, mais on ne suppose plus que ça a marché :
+    // c'est onYtPlayerStateChange (state réel renvoyé par YouTube) qui
+    // fera basculer l'affichage sur « Pause », pas ce clic lui-même.
     if(YT_PLAYER_READY && YT_PLAYER && YT_PLAYER.playVideo){ try{ YT_PLAYER.playVideo(); }catch(e){} }
     else YT_PLAYER_PENDING_PLAY = true;
-    renderAmbianceYtControls();
   };
   const pauseBtn = document.getElementById('ambiance-player-pause');
   if(pauseBtn) pauseBtn.onclick = ()=>{
