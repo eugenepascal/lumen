@@ -8395,7 +8395,12 @@ function openAmbianceYoutubeWindow(videoId, opts){
      demandant un vrai clic sur ▶ dans cet onglet YouTube, le son n'est plus jamais
      bloqué : c'est un geste direct de l'utilisateur sur la page qui joue le son. */
   opts = opts || {};
-  const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId);
+  /* &autoplay=0 force l'état en pause même si le réglage « Lecture automatique » du
+     compte/navigateur YouTube de la personne est activé — sinon YouTube tente quand
+     même de démarrer seul, se heurte au même blocage du son, et reste coincé sur
+     « Si la lecture ne commence pas… essayez de redémarrer votre appareil » au lieu
+     d'afficher simplement le bouton ▶ cliquable. */
+  const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId) + '&autoplay=0';
   try{
     if(AMBIANCE_YT_WINDOW && !AMBIANCE_YT_WINDOW.closed){
       AMBIANCE_YT_WINDOW.location.href = url;
