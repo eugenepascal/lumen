@@ -8404,6 +8404,8 @@ function ensureYouTubeAPI(cb){
 function destroyYtPlayer(){
   if(YT_PLAYER && YT_PLAYER.destroy){ try{ YT_PLAYER.destroy(); }catch(e){} }
   YT_PLAYER = null;
+  YT_PLAYER_READY = false;
+  YT_PLAYER_PENDING_PLAY = false;
   const holder = document.getElementById('ambiance-yt-holder');
   if(holder) holder.innerHTML = '';
 }
@@ -8421,8 +8423,11 @@ function openYoutubeDirectly(videoId, label){
   showToast('🎵 Ce titre ne peut pas être joué directement dans l’application (restriction posée par son auteur) — ouverture sur YouTube…');
   window.open('https://www.youtube.com/watch?v=' + videoId, '_blank', 'noopener');
 }
+let YT_PLAYER_READY = false;
+let YT_PLAYER_PENDING_PLAY = false;
 function createYtPlayer(videoId, loopSingle, onError){
   destroyYtPlayer();
+  YT_PLAYER_READY = false;
   const holder = document.getElementById('ambiance-yt-holder');
   if(!holder) return;
   const mount = document.createElement('div');
@@ -8432,8 +8437,15 @@ function createYtPlayer(videoId, loopSingle, onError){
     if(!document.getElementById('ambiance-yt-mount')) return; // panneau refermé entretemps
     YT_PLAYER = new YT.Player('ambiance-yt-mount', {
       videoId,
-      playerVars: Object.assign({autoplay:1, playsinline:1, controls:1, origin: window.location.origin}, loopSingle ? {loop:1, playlist:videoId} : {}),
+      // autoplay:0 — la plupart des navigateurs bloquent le son automatique
+      // dans un cadre embarqué, même après un clic ailleurs sur la page.
+      // Il faut un vrai clic sur « Lancer le son » pour appeler playVideo().
+      playerVars: Object.assign({autoplay:0, playsinline:1, controls:1, origin: window.location.origin}, loopSingle ? {loop:1, playlist:videoId} : {}),
       events: {
+        onReady: function(e){
+          YT_PLAYER_READY = true;
+          if(YT_PLAYER_PENDING_PLAY){ YT_PLAYER_PENDING_PLAY = false; try{ e.target.playVideo(); }catch(err){} }
+        },
         onStateChange: onYtPlayerStateChange,
         onError: function(e){ if(onError) onError(e.data); }
       }
@@ -8529,6 +8541,51 @@ function wireLumenPlayer(){
    YouTube. Fermer le cadre (✕ ou « Arrêter ») coupe le son en détruisant
    le lecteur. */
 let AMBIANCE_YT_PAUSED = false;
+let AMBIANCE_YT_STARTED = false;
+function renderAmbianceYtControls(){
+  const wrap = document.getElementById('ambiance-player-controls');
+  if(!wrap) return;
+  if(!AMBIANCE_YT_STARTED){
+    wrap.innerHTML = `
+      <button class="btn btn-gold btn-sm" id="ambiance-player-start">▶ Lancer le son</button>
+      <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>`;
+  } else {
+    wrap.innerHTML = `
+      <button class="btn btn-ghost btn-sm" id="ambiance-player-pause">${AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause'}</button>
+      ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
+      <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>`;
+  }
+  const startBtn = document.getElementById('ambiance-player-start');
+  if(startBtn) startBtn.onclick = ()=>{
+    AMBIANCE_YT_STARTED = true;
+    AMBIANCE_YT_PAUSED = false;
+    if(YT_PLAYER_READY && YT_PLAYER && YT_PLAYER.playVideo){ try{ YT_PLAYER.playVideo(); }catch(e){} }
+    else YT_PLAYER_PENDING_PLAY = true;
+    renderAmbianceYtControls();
+  };
+  const pauseBtn = document.getElementById('ambiance-player-pause');
+  if(pauseBtn) pauseBtn.onclick = ()=>{
+    AMBIANCE_YT_PAUSED = !AMBIANCE_YT_PAUSED;
+    if(YT_PLAYER){
+      if(AMBIANCE_YT_PAUSED && YT_PLAYER.pauseVideo) YT_PLAYER.pauseVideo();
+      else if(!AMBIANCE_YT_PAUSED && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
+    }
+    pauseBtn.textContent = AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause';
+  };
+  const nextBtn = document.getElementById('ambiance-player-next');
+  if(nextBtn) nextBtn.onclick = ()=>{
+    if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
+    else if(AMBIANCE_CURRENT_POOL && AMBIANCE_CURRENT_POOL.length){
+      const pool = AMBIANCE_CURRENT_POOL;
+      let pick, tries=0;
+      do { pick = pool[Math.floor(Math.random()*pool.length)]; tries++; }
+      while(pick.videoId === BG_YT_VIDEO_ID && tries < 10 && pool.length > 1);
+      playBgYoutube(pick.videoId, pick.title + ' — ' + pick.artist, {pool: AMBIANCE_CURRENT_POOL});
+    }
+  };
+  const stopBtn = document.getElementById('ambiance-player-stop');
+  if(stopBtn) stopBtn.onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); };
+}
 function renderAmbianceVideoWindow(){
   const host = document.getElementById('ambiance-player-overlay');
   if(!host) return;
@@ -8548,6 +8605,8 @@ function renderAmbianceVideoWindow(){
         <div class="ambiance-player-controls"><button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Fermer</button></div>
       </div>`;
   } else if(BG_YT_VIDEO_ID){
+    AMBIANCE_YT_STARTED = false;
+    AMBIANCE_YT_PAUSED = false;
     host.innerHTML = `
       <div class="ambiance-player-panel">
         <div class="ambiance-player-top" id="ambiance-player-drag">
@@ -8557,11 +8616,7 @@ function renderAmbianceVideoWindow(){
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
         <div class="ambiance-player-embed" id="ambiance-yt-holder"></div>
-        <div class="ambiance-player-controls">
-          <button class="btn btn-ghost btn-sm" id="ambiance-player-pause">${AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause'}</button>
-          ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
-          <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
-        </div>
+        <div class="ambiance-player-controls" id="ambiance-player-controls"></div>
       </div>`;
     createYtPlayer(BG_YT_VIDEO_ID, true, function(errCode){
       if(!ytErrorIsUnplayable(errCode)) return;
@@ -8575,30 +8630,10 @@ function renderAmbianceVideoWindow(){
         openYoutubeDirectly(BG_YT_VIDEO_ID, AMBIANCE_VIDEO_LABEL);
       }
     });
-    AMBIANCE_YT_PAUSED = false;
+    renderAmbianceYtControls();
   }
   const backBtn = document.getElementById('ambiance-player-back');
   if(backBtn) backBtn.onclick = ()=>{ stopAllAmbiance(); };
-  const pauseBtn = document.getElementById('ambiance-player-pause');
-  if(pauseBtn) pauseBtn.onclick = ()=>{
-    AMBIANCE_YT_PAUSED = !AMBIANCE_YT_PAUSED;
-    if(YT_PLAYER){
-      if(AMBIANCE_YT_PAUSED && YT_PLAYER.pauseVideo) YT_PLAYER.pauseVideo();
-      else if(!AMBIANCE_YT_PAUSED && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
-    }
-    pauseBtn.textContent = AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause';
-  };
-  const nextBtn = document.getElementById('ambiance-player-next');
-  if(nextBtn) nextBtn.onclick = ()=>{
-    if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
-    else if(AMBIANCE_CURRENT_POOL && AMBIANCE_CURRENT_POOL.length){
-      const pool = AMBIANCE_CURRENT_POOL;
-      let pick, tries=0;
-      do { pick = pool[Math.floor(Math.random()*pool.length)]; tries++; }
-      while(pick.videoId === BG_YT_VIDEO_ID && tries < 10 && pool.length > 1);
-      playBgYoutube(pick.videoId, pick.title + ' — ' + pick.artist, {pool});
-    }
-  };
   const stopBtn = document.getElementById('ambiance-player-stop');
   if(stopBtn) stopBtn.onclick = ()=>{ stopAllAmbiance(); showToast('Ambiance arrêtée'); };
   wireAmbianceFloatDrag();
