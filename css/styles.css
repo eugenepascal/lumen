@@ -411,6 +411,37 @@
   .rosary-catalogue-title{ font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:var(--ink); }
   .rosary-catalogue-sub{ font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); }
   .rosary-catalogue-arrow{ color:var(--gold); font-size:18px; }
+
+  /* ---- mystère du jour + calendrier (page d'accueil du chapelet) ---- */
+  .rosary-today-hero{ position:relative; display:block; width:100%; height:168px; border-radius:18px; overflow:hidden; margin-top:14px; border:none; padding:0; cursor:pointer; background:var(--rosary-today-color, var(--wine)); }
+  .rosary-today-hero img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 22%; }
+  .rosary-today-hero-scrim{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,10,20,0.05) 0%, rgba(20,10,20,0.78) 100%); }
+  .rosary-today-hero-content{ position:absolute; left:0; right:0; bottom:0; padding:14px 16px; display:flex; flex-direction:column; gap:3px; text-align:left; }
+  .rosary-today-hero-eyebrow{ font-family:'Inter',sans-serif; font-weight:600; font-size:11.5px; letter-spacing:0.04em; text-transform:uppercase; color:#F0D9A8; }
+  .rosary-today-hero-title{ font-family:'Fraunces',serif; font-weight:600; font-size:20px; color:#fff; }
+  .rosary-today-hero-cta{ font-family:'Inter',sans-serif; font-weight:600; font-size:12.5px; color:#F0E6D8; margin-top:2px; }
+  .rosary-schedule-card{ margin-top:12px; }
+  .rosary-schedule-row{ display:flex; align-items:center; gap:10px; padding:7px 2px; border-radius:10px; }
+  .rosary-schedule-row.active{ background:var(--gold-pale); }
+  .rosary-schedule-dot{ width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+  .rosary-schedule-label{ flex:1; font-family:'Fraunces',serif; font-size:14px; font-weight:600; color:var(--ink); }
+  .rosary-schedule-days{ font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); text-align:right; }
+  .rosary-wrap.rosary-mode-sombre .rosary-schedule-label, .rosary-wrap.rosary-mode-sombre .rosary-schedule-days{ color:#F0E6D8; }
+
+  /* ---- navigation détaillée des mystères (lecture libre) ---- */
+  .rosary-mystery-browse-item{ border-bottom:1px solid var(--hairline); }
+  .rosary-mystery-browse-item:last-child{ border-bottom:none; }
+  .rosary-mystery-browse-row{ width:100%; display:flex; align-items:center; gap:10px; background:none; border:none; padding:9px 2px; text-align:left; cursor:pointer; }
+  .rosary-mystery-browse-num{ width:22px; height:22px; border-radius:50%; background:var(--gold-pale); color:var(--wine-dark); font-family:'Inter',sans-serif; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .rosary-mystery-browse-text{ flex:1; display:flex; flex-direction:column; gap:1px; }
+  .rosary-mystery-browse-title{ font-family:'Fraunces',serif; font-size:14px; font-weight:600; color:var(--ink); }
+  .rosary-mystery-browse-ref{ font-family:'Inter',sans-serif; font-size:11.5px; color:var(--ink-soft); }
+  .rosary-mystery-browse-arrow{ color:var(--gold); font-size:13px; flex-shrink:0; }
+  .rosary-mystery-browse-detail{ padding:0 2px 12px 32px; }
+  .rosary-mystery-browse-img{ width:100%; height:140px; border-radius:12px; overflow:hidden; margin-bottom:8px; }
+  .rosary-mystery-browse-img img{ width:100%; height:100%; object-fit:cover; }
+  .rosary-wrap.rosary-mode-sombre .rosary-mystery-browse-title, .rosary-wrap.rosary-mode-sombre .rosary-mystery-browse-ref{ color:#F0E6D8; }
+
   .rosary-select-head{ display:flex; align-items:center; gap:8px; margin:4px 0 2px; }
   .rosary-select-head-title{ flex:1; text-align:center; font-family:'Fraunces',serif; font-weight:600; font-size:17px; color:var(--wine-dark); margin:0; }
   .rosary-select-hero{ height:260px; border-radius:16px; overflow:hidden; margin-top:10px; }

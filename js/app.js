@@ -8981,12 +8981,37 @@ function rosaryCurrentSet(){
   if(ROSARY_STATE.variantId === 'defunts') return ROSARY_SETS.glorieux;
   return ROSARY_SETS[ROSARY_STATE.setKey] || ROSARY_SETS.joyeux;
 }
+const ROSARY_DAY_NAMES = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const ROSARY_SCHEDULE_ORDER = ['joyeux','douloureux','glorieux','lumineux'];
 /* ---- écran 1 : choix du chapelet (catalogue) ---- */
 function chapletCatalogueHTML(){
   const list = CHAPLET_CATALOGUE.filter(c=> CHAPLET_CAT_TAB==='tous' || (CHAPLET_CAT_TAB==='classiques'&&c.cat==='classique') || (CHAPLET_CAT_TAB==='thematiques'&&c.cat==='thematique'));
+  const todayKeySet = todaysRosarySet();
+  const todaySet = ROSARY_SETS[todayKeySet];
+  const todayName = ROSARY_DAY_NAMES[new Date().getDay()];
   return `<h2 class="section-title">Le chapelet</h2>
     <p class="section-desc">Un temps de prière avec Marie pour confier votre vie à Dieu.</p>
-    <div class="chip-row">
+    <button type="button" class="rosary-today-hero" id="rosary-today-hero" style="--rosary-today-color:${todaySet.color};" aria-label="Prier le chapelet du jour">
+      <img src="${todaySet.image}" alt="" loading="lazy" onerror="this.style.display='none'">
+      <div class="rosary-today-hero-scrim"></div>
+      <div class="rosary-today-hero-content">
+        <span class="rosary-today-hero-eyebrow">Aujourd'hui, ${todayName}</span>
+        <span class="rosary-today-hero-title">${todaySet.label}</span>
+        <span class="rosary-today-hero-cta">Prier le chapelet du jour →</span>
+      </div>
+    </button>
+    <div class="card rosary-schedule-card">
+      <p class="eyebrow" style="color:var(--gold);">📅 Les mystères, jour par jour</p>
+      ${ROSARY_SCHEDULE_ORDER.map(k=>{
+        const s = ROSARY_SETS[k];
+        return `<div class="rosary-schedule-row ${k===todayKeySet?'active':''}">
+          <span class="rosary-schedule-dot" style="background:${s.color};"></span>
+          <span class="rosary-schedule-label">${s.label}</span>
+          <span class="rosary-schedule-days">${s.days}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="chip-row" style="margin-top:14px;">
       <button class="chip ${CHAPLET_CAT_TAB==='tous'?'active':''}" data-cattab="tous">Tous</button>
       <button class="chip ${CHAPLET_CAT_TAB==='classiques'?'active':''}" data-cattab="classiques">Classiques</button>
       <button class="chip ${CHAPLET_CAT_TAB==='thematiques'?'active':''}" data-cattab="thematiques">Thématiques</button>
@@ -9022,8 +9047,26 @@ function chapletSelectHTML(){
     <p class="section-desc" style="text-align:center;">${set.summary}</p>
     <div class="card" style="text-align:center;"><p class="vreader-text" style="font-style:italic;">« ${set.quote} »</p></div>
     <div style="text-align:center; margin:14px 0 8px;"><button class="btn btn-primary" id="rosary-start-btn">Commencer</button></div>
-    <div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="rosary-list-btn">Voir les mystères</button></div>
-    ${ROSARY_STATE.showList ? `<div class="card" style="margin-top:10px;">${set.mysteres.map((m,i)=>`<p class="entry-detail-text" style="margin:6px 0;"><strong>${i+1}.</strong> ${m.title} <span style="color:var(--ink-soft); font-size:12px;">(${m.ref})</span></p>`).join('')}</div>` : ''}`;
+    <div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="rosary-list-btn">${ROSARY_STATE.showList ? 'Masquer les mystères' : 'Voir les mystères en détail'}</button></div>
+    ${ROSARY_STATE.showList ? `<div class="card" style="margin-top:10px;">${set.mysteres.map((m,i)=>{
+      const expanded = ROSARY_STATE.expandIdx === i;
+      return `<div class="rosary-mystery-browse-item">
+        <button type="button" class="rosary-mystery-browse-row" data-expand-myst="${i}">
+          <span class="rosary-mystery-browse-num">${i+1}</span>
+          <span class="rosary-mystery-browse-text">
+            <span class="rosary-mystery-browse-title">${m.title}</span>
+            <span class="rosary-mystery-browse-ref">${m.ref}</span>
+          </span>
+          <span class="rosary-mystery-browse-arrow">${expanded?'▴':'▾'}</span>
+        </button>
+        ${expanded ? `<div class="rosary-mystery-browse-detail">
+          <figure class="rosary-mystery-browse-img"><img src="${m.img}" alt="" loading="lazy" onerror="this.style.display='none'"></figure>
+          <p class="vreader-text" style="font-style:italic;">« ${m.quote} »</p>
+          <p class="entry-detail-text" style="margin-top:6px;">${m.medit}</p>
+          <p class="eyebrow" style="color:var(--gold); margin-top:8px;">✨ Fruit à demander : ${m.fruit}</p>
+        </div>` : ''}
+      </div>`;
+    }).join('')}</div>` : ''}`;
 }
 /* ---- écran 3 : vue d'ensemble (ouverture du chapelet) ---- */
 function chapletOverviewHTML(){
@@ -9195,7 +9238,7 @@ function rosarySettingsPanelHTML(){
 }
 function renderRosary(){
   if(!ROSARY_STATE){
-    ROSARY_STATE = { variantId:null, setKey: todaysRosarySet(), phase:'catalogue', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, previewIdx:0 };
+    ROSARY_STATE = { variantId:null, setKey: todaysRosarySet(), phase:'catalogue', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, expandIdx:null, previewIdx:0 };
   }
   let html = (ROSARY_STATE.phase==='catalogue') ? chapletCatalogueHTML()
     : (ROSARY_STATE.phase==='select') ? chapletSelectHTML()
@@ -9218,7 +9261,7 @@ function wireRosaryEvents(){
       const id = b.dataset.chaplet;
       const meta = rosaryVariantMeta(id);
       if(meta.gotoSub){ ROSARY_STATE = null; goTo('devotions', meta.gotoSub); return; }
-      ROSARY_STATE = { variantId:id, setKey: todaysRosarySet(), phase: id==='defunts' ? 'overview' : 'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, previewIdx:0 };
+      ROSARY_STATE = { variantId:id, setKey: todaysRosarySet(), phase: id==='defunts' ? 'overview' : 'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, expandIdx:null, previewIdx:0 };
       render();
     };
   });
@@ -9245,7 +9288,15 @@ function wireRosaryEvents(){
   };
   document.querySelectorAll('.chip[data-set]').forEach(c=> c.onclick = ()=>{ ROSARY_STATE.setKey = c.dataset.set; render(); });
   const listBtn = document.getElementById('rosary-list-btn');
-  if(listBtn) listBtn.onclick = ()=>{ ROSARY_STATE.showList = !ROSARY_STATE.showList; render(); };
+  if(listBtn) listBtn.onclick = ()=>{ ROSARY_STATE.showList = !ROSARY_STATE.showList; if(!ROSARY_STATE.showList) ROSARY_STATE.expandIdx = null; render(); };
+  document.querySelectorAll('[data-expand-myst]').forEach(b=>{
+    b.onclick = ()=>{ const i = parseInt(b.dataset.expandMyst,10); ROSARY_STATE.expandIdx = (ROSARY_STATE.expandIdx===i) ? null : i; render(); };
+  });
+  const todayHero = document.getElementById('rosary-today-hero');
+  if(todayHero) todayHero.onclick = ()=>{
+    ROSARY_STATE = { variantId:'traditionnel', setKey: todaysRosarySet(), phase:'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, expandIdx:null, previewIdx:0 };
+    render();
+  };
   const startBtn = document.getElementById('rosary-start-btn');
   if(startBtn) startBtn.onclick = ()=>{ ROSARY_STATE.phase='overview'; render(); };
   const openExpandBtn = document.getElementById('rosary-open-expand');
@@ -9289,7 +9340,7 @@ function wireRosaryEvents(){
     render();
   };
   const restartBtn = document.getElementById('rosary-restart');
-  if(restartBtn) restartBtn.onclick = ()=>{ const v=ROSARY_STATE.variantId; ROSARY_STATE = { variantId:v, setKey: todaysRosarySet(), phase: v==='defunts'?'overview':'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, previewIdx:0 }; ROSARY_TAB='meditation'; render(); };
+  if(restartBtn) restartBtn.onclick = ()=>{ const v=ROSARY_STATE.variantId; ROSARY_STATE = { variantId:v, setKey: todaysRosarySet(), phase: v==='defunts'?'overview':'select', mysteryIdx:0, aveCount:0, openExpand:false, showList:false, expandIdx:null, previewIdx:0 }; ROSARY_TAB='meditation'; render(); };
   const changeChapletBtn = document.getElementById('rosary-change-chaplet');
   if(changeChapletBtn) changeChapletBtn.onclick = ()=>{ ROSARY_STATE = null; render(); };
   const shareBtn = document.getElementById('rosary-share');
