@@ -8387,12 +8387,20 @@ let AMBIANCE_VIDEO_OPEN = false;
 let AMBIANCE_VIDEO_LABEL = '';
 let AMBIANCE_CURRENT_POOL = null;
 let AMBIANCE_YT_WINDOW = null;
-function openAmbianceYoutubeWindow(videoId){
-  const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId) + '&autoplay=1';
+function openAmbianceYoutubeWindow(videoId, opts){
+  /* Important : pas de &autoplay=1 ici. Même sur youtube.com lui-même, Chrome et les
+     autres navigateurs coupent le son d'une vidéo qui démarre seule dans un nouvel
+     onglet (politique anti-autoplay liée au site, pas à notre page) — d'où le son
+     resté muet malgré l'ouverture de la fenêtre. En laissant la vidéo en pause et en
+     demandant un vrai clic sur ▶ dans cet onglet YouTube, le son n'est plus jamais
+     bloqué : c'est un geste direct de l'utilisateur sur la page qui joue le son. */
+  opts = opts || {};
+  const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId);
   try{
     if(AMBIANCE_YT_WINDOW && !AMBIANCE_YT_WINDOW.closed){
       AMBIANCE_YT_WINDOW.location.href = url;
       try{ AMBIANCE_YT_WINDOW.focus(); }catch(e){}
+      if(!opts.silent) showToast('🎵 ' + (opts.label ? opts.label + ' — ' : '') + 'appuyez sur ▶ dans l\'onglet YouTube pour lancer le son.');
       return;
     }
     AMBIANCE_YT_WINDOW = window.open(url, 'lumen_ambiance_yt', 'width=420,height=760,noopener,noreferrer');
@@ -8400,6 +8408,8 @@ function openAmbianceYoutubeWindow(videoId){
   }catch(err){ AMBIANCE_YT_WINDOW = null; }
   if(!AMBIANCE_YT_WINDOW){
     showToast('🎵 Les fenêtres pop-up semblent bloquées — autorisez-les pour ce site, ou touchez « Ouvrir sur YouTube » dans le cadre.');
+  } else if(!opts.silent) {
+    showToast('🎵 ' + (opts.label ? opts.label + ' — ' : '') + 'appuyez sur ▶ dans l\'onglet YouTube pour lancer le son.');
   }
 }
 function destroyAmbianceYoutubePlayer(){
@@ -8521,7 +8531,7 @@ function renderAmbianceVideoWindow(){
           <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
-        <p class="studio-note" style="text-align:center;">🔊 Le son joue dans une fenêtre YouTube séparée.</p>
+        <p class="studio-note" style="text-align:center;">🔊 Appuyez sur ▶ dans la fenêtre YouTube ouverte à part pour lancer le son.</p>
         <div class="ambiance-player-controls">
           <button class="btn btn-gold btn-sm" id="ambiance-player-reopen">↗ Rouvrir la fenêtre</button>
           ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
@@ -8532,7 +8542,7 @@ function renderAmbianceVideoWindow(){
   const backBtn = document.getElementById('ambiance-player-back');
   if(backBtn) backBtn.onclick = ()=>{ stopAllAmbiance(); };
   const reopenBtn = document.getElementById('ambiance-player-reopen');
-  if(reopenBtn) reopenBtn.onclick = ()=>{ if(BG_YT_VIDEO_ID) openAmbianceYoutubeWindow(BG_YT_VIDEO_ID); };
+  if(reopenBtn) reopenBtn.onclick = ()=>{ if(BG_YT_VIDEO_ID) openAmbianceYoutubeWindow(BG_YT_VIDEO_ID, {label:AMBIANCE_VIDEO_LABEL}); };
   const nextBtn = document.getElementById('ambiance-player-next');
   if(nextBtn) nextBtn.onclick = ()=>{
     if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
@@ -8598,8 +8608,7 @@ function playBgYoutube(videoId, label, opts){
   lumenPlayerHide();
   renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
-  openAmbianceYoutubeWindow(videoId);
-  if(!opts.silent) showToast('🎵 ' + label + '…');
+  openAmbianceYoutubeWindow(videoId, {label, silent:opts.silent});
 }
 function pickRandomAmbianceTrack(){
   if(!LOUANGES_VIDEOS.length) return null;
@@ -8622,8 +8631,10 @@ function playRandomAmbiance(isAutoAdvance){
   lumenPlayerHide();
   renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
-  openAmbianceYoutubeWindow(pick.videoId);
-  if(!isAutoAdvance) showToast('🔀 Lecture aléatoire — touchez « Titre suivant » pour changer de morceau.');
+  openAmbianceYoutubeWindow(pick.videoId, {silent:true});
+  showToast(isAutoAdvance
+    ? '🔀 ' + pick.title + ' — appuyez sur ▶ dans l\'onglet YouTube pour lancer le son.'
+    : '🔀 Lecture aléatoire — appuyez sur ▶ dans l\'onglet YouTube, puis « Titre suivant » pour changer de morceau.');
 }
 function startAmbianceShuffle(){
   AMBIANCE_SHUFFLE_MODE = true;
