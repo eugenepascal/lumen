@@ -8387,6 +8387,7 @@ let AMBIANCE_VIDEO_OPEN = false;
 let AMBIANCE_VIDEO_LABEL = '';
 let AMBIANCE_CURRENT_POOL = null;
 let AMBIANCE_YT_WINDOW = null;
+let AMBIANCE_YT_LAST_ID = null;
 function openAmbianceYoutubeWindow(videoId, opts){
   /* Important : pas de &autoplay=1 ici. Même sur youtube.com lui-même, Chrome et les
      autres navigateurs coupent le son d'une vidéo qui démarre seule dans un nouvel
@@ -8402,13 +8403,21 @@ function openAmbianceYoutubeWindow(videoId, opts){
      d'afficher simplement le bouton ▶ cliquable. */
   const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId) + '&autoplay=0';
   try{
+    /* « noopener » faisait que window.open() renvoyait toujours null, même quand la
+       fenêtre s'ouvrait bien : on perdait alors la référence, et chaque nouveau clic
+       relançait un tout nouveau chargement de la même fenêtre au lieu de simplement
+       la réafficher — d'où l'impression d'un chargement qui recommence sans fin. */
     if(AMBIANCE_YT_WINDOW && !AMBIANCE_YT_WINDOW.closed){
-      AMBIANCE_YT_WINDOW.location.href = url;
       try{ AMBIANCE_YT_WINDOW.focus(); }catch(e){}
+      if(AMBIANCE_YT_LAST_ID !== videoId){
+        AMBIANCE_YT_WINDOW.location.href = url;
+        AMBIANCE_YT_LAST_ID = videoId;
+      }
       if(!opts.silent) showToast('🎵 ' + (opts.label ? opts.label + ' — ' : '') + 'appuyez sur ▶ dans l\'onglet YouTube pour lancer le son.');
       return;
     }
-    AMBIANCE_YT_WINDOW = window.open(url, 'lumen_ambiance_yt', 'width=420,height=760,noopener,noreferrer');
+    AMBIANCE_YT_WINDOW = window.open(url, 'lumen_ambiance_yt', 'width=420,height=760');
+    AMBIANCE_YT_LAST_ID = videoId;
     if(AMBIANCE_YT_WINDOW){ try{ AMBIANCE_YT_WINDOW.focus(); }catch(e){} }
   }catch(err){ AMBIANCE_YT_WINDOW = null; }
   if(!AMBIANCE_YT_WINDOW){
@@ -8422,6 +8431,7 @@ function destroyAmbianceYoutubePlayer(){
     try{ AMBIANCE_YT_WINDOW.close(); }catch(err){}
   }
   AMBIANCE_YT_WINDOW = null;
+  AMBIANCE_YT_LAST_ID = null;
 }
 function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID || BG_SPOTIFY_ACTIVE; }
 function syncBgAmbianceIcon(){
