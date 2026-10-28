@@ -8371,14 +8371,14 @@ function toggleReadPage(){
 }
 
 /* ================= ambiance sonore de fond =================
-   La vidéo YouTube ne joue plus dans un cadre intégré (iframe/API JS) à
-   l'intérieur de l'appli : ces lecteurs intégrés se heurtaient sans arrêt
-   aux politiques anti-autoplay des navigateurs (« ça charge mais le son
-   ne vient pas »). La musique s'ouvre maintenant directement sur la vraie
-   page YouTube, dans une fenêtre à part (une popup dédiée, pas un nouvel
-   onglet plein écran) : c'est youtube.com lui-même qui joue le son, donc
-   plus aucun blocage possible. Le petit cadre flottant dans l'appli ne
-   sert plus qu'à garder trace du titre en cours et à passer au suivant. */
+   Retour à la toute première version : un vrai lecteur YouTube (API
+   IFrame Player) intégré DANS l'appli, toujours visible dans le cadre
+   flottant (jamais caché dans un cadre 1×1 hors écran — c'est justement
+   ce qui faisait que YouTube traitait le lecteur comme suspect et
+   refusait de jouer le son). Les tentatives suivantes (fenêtre à part,
+   onglet YouTube externe) imposaient un clic en dehors de l'appli et
+   restaient peu fiables ; ce lecteur intégré, visible, avec ses vrais
+   contrôles YouTube, est la version qui fonctionnait à l'origine. */
 let BG_YT_VIDEO_ID = null;
 let BG_SPOTIFY_ACTIVE = false;
 let AMBIANCE_SHUFFLE_MODE = false;
@@ -8386,52 +8386,59 @@ let AMBIANCE_SHUFFLE_LAST = null;
 let AMBIANCE_VIDEO_OPEN = false;
 let AMBIANCE_VIDEO_LABEL = '';
 let AMBIANCE_CURRENT_POOL = null;
-let AMBIANCE_YT_WINDOW = null;
-let AMBIANCE_YT_LAST_ID = null;
-function openAmbianceYoutubeWindow(videoId, opts){
-  /* Important : pas de &autoplay=1 ici. Même sur youtube.com lui-même, Chrome et les
-     autres navigateurs coupent le son d'une vidéo qui démarre seule dans un nouvel
-     onglet (politique anti-autoplay liée au site, pas à notre page) — d'où le son
-     resté muet malgré l'ouverture de la fenêtre. En laissant la vidéo en pause et en
-     demandant un vrai clic sur ▶ dans cet onglet YouTube, le son n'est plus jamais
-     bloqué : c'est un geste direct de l'utilisateur sur la page qui joue le son. */
-  opts = opts || {};
-  /* &autoplay=0 force l'état en pause même si le réglage « Lecture automatique » du
-     compte/navigateur YouTube de la personne est activé — sinon YouTube tente quand
-     même de démarrer seul, se heurte au même blocage du son, et reste coincé sur
-     « Si la lecture ne commence pas… essayez de redémarrer votre appareil » au lieu
-     d'afficher simplement le bouton ▶ cliquable. */
-  const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId) + '&autoplay=0';
-  try{
-    /* « noopener » faisait que window.open() renvoyait toujours null, même quand la
-       fenêtre s'ouvrait bien : on perdait alors la référence, et chaque nouveau clic
-       relançait un tout nouveau chargement de la même fenêtre au lieu de simplement
-       la réafficher — d'où l'impression d'un chargement qui recommence sans fin. */
-    if(AMBIANCE_YT_WINDOW && !AMBIANCE_YT_WINDOW.closed){
-      try{ AMBIANCE_YT_WINDOW.focus(); }catch(e){}
-      if(AMBIANCE_YT_LAST_ID !== videoId){
-        AMBIANCE_YT_WINDOW.location.href = url;
-        AMBIANCE_YT_LAST_ID = videoId;
-      }
-      if(!opts.silent) showToast('🎵 ' + (opts.label ? opts.label + ' — ' : '') + 'appuyez sur ▶ dans l\'onglet YouTube pour lancer le son.');
-      return;
-    }
-    AMBIANCE_YT_WINDOW = window.open(url, 'lumen_ambiance_yt', 'width=420,height=760');
-    AMBIANCE_YT_LAST_ID = videoId;
-    if(AMBIANCE_YT_WINDOW){ try{ AMBIANCE_YT_WINDOW.focus(); }catch(e){} }
-  }catch(err){ AMBIANCE_YT_WINDOW = null; }
-  if(!AMBIANCE_YT_WINDOW){
-    showToast('🎵 Les fenêtres pop-up semblent bloquées — autorisez-les pour ce site, ou touchez « Ouvrir sur YouTube » dans le cadre.');
-  } else if(!opts.silent) {
-    showToast('🎵 ' + (opts.label ? opts.label + ' — ' : '') + 'appuyez sur ▶ dans l\'onglet YouTube pour lancer le son.');
+let YT_PLAYER = null;
+let YT_API_QUEUE = [];
+function ensureYouTubeAPI(cb){
+  if(window.YT && window.YT.Player){ cb(); return; }
+  YT_API_QUEUE.push(cb);
+  if(document.getElementById('yt-iframe-api-script')) return;
+  const tag = document.createElement('script');
+  tag.id = 'yt-iframe-api-script';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+  window.onYouTubeIframeAPIReady = function(){
+    const queue = YT_API_QUEUE; YT_API_QUEUE = [];
+    queue.forEach(fn=>fn());
+  };
+}
+function destroyYtPlayer(){
+  if(YT_PLAYER && YT_PLAYER.destroy){ try{ YT_PLAYER.destroy(); }catch(e){} }
+  YT_PLAYER = null;
+  const holder = document.getElementById('ambiance-yt-holder');
+  if(holder) holder.innerHTML = '';
+}
+function onYtPlayerStateChange(e){
+  if(e.data === 0){ // ENDED
+    if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
   }
 }
-function destroyAmbianceYoutubePlayer(){
-  if(AMBIANCE_YT_WINDOW && !AMBIANCE_YT_WINDOW.closed){
-    try{ AMBIANCE_YT_WINDOW.close(); }catch(err){}
-  }
-  AMBIANCE_YT_WINDOW = null;
-  AMBIANCE_YT_LAST_ID = null;
+function ytErrorIsUnplayable(code){ return [2,5,100,101,150].indexOf(code) !== -1; }
+/* Certains titres appartiennent à des chaînes qui interdisent la lecture
+   intégrée sur un autre site (erreur YouTube 150 — une restriction posée
+   par l'auteur de la vidéo, indépendante de notre code). Dans ce cas, on
+   ouvre directement la vidéo sur YouTube plutôt que de rester bloqué. */
+function openYoutubeDirectly(videoId, label){
+  showToast('🎵 Ce titre ne peut pas être joué directement dans l’application (restriction posée par son auteur) — ouverture sur YouTube…');
+  window.open('https://www.youtube.com/watch?v=' + videoId, '_blank', 'noopener');
+}
+function createYtPlayer(videoId, loopSingle, onError){
+  destroyYtPlayer();
+  const holder = document.getElementById('ambiance-yt-holder');
+  if(!holder) return;
+  const mount = document.createElement('div');
+  mount.id = 'ambiance-yt-mount';
+  holder.appendChild(mount);
+  ensureYouTubeAPI(()=>{
+    if(!document.getElementById('ambiance-yt-mount')) return; // panneau refermé entretemps
+    YT_PLAYER = new YT.Player('ambiance-yt-mount', {
+      videoId,
+      playerVars: Object.assign({autoplay:1, playsinline:1, controls:1, origin: window.location.origin}, loopSingle ? {loop:1, playlist:videoId} : {}),
+      events: {
+        onStateChange: onYtPlayerStateChange,
+        onError: function(e){ if(onError) onError(e.data); }
+      }
+    });
+  });
 }
 function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID || BG_SPOTIFY_ACTIVE; }
 function syncBgAmbianceIcon(){
@@ -8440,7 +8447,7 @@ function syncBgAmbianceIcon(){
 }
 function stopAllAmbiance(){
   stopLoop();
-  destroyAmbianceYoutubePlayer();
+  destroyYtPlayer();
   AMBIANCE_CURRENT_POOL = null;
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = false;
@@ -8516,16 +8523,19 @@ function wireLumenPlayer(){
     window.addEventListener('touchend', onUp);
   }
 }
-/* La fenêtre qui affiche directement la vidéo YouTube (ou l'intégration
-   Spotify). Un <iframe> standard avec ses propres contrôles natifs — fermer
-   la fenêtre (✕ ou « Arrêter ») coupe le son en retirant le cadre. */
+/* Le cadre flottant qui affiche directement la vidéo YouTube (ou
+   l'intégration Spotify). Le lecteur YouTube reste toujours visible ici
+   — jamais réduit ou caché — pour ne pas être traité comme suspect par
+   YouTube. Fermer le cadre (✕ ou « Arrêter ») coupe le son en détruisant
+   le lecteur. */
+let AMBIANCE_YT_PAUSED = false;
 function renderAmbianceVideoWindow(){
   const host = document.getElementById('ambiance-player-overlay');
   if(!host) return;
-  if(!AMBIANCE_VIDEO_OPEN){ destroyAmbianceYoutubePlayer(); host.classList.add('hidden'); host.innerHTML = ''; return; }
+  if(!AMBIANCE_VIDEO_OPEN){ destroyYtPlayer(); host.classList.add('hidden'); host.innerHTML = ''; return; }
   host.classList.remove('hidden');
   if(BG_SPOTIFY_ACTIVE){
-    destroyAmbianceYoutubePlayer();
+    destroyYtPlayer();
     host.innerHTML = `
       <div class="ambiance-player-panel">
         <div class="ambiance-player-top" id="ambiance-player-drag">
@@ -8546,18 +8556,38 @@ function renderAmbianceVideoWindow(){
           <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
-        <p class="studio-note" style="text-align:center;">🔊 Appuyez sur ▶ dans la fenêtre YouTube ouverte à part pour lancer le son.</p>
+        <div class="ambiance-player-embed" id="ambiance-yt-holder"></div>
         <div class="ambiance-player-controls">
-          <button class="btn btn-gold btn-sm" id="ambiance-player-reopen">↗ Rouvrir la fenêtre</button>
+          <button class="btn btn-ghost btn-sm" id="ambiance-player-pause">${AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause'}</button>
           ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
         </div>
       </div>`;
+    createYtPlayer(BG_YT_VIDEO_ID, true, function(errCode){
+      if(!ytErrorIsUnplayable(errCode)) return;
+      const pool = AMBIANCE_CURRENT_POOL;
+      if(pool && pool.length > 1){
+        const alternatives = pool.filter(t => t.videoId !== BG_YT_VIDEO_ID);
+        const next = alternatives[Math.floor(Math.random()*alternatives.length)];
+        showToast('🎵 Cette vidéo n’est pas disponible ici, on essaie une autre…');
+        playBgYoutube(next.videoId, next.title + ' — ' + next.artist, {pool});
+      } else {
+        openYoutubeDirectly(BG_YT_VIDEO_ID, AMBIANCE_VIDEO_LABEL);
+      }
+    });
+    AMBIANCE_YT_PAUSED = false;
   }
   const backBtn = document.getElementById('ambiance-player-back');
   if(backBtn) backBtn.onclick = ()=>{ stopAllAmbiance(); };
-  const reopenBtn = document.getElementById('ambiance-player-reopen');
-  if(reopenBtn) reopenBtn.onclick = ()=>{ if(BG_YT_VIDEO_ID) openAmbianceYoutubeWindow(BG_YT_VIDEO_ID, {label:AMBIANCE_VIDEO_LABEL}); };
+  const pauseBtn = document.getElementById('ambiance-player-pause');
+  if(pauseBtn) pauseBtn.onclick = ()=>{
+    AMBIANCE_YT_PAUSED = !AMBIANCE_YT_PAUSED;
+    if(YT_PLAYER){
+      if(AMBIANCE_YT_PAUSED && YT_PLAYER.pauseVideo) YT_PLAYER.pauseVideo();
+      else if(!AMBIANCE_YT_PAUSED && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
+    }
+    pauseBtn.textContent = AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause';
+  };
   const nextBtn = document.getElementById('ambiance-player-next');
   if(nextBtn) nextBtn.onclick = ()=>{
     if(AMBIANCE_SHUFFLE_MODE) playRandomAmbiance(true);
@@ -8623,7 +8653,7 @@ function playBgYoutube(videoId, label, opts){
   lumenPlayerHide();
   renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
-  openAmbianceYoutubeWindow(videoId, {label, silent:opts.silent});
+  if(!opts.silent) showToast('🎵 ' + label + '…');
 }
 function pickRandomAmbianceTrack(){
   if(!LOUANGES_VIDEOS.length) return null;
@@ -8646,10 +8676,7 @@ function playRandomAmbiance(isAutoAdvance){
   lumenPlayerHide();
   renderAmbianceVideoWindow();
   syncBgAmbianceIcon();
-  openAmbianceYoutubeWindow(pick.videoId, {silent:true});
-  showToast(isAutoAdvance
-    ? '🔀 ' + pick.title + ' — appuyez sur ▶ dans l\'onglet YouTube pour lancer le son.'
-    : '🔀 Lecture aléatoire — appuyez sur ▶ dans l\'onglet YouTube, puis « Titre suivant » pour changer de morceau.');
+  if(!isAutoAdvance) showToast('🔀 Lecture aléatoire — « Suivant » pour changer de morceau.');
 }
 function startAmbianceShuffle(){
   AMBIANCE_SHUFFLE_MODE = true;
@@ -8667,7 +8694,7 @@ function playBgSpotify(spotifyArtistId, label){
   syncBgAmbianceIcon();
 }
 function playBgLoop(key, label){
-  destroyAmbianceYoutubePlayer();
+  destroyYtPlayer();
   BG_YT_VIDEO_ID = null;
   BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_VIDEO_OPEN = false;
