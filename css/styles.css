@@ -1,26 +1,26 @@
 
   :root{
-    --vellum: #D6C69B;
-    --vellum-light: #E6D8AF;
+    --vellum: #E8D6A4;
+    --vellum-light: #F3E6BC;
     --ink: #2E2A3D;
     --ink-soft: #6B6480;
     --wine: #6B2545;
     --wine-dark: #3F1530;
-    --gold: #B07D37;
-    --gold-light: #D9B873;
-    --gold-pale: #E2D09E;
+    --gold: #C0923E;
+    --gold-light: #E7C372;
+    --gold-pale: #EFDCA3;
     --sage: #5C6E58;
-    --hairline: #BDA873;
+    --hairline: #CBAD6C;
     --shadow: 0 6px 18px rgba(40,18,36,0.14);
     --shadow-warm: 0 10px 30px rgba(63,21,48,0.28);
-    --glow-gold: 0 0 18px rgba(217,184,115,0.45);
+    --glow-gold: 0 0 18px rgba(231,195,114,0.5);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(166,122,74,0.2), transparent 55%),
-      linear-gradient(165deg, #241A30 0%, #3B2240 45%, #5C2142 100%);
+      radial-gradient(circle at 50% 0%, rgba(201,162,39,0.22), transparent 55%),
+      linear-gradient(165deg, #1E1130 0%, #3A1B42 45%, #6B2545 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
@@ -1907,8 +1907,8 @@
   }
   body[data-theme="dark"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(110,140,174,0.1), transparent 55%),
-      linear-gradient(165deg, #0D0912 0%, #190D1C 45%, #210A17 100%);
+      radial-gradient(circle at 50% 0%, rgba(199,164,114,0.12), transparent 55%),
+      linear-gradient(165deg, #100A1C 0%, #241132 45%, #350F28 100%);
   }
   body[data-theme="dark"] #app::before{
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23C7A472' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230A0704'/%3E%3Cg fill='%236E8CAE' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
