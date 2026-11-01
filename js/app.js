@@ -8952,8 +8952,8 @@ function generateShareImage(title, text){
   canvas.width = 800; canvas.height = 800;
   const ctx = canvas.getContext('2d');
   const styles = getComputedStyle(document.body);
-  const wine = styles.getPropertyValue('--wine-dark').trim() || '#5E1622';
-  const wine2 = styles.getPropertyValue('--wine').trim() || '#7C1F2E';
+  const wine = styles.getPropertyValue('--wine-dark').trim() || '#14284C';
+  const wine2 = styles.getPropertyValue('--wine').trim() || '#24467E';
   const gold = styles.getPropertyValue('--gold-light').trim() || '#E4C77E';
   const cream = styles.getPropertyValue('--vellum-light').trim() || '#FBF7EC';
 
@@ -13026,8 +13026,8 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Ambre', icon:'🕯️', swatches:['#F5EFE4','#6B2545','#C08A3E']},
-  {key:'dark', label:'Ambre sombre', icon:'🌙', swatches:['#161B24','#5C7DA6','#D9A85C']}
+  {key:'light', label:'Céleste', icon:'🕯️', swatches:['#F7F2E3','#24467E','#C49A3A']},
+  {key:'dark', label:'Nuit étoilée', icon:'🌙', swatches:['#131A2C','#7FA0C9','#D4B05A']}
 ];
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
@@ -13093,7 +13093,7 @@ function openThemePicker(){
   const titleEl = overlay.querySelector('.search-input-row p');
   const descEl = document.getElementById('ambiance-picker-desc');
   if(titleEl) titleEl.textContent = '🎨 Apparence';
-  if(descEl) descEl.textContent = "Le thème Ambre de Lumen, en clair ou en sombre.";
+  if(descEl) descEl.textContent = "Le thème de Lumen, en clair ou en sombre.";
 
   function themeCardHTML(t){
     return `<button class="card theme-swatch-btn ${THEME_MODE==='manual' && THEME===t.key?'theme-active':''}" data-theme-key="${t.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding-top:10px;">
@@ -13110,7 +13110,7 @@ function openThemePicker(){
       <span style="font-size:22px;">🔄</span>
       <span>
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Automatique</p>
-        <p class="section-desc" style="margin:2px 0 0;">Ambre clair le jour, Ambre sombre le soir et la nuit.</p>
+        <p class="section-desc" style="margin:2px 0 0;">Céleste le jour, Nuit étoilée le soir et la nuit.</p>
       </span>
     </button>
 

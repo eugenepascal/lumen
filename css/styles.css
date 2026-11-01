@@ -1,26 +1,26 @@
 
   :root{
-    --vellum: #E8D6A4;
-    --vellum-light: #F3E6BC;
-    --ink: #2E2A3D;
-    --ink-soft: #6B6480;
-    --wine: #6B2545;
-    --wine-dark: #3F1530;
-    --gold: #C0923E;
-    --gold-light: #E7C372;
-    --gold-pale: #EFDCA3;
+    --vellum: #ECE6D4;
+    --vellum-light: #F7F2E3;
+    --ink: #22283D;
+    --ink-soft: #5E6480;
+    --wine: #24467E;
+    --wine-dark: #14284C;
+    --gold: #C49A3A;
+    --gold-light: #E8C873;
+    --gold-pale: #EFE2B6;
     --sage: #5C6E58;
-    --hairline: #CBAD6C;
-    --shadow: 0 6px 18px rgba(40,18,36,0.14);
-    --shadow-warm: 0 10px 30px rgba(63,21,48,0.28);
-    --glow-gold: 0 0 18px rgba(231,195,114,0.5);
+    --hairline: #C7B98A;
+    --shadow: 0 6px 18px rgba(14,26,52,0.14);
+    --shadow-warm: 0 10px 30px rgba(20,40,76,0.3);
+    --glow-gold: 0 0 18px rgba(232,200,115,0.5);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(201,162,39,0.22), transparent 55%),
-      linear-gradient(165deg, #1E1130 0%, #3A1B42 45%, #6B2545 100%);
+      radial-gradient(circle at 50% 0%, rgba(201,162,39,0.2), transparent 55%),
+      linear-gradient(165deg, #0B1526 0%, #152A4A 45%, #24467E 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
@@ -168,7 +168,7 @@
   /* header */
   #topbar{
     padding: 22px 22px 16px;
-    background: linear-gradient(160deg, #5E1622 0%, var(--wine-dark) 45%, var(--wine) 100%);
+    background: linear-gradient(160deg, #0F2142 0%, var(--wine-dark) 45%, var(--wine) 100%);
     color: var(--vellum-light);
     position:relative;
     overflow:hidden;
@@ -1889,29 +1889,29 @@
   }
   .flourish-divider{ text-align:center; color:var(--gold); font-size:13px; letter-spacing:6px; margin:18px 0; opacity:0.7; }
 
-  /* ===== mode sombre : "Ambre sombre" — ambre sablé très sombre, doux et feutré,
-     avec le bleu nuit gardé en accent discret pour la navigation ===== */
+  /* ===== mode sombre : "Nuit étoilée" — bleu marial très sombre, feutré,
+     avec l'or antique en lueur discrète, comme un ciel nocturne ===== */
   body[data-theme="dark"]{
-    --vellum: #1B150C;
-    --vellum-light: #251D11;
-    --ink: #E7DFCF;
-    --ink-soft: #9C9075;
-    --wine: #6E8CAE;
-    --wine-dark: #526E8E;
-    --gold: #C7A472;
-    --gold-light: #D9BE93;
-    --gold-pale: #241C10;
-    --hairline: #332A16;
+    --vellum: #131A2C;
+    --vellum-light: #1D2640;
+    --ink: #E8E6DA;
+    --ink-soft: #9CA3BC;
+    --wine: #7FA0C9;
+    --wine-dark: #577BAA;
+    --gold: #D4B05A;
+    --gold-light: #E8CC8C;
+    --gold-pale: #22283F;
+    --hairline: #2B3450;
     --shadow-warm: 0 10px 30px rgba(0,0,0,0.6);
-    --glow-gold: 0 0 16px rgba(199,164,114,0.3);
+    --glow-gold: 0 0 16px rgba(212,176,90,0.32);
   }
   body[data-theme="dark"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(199,164,114,0.12), transparent 55%),
-      linear-gradient(165deg, #100A1C 0%, #241132 45%, #350F28 100%);
+      radial-gradient(circle at 50% 0%, rgba(212,176,90,0.12), transparent 55%),
+      linear-gradient(165deg, #070B14 0%, #0E1830 45%, #152A4A 100%);
   }
   body[data-theme="dark"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23C7A472' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230A0704'/%3E%3Cg fill='%236E8CAE' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D4B05A' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%23070B14'/%3E%3Cg fill='%237FA0C9' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;
   }
   body[data-theme="dark"] #app{ box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
