@@ -1,26 +1,26 @@
 
   :root{
-    --vellum: #ECE6D4;
-    --vellum-light: #F7F2E3;
-    --ink: #22283D;
-    --ink-soft: #5E6480;
-    --wine: #24467E;
-    --wine-dark: #14284C;
-    --gold: #C49A3A;
-    --gold-light: #E8C873;
-    --gold-pale: #EFE2B6;
+    --vellum: #F0E8D8;
+    --vellum-light: #FAF5EA;
+    --ink: #352A1E;
+    --ink-soft: #7D6E58;
+    --wine: #8C5A2E;
+    --wine-dark: #5C3A1C;
+    --gold: #C9983E;
+    --gold-light: #E3C073;
+    --gold-pale: #EEDEB3;
     --sage: #5C6E58;
-    --hairline: #C7B98A;
-    --shadow: 0 6px 18px rgba(14,26,52,0.14);
-    --shadow-warm: 0 10px 30px rgba(20,40,76,0.3);
-    --glow-gold: 0 0 18px rgba(232,200,115,0.5);
+    --hairline: #D1BE93;
+    --shadow: 0 6px 18px rgba(46,30,16,0.14);
+    --shadow-warm: 0 10px 30px rgba(92,58,28,0.28);
+    --glow-gold: 0 0 18px rgba(227,192,115,0.5);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(201,162,39,0.2), transparent 55%),
-      linear-gradient(165deg, #0B1526 0%, #152A4A 45%, #24467E 100%);
+      radial-gradient(circle at 50% 0%, rgba(201,138,82,0.22), transparent 55%),
+      linear-gradient(165deg, #1F150D 0%, #4A2E1A 45%, #7A4420 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
@@ -82,10 +82,10 @@
     50%{ transform:translate(-8%,-10%) scale(1.2); opacity:0.8; }
   }
   body[data-theme="dark"] .bg-glow-ray{
-    background:radial-gradient(circle, rgba(110,140,174,0.55) 0%, rgba(110,140,174,0.16) 45%, transparent 72%);
+    background:radial-gradient(circle, rgba(201,138,82,0.5) 0%, rgba(201,138,82,0.15) 45%, transparent 72%);
   }
   body[data-theme="dark"] .bg-glow-ray-2{
-    background:radial-gradient(circle, rgba(199,164,114,0.4) 0%, rgba(199,164,114,0.12) 45%, transparent 72%);
+    background:radial-gradient(circle, rgba(216,174,100,0.4) 0%, rgba(216,174,100,0.12) 45%, transparent 72%);
   }
   @media (prefers-reduced-motion: reduce){
     .bg-glow-ray{ animation:none; }
@@ -168,7 +168,7 @@
   /* header */
   #topbar{
     padding: 22px 22px 16px;
-    background: linear-gradient(160deg, #0F2142 0%, var(--wine-dark) 45%, var(--wine) 100%);
+    background: linear-gradient(160deg, #3A2411 0%, var(--wine-dark) 45%, var(--wine) 100%);
     color: var(--vellum-light);
     position:relative;
     overflow:hidden;
@@ -1889,38 +1889,38 @@
   }
   .flourish-divider{ text-align:center; color:var(--gold); font-size:13px; letter-spacing:6px; margin:18px 0; opacity:0.7; }
 
-  /* ===== mode sombre : "Nuit étoilée" — bleu marial très sombre, feutré,
-     avec l'or antique en lueur discrète, comme un ciel nocturne ===== */
+  /* ===== mode sombre : "Cacao" — brun très sombre et feutré, comme un bois
+     ciré à la lueur d'une bougie, avec le cuivre et l'or en chaleur discrète ===== */
   body[data-theme="dark"]{
-    --vellum: #131A2C;
-    --vellum-light: #1D2640;
-    --ink: #E8E6DA;
-    --ink-soft: #9CA3BC;
-    --wine: #7FA0C9;
-    --wine-dark: #577BAA;
-    --gold: #D4B05A;
-    --gold-light: #E8CC8C;
-    --gold-pale: #22283F;
-    --hairline: #2B3450;
+    --vellum: #1C140D;
+    --vellum-light: #261B11;
+    --ink: #EDE2CE;
+    --ink-soft: #A89A82;
+    --wine: #C98A52;
+    --wine-dark: #A66B38;
+    --gold: #D8AE64;
+    --gold-light: #E8C98C;
+    --gold-pale: #2A1D10;
+    --hairline: #3A2A18;
     --shadow-warm: 0 10px 30px rgba(0,0,0,0.6);
-    --glow-gold: 0 0 16px rgba(212,176,90,0.32);
+    --glow-gold: 0 0 16px rgba(216,174,100,0.32);
   }
   body[data-theme="dark"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(212,176,90,0.12), transparent 55%),
-      linear-gradient(165deg, #070B14 0%, #0E1830 45%, #152A4A 100%);
+      radial-gradient(circle at 50% 0%, rgba(201,138,82,0.15), transparent 55%),
+      linear-gradient(165deg, #0C0805 0%, #1F140B 45%, #2E1C0E 100%);
   }
   body[data-theme="dark"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D4B05A' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%23070B14'/%3E%3Cg fill='%237FA0C9' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D8AE64' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230C0805'/%3E%3Cg fill='%23C98A52' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;
   }
   body[data-theme="dark"] #app{ box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
   body[data-theme="dark"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.25); }
-  /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en bleu nuit, pas en bordeaux.
+  /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en brun cacao profond.
      Le texte du bandeau utilise par défaut --vellum-light, qui devient une couleur sombre (fond de
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
-  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0A0E16 0%, #121A27 45%, #1A2535 100%); border-bottom-color: rgba(110,140,174,0.22); color: #E4E9F0; }
-  body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #E4E9F0; }
+  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0C0805 0%, #201409 45%, #3A2411 100%); border-bottom-color: rgba(201,138,82,0.25); color: #F2E8DA; }
+  body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F2E8DA; }
   body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 
   /* ===== topbar toolbar ===== */
