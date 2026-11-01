@@ -1,26 +1,26 @@
 
   :root{
-    --vellum: #EADFBD;
-    --vellum-light: #F4EBD2;
+    --vellum: #D6C69B;
+    --vellum-light: #E6D8AF;
     --ink: #2E2A3D;
     --ink-soft: #6B6480;
     --wine: #6B2545;
     --wine-dark: #3F1530;
-    --gold: #C08A3E;
-    --gold-light: #EAC77E;
-    --gold-pale: #F0E0B4;
+    --gold: #B07D37;
+    --gold-light: #D9B873;
+    --gold-pale: #E2D09E;
     --sage: #5C6E58;
-    --hairline: #D9C396;
-    --shadow: 0 6px 18px rgba(60,30,50,0.08);
-    --shadow-warm: 0 10px 30px rgba(107,37,69,0.18);
-    --glow-gold: 0 0 18px rgba(234,199,126,0.5);
+    --hairline: #BDA873;
+    --shadow: 0 6px 18px rgba(40,18,36,0.14);
+    --shadow-warm: 0 10px 30px rgba(63,21,48,0.28);
+    --glow-gold: 0 0 18px rgba(217,184,115,0.45);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(192,138,62,0.28), transparent 55%),
-      linear-gradient(180deg, #DBC797 0%, #B2935B 100%);
+      radial-gradient(circle at 50% 0%, rgba(166,122,74,0.2), transparent 55%),
+      linear-gradient(165deg, #241A30 0%, #3B2240 45%, #5C2142 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
