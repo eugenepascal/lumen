@@ -4931,6 +4931,18 @@ const ESPACE_HUB_CATEGORIES = [
 ];
 function renderEspaceHub(){
   renderCategoryHubGeneric('👤 Mon espace', 'Votre parcours personnel, votre journal, et vos réglages.', ESPACE_HUB_CATEGORIES, (goto)=>{ SUBTAB.espace = goto; render(); }, '👤');
+  /* Accès direct à la déconnexion depuis la page d'accueil de « Mon espace »,
+     pour ne pas avoir à aller chercher ce bouton dans Mon compte. */
+  const screen = document.getElementById('screen');
+  if(CURRENT_USER){
+    screen.insertAdjacentHTML('beforeend', `
+      <div class="card" id="espace-quick-logout" style="margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <span class="entry-detail-text" style="margin:0;">Connecté(e) en tant que <b>${CURRENT_USER.email}</b></span>
+        <button class="btn btn-ghost btn-sm" id="espace-quick-logout-btn">🚪 Se déconnecter</button>
+      </div>`);
+    const btn = document.getElementById('espace-quick-logout-btn');
+    if(btn) btn.onclick = async ()=>{ await fbAuth.signOut(); window.location.reload(); };
+  }
 }
 const SAGESSE_HUB_CATEGORIES = [
   {label:'Vie spirituelle', desc:'Discernement, vertus, grandir dans la foi', icon:'💡', goto:'spiritualite', color:'#4A3D6B'},
