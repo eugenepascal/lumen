@@ -8952,8 +8952,8 @@ function generateShareImage(title, text){
   canvas.width = 800; canvas.height = 800;
   const ctx = canvas.getContext('2d');
   const styles = getComputedStyle(document.body);
-  const wine = styles.getPropertyValue('--wine-dark').trim() || '#5C3A1C';
-  const wine2 = styles.getPropertyValue('--wine').trim() || '#8C5A2E';
+  const wine = styles.getPropertyValue('--wine-dark').trim() || '#101D3E';
+  const wine2 = styles.getPropertyValue('--wine').trim() || '#1B2F5C';
   const gold = styles.getPropertyValue('--gold-light').trim() || '#E4C77E';
   const cream = styles.getPropertyValue('--vellum-light').trim() || '#FBF7EC';
 
@@ -13026,8 +13026,8 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Sable', icon:'🕯️', swatches:['#D7BD8E','#6E1E34','#AD7B32']},
-  {key:'dark', label:'Cacao', icon:'🌙', swatches:['#22120A','#B8506C','#D8AE64']}
+  {key:'light', label:'Ivoire', icon:'🕯️', swatches:['#FAF6EC','#1B2F5C','#C9A227']},
+  {key:'dark', label:'Nuit étoilée', icon:'🌙', swatches:['#0E1628','#7FA0C9','#D4B05A']}
 ];
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
@@ -13110,7 +13110,7 @@ function openThemePicker(){
       <span style="font-size:22px;">🔄</span>
       <span>
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Automatique</p>
-        <p class="section-desc" style="margin:2px 0 0;">Sable le jour, Cacao le soir et la nuit.</p>
+        <p class="section-desc" style="margin:2px 0 0;">Ivoire le jour, Nuit étoilée le soir et la nuit.</p>
       </span>
     </button>
 
