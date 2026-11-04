@@ -1892,26 +1892,26 @@
   /* ===== mode sombre : "Cacao" — brun très sombre et feutré, comme un bois
      ciré à la lueur d'une bougie, avec le cuivre et l'or en chaleur discrète ===== */
   body[data-theme="dark"]{
-    --vellum: #1C140D;
-    --vellum-light: #261B11;
+    --vellum: #22120A;
+    --vellum-light: #311C0F;
     --ink: #EDE2CE;
     --ink-soft: #A89A82;
     --wine: #C98A52;
     --wine-dark: #A66B38;
     --gold: #D8AE64;
     --gold-light: #E8C98C;
-    --gold-pale: #2A1D10;
-    --hairline: #3A2A18;
-    --shadow-warm: 0 10px 30px rgba(0,0,0,0.6);
-    --glow-gold: 0 0 16px rgba(216,174,100,0.32);
+    --gold-pale: #26160B;
+    --hairline: #3D2814;
+    --shadow-warm: 0 10px 30px rgba(0,0,0,0.65);
+    --glow-gold: 0 0 16px rgba(216,174,100,0.3);
   }
   body[data-theme="dark"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(201,138,82,0.15), transparent 55%),
-      linear-gradient(165deg, #0C0805 0%, #1F140B 45%, #2E1C0E 100%);
+      radial-gradient(circle at 50% 0%, rgba(201,138,82,0.13), transparent 55%),
+      linear-gradient(165deg, #070402 0%, #170D06 45%, #22120A 100%);
   }
   body[data-theme="dark"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D8AE64' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230C0805'/%3E%3Cg fill='%23C98A52' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D8AE64' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%23070402'/%3E%3Cg fill='%23C98A52' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;
   }
   body[data-theme="dark"] #app{ box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
@@ -1919,7 +1919,7 @@
   /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en brun cacao profond.
      Le texte du bandeau utilise par défaut --vellum-light, qui devient une couleur sombre (fond de
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
-  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0C0805 0%, #201409 45%, #3A2411 100%); border-bottom-color: rgba(201,138,82,0.25); color: #F2E8DA; }
+  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #070402 0%, #170D06 45%, #311C0F 100%); border-bottom-color: rgba(201,138,82,0.25); color: #F2E8DA; }
   body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F2E8DA; }
   body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 
