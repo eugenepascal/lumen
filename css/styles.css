@@ -1,26 +1,26 @@
 
   :root{
-    --vellum: #DDC9AD;
-    --vellum-light: #E9D9BE;
-    --ink: #352A1E;
-    --ink-soft: #776952;
+    --vellum: #C7A87A;
+    --vellum-light: #D7BD8E;
+    --ink: #2E2112;
+    --ink-soft: #6B5A3F;
     --wine: #8C5A2E;
     --wine-dark: #5C3A1C;
-    --gold: #B9863A;
-    --gold-light: #D4AC6C;
-    --gold-pale: #E0CB9F;
+    --gold: #AD7B32;
+    --gold-light: #CB9F5C;
+    --gold-pale: #D3B480;
     --sage: #5C6E58;
-    --hairline: #BFA878;
-    --shadow: 0 6px 18px rgba(46,30,16,0.16);
-    --shadow-warm: 0 10px 30px rgba(92,58,28,0.3);
-    --glow-gold: 0 0 18px rgba(212,172,108,0.5);
+    --hairline: #A98B57;
+    --shadow: 0 6px 18px rgba(40,24,10,0.2);
+    --shadow-warm: 0 10px 30px rgba(92,58,28,0.32);
+    --glow-gold: 0 0 18px rgba(203,159,92,0.5);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(180,122,70,0.18), transparent 55%),
-      linear-gradient(165deg, #1A110B 0%, #3E2817 45%, #5C3A1F 100%);
+      radial-gradient(circle at 50% 0%, rgba(160,104,56,0.2), transparent 55%),
+      linear-gradient(165deg, #140C06 0%, #311F11 45%, #4A2E18 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
