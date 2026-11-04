@@ -4826,13 +4826,18 @@ const ORDINAL_DAYS = ['Premier','Deuxième','Troisième','Quatrième','Cinquièm
    plus bas) s'applique à l'accueil ET aux bannières de chaque rubrique, pour un
    « fond d'écran » cohérent dans toute l'application — d'où ces accesseurs
    dynamiques plutôt que des images fixes par rubrique. */
+/* Chaque rubrique garde sa propre image, choisie pour correspondre à son
+   thème (indépendante du fond d'écran personnel de l'accueil, voir
+   HOME_WALLPAPER plus bas) : bougies pour la prière, vitrail pour l'Église,
+   croix pour les dévotions, lys pour Jésus & Marie, Bible ouverte pour la
+   sagesse, mer de Galilée pour les Écritures. */
 const HUB_HERO_IMAGES = {
-  get prier(){ return wallpaperUrl(HOME_WALLPAPER); },
-  get eglise(){ return wallpaperUrl(HOME_WALLPAPER); },
-  get devotions(){ return wallpaperUrl(HOME_WALLPAPER); },
-  get jesus(){ return wallpaperUrl(HOME_WALLPAPER); },
-  get sagesse(){ return wallpaperUrl(HOME_WALLPAPER); },
-  get ecritures(){ return wallpaperUrl(HOME_WALLPAPER); },
+  get prier(){ return wallpaperUrl('bougies'); },
+  get eglise(){ return wallpaperUrl('vitrail'); },
+  get devotions(){ return wallpaperUrl('croix'); },
+  get jesus(){ return wallpaperUrl('lys'); },
+  get sagesse(){ return wallpaperUrl('bible'); },
+  get ecritures(){ return wallpaperUrl('mer-galilee'); },
   espace: null
 };
 const PRIER_HUB_CATEGORIES = [
@@ -8965,8 +8970,8 @@ function generateShareImage(title, text){
   canvas.width = 800; canvas.height = 800;
   const ctx = canvas.getContext('2d');
   const styles = getComputedStyle(document.body);
-  const wine = styles.getPropertyValue('--wine-dark').trim() || '#134A48';
-  const wine2 = styles.getPropertyValue('--wine').trim() || '#1F6E6B';
+  const wine = styles.getPropertyValue('--wine-dark').trim() || '#561520';
+  const wine2 = styles.getPropertyValue('--wine').trim() || '#7C1F2E';
   const gold = styles.getPropertyValue('--gold-light').trim() || '#E4C77E';
   const cream = styles.getPropertyValue('--vellum-light').trim() || '#FBF7EC';
 
@@ -13039,8 +13044,8 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Terre cuite', icon:'🕯️', swatches:['#F3E2C2','#1F6E6B','#C17A3A']},
-  {key:'dark', label:'Argile nocturne', icon:'🌙', swatches:['#20140B','#4FBDB3','#D99355']},
+  {key:'light', label:'Classique Lumen', icon:'🕯️', swatches:['#F3E2C2','#7C1F2E','#C9A227']},
+  {key:'dark', label:'Sombre', icon:'🌙', swatches:['#1A1A1A','#D4752A','#E8A94A']},
   {key:'aube', label:'Aube', icon:'🌅', swatches:['#EDF3F8','#3B6EA5','#D9B36C']},
   {key:'nature', label:'Nature', icon:'🌿', swatches:['#F1F2E6','#3F6B2E','#8A6A3B']},
   {key:'liturgique', label:'Liturgique', icon:'👑', swatches:['#EFE8F2','#5B3C78','#C9A227']}
@@ -13068,7 +13073,7 @@ function wallpaperUrl(key){
 let HOME_WALLPAPER = 'lever-soleil';
 function applyHomeWallpaper(){
   const url = wallpaperUrl(HOME_WALLPAPER);
-  document.querySelectorAll('#home-evangile-card img, .hub-hero-banner-img, [data-wallpaper-img]').forEach(img=>{
+  document.querySelectorAll('#home-evangile-card img, [data-wallpaper-img]').forEach(img=>{
     img.src = url;
   });
 }
@@ -13153,7 +13158,7 @@ function openThemePicker(){
       <span style="font-size:22px;">🔄</span>
       <span>
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Automatique</p>
-        <p class="section-desc" style="margin:2px 0 0;">Terre cuite le jour, Argile nocturne le soir et la nuit.</p>
+        <p class="section-desc" style="margin:2px 0 0;">Classique Lumen le jour, Sombre le soir et la nuit.</p>
       </span>
     </button>
 
@@ -13169,8 +13174,8 @@ function openThemePicker(){
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 0; color:var(--ink);">${p.label}</p>
       </button>`).join('')}</div>
 
-    <h2 class="section-title" style="font-size:14px;">🖼️ Fond d'écran</h2>
-    <p class="section-desc" style="margin-top:-6px;">L'image affichée en haut de l'accueil et de chaque rubrique (Prier, Église, Bible...).</p>
+    <h2 class="section-title" style="font-size:14px;">🖼️ Fond d'écran (Évangile du jour)</h2>
+    <p class="section-desc" style="margin-top:-6px;">L'image affichée en haut de l'accueil. Chaque rubrique garde sa propre image, adaptée à son thème.</p>
     <div class="grid" style="grid-template-columns:repeat(3,1fr);">${WALLPAPER_LIST.map(w=>`
       <button class="card theme-swatch-btn ${HOME_WALLPAPER===w.key?'theme-active':''}" data-wallpaper-key="${w.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding:0; overflow:hidden;">
         <img src="${wallpaperUrl(w.key)}" alt="" loading="lazy" style="width:100%; height:64px; object-fit:cover; display:block;" onerror="this.style.display='none'">
