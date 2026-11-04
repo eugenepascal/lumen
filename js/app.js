@@ -13076,6 +13076,29 @@ function applyHomeWallpaper(){
   document.querySelectorAll('#home-evangile-card img, [data-wallpaper-img]').forEach(img=>{
     img.src = url;
   });
+  applyPageWallpaper();
+}
+function hexToRgba(hex, alpha){
+  const h = (hex||'').replace('#','').trim();
+  if(h.length !== 6) return `rgba(243,226,194,${alpha})`;
+  const r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+/* Le fond d'écran choisi (voir WALLPAPER_LIST) devient le papier peint de
+   toute l'application — visible derrière chaque écran, pas seulement sur une
+   bannière — teinté dans les couleurs du thème actif pour rester lisible et
+   cohérent (clair, sombre, Aube, Nature, Liturgique). */
+function applyPageWallpaper(){
+  const app = document.getElementById('app');
+  if(!app) return;
+  const styles = getComputedStyle(document.body);
+  const vellum = styles.getPropertyValue('--vellum').trim() || '#F3E2C2';
+  const vellumLight = styles.getPropertyValue('--vellum-light').trim() || '#F8ECD4';
+  const url = wallpaperUrl(HOME_WALLPAPER);
+  app.style.backgroundImage = `linear-gradient(175deg, ${hexToRgba(vellum,0.62)} 0%, ${hexToRgba(vellumLight,0.62)} 100%), url("${url}")`;
+  app.style.backgroundSize = 'cover';
+  app.style.backgroundPosition = 'center';
+  app.style.backgroundRepeat = 'no-repeat';
 }
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
@@ -13120,6 +13143,7 @@ function applyThemeAndFont(){
     app.style.removeProperty('--wine-dark');
     app.style.removeProperty('--gold');
   }
+  applyPageWallpaper();
 }
 function shadeColor(hex, percent){
   const num = parseInt(hex.replace('#',''), 16);
