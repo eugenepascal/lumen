@@ -1,7 +1,7 @@
 
   :root{
-    --vellum: #F3E2C2;
-    --vellum-light: #F8ECD4;
+    --vellum: #F4EFE4;
+    --vellum-light: #FAF7F0;
     --ink: #3A2817;
     --ink-soft: #7D6A4C;
     --wine: #7C1F2E;
@@ -10,7 +10,7 @@
     --gold-light: #DDBE5C;
     --gold-pale: #E8D6A0;
     --sage: #5C6E58;
-    --hairline: #D9BD8F;
+    --hairline: #E3DAC6;
     --shadow: 0 6px 18px rgba(124,31,46,0.14);
     --shadow-warm: 0 10px 30px rgba(124,31,46,0.24);
     --glow-gold: 0 0 18px rgba(201,162,39,0.5);
@@ -19,8 +19,9 @@
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(124,31,46,0.16), transparent 55%),
-      linear-gradient(165deg, #241209 0%, #4A2A14 45%, #7A4620 100%);
+      radial-gradient(circle at 22% -8%, rgba(201,162,39,0.16), transparent 45%),
+      radial-gradient(circle at 82% 105%, rgba(124,31,46,0.22), transparent 55%),
+      linear-gradient(155deg, #1C0D08 0%, #3A1016 30%, #611A26 58%, #8C3226 82%, #B2541F 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
@@ -168,7 +169,7 @@
   /* header */
   #topbar{
     padding: 22px 22px 16px;
-    background: linear-gradient(160deg, #2E0A10 0%, var(--wine-dark) 45%, var(--wine) 100%);
+    background: linear-gradient(155deg, #2E0A10 0%, var(--wine-dark) 40%, var(--wine) 75%, #B2541F 100%);
     color: var(--vellum-light);
     position:relative;
     overflow:hidden;
@@ -1907,8 +1908,9 @@
   }
   body[data-theme="dark"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(212,117,42,0.12), transparent 55%),
-      linear-gradient(165deg, #0C0C0C 0%, #161616 45%, #222222 100%);
+      radial-gradient(circle at 25% -8%, rgba(232,169,74,0.1), transparent 42%),
+      radial-gradient(circle at 82% 105%, rgba(212,117,42,0.16), transparent 55%),
+      linear-gradient(155deg, #060606 0%, #141414 35%, #222222 65%, #352313 100%);
   }
   body[data-theme="dark"] #app::before{
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D4752A' fill-opacity='0.12'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230C0C0C'/%3E%3Cg fill='%23E8A94A' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
@@ -1919,7 +1921,7 @@
   /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en noir profond.
      Le texte du bandeau utilise par défaut --vellum-light, qui devient une couleur sombre (fond de
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
-  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #000000 0%, #121212 45%, #222222 100%); border-bottom-color: rgba(212,117,42,0.3); color: #F2E8DA; }
+  body[data-theme="dark"] #topbar{ background: linear-gradient(155deg, #000000 0%, #121212 35%, #222222 65%, var(--wine-dark) 100%); border-bottom-color: rgba(212,117,42,0.3); color: #F2E8DA; }
   body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F2E8DA; }
   body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 
@@ -1941,10 +1943,11 @@
   }
   body[data-theme="aube"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(59,110,165,0.16), transparent 55%),
-      linear-gradient(165deg, #FDF6E8 0%, #EAF2F8 45%, #CFE0EE 100%);
+      radial-gradient(circle at 20% -8%, rgba(217,179,108,0.24), transparent 42%),
+      radial-gradient(circle at 85% 105%, rgba(59,110,165,0.18), transparent 55%),
+      linear-gradient(155deg, #FDF6E8 0%, #EAF2F8 38%, #CFE0EE 68%, #AFC9E0 100%);
   }
-  body[data-theme="aube"] #topbar{ background: linear-gradient(160deg, #0B2A42 0%, var(--wine-dark) 45%, var(--wine) 100%); }
+  body[data-theme="aube"] #topbar{ background: linear-gradient(155deg, #0B2A42 0%, var(--wine-dark) 40%, var(--wine) 75%, var(--gold) 100%); }
 
   /* ===== thème "Nature" — vert espérance et sauge, apaisant,
      avec le bronze chaud en lueur d'accent ===== */
@@ -1964,10 +1967,11 @@
   }
   body[data-theme="nature"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(63,107,46,0.16), transparent 55%),
-      linear-gradient(165deg, #F6F5E8 0%, #E3E8D2 45%, #C3CFA8 100%);
+      radial-gradient(circle at 20% -8%, rgba(138,106,59,0.2), transparent 42%),
+      radial-gradient(circle at 85% 105%, rgba(63,107,46,0.22), transparent 55%),
+      linear-gradient(155deg, #F8F7EA 0%, #E3E8D2 38%, #C3CFA8 68%, #9FB37E 100%);
   }
-  body[data-theme="nature"] #topbar{ background: linear-gradient(160deg, #15210F 0%, var(--wine-dark) 45%, var(--wine) 100%); }
+  body[data-theme="nature"] #topbar{ background: linear-gradient(155deg, #15210F 0%, var(--wine-dark) 40%, var(--wine) 75%, var(--gold) 100%); }
 
   /* ===== thème "Liturgique" — violet pénitentiel et or,
      dans l'esprit des couleurs liturgiques de l'Église ===== */
@@ -1987,10 +1991,35 @@
   }
   body[data-theme="liturgique"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(91,60,120,0.18), transparent 55%),
-      linear-gradient(165deg, #F5EEF8 0%, #E3D4EC 45%, #C7A8D8 100%);
+      radial-gradient(circle at 20% -8%, rgba(201,162,39,0.18), transparent 42%),
+      radial-gradient(circle at 85% 105%, rgba(91,60,120,0.24), transparent 55%),
+      linear-gradient(155deg, #F7F0FA 0%, #E3D4EC 38%, #C7A8D8 68%, #A87EC0 100%);
   }
-  body[data-theme="liturgique"] #topbar{ background: linear-gradient(160deg, #1F1228 0%, var(--wine-dark) 45%, var(--wine) 100%); }
+  body[data-theme="liturgique"] #topbar{ background: linear-gradient(155deg, #1F1228 0%, var(--wine-dark) 40%, var(--wine) 75%, var(--gold) 100%); }
+
+  /* ===== thème "Ambre écarlate" — amber chaleureux et accent écarlate vif,
+     comme une braise ou un vitrail au couchant ===== */
+  body[data-theme="ambre"]{
+    --vellum: #FBEEE2;
+    --vellum-light: #FFF8F0;
+    --ink: #3D1710;
+    --ink-soft: #8A4A34;
+    --wine: #D8432E;
+    --wine-dark: #A52E1C;
+    --gold: #E8832E;
+    --gold-light: #F2A85C;
+    --gold-pale: #F8D2A0;
+    --hairline: #EFCBA0;
+    --shadow-warm: 0 10px 30px rgba(216,67,46,0.22);
+    --glow-gold: 0 0 18px rgba(232,131,46,0.5);
+  }
+  body[data-theme="ambre"]{
+    background:
+      radial-gradient(circle at 20% -8%, rgba(232,131,46,0.22), transparent 42%),
+      radial-gradient(circle at 85% 105%, rgba(216,67,46,0.24), transparent 55%),
+      linear-gradient(155deg, #230D06 0%, #4A1810 32%, #7A2A16 60%, #B0501E 85%, #E8832E 100%);
+  }
+  body[data-theme="ambre"] #topbar{ background: linear-gradient(155deg, #2A0D06 0%, var(--wine-dark) 40%, var(--wine) 75%, var(--gold) 100%); }
 
   /* ===== topbar toolbar ===== */
   .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }

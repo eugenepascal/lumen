@@ -13038,11 +13038,12 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Classique Lumen', icon:'🕯️', swatches:['#F3E2C2','#7C1F2E','#C9A227']},
+  {key:'light', label:'Classique Lumen', icon:'🕯️', swatches:['#F4EFE4','#7C1F2E','#C9A227']},
   {key:'dark', label:'Sombre', icon:'🌙', swatches:['#1A1A1A','#D4752A','#E8A94A']},
   {key:'aube', label:'Aube', icon:'🌅', swatches:['#EDF3F8','#3B6EA5','#D9B36C']},
   {key:'nature', label:'Nature', icon:'🌿', swatches:['#F1F2E6','#3F6B2E','#8A6A3B']},
-  {key:'liturgique', label:'Liturgique', icon:'👑', swatches:['#EFE8F2','#5B3C78','#C9A227']}
+  {key:'liturgique', label:'Liturgique', icon:'👑', swatches:['#EFE8F2','#5B3C78','#C9A227']},
+  {key:'ambre', label:'Ambre écarlate', icon:'🔥', swatches:['#FBEEE2','#D8432E','#E8832E']}
 ];
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
