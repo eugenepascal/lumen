@@ -8964,8 +8964,8 @@ function generateShareImage(title, text){
   canvas.width = 800; canvas.height = 800;
   const ctx = canvas.getContext('2d');
   const styles = getComputedStyle(document.body);
-  const wine = styles.getPropertyValue('--wine-dark').trim() || '#134A48';
-  const wine2 = styles.getPropertyValue('--wine').trim() || '#1F6E6B';
+  const wine = styles.getPropertyValue('--wine-dark').trim() || '#561520';
+  const wine2 = styles.getPropertyValue('--wine').trim() || '#7C1F2E';
   const gold = styles.getPropertyValue('--gold-light').trim() || '#E4C77E';
   const cream = styles.getPropertyValue('--vellum-light').trim() || '#FBF7EC';
 
@@ -13038,8 +13038,8 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Classique Lumen', icon:'🕯️', swatches:['#F3E2C2','#1F6E6B','#C17A3A']},
-  {key:'dark', label:'Sombre', icon:'🌙', swatches:['#20140B','#4FBDB3','#D99355']},
+  {key:'light', label:'Classique Lumen', icon:'🕯️', swatches:['#F3E2C2','#7C1F2E','#C9A227']},
+  {key:'dark', label:'Sombre', icon:'🌙', swatches:['#1A1A1A','#D4752A','#E8A94A']},
   {key:'aube', label:'Aube', icon:'🌅', swatches:['#EDF3F8','#3B6EA5','#D9B36C']},
   {key:'nature', label:'Nature', icon:'🌿', swatches:['#F1F2E6','#3F6B2E','#8A6A3B']},
   {key:'liturgique', label:'Liturgique', icon:'👑', swatches:['#EFE8F2','#5B3C78','#C9A227']}
