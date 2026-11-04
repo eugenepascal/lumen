@@ -4848,7 +4848,6 @@ function renderPrierHub(){
   const html = `
     <div class="hub-hero-banner" style="background:${PRIER_HUB_CATEGORIES[0].color};">
       ${HUB_HERO_IMAGES.prier ? `<img class="hub-hero-banner-img" src="${HUB_HERO_IMAGES.prier}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
-      <span class="hub-hero-emoji">🙏</span>
     </div>
     <h2 class="section-title">🙏 Prier</h2>
     <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui.</p>
@@ -4873,9 +4872,8 @@ function renderPrierHub(){
 
 function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, heroImgUrl){
   const html = `
-    ${heroEmoji ? `<div class="hub-hero-banner" style="background:${categories[0].color};">
-      ${heroImgUrl ? `<img class="hub-hero-banner-img" src="${heroImgUrl}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
-      <span class="hub-hero-emoji">${heroEmoji}</span>
+    ${heroImgUrl ? `<div class="hub-hero-banner" style="background:${categories[0].color};">
+      <img class="hub-hero-banner-img" src="${heroImgUrl}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>
     </div>` : ''}
     <h2 class="section-title">${title}</h2>
     <p class="section-desc">${desc}</p>
@@ -6977,7 +6975,6 @@ function renderGenericSection(groups, compKey, sectionLabel){
   if(group.id === 'meditations-pardon'){
     html += `<div class="hub-hero-banner" style="background:#180C0C; height:170px;">
       <img class="hub-hero-banner-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=900" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>
-      <span class="hub-hero-emoji">✝️</span>
     </div>`;
   }
 
