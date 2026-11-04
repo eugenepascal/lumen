@@ -3863,7 +3863,7 @@ async function saveGroupIntentions(code, list){
   try{ await window.storage.set('group-intentions:'+code, JSON.stringify(list), true); }catch(e){}
 }
 async function loadPrefsAndData(){
-  const defaults = { favorites:[], recent:[], streak:{count:0,lastDate:null}, theme:'light', themeMode:'auto', fontSize:'md', onboardingSeen:false, seenMilestones:[], lastSummarySeen:'', userName:'', dyslexicFont:false, homeWallpaper:'lever-soleil' };
+  const defaults = { favorites:[], recent:[], streak:{count:0,lastDate:null}, theme:'light', themeMode:'auto', fontSize:'md', onboardingSeen:false, seenMilestones:[], lastSummarySeen:'', userName:'', dyslexicFont:false };
   try{
     const r = await window.storage.get('lumen-prefs', false);
     if(!r) return defaults;
@@ -3873,7 +3873,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, homeWallpaper: HOME_WALLPAPER, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
     }), false);
   }catch(e){}
 }
@@ -4277,7 +4277,7 @@ function homePage1HTML(){
 
     ${homeTitleRowHTML('☀️','Évangile du jour','linear-gradient(160deg, #D9A35C, #B8863B)', '', 'home-evangile-ref', true)}
     <figure class="evangile-hero" id="home-evangile-card">
-      <img src="${wallpaperUrl(HOME_WALLPAPER)}" alt="" loading="lazy" onerror="this.style.display='none'">
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Cmglee%20Normanton%20church%20sunset.jpg?width=900" alt="" loading="lazy" onerror="this.style.display='none'">
       <div class="evangile-hero-scrim"></div>
       <figcaption class="evangile-hero-body">
         <p class="evangile-quote" id="home-evangile-quote">Chargement des lectures du jour…</p>
@@ -4822,22 +4822,13 @@ let NOVENA_STEP_INDEX = null; // étape courante (0..5) dans le déroulement du 
 let NOVENA_DAY_DONE_SCREEN = null; // {novenaId, dayIndex} — écran de validation après un jour prié
 let NOVENA_DAY_AUDIO_PLAYING = null;
 const ORDINAL_DAYS = ['Premier','Deuxième','Troisième','Quatrième','Cinquième','Sixième','Septième','Huitième','Neuvième'];
-/* Le fond d'écran choisi par l'utilisateur (voir WALLPAPER_LIST / HOME_WALLPAPER,
-   plus bas) s'applique à l'accueil ET aux bannières de chaque rubrique, pour un
-   « fond d'écran » cohérent dans toute l'application — d'où ces accesseurs
-   dynamiques plutôt que des images fixes par rubrique. */
-/* Chaque rubrique garde sa propre image, choisie pour correspondre à son
-   thème (indépendante du fond d'écran personnel de l'accueil, voir
-   HOME_WALLPAPER plus bas) : bougies pour la prière, vitrail pour l'Église,
-   croix pour les dévotions, lys pour Jésus & Marie, Bible ouverte pour la
-   sagesse, mer de Galilée pour les Écritures. */
 const HUB_HERO_IMAGES = {
-  get prier(){ return wallpaperUrl('bougies'); },
-  get eglise(){ return wallpaperUrl('vitrail'); },
-  get devotions(){ return wallpaperUrl('croix'); },
-  get jesus(){ return wallpaperUrl('lys'); },
-  get sagesse(){ return wallpaperUrl('bible'); },
-  get ecritures(){ return wallpaperUrl('mer-galilee'); },
+  prier: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=900',
+  eglise: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bernadette%20Soubirous%20en%201863%2C%20photo%20Billard-Perrin.jpg?width=900',
+  devotions: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20The-Madonna-and-Child-128.jpg?width=900',
+  jesus: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900',
+  sagesse: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Thomas%20Aquinas%20by%20Sandro%20Botticelli.jpg?width=900',
+  ecritures: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900',
   espace: null
 };
 const PRIER_HUB_CATEGORIES = [
@@ -4853,6 +4844,7 @@ function renderPrierHub(){
   const html = `
     <div class="hub-hero-banner" style="background:${PRIER_HUB_CATEGORIES[0].color};">
       ${HUB_HERO_IMAGES.prier ? `<img class="hub-hero-banner-img" src="${HUB_HERO_IMAGES.prier}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
+      <span class="hub-hero-emoji">🙏</span>
     </div>
     <h2 class="section-title">🙏 Prier</h2>
     <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui.</p>
@@ -4877,8 +4869,9 @@ function renderPrierHub(){
 
 function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, heroImgUrl){
   const html = `
-    ${heroImgUrl ? `<div class="hub-hero-banner" style="background:${categories[0].color};">
-      <img class="hub-hero-banner-img" src="${heroImgUrl}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>
+    ${heroEmoji ? `<div class="hub-hero-banner" style="background:${categories[0].color};">
+      ${heroImgUrl ? `<img class="hub-hero-banner-img" src="${heroImgUrl}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
+      <span class="hub-hero-emoji">${heroEmoji}</span>
     </div>` : ''}
     <h2 class="section-title">${title}</h2>
     <p class="section-desc">${desc}</p>
@@ -6980,6 +6973,7 @@ function renderGenericSection(groups, compKey, sectionLabel){
   if(group.id === 'meditations-pardon'){
     html += `<div class="hub-hero-banner" style="background:#180C0C; height:170px;">
       <img class="hub-hero-banner-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=900" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>
+      <span class="hub-hero-emoji">✝️</span>
     </div>`;
   }
 
@@ -8970,8 +8964,8 @@ function generateShareImage(title, text){
   canvas.width = 800; canvas.height = 800;
   const ctx = canvas.getContext('2d');
   const styles = getComputedStyle(document.body);
-  const wine = styles.getPropertyValue('--wine-dark').trim() || '#561520';
-  const wine2 = styles.getPropertyValue('--wine').trim() || '#7C1F2E';
+  const wine = styles.getPropertyValue('--wine-dark').trim() || '#134A48';
+  const wine2 = styles.getPropertyValue('--wine').trim() || '#1F6E6B';
   const gold = styles.getPropertyValue('--gold-light').trim() || '#E4C77E';
   const cream = styles.getPropertyValue('--vellum-light').trim() || '#FBF7EC';
 
@@ -13044,62 +13038,12 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Classique Lumen', icon:'🕯️', swatches:['#F3E2C2','#7C1F2E','#C9A227']},
-  {key:'dark', label:'Sombre', icon:'🌙', swatches:['#1A1A1A','#D4752A','#E8A94A']},
+  {key:'light', label:'Classique Lumen', icon:'🕯️', swatches:['#F3E2C2','#1F6E6B','#C17A3A']},
+  {key:'dark', label:'Sombre', icon:'🌙', swatches:['#20140B','#4FBDB3','#D99355']},
   {key:'aube', label:'Aube', icon:'🌅', swatches:['#EDF3F8','#3B6EA5','#D9B36C']},
   {key:'nature', label:'Nature', icon:'🌿', swatches:['#F1F2E6','#3F6B2E','#8A6A3B']},
   {key:'liturgique', label:'Liturgique', icon:'👑', swatches:['#EFE8F2','#5B3C78','#C9A227']}
 ];
-/* Fonds d'écran illustrés, proposés pour l'image d'accueil (« Évangile du
-   jour ») et réutilisables comme bannière des rubriques. Photos libres de
-   droits hébergées sur Wikimedia Commons (domaine public ou licence CC),
-   jamais de contenu sous droits d'auteur. */
-const WALLPAPER_LIST = [
-  {key:'lever-soleil', label:'Lever de soleil', icon:'🌅', file:'Cmglee Normanton church sunset.jpg'},
-  {key:'bougies', label:'Bougies', icon:'🕯️', file:'Votive candles in Notre-Dame de Paris (14523908600).jpg'},
-  {key:'bible', label:'Bible', icon:'📖', file:'Bible from 1300 (9).jpg'},
-  {key:'olivier', label:'Olivier', icon:'🫒', file:'Olivesfromjordan.jpg'},
-  {key:'mer-galilee', label:'Mer de Galilée', icon:'🌊', file:'Sea of Galilee View.jpg'},
-  {key:'desert', label:'Désert', icon:'🏜️', file:'Judea 1 by David Shankbone.jpg'},
-  {key:'ciel-etoile', label:'Ciel étoilé', icon:'✨', file:'Milky Way Shines over Snowy La Silla.jpg'},
-  {key:'vitrail', label:'Vitrail', icon:'🪟', file:'Stained glass window, St John the Baptist church, Cirencester.jpg'},
-  {key:'croix', label:'Croix', icon:'✝️', file:'Chapel of the Holy Cross, Sedona, AZ.jpg'},
-  {key:'lys', label:'Lys', icon:'🌷', file:'La Vierge au lys.jpg'}
-];
-function wallpaperUrl(key){
-  const w = WALLPAPER_LIST.find(x=>x.key===key) || WALLPAPER_LIST[0];
-  return 'https://commons.wikimedia.org/wiki/Special:Redirect/file/' + encodeURIComponent(w.file) + '?width=900';
-}
-let HOME_WALLPAPER = 'lever-soleil';
-function applyHomeWallpaper(){
-  const url = wallpaperUrl(HOME_WALLPAPER);
-  document.querySelectorAll('#home-evangile-card img, [data-wallpaper-img]').forEach(img=>{
-    img.src = url;
-  });
-  applyPageWallpaper();
-}
-function hexToRgba(hex, alpha){
-  const h = (hex||'').replace('#','').trim();
-  if(h.length !== 6) return `rgba(243,226,194,${alpha})`;
-  const r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-/* Le fond d'écran choisi (voir WALLPAPER_LIST) devient le papier peint de
-   toute l'application — visible derrière chaque écran, pas seulement sur une
-   bannière — teinté dans les couleurs du thème actif pour rester lisible et
-   cohérent (clair, sombre, Aube, Nature, Liturgique). */
-function applyPageWallpaper(){
-  const app = document.getElementById('app');
-  if(!app) return;
-  const styles = getComputedStyle(document.body);
-  const vellum = styles.getPropertyValue('--vellum').trim() || '#F3E2C2';
-  const vellumLight = styles.getPropertyValue('--vellum-light').trim() || '#F8ECD4';
-  const url = wallpaperUrl(HOME_WALLPAPER);
-  app.style.backgroundImage = `linear-gradient(175deg, ${hexToRgba(vellum,0.62)} 0%, ${hexToRgba(vellumLight,0.62)} 100%), url("${url}")`;
-  app.style.backgroundSize = 'cover';
-  app.style.backgroundPosition = 'center';
-  app.style.backgroundRepeat = 'no-repeat';
-}
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
   {key:'croix', label:'Croix', icon:'✝️'},
@@ -13143,7 +13087,6 @@ function applyThemeAndFont(){
     app.style.removeProperty('--wine-dark');
     app.style.removeProperty('--gold');
   }
-  applyPageWallpaper();
 }
 function shadeColor(hex, percent){
   const num = parseInt(hex.replace('#',''), 16);
@@ -13198,14 +13141,6 @@ function openThemePicker(){
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 0; color:var(--ink);">${p.label}</p>
       </button>`).join('')}</div>
 
-    <h2 class="section-title" style="font-size:14px;">🖼️ Fond d'écran (Évangile du jour)</h2>
-    <p class="section-desc" style="margin-top:-6px;">L'image affichée en haut de l'accueil. Chaque rubrique garde sa propre image, adaptée à son thème.</p>
-    <div class="grid" style="grid-template-columns:repeat(3,1fr);">${WALLPAPER_LIST.map(w=>`
-      <button class="card theme-swatch-btn ${HOME_WALLPAPER===w.key?'theme-active':''}" data-wallpaper-key="${w.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding:0; overflow:hidden;">
-        <img src="${wallpaperUrl(w.key)}" alt="" loading="lazy" style="width:100%; height:64px; object-fit:cover; display:block;" onerror="this.style.display='none'">
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:11px; margin:4px 0 6px; color:var(--ink);">${w.icon} ${w.label}</p>
-      </button>`).join('')}</div>
-
     <h2 class="section-title" style="font-size:14px;">💡 Luminosité</h2>
     <div class="card">
       <input type="range" id="brightness-slider" min="70" max="130" value="${BRIGHTNESS}" style="width:100%;">
@@ -13239,15 +13174,6 @@ function openThemePicker(){
       applyThemeAndFont();
       await savePrefs();
       showToast(`${BG_PATTERN_LIST.find(p=>p.key===BG_PATTERN).icon} Motif appliqué`);
-      openThemePicker();
-    };
-  });
-  list.querySelectorAll('[data-wallpaper-key]').forEach(btn=>{
-    btn.onclick = async ()=>{
-      HOME_WALLPAPER = btn.dataset.wallpaperKey;
-      applyHomeWallpaper();
-      await savePrefs();
-      showToast(`${WALLPAPER_LIST.find(w=>w.key===HOME_WALLPAPER).icon} Fond d'écran appliqué`);
       openThemePicker();
     };
   });
@@ -13698,8 +13624,6 @@ async function startApp(){
   THEME = prefs.theme || 'light';
   THEME_MODE = (prefs.themeMode === 'manual') ? 'manual' : 'auto';
   BG_PATTERN = prefs.bgPattern || 'croix';
-  HOME_WALLPAPER = prefs.homeWallpaper || 'lever-soleil';
-  applyHomeWallpaper();
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);
   FAMILY_CODE = prefs.familyCode || null;
