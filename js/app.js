@@ -3069,7 +3069,7 @@ const CHAPLET_CATALOGUE = [
   {id:"traditionnel", cat:"classique", title:"Chapelet traditionnel", sub:"Mystères joyeux, douloureux, glorieux et lumineux.",
     avatar:"📿", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Zurbar%C3%A1n%20%28atribuido%29-John%20of%20the%20Cross-1656.jpg?width=400"},
   {id:"misericorde", cat:"classique", title:"Chapelet de la Miséricorde", sub:"Avec les paroles de sainte Faustine.",
-    avatar:"❤️", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Divine-mercy.jpg?width=400", gotoSub:"misericorde"},
+    avatar:"❤️", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Kazimirowski_Eugeniusz,_Divine_Mercy,_1934.jpg?width=400", gotoSub:"misericorde"},
   {id:"defunts", cat:"thematique", title:"Chapelet pour les défunts", sub:"Unis dans l'espérance de la Résurrection.",
     avatar:"🕯️", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Peter%20Paul%20Rubens%20-%20The%20Resurrection%20of%20Christ%20-%20WGA20209.jpg?width=400"},
   {id:"medite", cat:"thematique", title:"Chapelet médité", sub:"Avec des méditations détaillées pour chaque mystère.",
@@ -7037,7 +7037,7 @@ function renderGenericSection(groups, compKey, sectionLabel){
     return;
   }
 
-  const BOOK_LIST_COMPKEYS = ['ecritures:psaumes', 'ecritures:recits', 'ecritures:reperes'];
+  const BOOK_LIST_COMPKEYS = ['ecritures:psaumes', 'ecritures:recits', 'ecritures:reperes', 'jesus:main', 'eglise:vie-eglise', 'eglise:pelerinages', 'eglise:calendrier', 'eglise:actualites', 'sagesse:spiritualite', 'sagesse:enseignements'];
   html += BOOK_LIST_COMPKEYS.includes(compKey)
     ? `<div class="rubric-list">${group.entries.map((e,i)=>entryRowHTML(e,i)).join('')}</div>`
     : `<div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
