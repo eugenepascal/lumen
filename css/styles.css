@@ -1923,6 +1923,75 @@
   body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F2E8DA; }
   body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 
+  /* ===== thème "Aube" — ciel clair et bleu pastel du petit matin,
+     avec une touche d'or pour la lumière du soleil levant ===== */
+  body[data-theme="aube"]{
+    --vellum: #EAF2F8;
+    --vellum-light: #F7FBFD;
+    --ink: #1F3A52;
+    --ink-soft: #5C7A91;
+    --wine: #3B6EA5;
+    --wine-dark: #274D74;
+    --gold: #D9B36C;
+    --gold-light: #E8CA92;
+    --gold-pale: #F6E9CC;
+    --hairline: #C9DCEA;
+    --shadow-warm: 0 10px 30px rgba(59,110,165,0.18);
+    --glow-gold: 0 0 18px rgba(217,179,108,0.45);
+  }
+  body[data-theme="aube"]{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(59,110,165,0.16), transparent 55%),
+      linear-gradient(165deg, #FDF6E8 0%, #EAF2F8 45%, #CFE0EE 100%);
+  }
+  body[data-theme="aube"] #topbar{ background: linear-gradient(160deg, #0B2A42 0%, var(--wine-dark) 45%, var(--wine) 100%); }
+
+  /* ===== thème "Nature" — vert espérance et sauge, apaisant,
+     avec le bronze chaud en lueur d'accent ===== */
+  body[data-theme="nature"]{
+    --vellum: #F1F2E6;
+    --vellum-light: #F8F9F0;
+    --ink: #2B3A22;
+    --ink-soft: #66734F;
+    --wine: #3F6B2E;
+    --wine-dark: #2A4A1E;
+    --gold: #8A6A3B;
+    --gold-light: #A8865A;
+    --gold-pale: #E3D9BE;
+    --hairline: #C7CFAE;
+    --shadow-warm: 0 10px 30px rgba(63,107,46,0.18);
+    --glow-gold: 0 0 18px rgba(138,106,59,0.4);
+  }
+  body[data-theme="nature"]{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(63,107,46,0.16), transparent 55%),
+      linear-gradient(165deg, #F6F5E8 0%, #E3E8D2 45%, #C3CFA8 100%);
+  }
+  body[data-theme="nature"] #topbar{ background: linear-gradient(160deg, #15210F 0%, var(--wine-dark) 45%, var(--wine) 100%); }
+
+  /* ===== thème "Liturgique" — violet pénitentiel et or,
+     dans l'esprit des couleurs liturgiques de l'Église ===== */
+  body[data-theme="liturgique"]{
+    --vellum: #EFE8F2;
+    --vellum-light: #F8F4FA;
+    --ink: #2E2038;
+    --ink-soft: #6E5C7D;
+    --wine: #5B3C78;
+    --wine-dark: #3D2652;
+    --gold: #C9A227;
+    --gold-light: #DDBE5C;
+    --gold-pale: #F0E2B4;
+    --hairline: #D8C4E0;
+    --shadow-warm: 0 10px 30px rgba(91,60,120,0.2);
+    --glow-gold: 0 0 18px rgba(201,162,39,0.45);
+  }
+  body[data-theme="liturgique"]{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(91,60,120,0.18), transparent 55%),
+      linear-gradient(165deg, #F5EEF8 0%, #E3D4EC 45%, #C7A8D8 100%);
+  }
+  body[data-theme="liturgique"] #topbar{ background: linear-gradient(160deg, #1F1228 0%, var(--wine-dark) 45%, var(--wine) 100%); }
+
   /* ===== topbar toolbar ===== */
   .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
   .topbar-tools{ display:flex; gap:4px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
