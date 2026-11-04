@@ -1,26 +1,26 @@
 
   :root{
-    --vellum: #F4EEE0;
-    --vellum-light: #FAF6EC;
-    --ink: #262A3D;
-    --ink-soft: #5E6480;
-    --wine: #1B2F5C;
-    --wine-dark: #101D3E;
-    --gold: #C9A227;
-    --gold-light: #E3C873;
-    --gold-pale: #EDE2BC;
+    --vellum: #E8CFA8;
+    --vellum-light: #F3E2C2;
+    --ink: #3A2817;
+    --ink-soft: #7D6A4C;
+    --wine: #1F6E6B;
+    --wine-dark: #134A48;
+    --gold: #C17A3A;
+    --gold-light: #DDA066;
+    --gold-pale: #E8C89C;
     --sage: #5C6E58;
-    --hairline: #D8CBA8;
-    --shadow: 0 6px 18px rgba(16,29,62,0.14);
-    --shadow-warm: 0 10px 30px rgba(16,29,62,0.28);
-    --glow-gold: 0 0 18px rgba(201,162,39,0.45);
+    --hairline: #CBA571;
+    --shadow: 0 6px 18px rgba(31,110,107,0.14);
+    --shadow-warm: 0 10px 30px rgba(31,110,107,0.26);
+    --glow-gold: 0 0 18px rgba(221,160,102,0.5);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(201,162,39,0.2), transparent 55%),
-      linear-gradient(165deg, #0B1526 0%, #152A4A 45%, #1B2F5C 100%);
+      radial-gradient(circle at 50% 0%, rgba(31,110,107,0.22), transparent 55%),
+      linear-gradient(165deg, #1A0D06 0%, #3E2314 45%, #6B3A1E 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
@@ -82,10 +82,10 @@
     50%{ transform:translate(-8%,-10%) scale(1.2); opacity:0.8; }
   }
   body[data-theme="dark"] .bg-glow-ray{
-    background:radial-gradient(circle, rgba(127,160,201,0.55) 0%, rgba(127,160,201,0.16) 45%, transparent 72%);
+    background:radial-gradient(circle, rgba(79,189,179,0.55) 0%, rgba(79,189,179,0.16) 45%, transparent 72%);
   }
   body[data-theme="dark"] .bg-glow-ray-2{
-    background:radial-gradient(circle, rgba(212,176,90,0.4) 0%, rgba(212,176,90,0.12) 45%, transparent 72%);
+    background:radial-gradient(circle, rgba(217,147,85,0.4) 0%, rgba(217,147,85,0.12) 45%, transparent 72%);
   }
   @media (prefers-reduced-motion: reduce){
     .bg-glow-ray{ animation:none; }
@@ -168,7 +168,7 @@
   /* header */
   #topbar{
     padding: 22px 22px 16px;
-    background: linear-gradient(160deg, #0A1226 0%, var(--wine-dark) 45%, var(--wine) 100%);
+    background: linear-gradient(160deg, #0A2423 0%, var(--wine-dark) 45%, var(--wine) 100%);
     color: var(--vellum-light);
     position:relative;
     overflow:hidden;
@@ -1889,37 +1889,37 @@
   }
   .flourish-divider{ text-align:center; color:var(--gold); font-size:13px; letter-spacing:6px; margin:18px 0; opacity:0.7; }
 
-  /* ===== mode sombre : "Nuit étoilée" — bleu nuit profond, feutré, comme un
-     ciel étoilé, avec l'or antique en lueur discrète ===== */
+  /* ===== mode sombre : "Argile nocturne" — terre cuite très sombre et feutrée,
+     avec le turquoise patiné (cuivre oxydé) en lueur d'accent ===== */
   body[data-theme="dark"]{
-    --vellum: #0E1628;
-    --vellum-light: #182238;
-    --ink: #E8E6DA;
-    --ink-soft: #9CA3BC;
-    --wine: #7FA0C9;
-    --wine-dark: #577BAA;
-    --gold: #D4B05A;
-    --gold-light: #E8CC8C;
-    --gold-pale: #1C2238;
-    --hairline: #26304C;
+    --vellum: #20140B;
+    --vellum-light: #2E1D10;
+    --ink: #EDE1CE;
+    --ink-soft: #A89A82;
+    --wine: #4FBDB3;
+    --wine-dark: #2E8A82;
+    --gold: #D99355;
+    --gold-light: #E8B57E;
+    --gold-pale: #241709;
+    --hairline: #3D2814;
     --shadow-warm: 0 10px 30px rgba(0,0,0,0.65);
-    --glow-gold: 0 0 16px rgba(212,176,90,0.32);
+    --glow-gold: 0 0 16px rgba(79,189,179,0.3);
   }
   body[data-theme="dark"]{
     background:
-      radial-gradient(circle at 50% 0%, rgba(212,176,90,0.12), transparent 55%),
-      linear-gradient(165deg, #050810 0%, #0C1428 45%, #122244 100%);
+      radial-gradient(circle at 50% 0%, rgba(79,189,179,0.14), transparent 55%),
+      linear-gradient(165deg, #0A0503 0%, #1C0F07 45%, #2E1A0D 100%);
   }
   body[data-theme="dark"] #app::before{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%23D4B05A' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%23050810'/%3E%3Cg fill='%237FA0C9' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='300' cy='65' r='42' fill='%234FBDB3' fill-opacity='0.14'/%3E%3Ccircle cx='317' cy='52' r='36' fill='%230A0503'/%3E%3Cg fill='%23D99355' fill-opacity='0.4'%3E%3Ccircle cx='50' cy='40' r='2'/%3E%3Ccircle cx='110' cy='95' r='1.6'/%3E%3Ccircle cx='190' cy='25' r='2.2'/%3E%3Ccircle cx='240' cy='130' r='1.4'/%3E%3Ccircle cx='30' cy='160' r='1.8'/%3E%3Ccircle cx='150' cy='170' r='1.5'/%3E%3Ccircle cx='340' cy='190' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 460px 320px; background-position: 50% 0%;
   }
   body[data-theme="dark"] #app{ box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
   body[data-theme="dark"] .saint-emblem{ box-shadow: inset 0 0 0 3px rgba(0,0,0,0.25); }
-  /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en bleu nuit profond.
+  /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en terre cuite très sombre.
      Le texte du bandeau utilise par défaut --vellum-light, qui devient une couleur sombre (fond de
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
-  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #050810 0%, #0E1A32 45%, #18304F 100%); border-bottom-color: rgba(127,160,201,0.25); color: #F2E8DA; }
+  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #050302 0%, #150D06 45%, #2E1A0D 100%); border-bottom-color: rgba(79,189,179,0.28); color: #F2E8DA; }
   body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F2E8DA; }
   body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 

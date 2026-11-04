@@ -8952,8 +8952,8 @@ function generateShareImage(title, text){
   canvas.width = 800; canvas.height = 800;
   const ctx = canvas.getContext('2d');
   const styles = getComputedStyle(document.body);
-  const wine = styles.getPropertyValue('--wine-dark').trim() || '#101D3E';
-  const wine2 = styles.getPropertyValue('--wine').trim() || '#1B2F5C';
+  const wine = styles.getPropertyValue('--wine-dark').trim() || '#134A48';
+  const wine2 = styles.getPropertyValue('--wine').trim() || '#1F6E6B';
   const gold = styles.getPropertyValue('--gold-light').trim() || '#E4C77E';
   const cream = styles.getPropertyValue('--vellum-light').trim() || '#FBF7EC';
 
@@ -13026,8 +13026,8 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Ivoire', icon:'🕯️', swatches:['#FAF6EC','#1B2F5C','#C9A227']},
-  {key:'dark', label:'Nuit étoilée', icon:'🌙', swatches:['#0E1628','#7FA0C9','#D4B05A']}
+  {key:'light', label:'Terre cuite', icon:'🕯️', swatches:['#F3E2C2','#1F6E6B','#C17A3A']},
+  {key:'dark', label:'Argile nocturne', icon:'🌙', swatches:['#20140B','#4FBDB3','#D99355']}
 ];
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
@@ -13110,7 +13110,7 @@ function openThemePicker(){
       <span style="font-size:22px;">🔄</span>
       <span>
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:0; color:var(--ink);">Automatique</p>
-        <p class="section-desc" style="margin:2px 0 0;">Ivoire le jour, Nuit étoilée le soir et la nuit.</p>
+        <p class="section-desc" style="margin:2px 0 0;">Terre cuite le jour, Argile nocturne le soir et la nuit.</p>
       </span>
     </button>
 
