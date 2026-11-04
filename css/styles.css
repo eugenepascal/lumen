@@ -4,8 +4,8 @@
     --vellum-light: #D7BD8E;
     --ink: #2E2112;
     --ink-soft: #6B5A3F;
-    --wine: #8C5A2E;
-    --wine-dark: #5C3A1C;
+    --wine: #6E1E34;
+    --wine-dark: #470F20;
     --gold: #AD7B32;
     --gold-light: #CB9F5C;
     --gold-pale: #D3B480;
@@ -19,8 +19,8 @@
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(160,104,56,0.2), transparent 55%),
-      linear-gradient(165deg, #140C06 0%, #311F11 45%, #4A2E18 100%);
+      radial-gradient(circle at 50% 0%, rgba(201,162,80,0.2), transparent 55%),
+      linear-gradient(165deg, #140A0D 0%, #2E1420 45%, #4A1C2E 100%);
     background-attachment: fixed;
     font-family:'Lora', serif;
     color:var(--ink);
@@ -168,7 +168,7 @@
   /* header */
   #topbar{
     padding: 22px 22px 16px;
-    background: linear-gradient(160deg, #3A2411 0%, var(--wine-dark) 45%, var(--wine) 100%);
+    background: linear-gradient(160deg, #220A14 0%, var(--wine-dark) 45%, var(--wine) 100%);
     color: var(--vellum-light);
     position:relative;
     overflow:hidden;
@@ -1896,8 +1896,8 @@
     --vellum-light: #311C0F;
     --ink: #EDE2CE;
     --ink-soft: #A89A82;
-    --wine: #C98A52;
-    --wine-dark: #A66B38;
+    --wine: #B8506C;
+    --wine-dark: #8C3A52;
     --gold: #D8AE64;
     --gold-light: #E8C98C;
     --gold-pale: #26160B;
@@ -1919,7 +1919,7 @@
   /* navigation bien contrastée en mode sombre : bandeau et barre d'onglets en brun cacao profond.
      Le texte du bandeau utilise par défaut --vellum-light, qui devient une couleur sombre (fond de
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
-  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #070402 0%, #170D06 45%, #311C0F 100%); border-bottom-color: rgba(201,138,82,0.25); color: #F2E8DA; }
+  body[data-theme="dark"] #topbar{ background: linear-gradient(160deg, #0A0205 0%, #2A0F1C 45%, #471A2C 100%); border-bottom-color: rgba(184,80,108,0.28); color: #F2E8DA; }
   body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F2E8DA; }
   body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 

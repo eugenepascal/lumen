@@ -13026,8 +13026,8 @@ function closeSearch(){ document.getElementById('search-overlay').classList.add(
 
 /* ================= theme / font size ================= */
 const THEMES_LIST = [
-  {key:'light', label:'Sable', icon:'🕯️', swatches:['#D7BD8E','#8C5A2E','#AD7B32']},
-  {key:'dark', label:'Cacao', icon:'🌙', swatches:['#22120A','#C98A52','#D8AE64']}
+  {key:'light', label:'Sable', icon:'🕯️', swatches:['#D7BD8E','#6E1E34','#AD7B32']},
+  {key:'dark', label:'Cacao', icon:'🌙', swatches:['#22120A','#B8506C','#D8AE64']}
 ];
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
