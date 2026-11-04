@@ -4822,13 +4822,17 @@ let NOVENA_STEP_INDEX = null; // étape courante (0..5) dans le déroulement du 
 let NOVENA_DAY_DONE_SCREEN = null; // {novenaId, dayIndex} — écran de validation après un jour prié
 let NOVENA_DAY_AUDIO_PLAYING = null;
 const ORDINAL_DAYS = ['Premier','Deuxième','Troisième','Quatrième','Cinquième','Sixième','Septième','Huitième','Neuvième'];
+/* Le fond d'écran choisi par l'utilisateur (voir WALLPAPER_LIST / HOME_WALLPAPER,
+   plus bas) s'applique à l'accueil ET aux bannières de chaque rubrique, pour un
+   « fond d'écran » cohérent dans toute l'application — d'où ces accesseurs
+   dynamiques plutôt que des images fixes par rubrique. */
 const HUB_HERO_IMAGES = {
-  prier: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=900',
-  eglise: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bernadette%20Soubirous%20en%201863%2C%20photo%20Billard-Perrin.jpg?width=900',
-  devotions: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20The-Madonna-and-Child-128.jpg?width=900',
-  jesus: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/SacredHeartBatoni.jpg?width=900',
-  sagesse: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Thomas%20Aquinas%20by%20Sandro%20Botticelli.jpg?width=900',
-  ecritures: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900',
+  get prier(){ return wallpaperUrl(HOME_WALLPAPER); },
+  get eglise(){ return wallpaperUrl(HOME_WALLPAPER); },
+  get devotions(){ return wallpaperUrl(HOME_WALLPAPER); },
+  get jesus(){ return wallpaperUrl(HOME_WALLPAPER); },
+  get sagesse(){ return wallpaperUrl(HOME_WALLPAPER); },
+  get ecritures(){ return wallpaperUrl(HOME_WALLPAPER); },
   espace: null
 };
 const PRIER_HUB_CATEGORIES = [
@@ -13066,8 +13070,9 @@ function wallpaperUrl(key){
 }
 let HOME_WALLPAPER = 'lever-soleil';
 function applyHomeWallpaper(){
-  document.querySelectorAll('.evangile-hero img, [data-wallpaper-img]').forEach(img=>{
-    img.src = wallpaperUrl(HOME_WALLPAPER);
+  const url = wallpaperUrl(HOME_WALLPAPER);
+  document.querySelectorAll('#home-evangile-card img, .hub-hero-banner-img, [data-wallpaper-img]').forEach(img=>{
+    img.src = url;
   });
 }
 const BG_PATTERN_LIST = [
@@ -13167,8 +13172,8 @@ function openThemePicker(){
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 0; color:var(--ink);">${p.label}</p>
       </button>`).join('')}</div>
 
-    <h2 class="section-title" style="font-size:14px;">🖼️ Fond d'écran (Évangile du jour)</h2>
-    <p class="section-desc" style="margin-top:-6px;">L'image affichée en haut de l'accueil, au-dessus des lectures du jour.</p>
+    <h2 class="section-title" style="font-size:14px;">🖼️ Fond d'écran</h2>
+    <p class="section-desc" style="margin-top:-6px;">L'image affichée en haut de l'accueil et de chaque rubrique (Prier, Église, Bible...).</p>
     <div class="grid" style="grid-template-columns:repeat(3,1fr);">${WALLPAPER_LIST.map(w=>`
       <button class="card theme-swatch-btn ${HOME_WALLPAPER===w.key?'theme-active':''}" data-wallpaper-key="${w.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding:0; overflow:hidden;">
         <img src="${wallpaperUrl(w.key)}" alt="" loading="lazy" style="width:100%; height:64px; object-fit:cover; display:block;" onerror="this.style.display='none'">
