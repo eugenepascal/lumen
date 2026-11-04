@@ -1,4 +1,9 @@
-
+/*!
+ * Lumen — © 2026 Eugène Pascal Yaro. Tous droits réservés.
+ * Code source, nom et contenus protégés — voir LICENSE à la racine du dépôt.
+ * Toute reproduction, redistribution ou appropriation sans autorisation est interdite.
+ * Dépôt original : https://github.com/eugenepascal/lumen
+ */
   :root{
     --vellum: #F4EFE4;
     --vellum-light: #FAF7F0;
@@ -1889,6 +1894,25 @@
     50%{ box-shadow: inset 0 0 0 3px rgba(255,255,255,0.35), 0 4px 22px rgba(232,204,126,0.55); }
   }
   .flourish-divider{ text-align:center; color:var(--gold); font-size:13px; letter-spacing:6px; margin:18px 0; opacity:0.7; }
+
+  /* ===== signature de l'auteur, page À propos ===== */
+  .lumen-signature-badge{
+    width:56px; height:56px; margin:0 auto 10px;
+    border-radius:50%;
+    background: linear-gradient(160deg, var(--wine) 0%, var(--wine-dark) 100%);
+    border: 2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:700; font-size:16px; letter-spacing:1px;
+    color: var(--gold-light);
+    box-shadow: var(--shadow-warm);
+  }
+  .lumen-signature-script{
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:34px;
+    color: var(--wine);
+    margin: 4px 0 0;
+    line-height:1.1;
+  }
 
   /* ===== mode sombre : "Sombre" — noir sobre et reposant,
      avec une lueur ambre/or en accent, dans l'esprit de la maquette ===== */

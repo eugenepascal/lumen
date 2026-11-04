@@ -1,3 +1,9 @@
+/*!
+ * Lumen — © 2026 Eugène Pascal Yaro. Tous droits réservés.
+ * Code source, nom et contenus protégés — voir LICENSE à la racine du dépôt.
+ * Toute reproduction, redistribution ou appropriation sans autorisation est interdite.
+ * Dépôt original : https://github.com/eugenepascal/lumen
+ */
 
 /* ---------- firebase ---------- */
 const firebaseConfig = {
@@ -7540,6 +7546,13 @@ function renderApropos(){
       <p class="eyebrow" style="color:var(--wine);">📤 Partager Lumen</p>
       <p class="entry-detail-text" style="margin-bottom:8px;">Faites découvrir l'application à un proche.</p>
       <button class="btn btn-primary btn-sm" id="apropos-share-btn">Partager l'application</button>
+    </div>
+
+    <div class="card lumen-signature-card" style="margin-top:12px; text-align:center;">
+      <div class="lumen-signature-badge">EPY</div>
+      <p class="lumen-signature-script">Eugène Pascal Yaro</p>
+      <p class="entry-detail-text" style="font-size:12px; color:var(--ink-soft); margin-top:2px;">Créateur de Lumen · © 2026 · Tous droits réservés</p>
+      <p class="entry-detail-text" style="font-size:11px; color:var(--ink-soft); opacity:0.8; margin-top:6px;">Le code, le nom et les contenus de cette application sont protégés ; toute reproduction, redistribution ou appropriation sans autorisation écrite est interdite.</p>
     </div>
   `;
   document.getElementById('screen').innerHTML = html;
