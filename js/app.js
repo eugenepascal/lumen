@@ -13075,15 +13075,15 @@ const BG_PATTERN_LIST = [
   {key:'ancre', label:'Ancre (espérance)', icon:'⚓'}
 ];
 let BG_PATTERN = 'croix';
-/* fonds d'écran photo — images spirituelles libres de droits (Wikimedia Commons),
-   affichées discrètement derrière le contenu, à la place du motif en filigrane. */
+/* fonds d'écran photo — vraies images d'ambiance (flou artistique, bokeh, lumière douce),
+   pensées pour servir de fond et non comme photo-sujet ; libres de droits (licence Pexels). */
 const WALLPAPER_LIST = [
-  {key:'croix', label:'Croix', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Wooden%20crucifix%20on%20the%20Hill%20of%20Crosses%2C%20Lithuania.jpg?width=900'},
-  {key:'chapelet', label:'Chapelet', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Catholic%20Rosary.jpg?width=900'},
-  {key:'bible', label:'Bible', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Open%20Bible%20with%20pen%20%284543060842%29.jpg?width=900'},
-  {key:'vitrail', label:'Vitrail', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Chartres%20stained%20window%20complete%20-%20The%20life%20of%20Jesus%20-%20retouched%20final%20version%20MK%2010.jpg?width=900'},
-  {key:'adoration', label:'Adoration', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Eucharistic%20Adoration%20at%20st%20catherine%20of%20siena%20church.jpg?width=900'},
-  {key:'esprit-saint', label:'Esprit Saint', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Holy%20Spirit%20stained-glass%20window%20%28Cathedra%20Petri%29.jpg?width=900'}
+  {key:'croix', label:'Croix', img:'https://images.pexels.com/photos/29550932/pexels-photo-29550932.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'chapelet', label:'Chapelet', img:'https://images.pexels.com/photos/33461101/pexels-photo-33461101.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'bible', label:'Bible', img:'https://images.pexels.com/photos/15382610/pexels-photo-15382610.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'vitrail', label:'Vitrail', img:'https://images.pexels.com/photos/374609/pexels-photo-374609.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'adoration', label:'Adoration', img:'https://images.pexels.com/photos/29660338/pexels-photo-29660338.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'lumiere', label:'Lumière', img:'https://images.pexels.com/photos/16746856/pexels-photo-16746856.jpeg?auto=compress&cs=tinysrgb&w=900'}
 ];
 let BG_WALLPAPER = 'aucun';
 let THEME_MODE = 'auto';
