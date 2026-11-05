@@ -4837,6 +4837,16 @@ const HUB_HERO_IMAGES = {
   ecritures: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/KellsFol032vChristEnthroned.jpg?width=900',
   espace: null
 };
+/* position verticale du recadrage, pour que l'élément clé de l'image (visage, cœur, scène)
+   reste visible dans le bandeau étroit — par défaut 22% (haut), ajusté au cas par cas */
+const HUB_HERO_POS = {
+  prier: '22%',
+  eglise: '30%',
+  devotions: '25%',
+  jesus: '58%',
+  sagesse: '20%',
+  ecritures: '35%'
+};
 const PRIER_HUB_CATEGORIES = [
   {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Compline...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B'},
   {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545'},
@@ -4849,8 +4859,7 @@ const PRIER_HUB_CATEGORIES = [
 function renderPrierHub(){
   const html = `
     <div class="hub-hero-banner" style="background:${PRIER_HUB_CATEGORIES[0].color};">
-      ${HUB_HERO_IMAGES.prier ? `<img class="hub-hero-banner-img" src="${HUB_HERO_IMAGES.prier}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
-      <span class="hub-hero-emoji">🙏</span>
+      ${HUB_HERO_IMAGES.prier ? `<img class="hub-hero-banner-img" style="object-position:center ${HUB_HERO_POS.prier};" src="${HUB_HERO_IMAGES.prier}" alt="" onerror="this.remove(); this.closest('.hub-hero-banner').insertAdjacentHTML('beforeend','<span class=\\'hub-hero-emoji\\'>🙏</span>');"><div class="hub-hero-scrim"></div>` : `<span class="hub-hero-emoji">🙏</span>`}
     </div>
     <h2 class="section-title">🙏 Prier</h2>
     <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui.</p>
@@ -4873,11 +4882,10 @@ function renderPrierHub(){
   });
 }
 
-function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, heroImgUrl){
+function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, heroImgUrl, heroImgPos){
   const html = `
     ${heroEmoji ? `<div class="hub-hero-banner" style="background:${categories[0].color};">
-      ${heroImgUrl ? `<img class="hub-hero-banner-img" src="${heroImgUrl}" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>` : ''}
-      <span class="hub-hero-emoji">${heroEmoji}</span>
+      ${heroImgUrl ? `<img class="hub-hero-banner-img" style="object-position:center ${heroImgPos||'22%'};" src="${heroImgUrl}" alt="" onerror="this.remove(); this.closest('.hub-hero-banner').insertAdjacentHTML('beforeend','<span class=\\'hub-hero-emoji\\'>${heroEmoji}</span>');"><div class="hub-hero-scrim"></div>` : `<span class="hub-hero-emoji">${heroEmoji}</span>`}
     </div>` : ''}
     <h2 class="section-title">${title}</h2>
     <p class="section-desc">${desc}</p>
@@ -4909,14 +4917,14 @@ const EGLISE_HUB_CATEGORIES = [
   {label:'Pèlerinages virtuels', desc:'Lourdes, Fatima — un parcours guidé', icon:'🧳', goto:'pelerinages-virtuels', color:'#8A4A1F'}
 ];
 function renderEgliseHub(){
-  renderCategoryHubGeneric('⛪ Église', 'Explorez la vie de l\u2019Église, les saints et le calendrier liturgique.', EGLISE_HUB_CATEGORIES, (goto)=>{ SUBTAB.eglise = goto; render(); }, '⛪', HUB_HERO_IMAGES.eglise);
+  renderCategoryHubGeneric('⛪ Église', 'Explorez la vie de l\u2019Église, les saints et le calendrier liturgique.', EGLISE_HUB_CATEGORIES, (goto)=>{ SUBTAB.eglise = goto; render(); }, '⛪', HUB_HERO_IMAGES.eglise, HUB_HERO_POS.eglise);
 }
 const DEVOTIONS_HUB_CATEGORIES = [
   {label:'Prières & dévotions', desc:'Chapelet, Miséricorde, chemin de croix, Lectio Divina...', icon:'📿', goto:'prieres', color:'#7C1F2E'},
   {label:'Combat spirituel', desc:"L'armure de Dieu, prières et témoins de force", icon:'🛡️', goto:'armure', color:'#4A3D6B'}
 ];
 function renderDevotionsHub(){
-  renderCategoryHubGeneric('📿 Dévotions', 'Des prières et dévotions pour nourrir votre foi au quotidien.', DEVOTIONS_HUB_CATEGORIES, (goto)=>{ SUBTAB.devotions = goto; render(); }, '📿', HUB_HERO_IMAGES.devotions);
+  renderCategoryHubGeneric('📿 Dévotions', 'Des prières et dévotions pour nourrir votre foi au quotidien.', DEVOTIONS_HUB_CATEGORIES, (goto)=>{ SUBTAB.devotions = goto; render(); }, '📿', HUB_HERO_IMAGES.devotions, HUB_HERO_POS.devotions);
 }
 const JESUS_HUB_CATEGORIES = [
   {label:'Vie de Jésus', desc:"Sa naissance, son ministère, sa passion", icon:'✝️', goto:'vie-de-jesus', color:'#7C1F2E'},
@@ -4924,7 +4932,7 @@ const JESUS_HUB_CATEGORIES = [
   {label:'Méditations', desc:'Sur la Sainte Famille, le pardon, les grands thèmes', icon:'💭', goto:'meditations-sainte-famille', color:'#B8863B'}
 ];
 function renderJesusHub(){
-  renderCategoryHubGeneric('✝️ Jésus', 'La vie de Jésus, de Marie, et des méditations pour approfondir votre foi.', JESUS_HUB_CATEGORIES, (goto)=>{ GROUP_SEL['jesus:main'] = goto; render(); }, '✝️', HUB_HERO_IMAGES.jesus);
+  renderCategoryHubGeneric('✝️ Jésus', 'La vie de Jésus, de Marie, et des méditations pour approfondir votre foi.', JESUS_HUB_CATEGORIES, (goto)=>{ GROUP_SEL['jesus:main'] = goto; render(); }, '✝️', HUB_HERO_IMAGES.jesus, HUB_HERO_POS.jesus);
 }
 
 const ESPACE_HUB_CATEGORIES = [
@@ -4959,7 +4967,7 @@ const SAGESSE_HUB_CATEGORIES = [
   {label:'Méditations audio', desc:'À écouter, les yeux fermés', icon:'🎧', goto:'meditations-audio', color:'#8A4A1F'}
 ];
 function renderSagesseHub(){
-  renderCategoryHubGeneric('🌿 Sagesse', 'Approfondir sa foi, comprendre, et grandir spirituellement.', SAGESSE_HUB_CATEGORIES, (goto)=>{ SUBTAB.sagesse = goto; render(); }, '🌿', HUB_HERO_IMAGES.sagesse);
+  renderCategoryHubGeneric('🌿 Sagesse', 'Approfondir sa foi, comprendre, et grandir spirituellement.', SAGESSE_HUB_CATEGORIES, (goto)=>{ SUBTAB.sagesse = goto; render(); }, '🌿', HUB_HERO_IMAGES.sagesse, HUB_HERO_POS.sagesse);
 }
 
 /* Onglet "Explorer" — regroupe Jésus & Marie, Église et Sagesse, qui restent
@@ -4972,7 +4980,7 @@ const EXPLORER_HUB_CATEGORIES = [
   {label:'Sagesse & enseignements', desc:'Vie spirituelle, sacrements, enseignements, lexique', icon:'🌿', cross:{primary:'sagesse', sub:'accueil-sagesse'}, color:'#5C6E58'}
 ];
 function renderExplorerHub(){
-  renderCategoryHubGeneric('🧭 Explorer', 'Jésus, Marie, les saints, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse);
+  renderCategoryHubGeneric('🧭 Explorer', 'Jésus, Marie, les saints, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse, HUB_HERO_POS.sagesse);
 }
 
 const ECRITURES_HUB_CATEGORIES = [
@@ -4984,7 +4992,7 @@ const ECRITURES_HUB_CATEGORIES = [
   {label:'Mémoriser', desc:'Des versets à apprendre par cœur', icon:'🧠', goto:'memoriser', color:'#3B7A3B'}
 ];
 function renderEcrituresHub(){
-  renderCategoryHubGeneric('📖 Bible', 'La Parole de Dieu à lire, méditer et mémoriser, à votre rythme.', ECRITURES_HUB_CATEGORIES, (goto)=>{ SUBTAB.ecritures = goto; render(); }, '📖', HUB_HERO_IMAGES.ecritures);
+  renderCategoryHubGeneric('📖 Bible', 'La Parole de Dieu à lire, méditer et mémoriser, à votre rythme.', ECRITURES_HUB_CATEGORIES, (goto)=>{ SUBTAB.ecritures = goto; render(); }, '📖', HUB_HERO_IMAGES.ecritures, HUB_HERO_POS.ecritures);
 }
 
 function wireNovenaAudioPlayer(dayData){
@@ -6978,8 +6986,7 @@ function renderGenericSection(groups, compKey, sectionLabel){
 
   if(group.id === 'meditations-pardon'){
     html += `<div class="hub-hero-banner" style="background:#180C0C; height:170px;">
-      <img class="hub-hero-banner-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=900" alt="" onerror="this.remove();"><div class="hub-hero-scrim"></div>
-      <span class="hub-hero-emoji">✝️</span>
+      <img class="hub-hero-banner-img" style="object-position:center 58%;" src="https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=900" alt="" onerror="this.remove(); this.closest('.hub-hero-banner').insertAdjacentHTML('beforeend','<span class=\\'hub-hero-emoji\\'>✝️</span>');"><div class="hub-hero-scrim"></div>
     </div>`;
   }
 
