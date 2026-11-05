@@ -13696,6 +13696,7 @@ async function startApp(){
   document.getElementById('fab-prier').onclick = ()=>{
     PRIMARY = 'prier'; SUBTAB.prier = 'office'; ENTRY_OPEN = null; OPEN_NOVENA = null; NOVENA_OPEN_DAY = null; render();
   };
+  document.getElementById('lumen-signature-mark').onclick = ()=> goTo('espace','apropos');
   document.getElementById('search-close').onclick = closeSearch;
   document.getElementById('search-input').oninput = (e)=> renderSearchResults(e.target.value);
   document.getElementById('search-overlay').onclick = (e)=>{ if(e.target.id==='search-overlay') closeSearch(); };
