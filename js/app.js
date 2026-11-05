@@ -3879,7 +3879,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
     }), false);
   }catch(e){}
 }
@@ -13075,6 +13075,17 @@ const BG_PATTERN_LIST = [
   {key:'ancre', label:'Ancre (espérance)', icon:'⚓'}
 ];
 let BG_PATTERN = 'croix';
+/* fonds d'écran photo — images spirituelles libres de droits (Wikimedia Commons),
+   affichées discrètement derrière le contenu, à la place du motif en filigrane. */
+const WALLPAPER_LIST = [
+  {key:'croix', label:'Croix', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Wooden%20crucifix%20on%20the%20Hill%20of%20Crosses%2C%20Lithuania.jpg?width=900'},
+  {key:'chapelet', label:'Chapelet', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Catholic%20Rosary.jpg?width=900'},
+  {key:'bible', label:'Bible', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Open%20Bible%20with%20pen%20%284543060842%29.jpg?width=900'},
+  {key:'vitrail', label:'Vitrail', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Chartres%20stained%20window%20complete%20-%20The%20life%20of%20Jesus%20-%20retouched%20final%20version%20MK%2010.jpg?width=900'},
+  {key:'adoration', label:'Adoration', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Eucharistic%20Adoration%20at%20st%20catherine%20of%20siena%20church.jpg?width=900'},
+  {key:'esprit-saint', label:'Esprit Saint', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Holy%20Spirit%20stained-glass%20window%20%28Cathedra%20Petri%29.jpg?width=900'}
+];
+let BG_WALLPAPER = 'aucun';
 let THEME_MODE = 'auto';
 let BRIGHTNESS = 100;
 let CUSTOM_ACCENT = '';
@@ -13088,6 +13099,9 @@ function applyThemeAndFont(){
   document.body.setAttribute('data-theme', THEME);
   document.body.setAttribute('data-pattern', BG_PATTERN);
   document.body.setAttribute('data-theme-mode', THEME_MODE);
+  document.body.setAttribute('data-wallpaper', BG_WALLPAPER || 'aucun');
+  const wp = WALLPAPER_LIST.find(w=>w.key===BG_WALLPAPER);
+  document.documentElement.style.setProperty('--wallpaper-img', wp ? `url("${wp.img}")` : 'none');
   const current = THEMES_LIST.find(t=>t.key===THEME) || THEMES_LIST[0];
   const btn = document.getElementById('theme-btn');
   if(btn){ const iconEl = btn.querySelector('.tool-btn-icon'); if(iconEl) iconEl.textContent = THEME_MODE === 'auto' ? '🔄' : current.icon; }
@@ -13162,6 +13176,20 @@ function openThemePicker(){
         <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 0; color:var(--ink);">${p.label}</p>
       </button>`).join('')}</div>
 
+    <h2 class="section-title" style="font-size:14px;">🖼️ Fond d'écran (photo)</h2>
+    <p class="section-desc" style="margin-top:-6px;">Une image spirituelle discrète derrière le contenu, à la place du motif ci-dessus.</p>
+    <div class="grid wallpaper-picker-grid">
+      <button class="card theme-swatch-btn wallpaper-swatch-btn ${BG_WALLPAPER==='aucun'?'theme-active':''}" data-wallpaper-key="aucun" style="text-align:center; cursor:pointer; border:none; width:100%; padding-top:10px;">
+        <span style="font-size:22px;">◻️</span>
+        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 0; color:var(--ink);">Aucun</p>
+      </button>
+      ${WALLPAPER_LIST.map(w=>`
+      <button class="card theme-swatch-btn wallpaper-swatch-btn ${BG_WALLPAPER===w.key?'theme-active':''}" data-wallpaper-key="${w.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding:0; overflow:hidden;">
+        <img src="${w.img}" alt="" style="width:100%; height:56px; object-fit:cover; display:block;" onerror="this.style.display='none';">
+        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 6px; color:var(--ink);">${w.label}</p>
+      </button>`).join('')}
+    </div>
+
     <h2 class="section-title" style="font-size:14px;">💡 Luminosité</h2>
     <div class="card">
       <input type="range" id="brightness-slider" min="70" max="130" value="${BRIGHTNESS}" style="width:100%;">
@@ -13195,6 +13223,15 @@ function openThemePicker(){
       applyThemeAndFont();
       await savePrefs();
       showToast(`${BG_PATTERN_LIST.find(p=>p.key===BG_PATTERN).icon} Motif appliqué`);
+      openThemePicker();
+    };
+  });
+  list.querySelectorAll('[data-wallpaper-key]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      BG_WALLPAPER = btn.dataset.wallpaperKey;
+      applyThemeAndFont();
+      await savePrefs();
+      showToast(BG_WALLPAPER === 'aucun' ? '◻️ Fond d’écran retiré' : `🖼️ Fond d’écran « ${WALLPAPER_LIST.find(w=>w.key===BG_WALLPAPER).label} » appliqué`);
       openThemePicker();
     };
   });
@@ -13645,6 +13682,7 @@ async function startApp(){
   THEME = prefs.theme || 'light';
   THEME_MODE = (prefs.themeMode === 'manual') ? 'manual' : 'auto';
   BG_PATTERN = prefs.bgPattern || 'croix';
+  BG_WALLPAPER = prefs.bgWallpaper || 'aucun';
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);
   FAMILY_CODE = prefs.familyCode || null;

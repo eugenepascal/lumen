@@ -142,6 +142,18 @@
   }
   body[data-pattern="aucun"] #app::before{ background-image:none; }
 
+  /* ===== fond d'écran photo (images spirituelles), remplace le motif en filigrane ===== */
+  body[data-wallpaper]:not([data-wallpaper="aucun"]) #app::before{
+    background-image: var(--wallpaper-img, none);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.4;
+    filter: saturate(0.9) blur(0.5px);
+    animation: none;
+  }
+  body[data-theme="dark"][data-wallpaper]:not([data-wallpaper="aucun"]) #app::before{ opacity:0.3; }
+
   #app{
     width:100%;
     max-width:430px;
