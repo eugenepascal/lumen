@@ -3879,7 +3879,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
     }), false);
   }catch(e){}
 }
@@ -4019,14 +4019,13 @@ function getOrderedTabs(){
   PRIMARY_TABS.forEach(t=>{ if(!ordered.includes(t)) ordered.push(t); });
   return ordered;
 }
-const TAB_I18N_KEYS = {accueil:'tabAccueil', prier:'tabPrier', ecritures:'tabBible', explorer:'tabDecouvrir', espace:'tabChapelle'};
 function renderTabbar(){
   const tabs = getOrderedTabs();
   const activeTabKey = primaryToTabKey(PRIMARY);
   document.getElementById('tabbar').innerHTML =
     `<div class="tabbar-brand"><span class="tabbar-brand-flame">🕯️</span><span class="tabbar-brand-name">Lumen</span></div>` +
     tabs.map(t =>
-      `<button class="tab-btn ${activeTabKey===t.key?'active':''}" data-tab="${t.key}">${ICONS[t.key]||''}<span>${TAB_I18N_KEYS[t.key]?t(TAB_I18N_KEYS[t.key]):t.label}</span></button>`
+      `<button class="tab-btn ${activeTabKey===t.key?'active':''}" data-tab="${t.key}">${ICONS[t.key]||''}<span>${t.label}</span></button>`
     ).join('');
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.onclick = ()=>{
@@ -4258,15 +4257,14 @@ function homePage1HTML(){
   let saluTime = 'Bonjour';
   if(hourNow >= 18 || hourNow < 5) saluTime = 'Bonsoir';
   else if(hourNow >= 12) saluTime = 'Bon après-midi';
-  if(LANG === 'en') saluTime = (hourNow >= 18 || hourNow < 5) ? t('goodEvening') : t('goodMorning');
   const inProgress = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
   const {saint:dayFeastSaint, isFeast:dayIsFeast} = getSaintOfDay();
 
   return `
     <div class="home-plain-header">
       ${dayIsFeast ? `<p class="home-plain-date">✦ Fête de ${dayFeastSaint.name}</p>` : ''}
-      <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
-      <p class="home-plain-sub">${t('homeSubtitle')}.</p>
+      <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>que la paix soit avec vous.</h1>
+      <p class="home-plain-sub">Un moment avec Dieu pour aujourd'hui.</p>
     </div>
     ${USER_NAME ? '' : `
       <div class="home-name-prompt" style="margin:10px 0 2px;">
@@ -13089,58 +13087,6 @@ const WALLPAPER_LIST = [
 ];
 let BG_WALLPAPER = 'aucun';
 let THEME_MODE = 'auto';
-/* ================= langue (fr / en) =================
-   Phase 1 : l'habillage de l'application (navigation, barre d'outils,
-   recherche, bouton Prier, onglets, accueil, en-têtes des rubriques
-   principales). Le contenu religieux (psaumes, saints, méditations,
-   prières, etc.) reste en français pour l'instant — c'est un chantier
-   à part, bien plus long, à traiter rubrique par rubrique ensuite. */
-let LANG = 'fr';
-const I18N = {
-  fr: {
-    refuge:'Refuge', refugeTitle:'Un lieu sûr',
-    guide:'Guide', guideTitle:"Qu'aimeriez-vous faire ?",
-    autoVoice:'Voix auto', autoNarrateTitle:'Lecture automatique à chaque page',
-    music:'Musique', ambianceTitle:'Ambiance sonore de fond',
-    listen:'Écouter', readPageTitle:'Écouter cette page',
-    search:'Chercher', searchTitle:'Rechercher',
-    theme:'Thème', themeTitle:'Changer de thème',
-    smaller:'Petit', fontMinusTitle:'Réduire le texte',
-    bigger:'Grand', fontPlusTitle:'Agrandir le texte',
-    searchInviteLabel:'Chercher une prière, un saint, un psaume…', searchInviteTitle:"Rechercher dans toute l'application",
-    fabPrier:'Prier maintenant', fabPrierTitle:'Prier maintenant',
-    searchInputPlaceholder:'Rechercher un psaume, un saint, une prière…', voiceSearchTitle:'Recherche vocale',
-    tabAccueil:'Accueil', tabPrier:'Prier', tabBible:'Bible', tabDecouvrir:'Découvrir', tabChapelle:'Ma chapelle',
-    goodMorning:'Bonjour', goodEvening:'Bonsoir', homeSubtitle:'Un moment avec Dieu pour aujourd’hui',
-    contentNotice:"Le contenu de cette page (prières, textes) est encore en français — seule l'interface est traduite pour l'instant."
-  },
-  en: {
-    refuge:'Refuge', refugeTitle:'A safe place',
-    guide:'Guide', guideTitle:'What would you like to do?',
-    autoVoice:'Auto voice', autoNarrateTitle:'Automatic reading on every page',
-    music:'Music', ambianceTitle:'Background ambiance',
-    listen:'Listen', readPageTitle:'Listen to this page',
-    search:'Search', searchTitle:'Search',
-    theme:'Theme', themeTitle:'Change theme',
-    smaller:'Smaller', fontMinusTitle:'Shrink text',
-    bigger:'Bigger', fontPlusTitle:'Enlarge text',
-    searchInviteLabel:'Search a prayer, a saint, a psalm…', searchInviteTitle:'Search the whole app',
-    fabPrier:'Pray now', fabPrierTitle:'Pray now',
-    searchInputPlaceholder:'Search a psalm, a saint, a prayer…', voiceSearchTitle:'Voice search',
-    tabAccueil:'Home', tabPrier:'Pray', tabBible:'Bible', tabDecouvrir:'Discover', tabChapelle:'My Chapel',
-    goodMorning:'Good morning', goodEvening:'Good evening', homeSubtitle:'A moment with God, for today',
-    contentNotice:"This page's content (prayers, texts) is still in French — only the interface is translated for now."
-  }
-};
-function t(key){
-  return (I18N[LANG] && I18N[LANG][key]) || I18N.fr[key] || key;
-}
-function applyLanguage(){
-  document.documentElement.lang = LANG;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
-  document.querySelectorAll('[data-i18n-title]').forEach(el=>{ el.title = t(el.dataset.i18nTitle); });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ el.placeholder = t(el.dataset.i18nPlaceholder); });
-}
 let BRIGHTNESS = 100;
 let CUSTOM_ACCENT = '';
 function computeAutoTheme(){
@@ -13148,7 +13094,6 @@ function computeAutoTheme(){
   return (h>=7 && h<20) ? 'light' : 'dark';
 }
 function applyThemeAndFont(){
-  applyLanguage();
   if(THEME_MODE === 'auto') THEME = computeAutoTheme();
   if(!THEMES_LIST.some(t=>t.key===THEME)) THEME = 'light';
   document.body.setAttribute('data-theme', THEME);
@@ -13211,19 +13156,6 @@ function openThemePicker(){
   }
 
   list.innerHTML = `
-    <h2 class="section-title" style="font-size:14px;">🌐 Langue / Language</h2>
-    <p class="section-desc" style="margin-top:-6px;">L'interface se traduit ; les textes de prière restent en français pour l'instant.</p>
-    <div class="grid" style="grid-template-columns:repeat(2,1fr); margin-bottom:16px;">
-      <button class="card theme-swatch-btn ${LANG==='fr'?'theme-active':''}" data-lang-key="fr" style="text-align:center; cursor:pointer; border:none; padding-top:10px;">
-        <span style="font-size:20px;">🇫🇷</span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:4px 0 0; color:var(--ink);">Français</p>
-      </button>
-      <button class="card theme-swatch-btn ${LANG==='en'?'theme-active':''}" data-lang-key="en" style="text-align:center; cursor:pointer; border:none; padding-top:10px;">
-        <span style="font-size:20px;">🇬🇧</span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:4px 0 0; color:var(--ink);">English</p>
-      </button>
-    </div>
-
     <button class="card theme-swatch-btn ${THEME_MODE==='auto'?'theme-active':''}" id="theme-auto-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:14px;">
       <span style="font-size:22px;">🔄</span>
       <span>
@@ -13276,15 +13208,6 @@ function openThemePicker(){
     closeAmbiancePicker();
     showToast('🔄 Mode automatique activé');
   };
-  list.querySelectorAll('[data-lang-key]').forEach(btn=>{
-    btn.onclick = async ()=>{
-      LANG = btn.dataset.langKey;
-      applyThemeAndFont();
-      await savePrefs();
-      showToast(LANG === 'en' ? '🇬🇧 Language set to English' : '🇫🇷 Langue réglée sur le français');
-      openThemePicker();
-    };
-  });
   list.querySelectorAll('[data-theme-key]').forEach(btn=>{
     btn.onclick = async ()=>{
       THEME_MODE = 'manual';
@@ -13760,7 +13683,6 @@ async function startApp(){
   THEME_MODE = (prefs.themeMode === 'manual') ? 'manual' : 'auto';
   BG_PATTERN = prefs.bgPattern || 'croix';
   BG_WALLPAPER = prefs.bgWallpaper || 'aucun';
-  LANG = prefs.lang === 'en' ? 'en' : 'fr';
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);
   FAMILY_CODE = prefs.familyCode || null;
