@@ -7050,7 +7050,7 @@ function renderGenericSection(groups, compKey, sectionLabel){
     return;
   }
 
-  const BOOK_LIST_COMPKEYS = ['ecritures:psaumes', 'ecritures:recits', 'ecritures:reperes', 'jesus:main', 'eglise:vie-eglise', 'eglise:pelerinages', 'eglise:calendrier', 'eglise:actualites', 'sagesse:spiritualite', 'sagesse:enseignements'];
+  const BOOK_LIST_COMPKEYS = ['ecritures:psaumes', 'ecritures:recits', 'ecritures:reperes', 'jesus:main', 'eglise:vie-eglise', 'eglise:pelerinages', 'eglise:calendrier', 'eglise:actualites', 'sagesse:spiritualite', 'sagesse:enseignements', 'prier:famille', 'combat:prieres', 'combat:temoins'];
   html += BOOK_LIST_COMPKEYS.includes(compKey)
     ? `<div class="rubric-list">${group.entries.map((e,i)=>entryRowHTML(e,i)).join('')}</div>`
     : `<div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
@@ -8168,10 +8168,11 @@ function renderStudio(){
   const html = `<h2 class="section-title">🎶 Louanges & chants</h2>
     <p class="section-desc">Des chants de louange à écouter, pour prier en musique.</p>
     <div class="chip-row">${tags.map(t=>`<button class="chip ${(t==='Toutes'?!STUDIO_TAG_FILTER:STUDIO_TAG_FILTER===t)?'active':''}" data-studio-tag="${t==='Toutes'?'':t}">${t}</button>`).join('')}</div>
-    <div class="grid" style="margin-top:12px;">${filtered.map(v=>`
-      <div class="card entry-card" style="cursor:pointer;" data-play-video="${v.videoId}" data-play-title="${v.title.replace(/"/g,'&quot;')}">
-        <div class="entry-avatar">🎵</div>
-        <div class="entry-body"><p class="entry-name">${v.title}</p><p class="entry-summary">${v.artist}</p></div>
+    <div class="rubric-list" style="margin-top:12px;">${filtered.map(v=>`
+      <div class="rubric-row entry-card" data-play-video="${v.videoId}" data-play-title="${v.title.replace(/"/g,'&quot;')}">
+        <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">🎵</div>
+        <div class="rubric-row-text"><span class="rubric-row-title">${v.title}</span><span class="rubric-row-desc">${v.artist}</span></div>
+        <span class="rubric-row-chevron">›</span>
       </div>`).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('[data-studio-tag]').forEach(btn=>{
@@ -8224,27 +8225,29 @@ function renderFavoris(){
   if(FAVORITES.length === 0){
     html += `<div class="card empty-state">Vous n'avez encore rien épinglé. L'étoile ☆ à côté d'un psaume, d'une prière ou d'un saint permet de le retrouver ici.</div>`;
   } else {
-    html += `<div class="grid">${FAVORITES.map(f=>`
-      <div class="card entry-card" data-fav-open='${JSON.stringify(f).replace(/'/g,"&apos;")}'>
-        <div class="entry-avatar">${f.avatar||'⭐'}</div>
-        <div class="entry-body">
-          <p class="entry-name">${f.name}</p>
-          <p class="entry-summary">${f.summary||''}</p>
+    html += `<div class="rubric-list">${FAVORITES.map(f=>`
+      <div class="rubric-row entry-card" data-fav-open='${JSON.stringify(f).replace(/'/g,"&apos;")}'>
+        <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${f.avatar||'⭐'}</div>
+        <div class="rubric-row-text">
+          <span class="rubric-row-title">${f.name}</span>
+          <span class="rubric-row-desc">${f.summary||''}</span>
         </div>
         ${favStarHTML(f)}
+        <span class="rubric-row-chevron">›</span>
       </div>`).join('')}</div>`;
   }
   html += `<h2 class="section-title" style="margin-top:26px;">🕰️ Consultés récemment</h2>`;
   if(RECENT.length === 0){
     html += `<div class="card empty-state">Rien de récent pour l'instant.</div>`;
   } else {
-    html += `<div class="grid">${RECENT.slice(0,12).map(f=>`
-      <div class="card entry-card" data-fav-open='${JSON.stringify(f).replace(/'/g,"&apos;")}'>
-        <div class="entry-avatar">${f.avatar||'📖'}</div>
-        <div class="entry-body">
-          <p class="entry-name">${f.name}</p>
-          <p class="entry-summary">${f.summary||''}</p>
+    html += `<div class="rubric-list">${RECENT.slice(0,12).map(f=>`
+      <div class="rubric-row entry-card" data-fav-open='${JSON.stringify(f).replace(/'/g,"&apos;")}'>
+        <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${f.avatar||'📖'}</div>
+        <div class="rubric-row-text">
+          <span class="rubric-row-title">${f.name}</span>
+          <span class="rubric-row-desc">${f.summary||''}</span>
         </div>
+        <span class="rubric-row-chevron">›</span>
       </div>`).join('')}</div>`;
   }
   document.getElementById('screen').innerHTML = html;
@@ -9764,7 +9767,7 @@ function renderCombatArmure(){
   }
   let html = `<h2 class="section-title">🛡️ L'armure de Dieu</h2>` + guerrierDeviseHTML() +
     `<p class="section-desc">D'après Éphésiens 6, 10-18 : sept pièces d'une armure spirituelle, pour tenir bon dans le combat de chaque jour.</p>
-    <div class="grid">${ARMURE_DE_DIEU.map((e,i)=>entryCardHTML(e,i)).join('')}</div>`;
+    <div class="rubric-list">${ARMURE_DE_DIEU.map((e,i)=>entryRowHTML(e,i)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   GROUP_SEL['combat:armure'] = 'armure';
   document.querySelectorAll('.entry-card').forEach(c=>{
@@ -10648,11 +10651,12 @@ function renderActualitesVatican(){
       </div>`;
       return;
     }
-    body.innerHTML = items.map(it=>`
-      <a href="${it.link}" target="_blank" rel="noopener" class="card entry-card" style="cursor:pointer; text-decoration:none;">
-        <div class="entry-avatar">📰</div>
-        <div class="entry-body"><p class="entry-name">${it.title}</p><p class="entry-summary">${it.desc}</p></div>
-      </a>`).join('') + `<p class="studio-note" style="text-align:center; margin-top:12px;">Source : <a href="https://www.vaticannews.va/fr.html" target="_blank" rel="noopener">Vatican News</a></p>`;
+    body.innerHTML = `<div class="rubric-list">${items.map(it=>`
+      <a href="${it.link}" target="_blank" rel="noopener" class="rubric-row entry-card" style="text-decoration:none;">
+        <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">📰</div>
+        <div class="rubric-row-text"><span class="rubric-row-title">${it.title}</span><span class="rubric-row-desc">${it.desc}</span></div>
+        <span class="rubric-row-chevron">›</span>
+      </a>`).join('')}</div>` + `<p class="studio-note" style="text-align:center; margin-top:12px;">Source : <a href="https://www.vaticannews.va/fr.html" target="_blank" rel="noopener">Vatican News</a></p>`;
   });
 }
 let AELF_OFFICE_LAST_PLAIN_TEXT = '';
@@ -11313,22 +11317,24 @@ function renderEtatSelector(){
     const psalmGroup = PSALM_GROUPS.find(g=>g.id===etat.themeId);
     html += `<h2 class="section-title" style="font-size:16px;">📜 Psaumes qui peuvent aider</h2>`;
     if(psalmGroup){
-      html += `<div class="grid">${psalmGroup.entries.slice(0,3).map((e,i)=>{
+      html += `<div class="rubric-list">${psalmGroup.entries.slice(0,3).map((e,i)=>{
         const idx = psalmGroup.entries.indexOf(e);
-        return `<div class="card entry-card" data-nav-psalm="${idx}">
-          <div class="entry-avatar">${e.avatar}</div>
-          <div class="entry-body"><p class="entry-name">${e.name}</p><p class="entry-summary">${e.summary}</p></div>
+        return `<div class="rubric-row entry-card" data-nav-psalm="${idx}">
+          <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${e.avatar}</div>
+          <div class="rubric-row-text"><span class="rubric-row-title">${e.name}</span><span class="rubric-row-desc">${e.summary}</span></div>
+          <span class="rubric-row-chevron">›</span>
         </div>`;
       }).join('')}</div>`;
     }
-    html += `<h2 class="section-title" style="font-size:16px;">📿 Prières suggérées</h2><div class="grid">`;
+    html += `<h2 class="section-title" style="font-size:16px;">📿 Prières suggérées</h2><div class="rubric-list">`;
     etat.prieres.forEach(prayerName=>{
       let found = null, foundGroupId = null, foundIdx = null;
       PRIERES.forEach(g=>{ g.entries.forEach((e,i)=>{ if(e.name===prayerName){ found=e; foundGroupId=g.id; foundIdx=i; } }); });
       if(found){
-        html += `<div class="card entry-card" data-nav-priere="${foundGroupId}|${foundIdx}">
-          <div class="entry-avatar">${found.avatar||'📿'}</div>
-          <div class="entry-body"><p class="entry-name">${found.name}</p><p class="entry-summary">${found.summary}</p></div>
+        html += `<div class="rubric-row entry-card" data-nav-priere="${foundGroupId}|${foundIdx}">
+          <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${found.avatar||'📿'}</div>
+          <div class="rubric-row-text"><span class="rubric-row-title">${found.name}</span><span class="rubric-row-desc">${found.summary}</span></div>
+          <span class="rubric-row-chevron">›</span>
         </div>`;
       }
     });
@@ -12971,17 +12977,11 @@ function renderSacrements(){
     document.getElementById('back-btn').onclick = ()=>{ SACREMENT_OPEN=null; render(); };
     return;
   }
-  let html = `<h2 class="section-title">✨ Les sept sacrements</h2><div class="grid">`;
-  SACREMENTS.forEach((s,i)=>{
-    html += `<div class="card entry-card" data-i="${i}">
-      <div class="entry-avatar">${s.avatar}</div>
-      <div class="entry-body"><p class="entry-name">${s.name}</p><p class="entry-summary">${s.summary}</p></div>
-    </div>`;
-  });
-  html += `</div>`;
+  let html = `<h2 class="section-title">✨ Les sept sacrements</h2>
+    <div class="rubric-list">${SACREMENTS.map((s,i)=>entryRowHTML(s,i)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('.entry-card').forEach(c=>{
-    c.onclick = ()=>{ SACREMENT_OPEN = parseInt(c.dataset.i,10); render(); };
+    c.onclick = ()=>{ SACREMENT_OPEN = parseInt(c.dataset.idx,10); render(); };
   });
 }
 
