@@ -1513,25 +1513,27 @@ const PRIERES = [
   {
     id:"prieres-fondamentales",
     title:"Prières fondamentales",
+    titleEn:"Essential prayers",
     desc:"Les prières catholiques les plus universelles, avec leur texte complet.",
+    descEn:"The most universal Catholic prayers, with their full text.",
     entries:[
-      {name:"Notre Père (Pater Noster)", dates:"", tag:null, ref:"Matthieu 6:9-13 ; Luc 11:2-4", avatar:"🙏", summary:"Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd'hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation, mais délivre-nous du mal. Amen."},
-      {name:"Je vous salue Marie (Ave Maria)", dates:"", tag:null, ref:"D'après Luc 1:28 et 1:42", avatar:"🌹", summary:"Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes, et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l'heure de notre mort. Amen."},
-      {name:"Gloire au Père (Doxologie)", dates:"", tag:null, ref:"Formule liturgique traditionnelle", avatar:"✨", summary:"Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen."},
-      {name:"Je crois en Dieu (Symbole des Apôtres)", dates:"", tag:null, ref:"Formulé dès les premiers siècles du christianisme", avatar:"📜", summary:"Je crois en Dieu, le Père tout-puissant, Créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen."},
-      {name:"Acte de contrition", dates:"", tag:null, ref:"Prière de repentance", avatar:"💧", summary:"Mon Dieu, j'ai un très grand regret de vous avoir offensé, parce que vous êtes infiniment bon et que le péché vous déplaît. Je prends la ferme résolution, avec le secours de votre sainte grâce, de ne plus vous offenser et de faire pénitence. Amen."},
-      {name:"L'Angélus", dates:"", tag:null, ref:"Prière traditionnellement dite matin, midi et soir", avatar:"🔔", summary:"L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit. Je vous salue Marie... Voici la servante du Seigneur, qu'il me soit fait selon votre parole. Je vous salue Marie... Et le Verbe s'est fait chair, et il a habité parmi nous. Je vous salue Marie... Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ. Prions : que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Par le même Jésus-Christ notre Seigneur. Amen."},
-      {name:"Salve Regina", dates:"", tag:null, ref:"Antienne mariale médiévale", avatar:"👑", summary:"Salut, Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous votre regard miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie."},
-      {name:"Memorare", dates:"", tag:null, ref:"Attribué à la tradition de saint Bernard de Clairvaux", avatar:"🕊️", summary:"Souvenez-vous, ô très miséricordieuse Vierge Marie, qu'on n'a jamais entendu dire qu'aucun de ceux qui ont eu recours à votre protection, imploré votre assistance et réclamé votre secours, ait été abandonné. Animé d'une pareille confiance, ô Vierge des vierges, ô ma Mère, je viens à vous, et gémissant sous le poids de mes péchés, je me prosterne à vos pieds. Ne dédaignez pas mes paroles, ô Mère du Verbe, mais écoutez-les favorablement et daignez les exaucer. Amen."},
-      {name:"Prière à saint Michel Archange", dates:"", tag:null, ref:"Composée par le pape Léon XIII (fin du XIXe siècle)", avatar:"⚔️", summary:"Saint Michel archange, défendez-nous dans le combat ; soyez notre protection contre la malice et les embûches du démon. Que Dieu lui commande, nous le prions humblement, et vous, prince de la milice céleste, repoussez en enfer, par la puissance divine, Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. Amen."},
-      {name:"Le chapelet (structure)", dates:"", tag:null, ref:"Pratique mariale développée au Moyen Âge", avatar:"📿", externalUrl:"#", linkLabel:"Prier le chapelet dans l'appli →", summary:"Pas une prière unique mais une méditation structurée en dizaines, alternant Notre Père, dix Je vous salue Marie et Gloire au Père, organisée autour de quatre séries de mystères (joyeux, douloureux, glorieux, lumineux) retraçant la vie du Christ et de Marie. Retrouvez la version guidée dans Prier › Chapelet."},
-      {name:"Regina Coeli", dates:"", tag:null, ref:"Remplace l'Angélus durant le temps pascal", avatar:"🌸", summary:"Reine du ciel, réjouissez-vous, alléluia. Car celui que vous avez mérité de porter, alléluia. Est ressuscité comme il l'a dit, alléluia. Priez Dieu pour nous, alléluia. Réjouissez-vous et soyez dans la joie, Vierge Marie, alléluia. Car le Seigneur est vraiment ressuscité, alléluia."},
-      {name:"Sub tuum praesidium", dates:"", tag:null, ref:"L'une des plus anciennes prières mariales connues", avatar:"🛡️", summary:"Nous avons recours à votre protection, sainte Mère de Dieu. Ne rejetez pas les prières que nous vous adressons dans nos besoins, mais délivrez-nous toujours de tous les dangers, ô Vierge glorieuse et bénie."},
-      {name:"Litanies de Lorette (extrait)", dates:"", tag:null, ref:"Titres mariaux traditionnels — réponse : priez pour nous", avatar:"📋", summary:"Seigneur, ayez pitié de nous. Sainte Marie, priez pour nous. Sainte Mère de Dieu, Sainte Vierge des vierges, Mère du Christ, Mère de l'Église, Mère très pure, Mère très chaste, Vierge très prudente, Vierge très fidèle, Miroir de justice, Reine des anges, Reine des patriarches, Reine des prophètes, Reine des apôtres, Reine des martyrs, Reine de tous les saints, Reine conçue sans le péché originel, Reine de la paix, priez pour nous."},
-      {name:"Prière de saint François (Seigneur, fais de moi un instrument de ta paix)", dates:"", tag:null, ref:"Attribuée à saint François d'Assise", avatar:"🕊️", summary:"Seigneur, fais de moi un instrument de ta paix. Là où il y a de la haine, que je mette l'amour. Là où il y a l'offense, que je mette le pardon. Là où il y a la discorde, que je mette l'union. Là où il y a l'erreur, que je mette la vérité. Là où il y a le doute, que je mette la foi. Là où il y a le désespoir, que je mette l'espérance. Là où il y a les ténèbres, que je mette la lumière. Là où il y a la tristesse, que je mette la joie. Ô Maître, que je ne cherche pas tant à être consolé qu'à consoler, à être compris qu'à comprendre, à être aimé qu'à aimer. Car c'est en donnant qu'on reçoit, c'est en s'oubliant qu'on trouve, c'est en pardonnant qu'on est pardonné, c'est en mourant qu'on ressuscite à l'éternelle vie. Amen."},
-      {name:"Le Bénédicité", dates:"", tag:null, ref:"Prière avant le repas", avatar:"🍞", summary:"Bénissez-nous, Seigneur, ainsi que ce repas qui vient de votre bonté, par le Christ notre Seigneur. Amen."},
-      {name:"Prière pour les défunts (Éternel repos)", dates:"", tag:null, ref:"Prière de suffrage pour les morts", avatar:"🕯️", summary:"Donnez-leur, Seigneur, le repos éternel, et que la lumière sans déclin luise pour eux. Qu'ils reposent en paix. Amen."},
-      {name:"Actes de foi, d'espérance et de charité", dates:"", tag:null, ref:"Trois courtes prières classiques", avatar:"❤️", summary:"Acte de foi : Mon Dieu, je crois fermement toutes les vérités que vous avez révélées et que l'Église nous propose à croire, parce que vous ne pouvez ni vous tromper ni nous tromper. Acte d'espérance : Mon Dieu, j'espère avec une ferme confiance que vous me donnerez, par les mérites de Jésus-Christ, votre grâce en ce monde et la gloire éternelle en l'autre, parce que vous l'avez promis et que vous êtes fidèle à vos promesses. Acte de charité : Mon Dieu, je vous aime de tout mon cœur et par-dessus toute chose, parce que vous êtes infiniment bon et digne d'être aimé, et j'aime mon prochain comme moi-même pour l'amour de vous."}
+      {name:"Notre Père (Pater Noster)", nameEn:"The Lord's Prayer (Our Father)", dates:"", tag:null, ref:"Matthieu 6:9-13 ; Luc 11:2-4", refEn:"Matthew 6:9-13; Luke 11:2-4", avatar:"🙏", summary:"Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd'hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation, mais délivre-nous du mal. Amen.", summaryEn:"Our Father, who art in heaven, hallowed be thy name; thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil. Amen."},
+      {name:"Je vous salue Marie (Ave Maria)", nameEn:"Hail Mary (Ave Maria)", dates:"", tag:null, ref:"D'après Luc 1:28 et 1:42", refEn:"After Luke 1:28 and 1:42", avatar:"🌹", summary:"Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes, et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l'heure de notre mort. Amen.", summaryEn:"Hail Mary, full of grace, the Lord is with thee; blessed art thou among women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen."},
+      {name:"Gloire au Père (Doxologie)", nameEn:"Glory Be (Doxology)", dates:"", tag:null, ref:"Formule liturgique traditionnelle", refEn:"Traditional liturgical formula", avatar:"✨", summary:"Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen.", summaryEn:"Glory be to the Father, and to the Son, and to the Holy Spirit, as it was in the beginning, is now, and ever shall be, world without end. Amen."},
+      {name:"Je crois en Dieu (Symbole des Apôtres)", nameEn:"The Apostles' Creed", dates:"", tag:null, ref:"Formulé dès les premiers siècles du christianisme", refEn:"Formulated in the earliest centuries of Christianity", avatar:"📜", summary:"Je crois en Dieu, le Père tout-puissant, Créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.", summaryEn:"I believe in God, the Father almighty, Creator of heaven and earth. And in Jesus Christ, his only Son, our Lord, who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and was buried; he descended into hell; on the third day he rose again from the dead; he ascended into heaven, and is seated at the right hand of God the Father almighty; from there he will come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen."},
+      {name:"Acte de contrition", nameEn:"Act of Contrition", dates:"", tag:null, ref:"Prière de repentance", refEn:"Prayer of repentance", avatar:"💧", summary:"Mon Dieu, j'ai un très grand regret de vous avoir offensé, parce que vous êtes infiniment bon et que le péché vous déplaît. Je prends la ferme résolution, avec le secours de votre sainte grâce, de ne plus vous offenser et de faire pénitence. Amen.", summaryEn:"My God, I am sorry for my sins with all my heart, because they offend you, who are infinitely good, and because they deserve your just punishment. I firmly intend, with the help of your grace, to sin no more and to avoid whatever leads me to sin. Amen."},
+      {name:"L'Angélus", nameEn:"The Angelus", dates:"", tag:null, ref:"Prière traditionnellement dite matin, midi et soir", refEn:"Traditionally prayed morning, noon and evening", avatar:"🔔", summary:"L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit. Je vous salue Marie... Voici la servante du Seigneur, qu'il me soit fait selon votre parole. Je vous salue Marie... Et le Verbe s'est fait chair, et il a habité parmi nous. Je vous salue Marie... Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ. Prions : que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Par le même Jésus-Christ notre Seigneur. Amen.", summaryEn:"The Angel of the Lord declared unto Mary, and she conceived of the Holy Spirit. Hail Mary... Behold the handmaid of the Lord, be it done unto me according to thy word. Hail Mary... And the Word was made flesh, and dwelt among us. Hail Mary... Pray for us, O holy Mother of God, that we may be made worthy of the promises of Christ. Let us pray: pour forth, we beseech thee, O Lord, thy grace into our hearts, that we to whom the incarnation of Christ, thy Son, was made known by the message of an angel, may by his passion and cross be brought to the glory of his resurrection. Through the same Christ our Lord. Amen."},
+      {name:"Salve Regina", nameEn:"Hail, Holy Queen (Salve Regina)", dates:"", tag:null, ref:"Antienne mariale médiévale", refEn:"Medieval Marian antiphon", avatar:"👑", summary:"Salut, Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous votre regard miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie.", summaryEn:"Hail, holy Queen, Mother of mercy, our life, our sweetness, and our hope. To thee do we cry, poor banished children of Eve. To thee do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious advocate, thine eyes of mercy toward us, and after this our exile, show unto us the blessed fruit of thy womb, Jesus. O clement, O loving, O sweet Virgin Mary."},
+      {name:"Memorare", nameEn:"Memorare", dates:"", tag:null, ref:"Attribué à la tradition de saint Bernard de Clairvaux", refEn:"Attributed to the tradition of St. Bernard of Clairvaux", avatar:"🕊️", summary:"Souvenez-vous, ô très miséricordieuse Vierge Marie, qu'on n'a jamais entendu dire qu'aucun de ceux qui ont eu recours à votre protection, imploré votre assistance et réclamé votre secours, ait été abandonné. Animé d'une pareille confiance, ô Vierge des vierges, ô ma Mère, je viens à vous, et gémissant sous le poids de mes péchés, je me prosterne à vos pieds. Ne dédaignez pas mes paroles, ô Mère du Verbe, mais écoutez-les favorablement et daignez les exaucer. Amen.", summaryEn:"Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to thy protection, implored thy help, or sought thy intercession was left unaided. Inspired by this confidence, I fly unto thee, O Virgin of virgins, my Mother; to thee do I come, before thee I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in thy mercy hear and answer me. Amen."},
+      {name:"Prière à saint Michel Archange", nameEn:"Prayer to St. Michael the Archangel", dates:"", tag:null, ref:"Composée par le pape Léon XIII (fin du XIXe siècle)", refEn:"Composed by Pope Leo XIII (late 19th century)", avatar:"⚔️", summary:"Saint Michel archange, défendez-nous dans le combat ; soyez notre protection contre la malice et les embûches du démon. Que Dieu lui commande, nous le prions humblement, et vous, prince de la milice céleste, repoussez en enfer, par la puissance divine, Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. Amen.", summaryEn:"Saint Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. May God rebuke him, we humbly pray; and do thou, O Prince of the heavenly host, by the power of God, thrust into hell Satan and all the evil spirits who prowl about the world seeking the ruin of souls. Amen."},
+      {name:"Le chapelet (structure)", nameEn:"The Rosary (structure)", dates:"", tag:null, ref:"Pratique mariale développée au Moyen Âge", refEn:"Marian practice developed in the Middle Ages", avatar:"📿", externalUrl:"#", linkLabel:"Prier le chapelet dans l'appli →", linkLabelEn:"Pray the Rosary in the app →", summary:"Pas une prière unique mais une méditation structurée en dizaines, alternant Notre Père, dix Je vous salue Marie et Gloire au Père, organisée autour de quatre séries de mystères (joyeux, douloureux, glorieux, lumineux) retraçant la vie du Christ et de Marie. Retrouvez la version guidée dans Prier › Chapelet.", summaryEn:"Not a single prayer but a meditation structured in decades, alternating one Our Father, ten Hail Marys and one Glory Be, organized around four sets of mysteries (Joyful, Sorrowful, Glorious, Luminous) that retrace the life of Christ and Mary. Find the guided version under Pray › Rosary."},
+      {name:"Regina Coeli", nameEn:"Regina Caeli", dates:"", tag:null, ref:"Remplace l'Angélus durant le temps pascal", refEn:"Replaces the Angelus during the Easter season", avatar:"🌸", summary:"Reine du ciel, réjouissez-vous, alléluia. Car celui que vous avez mérité de porter, alléluia. Est ressuscité comme il l'a dit, alléluia. Priez Dieu pour nous, alléluia. Réjouissez-vous et soyez dans la joie, Vierge Marie, alléluia. Car le Seigneur est vraiment ressuscité, alléluia.", summaryEn:"Queen of heaven, rejoice, alleluia. For he whom you did merit to bear, alleluia. Has risen as he said, alleluia. Pray for us to God, alleluia. Rejoice and be glad, O Virgin Mary, alleluia. For the Lord has truly risen, alleluia."},
+      {name:"Sub tuum praesidium", nameEn:"Sub Tuum Praesidium (We Fly to Thy Patronage)", dates:"", tag:null, ref:"L'une des plus anciennes prières mariales connues", refEn:"One of the oldest known Marian prayers", avatar:"🛡️", summary:"Nous avons recours à votre protection, sainte Mère de Dieu. Ne rejetez pas les prières que nous vous adressons dans nos besoins, mais délivrez-nous toujours de tous les dangers, ô Vierge glorieuse et bénie.", summaryEn:"We fly to thy patronage, O holy Mother of God. Despise not our petitions in our necessities, but deliver us always from all dangers, O glorious and blessed Virgin."},
+      {name:"Litanies de Lorette (extrait)", nameEn:"Litany of Loreto (excerpt)", dates:"", tag:null, ref:"Titres mariaux traditionnels — réponse : priez pour nous", refEn:"Traditional Marian titles — response: pray for us", avatar:"📋", summary:"Seigneur, ayez pitié de nous. Sainte Marie, priez pour nous. Sainte Mère de Dieu, Sainte Vierge des vierges, Mère du Christ, Mère de l'Église, Mère très pure, Mère très chaste, Vierge très prudente, Vierge très fidèle, Miroir de justice, Reine des anges, Reine des patriarches, Reine des prophètes, Reine des apôtres, Reine des martyrs, Reine de tous les saints, Reine conçue sans le péché originel, Reine de la paix, priez pour nous.", summaryEn:"Lord, have mercy on us. Holy Mary, pray for us. Holy Mother of God, Holy Virgin of virgins, Mother of Christ, Mother of the Church, Mother most pure, Mother most chaste, Virgin most prudent, Virgin most faithful, Mirror of justice, Queen of angels, Queen of patriarchs, Queen of prophets, Queen of apostles, Queen of martyrs, Queen of all saints, Queen conceived without original sin, Queen of peace, pray for us."},
+      {name:"Prière de saint François (Seigneur, fais de moi un instrument de ta paix)", nameEn:"Prayer of St. Francis (Lord, Make Me an Instrument of Your Peace)", dates:"", tag:null, ref:"Attribuée à saint François d'Assise", refEn:"Attributed to St. Francis of Assisi", avatar:"🕊️", summary:"Seigneur, fais de moi un instrument de ta paix. Là où il y a de la haine, que je mette l'amour. Là où il y a l'offense, que je mette le pardon. Là où il y a la discorde, que je mette l'union. Là où il y a l'erreur, que je mette la vérité. Là où il y a le doute, que je mette la foi. Là où il y a le désespoir, que je mette l'espérance. Là où il y a les ténèbres, que je mette la lumière. Là où il y a la tristesse, que je mette la joie. Ô Maître, que je ne cherche pas tant à être consolé qu'à consoler, à être compris qu'à comprendre, à être aimé qu'à aimer. Car c'est en donnant qu'on reçoit, c'est en s'oubliant qu'on trouve, c'est en pardonnant qu'on est pardonné, c'est en mourant qu'on ressuscite à l'éternelle vie. Amen.", summaryEn:"Lord, make me an instrument of your peace. Where there is hatred, let me sow love. Where there is injury, pardon. Where there is doubt, faith. Where there is despair, hope. Where there is darkness, light. Where there is sadness, joy. O Divine Master, grant that I may not so much seek to be consoled as to console, to be understood as to understand, to be loved as to love. For it is in giving that we receive, it is in pardoning that we are pardoned, and it is in dying that we are born to eternal life. Amen."},
+      {name:"Le Bénédicité", nameEn:"Grace Before Meals", dates:"", tag:null, ref:"Prière avant le repas", refEn:"Prayer before a meal", avatar:"🍞", summary:"Bénissez-nous, Seigneur, ainsi que ce repas qui vient de votre bonté, par le Christ notre Seigneur. Amen.", summaryEn:"Bless us, O Lord, and these thy gifts, which we are about to receive from thy bounty, through Christ our Lord. Amen."},
+      {name:"Prière pour les défunts (Éternel repos)", nameEn:"Prayer for the Dead (Eternal Rest)", dates:"", tag:null, ref:"Prière de suffrage pour les morts", refEn:"Prayer of suffrage for the dead", avatar:"🕯️", summary:"Donnez-leur, Seigneur, le repos éternel, et que la lumière sans déclin luise pour eux. Qu'ils reposent en paix. Amen.", summaryEn:"Eternal rest grant unto them, O Lord, and let perpetual light shine upon them. May they rest in peace. Amen."},
+      {name:"Actes de foi, d'espérance et de charité", nameEn:"Acts of Faith, Hope, and Charity", dates:"", tag:null, ref:"Trois courtes prières classiques", refEn:"Three short classic prayers", avatar:"❤️", summary:"Acte de foi : Mon Dieu, je crois fermement toutes les vérités que vous avez révélées et que l'Église nous propose à croire, parce que vous ne pouvez ni vous tromper ni nous tromper. Acte d'espérance : Mon Dieu, j'espère avec une ferme confiance que vous me donnerez, par les mérites de Jésus-Christ, votre grâce en ce monde et la gloire éternelle en l'autre, parce que vous l'avez promis et que vous êtes fidèle à vos promesses. Acte de charité : Mon Dieu, je vous aime de tout mon cœur et par-dessus toute chose, parce que vous êtes infiniment bon et digne d'être aimé, et j'aime mon prochain comme moi-même pour l'amour de vous.", summaryEn:"Act of Faith: O my God, I firmly believe all the truths that you have revealed and that the Church proposes for our belief, because you can neither deceive nor be deceived. Act of Hope: O my God, relying on your infinite goodness and promises, I hope to obtain pardon for my sins, the help of your grace, and life everlasting, through the merits of Jesus Christ. Act of Charity: O my God, I love you above all things with my whole heart and soul, because you are all good and worthy of all my love, and I love my neighbor as myself for love of you."}
     ]
   },
   {
@@ -5744,15 +5746,23 @@ function renderGuides(){
 // courte référence + chevron) au lieu d'une carte en grille — utilisée pour les
 // sous-parties de la section Écritures (Psaumes, Récits fondateurs, Repères)
 // afin de présenter sections/chapitres comme un sommaire de livre.
+/* Localisation légère au niveau d'une entrée de contenu : si l'entrée porte
+   un champ "<field>En" et que LANG==='en', on l'utilise, sinon on retombe
+   sur le texte français d'origine. Permet de traduire certaines entrées
+   (ex. les prières fondamentales) sans toucher aux 114 tableaux restants. */
+function loc(entry, field){
+  if(LANG === 'en' && entry && entry[field+'En']) return entry[field+'En'];
+  return entry ? entry[field] : undefined;
+}
 function entryRowHTML(entry, idx){
   const art = lumenSacredArtFor(entry);
   const imgUrl = entry.img || (art ? art.url : null);
   const iconHTML = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📖').replace(/'/g,"\\'")}'">` : (entry.avatar || '📖');
-  const desc = entry.ref || entry.dates || entry.summary || '';
+  const desc = loc(entry,'ref') || loc(entry,'dates') || loc(entry,'summary') || '';
   return `<div class="rubric-row entry-card" data-idx="${idx}">
     <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${iconHTML}</div>
     <div class="rubric-row-text">
-      <span class="rubric-row-title">${entry.name}</span>
+      <span class="rubric-row-title">${loc(entry,'name')}</span>
       ${desc ? `<span class="rubric-row-desc">${desc}</span>` : ''}
     </div>
     <span class="rubric-row-chevron">›</span>
@@ -5767,25 +5777,26 @@ function entryCardHTML(entry, idx, halo){
     return `<div class="card entry-card" data-idx="${idx}">
       <div class="entry-avatar entry-avatar-photo">${thumbHTML}</div>
       <div class="entry-body">
-        <p class="entry-name">${entry.name}</p>
-        ${entry.dates ? `<p class="entry-dates">${entry.dates}</p>` : (entry.ref ? `<p class="entry-dates">${entry.ref}</p>` : '')}
-        <p class="entry-summary">${entry.summary}</p>
+        <p class="entry-name">${loc(entry,'name')}</p>
+        ${loc(entry,'dates') ? `<p class="entry-dates">${loc(entry,'dates')}</p>` : (loc(entry,'ref') ? `<p class="entry-dates">${loc(entry,'ref')}</p>` : '')}
+        <p class="entry-summary">${loc(entry,'summary')}</p>
       </div>
     </div>`;
   }
   return `<div class="card entry-card" data-idx="${idx}">
     <div class="entry-avatar entry-avatar-photo">${thumbHTML}</div>
     <div class="entry-body">
-      <p class="entry-name">${entry.name}</p>
-      ${entry.dates ? `<p class="entry-dates">${entry.dates}</p>` : (entry.ref ? `<p class="entry-dates">${entry.ref}</p>` : '')}
-      <p class="entry-summary">${entry.summary}</p>
+      <p class="entry-name">${loc(entry,'name')}</p>
+      ${loc(entry,'dates') ? `<p class="entry-dates">${loc(entry,'dates')}</p>` : (loc(entry,'ref') ? `<p class="entry-dates">${loc(entry,'ref')}</p>` : '')}
+      <p class="entry-summary">${loc(entry,'summary')}</p>
     </div>
   </div>`;
 }
 
 const REPEATABLE_PRAYER_COMPKEYS = ['prier:prieres', 'prier:famille', 'combat:prieres'];
 function entryDetailHTML(entry, idx, total, halo, favMeta){
-  const fav = favMeta ? {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey:favMeta.compKey, groupId:favMeta.groupId, idx, name:entry.name, avatar:entry.avatar, summary:(entry.summary||'').slice(0,90)} : null;
+  const locName = loc(entry,'name'), locDates = loc(entry,'dates'), locRef = loc(entry,'ref'), locSummary = loc(entry,'summary');
+  const fav = favMeta ? {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey:favMeta.compKey, groupId:favMeta.groupId, idx, name:locName, avatar:entry.avatar, summary:(locSummary||'').slice(0,90)} : null;
   const usageKey = favMeta ? `${favMeta.compKey}:${favMeta.groupId}:${idx}` : null;
   const usageCount = usageKey ? (PRAYER_USAGE[usageKey]||0) : 0;
   const detailArt = lumenSacredArtFor(entry);
@@ -5797,20 +5808,20 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
         ? `<div class="halo-wrap"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo">${detailThumb}</div></div>`
         : `<div class="entry-avatar-lg entry-avatar-photo">${detailThumb}</div>`}
       <div style="flex:1;">
-        <p class="entry-detail-name">${entry.name}</p>
-        ${entry.dates ? `<p class="entry-detail-dates">${entry.dates}</p>` : ''}
+        <p class="entry-detail-name">${locName}</p>
+        ${locDates ? `<p class="entry-detail-dates">${locDates}</p>` : ''}
       </div>
       ${fav ? favStarHTML(fav) : ''}
     </div>
-    ${entry.ref ? `<p class="saint-prayer" style="margin-bottom:12px;">${entry.ref}</p>` : ''}
-    ${carnetBoxesHTML(entry.summary, 'reading')}
-    ${textActionsRowHTML('candle', entry.name, entry.dates||'', entry.summary, entry.ref||'', detailArt ? [detailArt.url] : [])}
+    ${locRef ? `<p class="saint-prayer" style="margin-bottom:12px;">${locRef}</p>` : ''}
+    ${carnetBoxesHTML(locSummary, 'reading')}
+    ${textActionsRowHTML('candle', locName, locDates||'', locSummary, locRef||'', detailArt ? [detailArt.url] : [])}
     ${(()=>{
-      if(entry.externalUrl === '#') return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" id="goto-rosary-btn">${entry.linkLabel || 'Ouvrir →'}</button></div>`;
+      if(entry.externalUrl === '#') return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" id="goto-rosary-btn">${loc(entry,'linkLabel') || (LANG==='en'?'Open →':'Ouvrir →')}</button></div>`;
       if(!entry.externalUrl) return '';
       const ytId = extractYoutubeId(entry.externalUrl);
-      if(ytId) return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" data-video-id="${ytId}" data-video-title="${entry.name.replace(/"/g,'&quot;')}" data-video-caption="${(entry.ref||'').replace(/"/g,'&quot;')}">▶️ Regarder ici</button></div>`;
-      return `<div class="entry-link-row"><a class="btn btn-gold btn-sm" href="${entry.externalUrl}" target="_blank" rel="noopener">${entry.linkLabel || 'En savoir plus ↗'}</a></div>`;
+      if(ytId) return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" data-video-id="${ytId}" data-video-title="${locName.replace(/"/g,'&quot;')}" data-video-caption="${(locRef||'').replace(/"/g,'&quot;')}">▶️ Regarder ici</button></div>`;
+      return `<div class="entry-link-row"><a class="btn btn-gold btn-sm" href="${entry.externalUrl}" target="_blank" rel="noopener">${loc(entry,'linkLabel') || (LANG==='en'?'Learn more ↗':'En savoir plus ↗')}</a></div>`;
     })()}
     ${usageKey ? `
     <div class="card" style="margin-top:14px;">
@@ -5824,7 +5835,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
     ${favMeta && REPEATABLE_PRAYER_COMPKEYS.includes(favMeta.compKey) ? `
     <div class="card" style="margin-top:10px;">
       <p class="eyebrow" style="color:var(--gold);">📿 Chapelet de répétitions</p>
-      <p class="entry-detail-text" style="font-style:italic; margin-bottom:8px;">« ${entry.summary} »</p>
+      <p class="entry-detail-text" style="font-style:italic; margin-bottom:8px;">« ${locSummary} »</p>
       <p class="studio-note" style="margin:2px 0 8px;">Répétez ce texte à chaque perle — touchez une perle pour avancer, ou utilisez « + 1 ».</p>
       <div class="bead-chaplet" id="bead-chaplet"></div>
       <div style="display:flex; align-items:center; gap:14px; justify-content:center; margin-top:10px;">
@@ -6036,7 +6047,7 @@ function renderPrieresHub(){
     const group = PRIERES.find(g=>g.id===ENTRY_OPEN.groupId);
     const entry = group.entries[ENTRY_OPEN.idx];
     let html = `<div class="detail-wrap">
-      <button class="back-link" id="back-btn">← ${group.title}</button>
+      <button class="back-link" id="back-btn">← ${loc(group,'title')}</button>
       ${entryDetailHTML(entry, ENTRY_OPEN.idx, group.entries.length, halo, {primary:PRIMARY, sub:SUBTAB[PRIMARY], compKey, groupId:group.id})}
     </div>`;
     document.getElementById('screen').innerHTML = html;
@@ -6069,7 +6080,7 @@ function renderPrieresHub(){
     html += `<div class="grid">${results.map(r=>`
       <div class="entry-card" data-group="${r.group.id}" data-idx="${r.idx}">
         <div class="entry-avatar">${r.entry.avatar||'🙏'}</div>
-        <div class="entry-body"><p class="entry-name">${r.entry.name}</p><p class="entry-summary">${(PRIERES_CAT_META[r.group.id]||{}).icon||''} ${r.group.title}</p></div>
+        <div class="entry-body"><p class="entry-name">${loc(r.entry,'name')}</p><p class="entry-summary">${(PRIERES_CAT_META[r.group.id]||{}).icon||''} ${loc(r.group,'title')}</p></div>
       </div>`).join('')}</div>`;
     document.getElementById('screen').innerHTML = html;
     wirePrieresSearch();
@@ -6084,7 +6095,7 @@ function renderPrieresHub(){
       <div class="grid">${PRIERES.map(g=>`
         <div class="card prieres-cat-card" data-cat="${g.id}" style="cursor:pointer;">
           <span style="font-size:26px;">${(PRIERES_CAT_META[g.id]||{}).icon||'📿'}</span>
-          <p class="day-title" style="font-size:15px; margin:6px 0 2px;">${g.title}</p>
+          <p class="day-title" style="font-size:15px; margin:6px 0 2px;">${loc(g,'title')}</p>
           <p class="studio-note" style="margin:0;">${g.entries.length} prière${g.entries.length>1?'s':''}</p>
           <p class="entry-summary" style="margin-top:4px;">${(PRIERES_CAT_META[g.id]||{}).short||''}</p>
         </div>`).join('')}</div>`;
@@ -6098,8 +6109,8 @@ function renderPrieresHub(){
 
   const group = PRIERES.find(g=>g.id===PRIERES_CATEGORY);
   html += `<div style="margin-bottom:10px;"><button class="back-link" id="cat-back-btn">← Toutes les catégories</button></div>
-    <h2 class="section-title" style="font-size:17px;">${(PRIERES_CAT_META[group.id]||{}).icon||''} ${group.title}</h2>
-    <p class="section-desc">${group.desc||''}</p>
+    <h2 class="section-title" style="font-size:17px;">${(PRIERES_CAT_META[group.id]||{}).icon||''} ${loc(group,'title')}</h2>
+    <p class="section-desc">${loc(group,'desc')||''}</p>
     <div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   wirePrieresSearch();
