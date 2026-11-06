@@ -1513,54 +1513,58 @@ const PRIERES = [
   {
     id:"prieres-fondamentales",
     title:"Prières fondamentales",
+    titleEn:"Essential prayers",
     desc:"Les prières catholiques les plus universelles, avec leur texte complet.",
+    descEn:"The most universal Catholic prayers, with their full text.",
     entries:[
-      {name:"Notre Père (Pater Noster)", dates:"", tag:null, ref:"Matthieu 6:9-13 ; Luc 11:2-4", avatar:"🙏", summary:"Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd'hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation, mais délivre-nous du mal. Amen."},
-      {name:"Je vous salue Marie (Ave Maria)", dates:"", tag:null, ref:"D'après Luc 1:28 et 1:42", avatar:"🌹", summary:"Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes, et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l'heure de notre mort. Amen."},
-      {name:"Gloire au Père (Doxologie)", dates:"", tag:null, ref:"Formule liturgique traditionnelle", avatar:"✨", summary:"Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen."},
-      {name:"Je crois en Dieu (Symbole des Apôtres)", dates:"", tag:null, ref:"Formulé dès les premiers siècles du christianisme", avatar:"📜", summary:"Je crois en Dieu, le Père tout-puissant, Créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen."},
-      {name:"Acte de contrition", dates:"", tag:null, ref:"Prière de repentance", avatar:"💧", summary:"Mon Dieu, j'ai un très grand regret de vous avoir offensé, parce que vous êtes infiniment bon et que le péché vous déplaît. Je prends la ferme résolution, avec le secours de votre sainte grâce, de ne plus vous offenser et de faire pénitence. Amen."},
-      {name:"L'Angélus", dates:"", tag:null, ref:"Prière traditionnellement dite matin, midi et soir", avatar:"🔔", summary:"L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit. Je vous salue Marie... Voici la servante du Seigneur, qu'il me soit fait selon votre parole. Je vous salue Marie... Et le Verbe s'est fait chair, et il a habité parmi nous. Je vous salue Marie... Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ. Prions : que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Par le même Jésus-Christ notre Seigneur. Amen."},
-      {name:"Salve Regina", dates:"", tag:null, ref:"Antienne mariale médiévale", avatar:"👑", summary:"Salut, Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous votre regard miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie."},
-      {name:"Memorare", dates:"", tag:null, ref:"Attribué à la tradition de saint Bernard de Clairvaux", avatar:"🕊️", summary:"Souvenez-vous, ô très miséricordieuse Vierge Marie, qu'on n'a jamais entendu dire qu'aucun de ceux qui ont eu recours à votre protection, imploré votre assistance et réclamé votre secours, ait été abandonné. Animé d'une pareille confiance, ô Vierge des vierges, ô ma Mère, je viens à vous, et gémissant sous le poids de mes péchés, je me prosterne à vos pieds. Ne dédaignez pas mes paroles, ô Mère du Verbe, mais écoutez-les favorablement et daignez les exaucer. Amen."},
-      {name:"Prière à saint Michel Archange", dates:"", tag:null, ref:"Composée par le pape Léon XIII (fin du XIXe siècle)", avatar:"⚔️", summary:"Saint Michel archange, défendez-nous dans le combat ; soyez notre protection contre la malice et les embûches du démon. Que Dieu lui commande, nous le prions humblement, et vous, prince de la milice céleste, repoussez en enfer, par la puissance divine, Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. Amen."},
-      {name:"Le chapelet (structure)", dates:"", tag:null, ref:"Pratique mariale développée au Moyen Âge", avatar:"📿", externalUrl:"#", linkLabel:"Prier le chapelet dans l'appli →", summary:"Pas une prière unique mais une méditation structurée en dizaines, alternant Notre Père, dix Je vous salue Marie et Gloire au Père, organisée autour de quatre séries de mystères (joyeux, douloureux, glorieux, lumineux) retraçant la vie du Christ et de Marie. Retrouvez la version guidée dans Prier › Chapelet."},
-      {name:"Regina Coeli", dates:"", tag:null, ref:"Remplace l'Angélus durant le temps pascal", avatar:"🌸", summary:"Reine du ciel, réjouissez-vous, alléluia. Car celui que vous avez mérité de porter, alléluia. Est ressuscité comme il l'a dit, alléluia. Priez Dieu pour nous, alléluia. Réjouissez-vous et soyez dans la joie, Vierge Marie, alléluia. Car le Seigneur est vraiment ressuscité, alléluia."},
-      {name:"Sub tuum praesidium", dates:"", tag:null, ref:"L'une des plus anciennes prières mariales connues", avatar:"🛡️", summary:"Nous avons recours à votre protection, sainte Mère de Dieu. Ne rejetez pas les prières que nous vous adressons dans nos besoins, mais délivrez-nous toujours de tous les dangers, ô Vierge glorieuse et bénie."},
-      {name:"Litanies de Lorette (extrait)", dates:"", tag:null, ref:"Titres mariaux traditionnels — réponse : priez pour nous", avatar:"📋", summary:"Seigneur, ayez pitié de nous. Sainte Marie, priez pour nous. Sainte Mère de Dieu, Sainte Vierge des vierges, Mère du Christ, Mère de l'Église, Mère très pure, Mère très chaste, Vierge très prudente, Vierge très fidèle, Miroir de justice, Reine des anges, Reine des patriarches, Reine des prophètes, Reine des apôtres, Reine des martyrs, Reine de tous les saints, Reine conçue sans le péché originel, Reine de la paix, priez pour nous."},
-      {name:"Prière de saint François (Seigneur, fais de moi un instrument de ta paix)", dates:"", tag:null, ref:"Attribuée à saint François d'Assise", avatar:"🕊️", summary:"Seigneur, fais de moi un instrument de ta paix. Là où il y a de la haine, que je mette l'amour. Là où il y a l'offense, que je mette le pardon. Là où il y a la discorde, que je mette l'union. Là où il y a l'erreur, que je mette la vérité. Là où il y a le doute, que je mette la foi. Là où il y a le désespoir, que je mette l'espérance. Là où il y a les ténèbres, que je mette la lumière. Là où il y a la tristesse, que je mette la joie. Ô Maître, que je ne cherche pas tant à être consolé qu'à consoler, à être compris qu'à comprendre, à être aimé qu'à aimer. Car c'est en donnant qu'on reçoit, c'est en s'oubliant qu'on trouve, c'est en pardonnant qu'on est pardonné, c'est en mourant qu'on ressuscite à l'éternelle vie. Amen."},
-      {name:"Le Bénédicité", dates:"", tag:null, ref:"Prière avant le repas", avatar:"🍞", summary:"Bénissez-nous, Seigneur, ainsi que ce repas qui vient de votre bonté, par le Christ notre Seigneur. Amen."},
-      {name:"Prière pour les défunts (Éternel repos)", dates:"", tag:null, ref:"Prière de suffrage pour les morts", avatar:"🕯️", summary:"Donnez-leur, Seigneur, le repos éternel, et que la lumière sans déclin luise pour eux. Qu'ils reposent en paix. Amen."},
-      {name:"Actes de foi, d'espérance et de charité", dates:"", tag:null, ref:"Trois courtes prières classiques", avatar:"❤️", summary:"Acte de foi : Mon Dieu, je crois fermement toutes les vérités que vous avez révélées et que l'Église nous propose à croire, parce que vous ne pouvez ni vous tromper ni nous tromper. Acte d'espérance : Mon Dieu, j'espère avec une ferme confiance que vous me donnerez, par les mérites de Jésus-Christ, votre grâce en ce monde et la gloire éternelle en l'autre, parce que vous l'avez promis et que vous êtes fidèle à vos promesses. Acte de charité : Mon Dieu, je vous aime de tout mon cœur et par-dessus toute chose, parce que vous êtes infiniment bon et digne d'être aimé, et j'aime mon prochain comme moi-même pour l'amour de vous."}
+      {name:"Notre Père (Pater Noster)", nameEn:"The Lord's Prayer (Our Father)", dates:"", tag:null, ref:"Matthieu 6:9-13 ; Luc 11:2-4", refEn:"Matthew 6:9-13; Luke 11:2-4", avatar:"🙏", summary:"Notre Père, qui es aux cieux, que ton nom soit sanctifié, que ton règne vienne, que ta volonté soit faite sur la terre comme au ciel. Donne-nous aujourd'hui notre pain de ce jour. Pardonne-nous nos offenses, comme nous pardonnons aussi à ceux qui nous ont offensés. Et ne nous laisse pas entrer en tentation, mais délivre-nous du mal. Amen.", summaryEn:"Our Father, who art in heaven, hallowed be thy name; thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil. Amen."},
+      {name:"Je vous salue Marie (Ave Maria)", nameEn:"Hail Mary (Ave Maria)", dates:"", tag:null, ref:"D'après Luc 1:28 et 1:42", refEn:"After Luke 1:28 and 1:42", avatar:"🌹", summary:"Je vous salue Marie, pleine de grâce ; le Seigneur est avec vous. Vous êtes bénie entre toutes les femmes, et Jésus, le fruit de vos entrailles, est béni. Sainte Marie, Mère de Dieu, priez pour nous, pauvres pécheurs, maintenant et à l'heure de notre mort. Amen.", summaryEn:"Hail Mary, full of grace, the Lord is with thee; blessed art thou among women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen."},
+      {name:"Gloire au Père (Doxologie)", nameEn:"Glory Be (Doxology)", dates:"", tag:null, ref:"Formule liturgique traditionnelle", refEn:"Traditional liturgical formula", avatar:"✨", summary:"Gloire au Père, et au Fils, et au Saint-Esprit, comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen.", summaryEn:"Glory be to the Father, and to the Son, and to the Holy Spirit, as it was in the beginning, is now, and ever shall be, world without end. Amen."},
+      {name:"Je crois en Dieu (Symbole des Apôtres)", nameEn:"The Apostles' Creed", dates:"", tag:null, ref:"Formulé dès les premiers siècles du christianisme", refEn:"Formulated in the earliest centuries of Christianity", avatar:"📜", summary:"Je crois en Dieu, le Père tout-puissant, Créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.", summaryEn:"I believe in God, the Father almighty, Creator of heaven and earth. And in Jesus Christ, his only Son, our Lord, who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and was buried; he descended into hell; on the third day he rose again from the dead; he ascended into heaven, and is seated at the right hand of God the Father almighty; from there he will come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen."},
+      {name:"Acte de contrition", nameEn:"Act of Contrition", dates:"", tag:null, ref:"Prière de repentance", refEn:"Prayer of repentance", avatar:"💧", summary:"Mon Dieu, j'ai un très grand regret de vous avoir offensé, parce que vous êtes infiniment bon et que le péché vous déplaît. Je prends la ferme résolution, avec le secours de votre sainte grâce, de ne plus vous offenser et de faire pénitence. Amen.", summaryEn:"My God, I am sorry for my sins with all my heart, because they offend you, who are infinitely good, and because they deserve your just punishment. I firmly intend, with the help of your grace, to sin no more and to avoid whatever leads me to sin. Amen."},
+      {name:"L'Angélus", nameEn:"The Angelus", dates:"", tag:null, ref:"Prière traditionnellement dite matin, midi et soir", refEn:"Traditionally prayed morning, noon and evening", avatar:"🔔", summary:"L'ange du Seigneur apporta l'annonce à Marie, et elle conçut du Saint-Esprit. Je vous salue Marie... Voici la servante du Seigneur, qu'il me soit fait selon votre parole. Je vous salue Marie... Et le Verbe s'est fait chair, et il a habité parmi nous. Je vous salue Marie... Priez pour nous, sainte Mère de Dieu, afin que nous soyons rendus dignes des promesses de Jésus-Christ. Prions : que votre grâce, Seigneur, se répande en nos âmes ; vous qui, par le message de l'ange, nous avez fait connaître l'incarnation de votre Fils bien-aimé, conduisez-nous par sa passion et par sa croix jusqu'à la gloire de la résurrection. Par le même Jésus-Christ notre Seigneur. Amen.", summaryEn:"The Angel of the Lord declared unto Mary, and she conceived of the Holy Spirit. Hail Mary... Behold the handmaid of the Lord, be it done unto me according to thy word. Hail Mary... And the Word was made flesh, and dwelt among us. Hail Mary... Pray for us, O holy Mother of God, that we may be made worthy of the promises of Christ. Let us pray: pour forth, we beseech thee, O Lord, thy grace into our hearts, that we to whom the incarnation of Christ, thy Son, was made known by the message of an angel, may by his passion and cross be brought to the glory of his resurrection. Through the same Christ our Lord. Amen."},
+      {name:"Salve Regina", nameEn:"Hail, Holy Queen (Salve Regina)", dates:"", tag:null, ref:"Antienne mariale médiévale", refEn:"Medieval Marian antiphon", avatar:"👑", summary:"Salut, Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous votre regard miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie.", summaryEn:"Hail, holy Queen, Mother of mercy, our life, our sweetness, and our hope. To thee do we cry, poor banished children of Eve. To thee do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious advocate, thine eyes of mercy toward us, and after this our exile, show unto us the blessed fruit of thy womb, Jesus. O clement, O loving, O sweet Virgin Mary."},
+      {name:"Memorare", nameEn:"Memorare", dates:"", tag:null, ref:"Attribué à la tradition de saint Bernard de Clairvaux", refEn:"Attributed to the tradition of St. Bernard of Clairvaux", avatar:"🕊️", summary:"Souvenez-vous, ô très miséricordieuse Vierge Marie, qu'on n'a jamais entendu dire qu'aucun de ceux qui ont eu recours à votre protection, imploré votre assistance et réclamé votre secours, ait été abandonné. Animé d'une pareille confiance, ô Vierge des vierges, ô ma Mère, je viens à vous, et gémissant sous le poids de mes péchés, je me prosterne à vos pieds. Ne dédaignez pas mes paroles, ô Mère du Verbe, mais écoutez-les favorablement et daignez les exaucer. Amen.", summaryEn:"Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to thy protection, implored thy help, or sought thy intercession was left unaided. Inspired by this confidence, I fly unto thee, O Virgin of virgins, my Mother; to thee do I come, before thee I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in thy mercy hear and answer me. Amen."},
+      {name:"Prière à saint Michel Archange", nameEn:"Prayer to St. Michael the Archangel", dates:"", tag:null, ref:"Composée par le pape Léon XIII (fin du XIXe siècle)", refEn:"Composed by Pope Leo XIII (late 19th century)", avatar:"⚔️", summary:"Saint Michel archange, défendez-nous dans le combat ; soyez notre protection contre la malice et les embûches du démon. Que Dieu lui commande, nous le prions humblement, et vous, prince de la milice céleste, repoussez en enfer, par la puissance divine, Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. Amen.", summaryEn:"Saint Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. May God rebuke him, we humbly pray; and do thou, O Prince of the heavenly host, by the power of God, thrust into hell Satan and all the evil spirits who prowl about the world seeking the ruin of souls. Amen."},
+      {name:"Le chapelet (structure)", nameEn:"The Rosary (structure)", dates:"", tag:null, ref:"Pratique mariale développée au Moyen Âge", refEn:"Marian practice developed in the Middle Ages", avatar:"📿", externalUrl:"#", linkLabel:"Prier le chapelet dans l'appli →", linkLabelEn:"Pray the Rosary in the app →", summary:"Pas une prière unique mais une méditation structurée en dizaines, alternant Notre Père, dix Je vous salue Marie et Gloire au Père, organisée autour de quatre séries de mystères (joyeux, douloureux, glorieux, lumineux) retraçant la vie du Christ et de Marie. Retrouvez la version guidée dans Prier › Chapelet.", summaryEn:"Not a single prayer but a meditation structured in decades, alternating one Our Father, ten Hail Marys and one Glory Be, organized around four sets of mysteries (Joyful, Sorrowful, Glorious, Luminous) that retrace the life of Christ and Mary. Find the guided version under Pray › Rosary."},
+      {name:"Regina Coeli", nameEn:"Regina Caeli", dates:"", tag:null, ref:"Remplace l'Angélus durant le temps pascal", refEn:"Replaces the Angelus during the Easter season", avatar:"🌸", summary:"Reine du ciel, réjouissez-vous, alléluia. Car celui que vous avez mérité de porter, alléluia. Est ressuscité comme il l'a dit, alléluia. Priez Dieu pour nous, alléluia. Réjouissez-vous et soyez dans la joie, Vierge Marie, alléluia. Car le Seigneur est vraiment ressuscité, alléluia.", summaryEn:"Queen of heaven, rejoice, alleluia. For he whom you did merit to bear, alleluia. Has risen as he said, alleluia. Pray for us to God, alleluia. Rejoice and be glad, O Virgin Mary, alleluia. For the Lord has truly risen, alleluia."},
+      {name:"Sub tuum praesidium", nameEn:"Sub Tuum Praesidium (We Fly to Thy Patronage)", dates:"", tag:null, ref:"L'une des plus anciennes prières mariales connues", refEn:"One of the oldest known Marian prayers", avatar:"🛡️", summary:"Nous avons recours à votre protection, sainte Mère de Dieu. Ne rejetez pas les prières que nous vous adressons dans nos besoins, mais délivrez-nous toujours de tous les dangers, ô Vierge glorieuse et bénie.", summaryEn:"We fly to thy patronage, O holy Mother of God. Despise not our petitions in our necessities, but deliver us always from all dangers, O glorious and blessed Virgin."},
+      {name:"Litanies de Lorette (extrait)", nameEn:"Litany of Loreto (excerpt)", dates:"", tag:null, ref:"Titres mariaux traditionnels — réponse : priez pour nous", refEn:"Traditional Marian titles — response: pray for us", avatar:"📋", summary:"Seigneur, ayez pitié de nous. Sainte Marie, priez pour nous. Sainte Mère de Dieu, Sainte Vierge des vierges, Mère du Christ, Mère de l'Église, Mère très pure, Mère très chaste, Vierge très prudente, Vierge très fidèle, Miroir de justice, Reine des anges, Reine des patriarches, Reine des prophètes, Reine des apôtres, Reine des martyrs, Reine de tous les saints, Reine conçue sans le péché originel, Reine de la paix, priez pour nous.", summaryEn:"Lord, have mercy on us. Holy Mary, pray for us. Holy Mother of God, Holy Virgin of virgins, Mother of Christ, Mother of the Church, Mother most pure, Mother most chaste, Virgin most prudent, Virgin most faithful, Mirror of justice, Queen of angels, Queen of patriarchs, Queen of prophets, Queen of apostles, Queen of martyrs, Queen of all saints, Queen conceived without original sin, Queen of peace, pray for us."},
+      {name:"Prière de saint François (Seigneur, fais de moi un instrument de ta paix)", nameEn:"Prayer of St. Francis (Lord, Make Me an Instrument of Your Peace)", dates:"", tag:null, ref:"Attribuée à saint François d'Assise", refEn:"Attributed to St. Francis of Assisi", avatar:"🕊️", summary:"Seigneur, fais de moi un instrument de ta paix. Là où il y a de la haine, que je mette l'amour. Là où il y a l'offense, que je mette le pardon. Là où il y a la discorde, que je mette l'union. Là où il y a l'erreur, que je mette la vérité. Là où il y a le doute, que je mette la foi. Là où il y a le désespoir, que je mette l'espérance. Là où il y a les ténèbres, que je mette la lumière. Là où il y a la tristesse, que je mette la joie. Ô Maître, que je ne cherche pas tant à être consolé qu'à consoler, à être compris qu'à comprendre, à être aimé qu'à aimer. Car c'est en donnant qu'on reçoit, c'est en s'oubliant qu'on trouve, c'est en pardonnant qu'on est pardonné, c'est en mourant qu'on ressuscite à l'éternelle vie. Amen.", summaryEn:"Lord, make me an instrument of your peace. Where there is hatred, let me sow love. Where there is injury, pardon. Where there is doubt, faith. Where there is despair, hope. Where there is darkness, light. Where there is sadness, joy. O Divine Master, grant that I may not so much seek to be consoled as to console, to be understood as to understand, to be loved as to love. For it is in giving that we receive, it is in pardoning that we are pardoned, and it is in dying that we are born to eternal life. Amen."},
+      {name:"Le Bénédicité", nameEn:"Grace Before Meals", dates:"", tag:null, ref:"Prière avant le repas", refEn:"Prayer before a meal", avatar:"🍞", summary:"Bénissez-nous, Seigneur, ainsi que ce repas qui vient de votre bonté, par le Christ notre Seigneur. Amen.", summaryEn:"Bless us, O Lord, and these thy gifts, which we are about to receive from thy bounty, through Christ our Lord. Amen."},
+      {name:"Prière pour les défunts (Éternel repos)", nameEn:"Prayer for the Dead (Eternal Rest)", dates:"", tag:null, ref:"Prière de suffrage pour les morts", refEn:"Prayer of suffrage for the dead", avatar:"🕯️", summary:"Donnez-leur, Seigneur, le repos éternel, et que la lumière sans déclin luise pour eux. Qu'ils reposent en paix. Amen.", summaryEn:"Eternal rest grant unto them, O Lord, and let perpetual light shine upon them. May they rest in peace. Amen."},
+      {name:"Actes de foi, d'espérance et de charité", nameEn:"Acts of Faith, Hope, and Charity", dates:"", tag:null, ref:"Trois courtes prières classiques", refEn:"Three short classic prayers", avatar:"❤️", summary:"Acte de foi : Mon Dieu, je crois fermement toutes les vérités que vous avez révélées et que l'Église nous propose à croire, parce que vous ne pouvez ni vous tromper ni nous tromper. Acte d'espérance : Mon Dieu, j'espère avec une ferme confiance que vous me donnerez, par les mérites de Jésus-Christ, votre grâce en ce monde et la gloire éternelle en l'autre, parce que vous l'avez promis et que vous êtes fidèle à vos promesses. Acte de charité : Mon Dieu, je vous aime de tout mon cœur et par-dessus toute chose, parce que vous êtes infiniment bon et digne d'être aimé, et j'aime mon prochain comme moi-même pour l'amour de vous.", summaryEn:"Act of Faith: O my God, I firmly believe all the truths that you have revealed and that the Church proposes for our belief, because you can neither deceive nor be deceived. Act of Hope: O my God, relying on your infinite goodness and promises, I hope to obtain pardon for my sins, the help of your grace, and life everlasting, through the merits of Jesus Christ. Act of Charity: O my God, I love you above all things with my whole heart and soul, because you are all good and worthy of all my love, and I love my neighbor as myself for love of you."}
     ]
   },
   {
     id:"neuvaines",
     title:"Neuvaines connues",
+    titleEn:"Well-known novenas",
     desc:"Des prières réparties sur neuf jours consécutifs, une pratique inspirée des neuf jours d'attente des apôtres entre l'Ascension et la Pentecôte. Pour chacune de ces neuvaines, voici la structure complète à réciter, neuf jours de suite : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père (ou un chapelet entier si vous le souhaitez), suivis de la prière centrale ci-dessous propre à chaque neuvaine, et terminez par un Signe de croix.",
+    descEn:"Prayers spread over nine consecutive days, a practice inspired by the nine days the apostles waited between the Ascension and Pentecost. For each of these novenas, here is the full structure to recite, nine days in a row: Sign of the Cross, then 1 Our Father, 10 Hail Marys and 1 Glory Be (or a full Rosary if you prefer), followed by the central prayer for that novena below, and close with a Sign of the Cross.",
     entries:[
-      {name:"Neuvaine à l'Esprit Saint", dates:"", tag:null, ref:"Entre l'Ascension et la Pentecôte", avatar:"🕊️", summary:"Viens, Esprit Saint, remplis le cœur de tes fidèles et allume en eux le feu de ton amour. Envoie ton Esprit et tout sera créé, et tu renouvelleras la face de la terre. Ô Dieu, qui as instruit les cœurs de tes fidèles par la lumière de l'Esprit Saint, donne-nous, par ce même Esprit, de goûter ce qui est droit et de jouir toujours de ses consolations. Amen."},
-      {name:"Neuvaine à la Divine Miséricorde", dates:"", tag:null, ref:"Du Vendredi saint au dimanche de la Miséricorde", avatar:"❤️", summary:"Éternel Père, je vous offre le Corps et le Sang, l'Âme et la Divinité de votre Fils bien-aimé, Notre-Seigneur Jésus-Christ, en propitiation pour nos péchés et pour ceux du monde entier. Pour sa douloureuse Passion, ayez pitié de nous et du monde entier. Ô Sang et Eau, qui avez jailli du Cœur de Jésus comme une source de miséricorde pour nous, j'ai confiance en vous."},
-      {name:"Neuvaine à sainte Rita de Cascia", dates:"", tag:null, ref:"Neuvaine votive, souvent avant sa fête du 22 mai", avatar:"🌹", summary:"Ô sainte Rita, toi qui as toujours mis ta confiance en Dieu et qui as su aimer et pardonner au nom du Christ en te laissant guider par la lumière de l'Esprit Saint, tourne vers moi ton regard si tendre. Toi qu'on invoque comme l'avocate des causes désespérées, présente au Seigneur l'intention que je te confie aujourd'hui. Obtiens-moi la grâce de ne jamais désespérer et de mettre toute ma confiance en Dieu, quoi qu'il arrive. Amen."},
-      {name:"Neuvaine à sainte Thérèse de l'Enfant-Jésus", dates:"", tag:null, ref:"Souvent avant sa fête du 1er octobre", avatar:"🌸", summary:"Sainte Thérèse de l'Enfant-Jésus, qui avez dit vouloir passer votre ciel à faire du bien sur la terre et laisser tomber une pluie de roses, faites-nous connaître, une fois de plus, votre puissance auprès du Cœur de Dieu, en nous accordant la grâce que nous sollicitons par votre intercession. Amen."},
-      {name:"Neuvaine à saint Joseph", dates:"", tag:null, ref:"Souvent avant sa fête du 19 mars", avatar:"🔨", summary:"Saint Joseph, modèle des travailleurs et gardien des familles, veillez sur nous. Obtenez-nous l'esprit de foi et de simplicité dans nos tâches quotidiennes, la paix dans nos foyers, et accordez-nous, par votre intercession auprès de Jésus et de Marie, la grâce que nous vous demandons aujourd'hui. Amen."},
-      {name:"Neuvaine à Notre-Dame du Perpétuel Secours", dates:"", tag:null, ref:"Traditionnellement priée le mercredi", avatar:"🖼️", summary:"Ô Mère du Perpétuel Secours, vous êtes le secours perpétuel des chrétiens : secourez-moi partout et toujours, dans mes tentations, dans mes besoins, dans mes peines, surtout dans mes combats, à l'heure de ma mort. Obtenez-moi, Vierge de miséricorde, la grâce que je sollicite en cette neuvaine. Amen."},
-      {name:"Neuvaine de l'Avent (neuvaine de Noël)", dates:"", tag:null, ref:"Traditionnellement récitée 15 fois par jour du 30 novembre au 24 décembre", avatar:"⭐", summary:"Salut et bénie soit l'heure où le Fils de Dieu est né de la très pure Vierge Marie, à minuit, dans le froid intense, à Bethléem. En cette heure, je vous en supplie, ô mon Dieu, d'exaucer ma prière et de m'accorder la grâce que je demande, par les mérites de notre Sauveur Jésus-Christ et de sa Bienheureuse Mère. Amen."},
-      {name:"Neuvaine des 54 jours (rosaire)", dates:"", tag:null, ref:"27 jours de demande puis 27 jours d'action de grâce", avatar:"📿", externalUrl:"#", linkLabel:"Prier le chapelet dans l'appli →", summary:"Cette neuvaine n'a pas de texte propre : elle consiste à prier un chapelet complet chaque jour pendant 54 jours consécutifs — vingt-sept jours en esprit de demande, puis vingt-sept jours en esprit d'action de grâce, que la grâce demandée ait été obtenue ou non."},
-      {name:"Neuvaine à saint Antoine de Padoue", dates:"", tag:null, ref:"D'après le répons \u00abSi quaeris miracula\u00bb", avatar:"🐟", summary:"Si tu cherches les miracles, la mort, l'erreur, tous les fléaux, le démon fuit, les lépreux sont guéris. Devant saint Antoine, que l'on invoque, la mer s'apaise, les prisonniers retrouvent la liberté, les membres perdus ou malades sont réparés. Saint Antoine, obtiens-moi de retrouver ce qui compte vraiment dans ma vie, et intercède pour l'intention que je te confie aujourd'hui. Amen."},
-      {name:"Neuvaine à saint Jude Thaddée", dates:"", tag:null, ref:"Patron des causes désespérées", avatar:"🔥", summary:"Ô glorieux apôtre saint Jude, fidèle serviteur et ami de Jésus, l'Église vous honore et vous invoque universellement comme le patron des causes désespérées. Priez pour moi qui suis si malheureux, et obtenez-moi, je vous en supplie, le secours du ciel dans l'épreuve qui m'accable en ce moment. Je promets de faire connaître la grâce reçue et de vous honorer toujours comme mon puissant intercesseur. Amen."},
-      {name:"Neuvaine à saint Christophe", dates:"", tag:null, ref:"Patron des voyageurs", avatar:"🚗", summary:"Saint Christophe, toi qui as porté le Christ sur tes épaules pour lui faire traverser le fleuve, protège-nous sur nos routes et nos chemins. Garde-nous des accidents et des dangers du voyage, et fais que nous arrivions toujours à bon port. Amen."},
-      {name:"Neuvaine à saint Expédit", dates:"", tag:null, ref:"Prié pour les causes urgentes", avatar:"⏳", summary:"Ô grand saint Expédit, vous qui obtenez des grâces promptes dans les situations les plus pressantes, hâtez-vous de m'assister dans la circonstance présente. En retour, je m'engage à faire connaître la faveur obtenue. Saint Expédit, patron des causes urgentes, priez pour nous. Amen."},
-      {name:"Neuvaine à saint Benoît", dates:"", tag:null, ref:"D'après la formule de la médaille de saint Benoît", avatar:"✝️", summary:"Que la sainte Croix soit ma lumière, que le mal ne soit jamais mon guide. Recule, ce qui s'oppose à Dieu : c'est un mal que tu proposes, garde pour toi ton poison. Saint Benoît, obtiens-nous protection et paix intérieure face à ce qui nous éprouve. Priez pour nous. Amen."},
-      {name:"Neuvaine à sainte Bernadette Soubirous", dates:"", tag:null, ref:"En lien avec les apparitions de Lourdes", avatar:"💧", summary:"Sainte Bernadette, toi à qui la Vierge Marie s'est montrée dans la simplicité et la pauvreté, apprends-nous à croire sans avoir besoin de tout comprendre, et à garder un cœur d'enfant devant Dieu. Intercède pour l'intention que je te confie en cette neuvaine. Amen."},
-      {name:"Neuvaine à saint Pio de Pietrelcina (Padre Pio)", dates:"", tag:null, ref:"Neuvaine au Sacré-Cœur souvent attribuée à Padre Pio", avatar:"🙌", summary:"Ô mon Jésus, vous avez dit : demandez et vous recevrez, cherchez et vous trouverez, frappez et l'on vous ouvrira. Par l'intercession de Padre Pio, j'ose vous demander la grâce de... (formuler sa demande). Ô Cœur sacré de Jésus, je vous confie cette intention par les mains de Marie, votre Mère sainte et la mienne. Amen."},
-      {name:"Neuvaine au Sacré-Cœur de Jésus", dates:"", tag:null, ref:"Souvent avant la fête du Sacré-Cœur", avatar:"❤️‍🔥", summary:"Cœur sacré de Jésus, j'ai confiance en vous. Cœur sacré de Jésus, source de miséricorde infinie, je viens déposer devant vous l'intention que je porte en ce moment, certain(e) que rien de ce qui vous est confié avec confiance ne reste sans réponse. Amen."},
-      {name:"Neuvaine à l'Immaculée Conception", dates:"", tag:null, ref:"Prière de la médaille miraculeuse, du 30 novembre au 8 décembre", avatar:"💙", summary:"Ô Marie, conçue sans péché, priez pour nous qui avons recours à vous."},
-      {name:"Neuvaine à saint Charbel", dates:"", tag:null, ref:"Moine libanais, prié pour la guérison", avatar:"🌿", summary:"Saint Charbel, moine humble et silencieux, toi dont le corps est resté incorrompu comme signe de la puissance de Dieu, obtiens-nous la grâce de la guérison et de la paix intérieure. Prie pour nous et pour l'intention que nous te confions. Amen."},
-      {name:"Neuvaine à Notre-Dame de Fatima", dates:"", tag:null, ref:"D'après la prière enseignée à Fatima", avatar:"☀️", summary:"Ô mon Jésus, pardonnez-nous nos péchés, préservez-nous du feu de l'enfer, conduisez au ciel toutes les âmes, surtout celles qui ont le plus besoin de votre miséricorde. Notre-Dame de Fatima, obtenez la conversion des cœurs et la paix dans le monde. Amen."},
-      {name:"Neuvaine à saint Michel Archange", dates:"", tag:null, ref:"Voir la prière complète dans « Prières fondamentales »", avatar:"⚔️", summary:"Saint Michel archange, défendez-nous dans le combat ; soyez notre protection contre la malice et les embûches du démon. Que Dieu lui commande, nous le prions humblement, et vous, prince de la milice céleste, repoussez en enfer, par la puissance divine, Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. Amen."},
-      {name:"Neuvaine de l'Assomption", dates:"", tag:null, ref:"Du 6 au 14 août", avatar:"🌤️", summary:"Vierge Marie, élevée corps et âme dans la gloire du ciel, tournez vers nous votre regard et obtenez-nous la grâce de garder confiance, même dans les jours difficiles : le ciel n'est pas un lointain rêve mais une promesse pour ceux qui restent fidèles. Amen."},
-      {name:"Neuvaine à sainte Faustine (Divine Miséricorde)", dates:"", tag:null, ref:"Distincte de la neuvaine pascale de la Miséricorde", avatar:"📖", summary:"Sainte Faustine Kowalska, toi à qui Jésus a confié le message de sa Miséricorde infinie, aide-nous à faire confiance à cette Miséricorde même dans nos pires faiblesses, et à la répandre autour de nous par nos actes, nos paroles et notre prière. Amen."}
+      {name:"Neuvaine à l'Esprit Saint", nameEn:"Novena to the Holy Spirit", dates:"", tag:null, ref:"Entre l'Ascension et la Pentecôte", refEn:"Between the Ascension and Pentecost", avatar:"🕊️", summary:"Viens, Esprit Saint, remplis le cœur de tes fidèles et allume en eux le feu de ton amour. Envoie ton Esprit et tout sera créé, et tu renouvelleras la face de la terre. Ô Dieu, qui as instruit les cœurs de tes fidèles par la lumière de l'Esprit Saint, donne-nous, par ce même Esprit, de goûter ce qui est droit et de jouir toujours de ses consolations. Amen.", summaryEn:"Come, Holy Spirit, fill the hearts of your faithful and kindle in them the fire of your love. Send forth your Spirit and they shall be created, and you shall renew the face of the earth. O God, who taught the hearts of your faithful by the light of the Holy Spirit, grant us by that same Spirit to be truly wise and ever to rejoice in his consolation. Amen."},
+      {name:"Neuvaine à la Divine Miséricorde", nameEn:"Novena to the Divine Mercy", dates:"", tag:null, ref:"Du Vendredi saint au dimanche de la Miséricorde", refEn:"From Good Friday to Divine Mercy Sunday", avatar:"❤️", summary:"Éternel Père, je vous offre le Corps et le Sang, l'Âme et la Divinité de votre Fils bien-aimé, Notre-Seigneur Jésus-Christ, en propitiation pour nos péchés et pour ceux du monde entier. Pour sa douloureuse Passion, ayez pitié de nous et du monde entier. Ô Sang et Eau, qui avez jailli du Cœur de Jésus comme une source de miséricorde pour nous, j'ai confiance en vous.", summaryEn:"Eternal Father, I offer you the Body and Blood, Soul and Divinity of your dearly beloved Son, Our Lord Jesus Christ, in atonement for our sins and those of the whole world. For the sake of his sorrowful Passion, have mercy on us and on the whole world. O Blood and Water, which gushed forth from the Heart of Jesus as a fountain of mercy for us, I trust in you."},
+      {name:"Neuvaine à sainte Rita de Cascia", nameEn:"Novena to St. Rita of Cascia", dates:"", tag:null, ref:"Neuvaine votive, souvent avant sa fête du 22 mai", refEn:"Votive novena, often prayed before her feast on May 22", avatar:"🌹", summary:"Ô sainte Rita, toi qui as toujours mis ta confiance en Dieu et qui as su aimer et pardonner au nom du Christ en te laissant guider par la lumière de l'Esprit Saint, tourne vers moi ton regard si tendre. Toi qu'on invoque comme l'avocate des causes désespérées, présente au Seigneur l'intention que je te confie aujourd'hui. Obtiens-moi la grâce de ne jamais désespérer et de mettre toute ma confiance en Dieu, quoi qu'il arrive. Amen.", summaryEn:"O St. Rita, you who always put your trust in God and who knew how to love and forgive in Christ's name, letting yourself be guided by the light of the Holy Spirit, turn your tender gaze toward me. You who are invoked as the advocate of desperate causes, present to the Lord the intention I entrust to you today. Obtain for me the grace never to despair and to put all my trust in God, whatever happens. Amen."},
+      {name:"Neuvaine à sainte Thérèse de l'Enfant-Jésus", nameEn:"Novena to St. Thérèse of the Child Jesus", dates:"", tag:null, ref:"Souvent avant sa fête du 1er octobre", refEn:"Often prayed before her feast on October 1", avatar:"🌸", summary:"Sainte Thérèse de l'Enfant-Jésus, qui avez dit vouloir passer votre ciel à faire du bien sur la terre et laisser tomber une pluie de roses, faites-nous connaître, une fois de plus, votre puissance auprès du Cœur de Dieu, en nous accordant la grâce que nous sollicitons par votre intercession. Amen.", summaryEn:"St. Thérèse of the Child Jesus, who said you would spend your heaven doing good on earth and letting fall a shower of roses, make known to us once again your power with the Heart of God, by granting us the grace we seek through your intercession. Amen."},
+      {name:"Neuvaine à saint Joseph", nameEn:"Novena to St. Joseph", dates:"", tag:null, ref:"Souvent avant sa fête du 19 mars", refEn:"Often prayed before his feast on March 19", avatar:"🔨", summary:"Saint Joseph, modèle des travailleurs et gardien des familles, veillez sur nous. Obtenez-nous l'esprit de foi et de simplicité dans nos tâches quotidiennes, la paix dans nos foyers, et accordez-nous, par votre intercession auprès de Jésus et de Marie, la grâce que nous vous demandons aujourd'hui. Amen.", summaryEn:"St. Joseph, model of workers and guardian of families, watch over us. Obtain for us the spirit of faith and simplicity in our daily tasks, peace in our homes, and grant us, through your intercession with Jesus and Mary, the grace we ask of you today. Amen."},
+      {name:"Neuvaine à Notre-Dame du Perpétuel Secours", nameEn:"Novena to Our Lady of Perpetual Help", dates:"", tag:null, ref:"Traditionnellement priée le mercredi", refEn:"Traditionally prayed on Wednesdays", avatar:"🖼️", summary:"Ô Mère du Perpétuel Secours, vous êtes le secours perpétuel des chrétiens : secourez-moi partout et toujours, dans mes tentations, dans mes besoins, dans mes peines, surtout dans mes combats, à l'heure de ma mort. Obtenez-moi, Vierge de miséricorde, la grâce que je sollicite en cette neuvaine. Amen.", summaryEn:"O Mother of Perpetual Help, you are the perpetual help of Christians: help me everywhere and always, in my temptations, in my needs, in my sorrows, especially in my struggles, at the hour of my death. Obtain for me, Virgin of mercy, the grace I seek in this novena. Amen."},
+      {name:"Neuvaine de l'Avent (neuvaine de Noël)", nameEn:"Advent Novena (Christmas Novena)", dates:"", tag:null, ref:"Traditionnellement récitée 15 fois par jour du 30 novembre au 24 décembre", refEn:"Traditionally recited 15 times a day from November 30 to December 24", avatar:"⭐", summary:"Salut et bénie soit l'heure où le Fils de Dieu est né de la très pure Vierge Marie, à minuit, dans le froid intense, à Bethléem. En cette heure, je vous en supplie, ô mon Dieu, d'exaucer ma prière et de m'accorder la grâce que je demande, par les mérites de notre Sauveur Jésus-Christ et de sa Bienheureuse Mère. Amen.", summaryEn:"Hail and blessed be the hour and moment in which the Son of God was born of the most pure Virgin Mary, at midnight, in the piercing cold, in Bethlehem. In that hour, I beseech you, O my God, to hear my prayer and grant my request, through the merits of our Savior Jesus Christ and of his Blessed Mother. Amen."},
+      {name:"Neuvaine des 54 jours (rosaire)", nameEn:"The 54-Day Rosary Novena", dates:"", tag:null, ref:"27 jours de demande puis 27 jours d'action de grâce", refEn:"27 days of petition followed by 27 days of thanksgiving", avatar:"📿", externalUrl:"#", linkLabel:"Prier le chapelet dans l'appli →", linkLabelEn:"Pray the Rosary in the app →", summary:"Cette neuvaine n'a pas de texte propre : elle consiste à prier un chapelet complet chaque jour pendant 54 jours consécutifs — vingt-sept jours en esprit de demande, puis vingt-sept jours en esprit d'action de grâce, que la grâce demandée ait été obtenue ou non.", summaryEn:"This novena has no prayer text of its own: it consists of praying a full Rosary every day for 54 consecutive days — twenty-seven days in a spirit of petition, then twenty-seven days in a spirit of thanksgiving, whether or not the grace requested has been granted."},
+      {name:"Neuvaine à saint Antoine de Padoue", nameEn:"Novena to St. Anthony of Padua", dates:"", tag:null, ref:"D'après le répons «Si quaeris miracula»", refEn:"After the responsory \"Si quaeris miracula\"", avatar:"🐟", summary:"Si tu cherches les miracles, la mort, l'erreur, tous les fléaux, le démon fuit, les lépreux sont guéris. Devant saint Antoine, que l'on invoque, la mer s'apaise, les prisonniers retrouvent la liberté, les membres perdus ou malades sont réparés. Saint Antoine, obtiens-moi de retrouver ce qui compte vraiment dans ma vie, et intercède pour l'intention que je te confie aujourd'hui. Amen.", summaryEn:"If you seek miracles, death, error, all calamities, the demon flees, the leprous are healed. Before St. Anthony, when he is invoked, the sea grows calm, prisoners regain their freedom, lost or sick limbs are restored. St. Anthony, help me find what truly matters in my life, and intercede for the intention I entrust to you today. Amen."},
+      {name:"Neuvaine à saint Jude Thaddée", nameEn:"Novena to St. Jude Thaddeus", dates:"", tag:null, ref:"Patron des causes désespérées", refEn:"Patron of desperate causes", avatar:"🔥", summary:"Ô glorieux apôtre saint Jude, fidèle serviteur et ami de Jésus, l'Église vous honore et vous invoque universellement comme le patron des causes désespérées. Priez pour moi qui suis si malheureux, et obtenez-moi, je vous en supplie, le secours du ciel dans l'épreuve qui m'accable en ce moment. Je promets de faire connaître la grâce reçue et de vous honorer toujours comme mon puissant intercesseur. Amen.", summaryEn:"O glorious apostle St. Jude, faithful servant and friend of Jesus, the Church honors and invokes you universally as the patron of desperate cases. Pray for me, who am so miserable, and obtain for me, I beseech you, the help of heaven in the trial that weighs on me at this moment. I promise to make known the favor received and to honor you always as my powerful intercessor. Amen."},
+      {name:"Neuvaine à saint Christophe", nameEn:"Novena to St. Christopher", dates:"", tag:null, ref:"Patron des voyageurs", refEn:"Patron of travelers", avatar:"🚗", summary:"Saint Christophe, toi qui as porté le Christ sur tes épaules pour lui faire traverser le fleuve, protège-nous sur nos routes et nos chemins. Garde-nous des accidents et des dangers du voyage, et fais que nous arrivions toujours à bon port. Amen.", summaryEn:"St. Christopher, you who carried Christ on your shoulders to help him cross the river, protect us on our roads and journeys. Keep us from accidents and the dangers of travel, and bring us always safely to our destination. Amen."},
+      {name:"Neuvaine à saint Expédit", nameEn:"Novena to St. Expeditus", dates:"", tag:null, ref:"Prié pour les causes urgentes", refEn:"Prayed for urgent causes", avatar:"⏳", summary:"Ô grand saint Expédit, vous qui obtenez des grâces promptes dans les situations les plus pressantes, hâtez-vous de m'assister dans la circonstance présente. En retour, je m'engage à faire connaître la faveur obtenue. Saint Expédit, patron des causes urgentes, priez pour nous. Amen.", summaryEn:"O great St. Expeditus, you who obtain prompt graces in the most pressing situations, hasten to assist me in my present circumstance. In return, I pledge to make known the favor obtained. St. Expeditus, patron of urgent causes, pray for us. Amen."},
+      {name:"Neuvaine à saint Benoît", nameEn:"Novena to St. Benedict", dates:"", tag:null, ref:"D'après la formule de la médaille de saint Benoît", refEn:"After the formula of the St. Benedict medal", avatar:"✝️", summary:"Que la sainte Croix soit ma lumière, que le mal ne soit jamais mon guide. Recule, ce qui s'oppose à Dieu : c'est un mal que tu proposes, garde pour toi ton poison. Saint Benoît, obtiens-nous protection et paix intérieure face à ce qui nous éprouve. Priez pour nous. Amen.", summaryEn:"May the holy Cross be my light, may evil never be my guide. Begone, you who oppose God: what you offer is evil, keep your poison to yourself. St. Benedict, obtain for us protection and inner peace in the face of what tries us. Pray for us. Amen."},
+      {name:"Neuvaine à sainte Bernadette Soubirous", nameEn:"Novena to St. Bernadette Soubirous", dates:"", tag:null, ref:"En lien avec les apparitions de Lourdes", refEn:"Linked to the apparitions at Lourdes", avatar:"💧", summary:"Sainte Bernadette, toi à qui la Vierge Marie s'est montrée dans la simplicité et la pauvreté, apprends-nous à croire sans avoir besoin de tout comprendre, et à garder un cœur d'enfant devant Dieu. Intercède pour l'intention que je te confie en cette neuvaine. Amen.", summaryEn:"St. Bernadette, you to whom the Virgin Mary appeared in simplicity and poverty, teach us to believe without needing to understand everything, and to keep a childlike heart before God. Intercede for the intention I entrust to you in this novena. Amen."},
+      {name:"Neuvaine à saint Pio de Pietrelcina (Padre Pio)", nameEn:"Novena to St. Pio of Pietrelcina (Padre Pio)", dates:"", tag:null, ref:"Neuvaine au Sacré-Cœur souvent attribuée à Padre Pio", refEn:"A novena to the Sacred Heart often attributed to Padre Pio", avatar:"🙌", summary:"Ô mon Jésus, vous avez dit : demandez et vous recevrez, cherchez et vous trouverez, frappez et l'on vous ouvrira. Par l'intercession de Padre Pio, j'ose vous demander la grâce de... (formuler sa demande). Ô Cœur sacré de Jésus, je vous confie cette intention par les mains de Marie, votre Mère sainte et la mienne. Amen.", summaryEn:"O my Jesus, you have said: ask and you shall receive, seek and you shall find, knock and it shall be opened to you. Through the intercession of Padre Pio, I dare to ask you for the grace of... (state your request). O Sacred Heart of Jesus, I entrust this intention to you through the hands of Mary, your holy Mother and mine. Amen."},
+      {name:"Neuvaine au Sacré-Cœur de Jésus", nameEn:"Novena to the Sacred Heart of Jesus", dates:"", tag:null, ref:"Souvent avant la fête du Sacré-Cœur", refEn:"Often prayed before the feast of the Sacred Heart", avatar:"❤️‍🔥", summary:"Cœur sacré de Jésus, j'ai confiance en vous. Cœur sacré de Jésus, source de miséricorde infinie, je viens déposer devant vous l'intention que je porte en ce moment, certain(e) que rien de ce qui vous est confié avec confiance ne reste sans réponse. Amen.", summaryEn:"Sacred Heart of Jesus, I trust in you. Sacred Heart of Jesus, source of infinite mercy, I come to lay before you the intention I carry at this moment, confident that nothing entrusted to you with trust goes unanswered. Amen."},
+      {name:"Neuvaine à l'Immaculée Conception", nameEn:"Novena to the Immaculate Conception", dates:"", tag:null, ref:"Prière de la médaille miraculeuse, du 30 novembre au 8 décembre", refEn:"Prayer of the Miraculous Medal, from November 30 to December 8", avatar:"💙", summary:"Ô Marie, conçue sans péché, priez pour nous qui avons recours à vous.", summaryEn:"O Mary, conceived without sin, pray for us who have recourse to thee."},
+      {name:"Neuvaine à saint Charbel", nameEn:"Novena to St. Charbel", dates:"", tag:null, ref:"Moine libanais, prié pour la guérison", refEn:"Lebanese monk, prayed to for healing", avatar:"🌿", summary:"Saint Charbel, moine humble et silencieux, toi dont le corps est resté incorrompu comme signe de la puissance de Dieu, obtiens-nous la grâce de la guérison et de la paix intérieure. Prie pour nous et pour l'intention que nous te confions. Amen.", summaryEn:"St. Charbel, humble and silent monk, you whose body remained incorrupt as a sign of God's power, obtain for us the grace of healing and inner peace. Pray for us and for the intention we entrust to you. Amen."},
+      {name:"Neuvaine à Notre-Dame de Fatima", nameEn:"Novena to Our Lady of Fatima", dates:"", tag:null, ref:"D'après la prière enseignée à Fatima", refEn:"After the prayer taught at Fatima", avatar:"☀️", summary:"Ô mon Jésus, pardonnez-nous nos péchés, préservez-nous du feu de l'enfer, conduisez au ciel toutes les âmes, surtout celles qui ont le plus besoin de votre miséricorde. Notre-Dame de Fatima, obtenez la conversion des cœurs et la paix dans le monde. Amen.", summaryEn:"O my Jesus, forgive us our sins, save us from the fires of hell, lead all souls to heaven, especially those most in need of your mercy. Our Lady of Fatima, obtain for us the conversion of hearts and peace in the world. Amen."},
+      {name:"Neuvaine à saint Michel Archange", nameEn:"Novena to St. Michael the Archangel", dates:"", tag:null, ref:"Voir la prière complète dans « Prières fondamentales »", refEn:"See the full prayer under \"Essential prayers\"", avatar:"⚔️", summary:"Saint Michel archange, défendez-nous dans le combat ; soyez notre protection contre la malice et les embûches du démon. Que Dieu lui commande, nous le prions humblement, et vous, prince de la milice céleste, repoussez en enfer, par la puissance divine, Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. Amen.", summaryEn:"St. Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. May God rebuke him, we humbly pray; and do thou, O Prince of the heavenly host, by the power of God, thrust into hell Satan and all the evil spirits who prowl about the world seeking the ruin of souls. Amen."},
+      {name:"Neuvaine de l'Assomption", nameEn:"Novena of the Assumption", dates:"", tag:null, ref:"Du 6 au 14 août", refEn:"From August 6 to 14", avatar:"🌤️", summary:"Vierge Marie, élevée corps et âme dans la gloire du ciel, tournez vers nous votre regard et obtenez-nous la grâce de garder confiance, même dans les jours difficiles : le ciel n'est pas un lointain rêve mais une promesse pour ceux qui restent fidèles. Amen.", summaryEn:"Virgin Mary, raised body and soul into the glory of heaven, turn your gaze toward us and obtain for us the grace to keep trusting, even on difficult days: heaven is not a distant dream but a promise for those who remain faithful. Amen."},
+      {name:"Neuvaine à sainte Faustine (Divine Miséricorde)", nameEn:"Novena to St. Faustina (Divine Mercy)", dates:"", tag:null, ref:"Distincte de la neuvaine pascale de la Miséricorde", refEn:"Distinct from the Easter Divine Mercy novena", avatar:"📖", summary:"Sainte Faustine Kowalska, toi à qui Jésus a confié le message de sa Miséricorde infinie, aide-nous à faire confiance à cette Miséricorde même dans nos pires faiblesses, et à la répandre autour de nous par nos actes, nos paroles et notre prière. Amen.", summaryEn:"St. Faustina Kowalska, you to whom Jesus entrusted the message of his infinite Mercy, help us to trust in that Mercy even in our worst weaknesses, and to spread it around us through our actions, our words and our prayer. Amen."}
     ]
   },
 {
@@ -3021,64 +3025,65 @@ const SACREMENTS = [
 ];
 
 const ROSARY_SETS = {
-  joyeux: {label:"Mystères joyeux", days:"Lundi et samedi", color:"#C08A3E",
+  joyeux: {label:"Mystères joyeux", labelEn:"Joyful Mysteries", days:"Lundi et samedi", daysEn:"Monday and Saturday", color:"#C08A3E",
     image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20053.jpg?width=900",
     credit:"Duccio di Buoninsegna, L'Annonciation — Wikimedia Commons, domaine public",
-    summary:"À méditer le lundi et le samedi, et pendant le temps de l'Avent.",
-    quote:"En méditant ces mystères avec Marie, nous contemplons la joie de l'Incarnation.",
+    summary:"À méditer le lundi et le samedi, et pendant le temps de l'Avent.", summaryEn:"To be meditated on Monday and Saturday, and during Advent.",
+    quote:"En méditant ces mystères avec Marie, nous contemplons la joie de l'Incarnation.", quoteEn:"By meditating on these mysteries with Mary, we contemplate the joy of the Incarnation.",
     mysteres:[
-      {title:"L'Annonciation à Marie", ref:"Luc 1, 26-38", quote:"Réjouis-toi, comblée de grâce, le Seigneur est avec toi.", medit:"L'ange Gabriel est envoyé par Dieu dans une ville de Galilée, appelée Nazareth, à une jeune fille promise à Joseph. Il lui annonce qu'elle sera la mère du Fils de Dieu. Marie accueille avec foi et humilité la volonté du Seigneur : « Voici la servante du Seigneur ; que tout m'advienne selon ta parole. »", fruit:"L'humilité", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20053.jpg?width=900", imgCredit:"Duccio di Buoninsegna, L'Annonciation — Wikimedia Commons, domaine public"},
-      {title:"La Visitation à sa cousine Élisabeth", ref:"Luc 1, 39-45", quote:"Tu es bénie entre toutes les femmes, et le fruit de tes entrailles est béni.", medit:"Marie se met en route sans tarder vers la montagne, pour servir sa cousine âgée et enceinte elle aussi. Dès son arrivée, l'enfant tressaille de joie dans le sein d'Élisabeth, remplie de l'Esprit Saint.", fruit:"La charité envers le prochain", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Albertinelli%20Visitation.jpg?width=900", imgCredit:"Mariotto Albertinelli, La Visitation — Wikimedia Commons, domaine public"},
-      {title:"La Nativité de Jésus à Bethléem", ref:"Luc 2, 1-7", quote:"Elle mit au monde son fils premier-né, l'enveloppa de langes et le coucha dans une mangeoire.", medit:"À l'occasion d'un recensement, Joseph et Marie se rendent à Bethléem. Faute de place à l'auberge, Jésus naît dans une étable et est déposé dans une mangeoire — le Fils de Dieu choisit la pauvreté dès son premier instant parmi nous.", fruit:"L'esprit de pauvreté et le détachement", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Gerard%20van%20Honthorst%20-%20Adoration%20of%20the%20Shepherds%20(1622).jpg?width=900", imgCredit:"Gerard van Honthorst, L'Adoration des bergers (1622) — Wikimedia Commons, domaine public"},
-      {title:"La Présentation de Jésus au Temple", ref:"Luc 2, 22-35", quote:"Ils amenèrent l'enfant à Jérusalem pour le présenter au Seigneur.", medit:"Selon la Loi de Moïse, Marie et Joseph portent l'enfant au Temple. Le vieillard Siméon le reconnaît comme le salut attendu et annonce à Marie qu'une épée transpercera son âme.", fruit:"L'obéissance et la pureté du cœur", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Fra%20Angelico%20017.jpg?width=900", imgCredit:"Fra Angelico, La Présentation au Temple — Wikimedia Commons, domaine public"},
-      {title:"Le Recouvrement de Jésus au Temple", ref:"Luc 2, 41-50", quote:"Ils le trouvèrent dans le Temple, assis au milieu des docteurs, les écoutant et les interrogeant.", medit:"À douze ans, Jésus reste à Jérusalem sans que ses parents le sachent. Après trois jours de recherche angoissée, ils le retrouvent au Temple, et tous s'étonnent de son intelligence.", fruit:"La joie de retrouver et de chercher Jésus", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20-%20Disputation%20with%20the%20Doctors%20-%20WGA06768.jpg?width=900", imgCredit:"Duccio di Buoninsegna, Jésus parmi les docteurs — Wikimedia Commons, domaine public"}
+      {title:"L'Annonciation à Marie", ref:"Luc 1, 26-38", quote:"Réjouis-toi, comblée de grâce, le Seigneur est avec toi.", medit:"L'ange Gabriel est envoyé par Dieu dans une ville de Galilée, appelée Nazareth, à une jeune fille promise à Joseph. Il lui annonce qu'elle sera la mère du Fils de Dieu. Marie accueille avec foi et humilité la volonté du Seigneur : « Voici la servante du Seigneur ; que tout m'advienne selon ta parole. »", fruit:"L'humilité", fruitEn:"Humility", titleEn:"The Annunciation to Mary", refEn:"Luke 1:26-38", quoteEn:"Rejoice, highly favored one, the Lord is with you.", meditEn:"The angel Gabriel is sent by God to a town in Galilee called Nazareth, to a young woman betrothed to Joseph. He announces that she will be the mother of the Son of God. Mary accepts the Lord's will with faith and humility: \"Behold the handmaid of the Lord; be it done unto me according to your word.\"", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20053.jpg?width=900", imgCredit:"Duccio di Buoninsegna, L'Annonciation — Wikimedia Commons, domaine public"},
+      {title:"La Visitation à sa cousine Élisabeth", ref:"Luc 1, 39-45", quote:"Tu es bénie entre toutes les femmes, et le fruit de tes entrailles est béni.", medit:"Marie se met en route sans tarder vers la montagne, pour servir sa cousine âgée et enceinte elle aussi. Dès son arrivée, l'enfant tressaille de joie dans le sein d'Élisabeth, remplie de l'Esprit Saint.", fruit:"La charité envers le prochain", fruitEn:"Charity toward one's neighbor", titleEn:"The Visitation to her cousin Elizabeth", refEn:"Luke 1:39-45", quoteEn:"Blessed are you among women, and blessed is the fruit of your womb.", meditEn:"Mary sets out without delay for the hill country, to serve her older cousin, who is also expecting a child. As soon as she arrives, the child leaps for joy in Elizabeth's womb, who is filled with the Holy Spirit.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Albertinelli%20Visitation.jpg?width=900", imgCredit:"Mariotto Albertinelli, La Visitation — Wikimedia Commons, domaine public"},
+      {title:"La Nativité de Jésus à Bethléem", ref:"Luc 2, 1-7", quote:"Elle mit au monde son fils premier-né, l'enveloppa de langes et le coucha dans une mangeoire.", medit:"À l'occasion d'un recensement, Joseph et Marie se rendent à Bethléem. Faute de place à l'auberge, Jésus naît dans une étable et est déposé dans une mangeoire — le Fils de Dieu choisit la pauvreté dès son premier instant parmi nous.", fruit:"L'esprit de pauvreté et le détachement", fruitEn:"The spirit of poverty and detachment", titleEn:"The Nativity of Jesus at Bethlehem", refEn:"Luke 2:1-7", quoteEn:"She gave birth to her firstborn son, wrapped him in swaddling clothes, and laid him in a manger.", meditEn:"On the occasion of a census, Joseph and Mary travel to Bethlehem. With no room at the inn, Jesus is born in a stable and laid in a manger — the Son of God chooses poverty from his very first moment among us.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Gerard%20van%20Honthorst%20-%20Adoration%20of%20the%20Shepherds%20(1622).jpg?width=900", imgCredit:"Gerard van Honthorst, L'Adoration des bergers (1622) — Wikimedia Commons, domaine public"},
+      {title:"La Présentation de Jésus au Temple", ref:"Luc 2, 22-35", quote:"Ils amenèrent l'enfant à Jérusalem pour le présenter au Seigneur.", medit:"Selon la Loi de Moïse, Marie et Joseph portent l'enfant au Temple. Le vieillard Siméon le reconnaît comme le salut attendu et annonce à Marie qu'une épée transpercera son âme.", fruit:"L'obéissance et la pureté du cœur", fruitEn:"Obedience and purity of heart", titleEn:"The Presentation of Jesus in the Temple", refEn:"Luke 2:22-35", quoteEn:"They brought the child up to Jerusalem to present him to the Lord.", meditEn:"According to the Law of Moses, Mary and Joseph bring the child to the Temple. The elder Simeon recognizes him as the awaited salvation and tells Mary that a sword will pierce her own soul.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Fra%20Angelico%20017.jpg?width=900", imgCredit:"Fra Angelico, La Présentation au Temple — Wikimedia Commons, domaine public"},
+      {title:"Le Recouvrement de Jésus au Temple", ref:"Luc 2, 41-50", quote:"Ils le trouvèrent dans le Temple, assis au milieu des docteurs, les écoutant et les interrogeant.", medit:"À douze ans, Jésus reste à Jérusalem sans que ses parents le sachent. Après trois jours de recherche angoissée, ils le retrouvent au Temple, et tous s'étonnent de son intelligence.", fruit:"La joie de retrouver et de chercher Jésus", fruitEn:"The joy of seeking and finding Jesus", titleEn:"The Finding of Jesus in the Temple", refEn:"Luke 2:41-50", quoteEn:"They found him in the temple, sitting among the teachers, listening to them and asking them questions.", meditEn:"At twelve years old, Jesus stays behind in Jerusalem without his parents knowing. After three anxious days of searching, they find him in the Temple, and all are astonished at his understanding.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20-%20Disputation%20with%20the%20Doctors%20-%20WGA06768.jpg?width=900", imgCredit:"Duccio di Buoninsegna, Jésus parmi les docteurs — Wikimedia Commons, domaine public"}
     ]},
-  douloureux: {label:"Mystères douloureux", days:"Mardi et vendredi", color:"#6B2545",
+  douloureux: {label:"Mystères douloureux", labelEn:"Sorrowful Mysteries", days:"Mardi et vendredi", daysEn:"Tuesday and Friday", color:"#6B2545",
     image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Cristo%20crucificado.jpg?width=900",
     credit:"Diego Velázquez, Christ en croix — Wikimedia Commons, domaine public",
-    summary:"À méditer le mardi et le vendredi, et pendant le Carême.",
-    quote:"En méditant ces mystères avec Marie, nous contemplons l'amour du Christ qui s'offre pour nous.",
+    summary:"À méditer le mardi et le vendredi, et pendant le Carême.", summaryEn:"To be meditated on Tuesday and Friday, and during Lent.",
+    quote:"En méditant ces mystères avec Marie, nous contemplons l'amour du Christ qui s'offre pour nous.", quoteEn:"By meditating on these mysteries with Mary, we contemplate the love of Christ who offers himself for us.",
     mysteres:[
-      {title:"L'Agonie de Jésus à Gethsémani", ref:"Matthieu 26, 36-39", quote:"Mon Père, s'il est possible, que cette coupe passe loin de moi ! Cependant, non pas ce que je veux, mais ce que tu veux.", medit:"Jésus prie seul au jardin de Gethsémani, saisi de tristesse et d'angoisse devant la Passion qui approche. Dans son abandon, il accepte librement la volonté du Père.", fruit:"Le repentir et l'union à la volonté de Dieu", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Bellini%2CGiovanni%20-%20Agony%20in%20the%20Garden%20-%20National%20Gallery.jpg?width=900", imgCredit:"Giovanni Bellini, L'Agonie au jardin — Wikimedia Commons, domaine public"},
-      {title:"La Flagellation de Jésus", ref:"Matthieu 27, 26", quote:"Alors Pilate leur relâcha Barabbas ; quant à Jésus, après l'avoir fait flageller, il le livra pour être crucifié.", medit:"Pour satisfaire la foule, Pilate fait battre Jésus de verges avant de le livrer au supplice. Le corps du Seigneur est meurtri pour guérir nos propres blessures.", fruit:"La pureté et la maîtrise des sens", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Caravaggio%20-%20La%20Flagellazione%20di%20Cristo.jpg?width=900", imgCredit:"Caravage, La Flagellation du Christ — Wikimedia Commons, domaine public"},
-      {title:"Le Couronnement d'épines", ref:"Matthieu 27, 27-29", quote:"Les soldats tressèrent une couronne d'épines, la posèrent sur sa tête et le revêtirent d'un manteau de pourpre.", medit:"Les soldats se moquent de Jésus comme d'un roi dérisoire, lui enfonçant une couronne d'épines. Il reçoit l'humiliation en silence, roi véritable d'un règne qui n'est pas de ce monde.", fruit:"Le courage et le mépris du jugement du monde", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Titian%20-%20Crowning%20with%20Thorns%20-%20WGA22845.jpg?width=900", imgCredit:"Titien, Le Couronnement d'épines — Wikimedia Commons, domaine public"},
-      {title:"Le Portement de la Croix", ref:"Marc 15, 21-22", quote:"Ils réquisitionnèrent, pour porter sa croix, un passant, Simon de Cyrène.", medit:"Jésus chemine vers le Golgotha, chargé de sa croix. Simon de Cyrène est requis pour l'aider à la porter — figure de tous ceux qui acceptent de porter la croix d'un autre.", fruit:"La patience dans l'épreuve", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20Christ%20Carrying%20the%20Cross%20-%20WGA10559.jpg?width=900", imgCredit:"Le Greco, Le Portement de la Croix — Wikimedia Commons, domaine public"},
-      {title:"Jésus est crucifié et meurt sur la Croix", ref:"Luc 23, 32-46", quote:"Père, entre tes mains je remets mon esprit. Et, ayant dit cela, il expira.", medit:"Jésus est crucifié entre deux malfaiteurs et demande au Père le pardon pour ses bourreaux. Il meurt en confiant son esprit, achevant par amour l'œuvre de notre rédemption.", fruit:"Le pardon des offenses et la persévérance finale", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Cristo%20crucificado.jpg?width=900", imgCredit:"Diego Velázquez, Christ en croix — Wikimedia Commons, domaine public"}
+      {title:"L'Agonie de Jésus à Gethsémani", ref:"Matthieu 26, 36-39", quote:"Mon Père, s'il est possible, que cette coupe passe loin de moi ! Cependant, non pas ce que je veux, mais ce que tu veux.", medit:"Jésus prie seul au jardin de Gethsémani, saisi de tristesse et d'angoisse devant la Passion qui approche. Dans son abandon, il accepte librement la volonté du Père.", fruit:"Le repentir et l'union à la volonté de Dieu", fruitEn:"Repentance and union with the will of God", titleEn:"The Agony of Jesus in the Garden of Gethsemane", refEn:"Matthew 26:36-39", quoteEn:"My Father, if it is possible, let this cup pass from me; yet not as I will, but as you will.", meditEn:"Jesus prays alone in the Garden of Gethsemane, seized with sorrow and anguish as the Passion draws near. In his abandonment, he freely accepts the Father's will.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Bellini%2CGiovanni%20-%20Agony%20in%20the%20Garden%20-%20National%20Gallery.jpg?width=900", imgCredit:"Giovanni Bellini, L'Agonie au jardin — Wikimedia Commons, domaine public"},
+      {title:"La Flagellation de Jésus", ref:"Matthieu 27, 26", quote:"Alors Pilate leur relâcha Barabbas ; quant à Jésus, après l'avoir fait flageller, il le livra pour être crucifié.", medit:"Pour satisfaire la foule, Pilate fait battre Jésus de verges avant de le livrer au supplice. Le corps du Seigneur est meurtri pour guérir nos propres blessures.", fruit:"La pureté et la maîtrise des sens", fruitEn:"Purity and mastery of the senses", titleEn:"The Scourging of Jesus at the Pillar", refEn:"Matthew 27:26", quoteEn:"So Pilate released Barabbas to them; and after having Jesus scourged, he handed him over to be crucified.", meditEn:"To satisfy the crowd, Pilate has Jesus beaten with whips before handing him over to execution. The Lord's body is bruised to heal our own wounds.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Caravaggio%20-%20La%20Flagellazione%20di%20Cristo.jpg?width=900", imgCredit:"Caravage, La Flagellation du Christ — Wikimedia Commons, domaine public"},
+      {title:"Le Couronnement d'épines", ref:"Matthieu 27, 27-29", quote:"Les soldats tressèrent une couronne d'épines, la posèrent sur sa tête et le revêtirent d'un manteau de pourpre.", medit:"Les soldats se moquent de Jésus comme d'un roi dérisoire, lui enfonçant une couronne d'épines. Il reçoit l'humiliation en silence, roi véritable d'un règne qui n'est pas de ce monde.", fruit:"Le courage et le mépris du jugement du monde", fruitEn:"Courage, and contempt for the judgment of the world", titleEn:"The Crowning with Thorns", refEn:"Matthew 27:27-29", quoteEn:"The soldiers twisted together a crown of thorns, put it on his head, and clothed him in a purple robe.", meditEn:"The soldiers mock Jesus as a ridiculous king, pressing a crown of thorns onto his head. He receives the humiliation in silence, a true king of a kingdom not of this world.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Titian%20-%20Crowning%20with%20Thorns%20-%20WGA22845.jpg?width=900", imgCredit:"Titien, Le Couronnement d'épines — Wikimedia Commons, domaine public"},
+      {title:"Le Portement de la Croix", ref:"Marc 15, 21-22", quote:"Ils réquisitionnèrent, pour porter sa croix, un passant, Simon de Cyrène.", medit:"Jésus chemine vers le Golgotha, chargé de sa croix. Simon de Cyrène est requis pour l'aider à la porter — figure de tous ceux qui acceptent de porter la croix d'un autre.", fruit:"La patience dans l'épreuve", fruitEn:"Patience in trial", titleEn:"The Carrying of the Cross", refEn:"Mark 15:21-22", quoteEn:"They compelled a passer-by, Simon of Cyrene, to carry his cross.", meditEn:"Jesus walks toward Golgotha, carrying his cross. Simon of Cyrene is pressed into helping him carry it — a figure of all who agree to carry another's cross.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20Christ%20Carrying%20the%20Cross%20-%20WGA10559.jpg?width=900", imgCredit:"Le Greco, Le Portement de la Croix — Wikimedia Commons, domaine public"},
+      {title:"Jésus est crucifié et meurt sur la Croix", ref:"Luc 23, 32-46", quote:"Père, entre tes mains je remets mon esprit. Et, ayant dit cela, il expira.", medit:"Jésus est crucifié entre deux malfaiteurs et demande au Père le pardon pour ses bourreaux. Il meurt en confiant son esprit, achevant par amour l'œuvre de notre rédemption.", fruit:"Le pardon des offenses et la persévérance finale", fruitEn:"Forgiveness of offenses and final perseverance", titleEn:"The Crucifixion and Death of Jesus", refEn:"Luke 23:32-46", quoteEn:"Father, into your hands I commend my spirit. And having said this, he breathed his last.", meditEn:"Jesus is crucified between two criminals and asks the Father to forgive his executioners. He dies entrusting his spirit, completing out of love the work of our redemption.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Cristo%20crucificado.jpg?width=900", imgCredit:"Diego Velázquez, Christ en croix — Wikimedia Commons, domaine public"}
     ]},
-  glorieux: {label:"Mystères glorieux", days:"Mercredi et dimanche", color:"#5C6E58",
+  glorieux: {label:"Mystères glorieux", labelEn:"Glorious Mysteries", days:"Mercredi et dimanche", daysEn:"Wednesday and Sunday", color:"#5C6E58",
     image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Peter%20Paul%20Rubens%20-%20The%20Resurrection%20of%20Christ%20-%20WGA20209.jpg?width=900",
     credit:"Pierre Paul Rubens, La Résurrection du Christ — Wikimedia Commons, domaine public",
-    summary:"À méditer le mercredi et le dimanche, et pendant le temps pascal.",
-    quote:"En méditant ces mystères avec Marie, nous contemplons la victoire du Christ sur la mort.",
+    summary:"À méditer le mercredi et le dimanche, et pendant le temps pascal.", summaryEn:"To be meditated on Wednesday and Sunday, and during the Easter season.",
+    quote:"En méditant ces mystères avec Marie, nous contemplons la victoire du Christ sur la mort.", quoteEn:"By meditating on these mysteries with Mary, we contemplate Christ's victory over death.",
     mysteres:[
-      {title:"La Résurrection de Jésus", ref:"Luc 24, 1-6", quote:"Il n'est pas ici, car il est ressuscité, comme il l'avait dit.", medit:"Le premier jour de la semaine, de grand matin, les femmes se rendent au sépulcre et le trouvent vide. L'ange leur annonce que le Christ est vivant, vainqueur de la mort.", fruit:"La foi", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Peter%20Paul%20Rubens%20-%20The%20Resurrection%20of%20Christ%20-%20WGA20209.jpg?width=900", imgCredit:"Pierre Paul Rubens, La Résurrection du Christ — Wikimedia Commons, domaine public"},
-      {title:"L'Ascension du Seigneur au ciel", ref:"Marc 16, 19", quote:"Le Seigneur Jésus, après leur avoir parlé, fut enlevé au ciel et s'assit à la droite de Dieu.", medit:"Jésus s'élève au ciel sous le regard des apôtres, non pour les abandonner mais pour leur ouvrir le chemin et intercéder pour eux auprès du Père.", fruit:"L'espérance et le désir du ciel", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Wga%20Garofalo%20Ascension%20of%20Christ.jpg?width=900", imgCredit:"Garofalo, L'Ascension du Christ — Wikimedia Commons, domaine public"},
-      {title:"La descente du Saint-Esprit au Cénacle", ref:"Actes 2, 1-4", quote:"Ils furent tous remplis de l'Esprit Saint et se mirent à parler en d'autres langues.", medit:"Réunis au Cénacle avec Marie, les disciples reçoivent l'Esprit Saint dans le bruit d'un vent violent et des langues de feu. Naît alors l'Église, envoyée annoncer l'Évangile à toutes les nations.", fruit:"La sagesse et les dons de l'Esprit Saint", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Restout%20-%20La%20Pentec%C3%B4te%2001.jpg?width=900", imgCredit:"Jean Restout, La Pentecôte — Wikimedia Commons, domaine public"},
-      {title:"L'Assomption de Marie au Ciel", ref:"Luc 1, 48-49", quote:"Désormais tous les âges me diront bienheureuse. Le Puissant fit pour moi des merveilles.", medit:"Marie, préservée du péché, est élevée corps et âme auprès de son Fils au terme de sa vie terrestre — premier fruit de la résurrection promise à tous les croyants.", fruit:"La grâce d'une sainte mort et la confiance en Marie", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Tizian%20041.jpg?width=900", imgCredit:"Titien, L'Assomption de la Vierge — Wikimedia Commons, domaine public"},
-      {title:"Marie est couronnée Reine du ciel et de la terre", ref:"Apocalypse 12, 1", quote:"Un signe grandiose apparut dans le ciel : une Femme, ayant le soleil pour manteau.", medit:"Marie est honorée comme Reine auprès de son Fils, intercédant sans cesse pour ses enfants encore en chemin sur la terre.", fruit:"La persévérance et la confiance en l'intercession de Marie", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Diego%20Vel%C3%A1zquez%20-%20Coronation%20of%20the%20Virgin%20-%20Prado.jpg?width=900", imgCredit:"Diego Vélasquez, Le Couronnement de la Vierge — Wikimedia Commons, domaine public"}
+      {title:"La Résurrection de Jésus", ref:"Luc 24, 1-6", quote:"Il n'est pas ici, car il est ressuscité, comme il l'avait dit.", medit:"Le premier jour de la semaine, de grand matin, les femmes se rendent au sépulcre et le trouvent vide. L'ange leur annonce que le Christ est vivant, vainqueur de la mort.", fruit:"La foi", fruitEn:"Faith", titleEn:"The Resurrection of Jesus", refEn:"Luke 24:1-6", quoteEn:"He is not here, for he has risen, just as he said.", meditEn:"On the first day of the week, very early, the women go to the tomb and find it empty. The angel announces to them that Christ is alive, victorious over death.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Peter%20Paul%20Rubens%20-%20The%20Resurrection%20of%20Christ%20-%20WGA20209.jpg?width=900", imgCredit:"Pierre Paul Rubens, La Résurrection du Christ — Wikimedia Commons, domaine public"},
+      {title:"L'Ascension du Seigneur au ciel", ref:"Marc 16, 19", quote:"Le Seigneur Jésus, après leur avoir parlé, fut enlevé au ciel et s'assit à la droite de Dieu.", medit:"Jésus s'élève au ciel sous le regard des apôtres, non pour les abandonner mais pour leur ouvrir le chemin et intercéder pour eux auprès du Père.", fruit:"L'espérance et le désir du ciel", fruitEn:"Hope and the desire for heaven", titleEn:"The Ascension of the Lord into Heaven", refEn:"Mark 16:19", quoteEn:"So then the Lord Jesus, after he had spoken to them, was taken up into heaven and sat down at the right hand of God.", meditEn:"Jesus rises into heaven before the eyes of the apostles, not to abandon them but to open the way for them and to intercede for them with the Father.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Wga%20Garofalo%20Ascension%20of%20Christ.jpg?width=900", imgCredit:"Garofalo, L'Ascension du Christ — Wikimedia Commons, domaine public"},
+      {title:"La descente du Saint-Esprit au Cénacle", ref:"Actes 2, 1-4", quote:"Ils furent tous remplis de l'Esprit Saint et se mirent à parler en d'autres langues.", medit:"Réunis au Cénacle avec Marie, les disciples reçoivent l'Esprit Saint dans le bruit d'un vent violent et des langues de feu. Naît alors l'Église, envoyée annoncer l'Évangile à toutes les nations.", fruit:"La sagesse et les dons de l'Esprit Saint", fruitEn:"Wisdom and the gifts of the Holy Spirit", titleEn:"The Descent of the Holy Spirit at Pentecost", refEn:"Acts 2:1-4", quoteEn:"They were all filled with the Holy Spirit and began to speak in other tongues.", meditEn:"Gathered in the Upper Room with Mary, the disciples receive the Holy Spirit amid the sound of a mighty wind and tongues of fire. The Church is born, sent to proclaim the Gospel to all nations.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Restout%20-%20La%20Pentec%C3%B4te%2001.jpg?width=900", imgCredit:"Jean Restout, La Pentecôte — Wikimedia Commons, domaine public"},
+      {title:"L'Assomption de Marie au Ciel", ref:"Luc 1, 48-49", quote:"Désormais tous les âges me diront bienheureuse. Le Puissant fit pour moi des merveilles.", medit:"Marie, préservée du péché, est élevée corps et âme auprès de son Fils au terme de sa vie terrestre — premier fruit de la résurrection promise à tous les croyants.", fruit:"La grâce d'une sainte mort et la confiance en Marie", fruitEn:"The grace of a holy death and trust in Mary", titleEn:"The Assumption of Mary into Heaven", refEn:"Luke 1:48-49", quoteEn:"From now on, all generations will call me blessed, for the Almighty has done great things for me.", meditEn:"Mary, preserved from sin, is taken up body and soul to be with her Son at the end of her earthly life — the first fruit of the resurrection promised to all believers.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Tizian%20041.jpg?width=900", imgCredit:"Titien, L'Assomption de la Vierge — Wikimedia Commons, domaine public"},
+      {title:"Marie est couronnée Reine du ciel et de la terre", ref:"Apocalypse 12, 1", quote:"Un signe grandiose apparut dans le ciel : une Femme, ayant le soleil pour manteau.", medit:"Marie est honorée comme Reine auprès de son Fils, intercédant sans cesse pour ses enfants encore en chemin sur la terre.", fruit:"La persévérance et la confiance en l'intercession de Marie", fruitEn:"Perseverance and trust in Mary's intercession", titleEn:"The Coronation of Mary as Queen of Heaven and Earth", refEn:"Revelation 12:1", quoteEn:"A great sign appeared in heaven: a woman clothed with the sun.", meditEn:"Mary is honored as Queen beside her Son, ceaselessly interceding for her children still on their earthly journey.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Diego%20Vel%C3%A1zquez%20-%20Coronation%20of%20the%20Virgin%20-%20Prado.jpg?width=900", imgCredit:"Diego Vélasquez, Le Couronnement de la Vierge — Wikimedia Commons, domaine public"}
     ]},
-  lumineux: {label:"Mystères lumineux", days:"Jeudi", color:"#3B8199",
+  lumineux: {label:"Mystères lumineux", labelEn:"Luminous Mysteries", days:"Jeudi", daysEn:"Thursday", color:"#3B8199",
     image:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Piero%20della%20Francesca%20-%20Baptism%20of%20Christ%20-%20WGA17595.jpg?width=900",
     credit:"Piero della Francesca, Le Baptême du Christ — Wikimedia Commons, domaine public",
-    summary:"À méditer le jeudi, institués par saint Jean-Paul II en 2002.",
-    quote:"En méditant ces mystères avec Marie, nous contemplons la vie publique du Christ.",
+    summary:"À méditer le jeudi, institués par saint Jean-Paul II en 2002.", summaryEn:"To be meditated on Thursday, instituted by St. John Paul II in 2002.",
+    quote:"En méditant ces mystères avec Marie, nous contemplons la vie publique du Christ.", quoteEn:"By meditating on these mysteries with Mary, we contemplate the public life of Christ.",
     mysteres:[
-      {title:"Le Baptême de Jésus au Jourdain", ref:"Matthieu 3, 16-17", quote:"Celui-ci est mon Fils bien-aimé, en qui j'ai mis toute ma joie.", medit:"Jésus, sans péché, descend dans les eaux du Jourdain et s'y fait baptiser par Jean. L'Esprit descend sur lui comme une colombe et la voix du Père le proclame Fils bien-aimé.", fruit:"La fidélité aux promesses de notre baptême", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Piero%20della%20Francesca%20-%20Baptism%20of%20Christ%20-%20WGA17595.jpg?width=900", imgCredit:"Piero della Francesca, Le Baptême du Christ — Wikimedia Commons, domaine public"},
-      {title:"Les Noces de Cana", ref:"Jean 2, 1-11", quote:"Faites tout ce qu'il vous dira.", medit:"Lors d'un mariage en Galilée, le vin vient à manquer. Marie intercède auprès de son Fils, qui change l'eau en vin — premier signe, à la demande de sa mère, qui manifeste sa gloire.", fruit:"La confiance en l'intercession de Marie", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Paolo%20Veronese%20008.jpg?width=900", imgCredit:"Paul Véronèse, Les Noces de Cana — Wikimedia Commons, domaine public"},
-      {title:"L'Annonce du Royaume de Dieu et l'appel à la conversion", ref:"Marc 1, 14-15", quote:"Le temps est accompli, le règne de Dieu est tout proche. Convertissez-vous et croyez à l'Évangile.", medit:"Jésus parcourt la Galilée, annonçant la Bonne Nouvelle et appelant chacun à changer de vie pour accueillir le règne de Dieu déjà proche.", fruit:"Le désir de conversion et de sainteté", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Jan%20Brueghel%20the%20Elder%20-%20The%20Sermon%20on%20the%20Mount%20-%20Google%20Art%20Project.jpg?width=900", imgCredit:"Jan Brueghel l'Ancien, Le Sermon sur la montagne — Wikimedia Commons, domaine public"},
-      {title:"La Transfiguration", ref:"Matthieu 17, 1-5", quote:"Celui-ci est mon Fils bien-aimé, écoutez-le.", medit:"Sur une haute montagne, devant Pierre, Jacques et Jean, le visage de Jésus devient resplendissant comme le soleil — un avant-goût de gloire donné pour affermir leur foi avant l'épreuve de la Passion.", fruit:"Le courage dans les épreuves et le désir de sainteté", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Raphael%20-%20The%20Transfiguration%20-%20Google%20Art%20Project.jpg?width=900", imgCredit:"Raphaël, La Transfiguration — Wikimedia Commons, domaine public"},
-      {title:"L'Institution de l'Eucharistie", ref:"Matthieu 26, 26-28", quote:"Ceci est mon corps. Prenez, mangez : ceci est mon corps.", medit:"Au soir de la Cène, Jésus prend le pain, le bénit, le rompt et le donne à ses disciples, instituant le mémorial de son sacrifice et se donnant lui-même en nourriture jusqu'à la fin des temps.", fruit:"L'amour eucharistique et l'adoration", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Giusto%20di%20gand%2C%20pala%20del%20corpus%20domini.JPG?width=900", imgCredit:"Juste de Gand, L'Institution de l'Eucharistie — Wikimedia Commons, domaine public"}
+      {title:"Le Baptême de Jésus au Jourdain", ref:"Matthieu 3, 16-17", quote:"Celui-ci est mon Fils bien-aimé, en qui j'ai mis toute ma joie.", medit:"Jésus, sans péché, descend dans les eaux du Jourdain et s'y fait baptiser par Jean. L'Esprit descend sur lui comme une colombe et la voix du Père le proclame Fils bien-aimé.", fruit:"La fidélité aux promesses de notre baptême", fruitEn:"Faithfulness to the promises of our baptism", titleEn:"The Baptism of Jesus in the Jordan", refEn:"Matthew 3:16-17", quoteEn:"This is my beloved Son, in whom I am well pleased.", meditEn:"Jesus, without sin, goes down into the waters of the Jordan and is baptized by John. The Spirit descends on him like a dove, and the Father's voice proclaims him the beloved Son.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Piero%20della%20Francesca%20-%20Baptism%20of%20Christ%20-%20WGA17595.jpg?width=900", imgCredit:"Piero della Francesca, Le Baptême du Christ — Wikimedia Commons, domaine public"},
+      {title:"Les Noces de Cana", ref:"Jean 2, 1-11", quote:"Faites tout ce qu'il vous dira.", medit:"Lors d'un mariage en Galilée, le vin vient à manquer. Marie intercède auprès de son Fils, qui change l'eau en vin — premier signe, à la demande de sa mère, qui manifeste sa gloire.", fruit:"La confiance en l'intercession de Marie", fruitEn:"Trust in Mary's intercession", titleEn:"The Wedding at Cana", refEn:"John 2:1-11", quoteEn:"Do whatever he tells you.", meditEn:"At a wedding in Galilee, the wine runs out. Mary intercedes with her Son, who changes water into wine — his first sign, at his mother's request, revealing his glory.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Paolo%20Veronese%20008.jpg?width=900", imgCredit:"Paul Véronèse, Les Noces de Cana — Wikimedia Commons, domaine public"},
+      {title:"L'Annonce du Royaume de Dieu et l'appel à la conversion", ref:"Marc 1, 14-15", quote:"Le temps est accompli, le règne de Dieu est tout proche. Convertissez-vous et croyez à l'Évangile.", medit:"Jésus parcourt la Galilée, annonçant la Bonne Nouvelle et appelant chacun à changer de vie pour accueillir le règne de Dieu déjà proche.", fruit:"Le désir de conversion et de sainteté", fruitEn:"The desire for conversion and holiness", titleEn:"The Proclamation of the Kingdom and the Call to Conversion", refEn:"Mark 1:14-15", quoteEn:"The time is fulfilled, and the kingdom of God is at hand; repent, and believe in the gospel.", meditEn:"Jesus travels through Galilee, proclaiming the Good News and calling each person to change their life in order to welcome the kingdom of God already at hand.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Jan%20Brueghel%20the%20Elder%20-%20The%20Sermon%20on%20the%20Mount%20-%20Google%20Art%20Project.jpg?width=900", imgCredit:"Jan Brueghel l'Ancien, Le Sermon sur la montagne — Wikimedia Commons, domaine public"},
+      {title:"La Transfiguration", ref:"Matthieu 17, 1-5", quote:"Celui-ci est mon Fils bien-aimé, écoutez-le.", medit:"Sur une haute montagne, devant Pierre, Jacques et Jean, le visage de Jésus devient resplendissant comme le soleil — un avant-goût de gloire donné pour affermir leur foi avant l'épreuve de la Passion.", fruit:"Le courage dans les épreuves et le désir de sainteté", fruitEn:"Courage in trials, and the desire for holiness", titleEn:"The Transfiguration", refEn:"Matthew 17:1-5", quoteEn:"This is my beloved Son; listen to him.", meditEn:"On a high mountain, before Peter, James and John, Jesus' face becomes radiant like the sun — a foretaste of glory given to strengthen their faith before the trial of the Passion.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Raphael%20-%20The%20Transfiguration%20-%20Google%20Art%20Project.jpg?width=900", imgCredit:"Raphaël, La Transfiguration — Wikimedia Commons, domaine public"},
+      {title:"L'Institution de l'Eucharistie", ref:"Matthieu 26, 26-28", quote:"Ceci est mon corps. Prenez, mangez : ceci est mon corps.", medit:"Au soir de la Cène, Jésus prend le pain, le bénit, le rompt et le donne à ses disciples, instituant le mémorial de son sacrifice et se donnant lui-même en nourriture jusqu'à la fin des temps.", fruit:"L'amour eucharistique et l'adoration", fruitEn:"Eucharistic love and adoration", titleEn:"The Institution of the Eucharist", refEn:"Matthew 26:26-28", quoteEn:"This is my body. Take and eat: this is my body.", meditEn:"On the evening of the Last Supper, Jesus takes the bread, blesses it, breaks it, and gives it to his disciples, instituting the memorial of his sacrifice and giving himself as food until the end of time.", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Giusto%20di%20gand%2C%20pala%20del%20corpus%20domini.JPG?width=900", imgCredit:"Juste de Gand, L'Institution de l'Eucharistie — Wikimedia Commons, domaine public"}
     ]}
 };
 const ROSARY_ETERNAL_REST = "Donnez-leur, Seigneur, le repos éternel, et que la lumière sans déclin luise pour eux. Qu'ils reposent en paix. Amen.";
+const ROSARY_ETERNAL_REST_EN = "Eternal rest grant unto them, O Lord, and let perpetual light shine upon them. May they rest in peace. Amen.";
 const CHAPLET_CATALOGUE = [
-  {id:"traditionnel", cat:"classique", title:"Chapelet traditionnel", sub:"Mystères joyeux, douloureux, glorieux et lumineux.",
+  {id:"traditionnel", cat:"classique", title:"Chapelet traditionnel", titleEn:"Traditional Rosary", sub:"Mystères joyeux, douloureux, glorieux et lumineux.", subEn:"Joyful, Sorrowful, Glorious and Luminous Mysteries.",
     avatar:"📿", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Zurbar%C3%A1n%20%28atribuido%29-John%20of%20the%20Cross-1656.jpg?width=400"},
-  {id:"misericorde", cat:"classique", title:"Chapelet de la Miséricorde", sub:"Avec les paroles de sainte Faustine.",
+  {id:"misericorde", cat:"classique", title:"Chapelet de la Miséricorde", titleEn:"Chaplet of Divine Mercy", sub:"Avec les paroles de sainte Faustine.", subEn:"With the words of St. Faustina.",
     avatar:"❤️", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Kazimirowski_Eugeniusz,_Divine_Mercy,_1934.jpg?width=400", gotoSub:"misericorde"},
-  {id:"defunts", cat:"thematique", title:"Chapelet pour les défunts", sub:"Unis dans l'espérance de la Résurrection.",
+  {id:"defunts", cat:"thematique", title:"Chapelet pour les défunts", titleEn:"Rosary for the Deceased", sub:"Unis dans l'espérance de la Résurrection.", subEn:"United in the hope of the Resurrection.",
     avatar:"🕯️", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Peter%20Paul%20Rubens%20-%20The%20Resurrection%20of%20Christ%20-%20WGA20209.jpg?width=400"},
-  {id:"medite", cat:"thematique", title:"Chapelet médité", sub:"Avec des méditations détaillées pour chaque mystère.",
+  {id:"medite", cat:"thematique", title:"Chapelet médité", titleEn:"Meditated Rosary", sub:"Avec des méditations détaillées pour chaque mystère.", subEn:"With detailed meditations for each mystery.",
     avatar:"🏔️", img:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Duccio%20di%20Buoninsegna%20053.jpg?width=400"}
 ];
 function todaysRosarySet(){
@@ -3879,7 +3884,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
     }), false);
   }catch(e){}
 }
@@ -4019,13 +4024,14 @@ function getOrderedTabs(){
   PRIMARY_TABS.forEach(t=>{ if(!ordered.includes(t)) ordered.push(t); });
   return ordered;
 }
+const TAB_I18N_KEYS = {accueil:'tabAccueil', prier:'tabPrier', ecritures:'tabBible', explorer:'tabDecouvrir', espace:'tabChapelle'};
 function renderTabbar(){
   const tabs = getOrderedTabs();
   const activeTabKey = primaryToTabKey(PRIMARY);
   document.getElementById('tabbar').innerHTML =
     `<div class="tabbar-brand"><span class="tabbar-brand-flame">🕯️</span><span class="tabbar-brand-name">Lumen</span></div>` +
-    tabs.map(t =>
-      `<button class="tab-btn ${activeTabKey===t.key?'active':''}" data-tab="${t.key}">${ICONS[t.key]||''}<span>${t.label}</span></button>`
+    tabs.map(tb =>
+      `<button class="tab-btn ${activeTabKey===tb.key?'active':''}" data-tab="${tb.key}">${ICONS[tb.key]||''}<span>${TAB_I18N_KEYS[tb.key]?t(TAB_I18N_KEYS[tb.key]):tb.label}</span></button>`
     ).join('');
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.onclick = ()=>{
@@ -4257,14 +4263,15 @@ function homePage1HTML(){
   let saluTime = 'Bonjour';
   if(hourNow >= 18 || hourNow < 5) saluTime = 'Bonsoir';
   else if(hourNow >= 12) saluTime = 'Bon après-midi';
+  if(LANG === 'en') saluTime = (hourNow >= 18 || hourNow < 5) ? t('goodEvening') : t('goodMorning');
   const inProgress = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
   const {saint:dayFeastSaint, isFeast:dayIsFeast} = getSaintOfDay();
 
   return `
     <div class="home-plain-header">
       ${dayIsFeast ? `<p class="home-plain-date">✦ Fête de ${dayFeastSaint.name}</p>` : ''}
-      <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>que la paix soit avec vous.</h1>
-      <p class="home-plain-sub">Un moment avec Dieu pour aujourd'hui.</p>
+      <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
+      <p class="home-plain-sub">${t('homeSubtitle')}.</p>
     </div>
     ${USER_NAME ? '' : `
       <div class="home-name-prompt" style="margin:10px 0 2px;">
@@ -5511,6 +5518,19 @@ const CHAPLET_PRAYER_TEXTS = {
   'Je crois en Dieu': "Je crois en Dieu, le Père tout-puissant, créateur du ciel et de la terre. Et en Jésus-Christ, son Fils unique, notre Seigneur, qui a été conçu du Saint-Esprit, est né de la Vierge Marie, a souffert sous Ponce Pilate, a été crucifié, est mort et a été enseveli, est descendu aux enfers, le troisième jour est ressuscité des morts, est monté aux cieux, est assis à la droite de Dieu le Père tout-puissant, d'où il viendra juger les vivants et les morts. Je crois en l'Esprit Saint, à la sainte Église catholique, à la communion des saints, à la rémission des péchés, à la résurrection de la chair, à la vie éternelle. Amen.",
   'Salve Regina': "Salut, ô Reine, Mère de miséricorde, notre vie, notre douceur, notre espérance, salut ! Enfants d'Ève, exilés, nous crions vers vous ; vers vous nous soupirons, gémissant et pleurant dans cette vallée de larmes. Ô vous, notre avocate, tournez vers nous vos regards miséricordieux. Et, après cet exil, montrez-nous Jésus, le fruit béni de vos entrailles. Ô clémente, ô miséricordieuse, ô douce Vierge Marie !"
 };
+/* Textes anglais correspondants (traductions liturgiques traditionnelles),
+   utilisés par chapletText() quand LANG==='en'. */
+const CHAPLET_PRAYER_TEXTS_EN = {
+  'Notre Père': "Our Father, who art in heaven, hallowed be thy name; thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil. Amen.",
+  'Je vous salue Marie': "Hail Mary, full of grace, the Lord is with thee; blessed art thou among women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.",
+  'Gloire au Père': "Glory be to the Father, and to the Son, and to the Holy Spirit, as it was in the beginning, is now, and ever shall be, world without end. Amen.",
+  'Je crois en Dieu': "I believe in God, the Father almighty, Creator of heaven and earth. And in Jesus Christ, his only Son, our Lord, who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and was buried; he descended into hell; on the third day he rose again from the dead; he ascended into heaven, and is seated at the right hand of God the Father almighty; from there he will come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen.",
+  'Salve Regina': "Hail, holy Queen, Mother of mercy, our life, our sweetness, and our hope. To thee do we cry, poor banished children of Eve. To thee do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious advocate, thine eyes of mercy toward us, and after this our exile, show unto us the blessed fruit of thy womb, Jesus. O clement, O loving, O sweet Virgin Mary."
+};
+function chapletText(label){
+  if(LANG === 'en' && CHAPLET_PRAYER_TEXTS_EN[label]) return CHAPLET_PRAYER_TEXTS_EN[label];
+  return CHAPLET_PRAYER_TEXTS[label];
+}
 /* Une courte explication par prière classique, pour l'onglet « Explication »
    du lecteur de textes — façon maquette (écran du Notre Père). */
 const PRAYER_EXPLICATIONS = {
@@ -5742,15 +5762,23 @@ function renderGuides(){
 // courte référence + chevron) au lieu d'une carte en grille — utilisée pour les
 // sous-parties de la section Écritures (Psaumes, Récits fondateurs, Repères)
 // afin de présenter sections/chapitres comme un sommaire de livre.
+/* Localisation légère au niveau d'une entrée de contenu : si l'entrée porte
+   un champ "<field>En" et que LANG==='en', on l'utilise, sinon on retombe
+   sur le texte français d'origine. Permet de traduire certaines entrées
+   (ex. les prières fondamentales) sans toucher aux 114 tableaux restants. */
+function loc(entry, field){
+  if(LANG === 'en' && entry && entry[field+'En']) return entry[field+'En'];
+  return entry ? entry[field] : undefined;
+}
 function entryRowHTML(entry, idx){
   const art = lumenSacredArtFor(entry);
   const imgUrl = entry.img || (art ? art.url : null);
   const iconHTML = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📖').replace(/'/g,"\\'")}'">` : (entry.avatar || '📖');
-  const desc = entry.ref || entry.dates || entry.summary || '';
+  const desc = loc(entry,'ref') || loc(entry,'dates') || loc(entry,'summary') || '';
   return `<div class="rubric-row entry-card" data-idx="${idx}">
     <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${iconHTML}</div>
     <div class="rubric-row-text">
-      <span class="rubric-row-title">${entry.name}</span>
+      <span class="rubric-row-title">${loc(entry,'name')}</span>
       ${desc ? `<span class="rubric-row-desc">${desc}</span>` : ''}
     </div>
     <span class="rubric-row-chevron">›</span>
@@ -5765,25 +5793,26 @@ function entryCardHTML(entry, idx, halo){
     return `<div class="card entry-card" data-idx="${idx}">
       <div class="entry-avatar entry-avatar-photo">${thumbHTML}</div>
       <div class="entry-body">
-        <p class="entry-name">${entry.name}</p>
-        ${entry.dates ? `<p class="entry-dates">${entry.dates}</p>` : (entry.ref ? `<p class="entry-dates">${entry.ref}</p>` : '')}
-        <p class="entry-summary">${entry.summary}</p>
+        <p class="entry-name">${loc(entry,'name')}</p>
+        ${loc(entry,'dates') ? `<p class="entry-dates">${loc(entry,'dates')}</p>` : (loc(entry,'ref') ? `<p class="entry-dates">${loc(entry,'ref')}</p>` : '')}
+        <p class="entry-summary">${loc(entry,'summary')}</p>
       </div>
     </div>`;
   }
   return `<div class="card entry-card" data-idx="${idx}">
     <div class="entry-avatar entry-avatar-photo">${thumbHTML}</div>
     <div class="entry-body">
-      <p class="entry-name">${entry.name}</p>
-      ${entry.dates ? `<p class="entry-dates">${entry.dates}</p>` : (entry.ref ? `<p class="entry-dates">${entry.ref}</p>` : '')}
-      <p class="entry-summary">${entry.summary}</p>
+      <p class="entry-name">${loc(entry,'name')}</p>
+      ${loc(entry,'dates') ? `<p class="entry-dates">${loc(entry,'dates')}</p>` : (loc(entry,'ref') ? `<p class="entry-dates">${loc(entry,'ref')}</p>` : '')}
+      <p class="entry-summary">${loc(entry,'summary')}</p>
     </div>
   </div>`;
 }
 
 const REPEATABLE_PRAYER_COMPKEYS = ['prier:prieres', 'prier:famille', 'combat:prieres'];
 function entryDetailHTML(entry, idx, total, halo, favMeta){
-  const fav = favMeta ? {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey:favMeta.compKey, groupId:favMeta.groupId, idx, name:entry.name, avatar:entry.avatar, summary:(entry.summary||'').slice(0,90)} : null;
+  const locName = loc(entry,'name'), locDates = loc(entry,'dates'), locRef = loc(entry,'ref'), locSummary = loc(entry,'summary');
+  const fav = favMeta ? {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey:favMeta.compKey, groupId:favMeta.groupId, idx, name:locName, avatar:entry.avatar, summary:(locSummary||'').slice(0,90)} : null;
   const usageKey = favMeta ? `${favMeta.compKey}:${favMeta.groupId}:${idx}` : null;
   const usageCount = usageKey ? (PRAYER_USAGE[usageKey]||0) : 0;
   const detailArt = lumenSacredArtFor(entry);
@@ -5795,20 +5824,20 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
         ? `<div class="halo-wrap"><div class="halo-ring"></div><div class="halo-avatar entry-avatar-photo">${detailThumb}</div></div>`
         : `<div class="entry-avatar-lg entry-avatar-photo">${detailThumb}</div>`}
       <div style="flex:1;">
-        <p class="entry-detail-name">${entry.name}</p>
-        ${entry.dates ? `<p class="entry-detail-dates">${entry.dates}</p>` : ''}
+        <p class="entry-detail-name">${locName}</p>
+        ${locDates ? `<p class="entry-detail-dates">${locDates}</p>` : ''}
       </div>
       ${fav ? favStarHTML(fav) : ''}
     </div>
-    ${entry.ref ? `<p class="saint-prayer" style="margin-bottom:12px;">${entry.ref}</p>` : ''}
-    ${carnetBoxesHTML(entry.summary, 'reading')}
-    ${textActionsRowHTML('candle', entry.name, entry.dates||'', entry.summary, entry.ref||'', detailArt ? [detailArt.url] : [])}
+    ${locRef ? `<p class="saint-prayer" style="margin-bottom:12px;">${locRef}</p>` : ''}
+    ${carnetBoxesHTML(locSummary, 'reading')}
+    ${textActionsRowHTML('candle', locName, locDates||'', locSummary, locRef||'', detailArt ? [detailArt.url] : [])}
     ${(()=>{
-      if(entry.externalUrl === '#') return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" id="goto-rosary-btn">${entry.linkLabel || 'Ouvrir →'}</button></div>`;
+      if(entry.externalUrl === '#') return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" id="goto-rosary-btn">${loc(entry,'linkLabel') || (LANG==='en'?'Open →':'Ouvrir →')}</button></div>`;
       if(!entry.externalUrl) return '';
       const ytId = extractYoutubeId(entry.externalUrl);
-      if(ytId) return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" data-video-id="${ytId}" data-video-title="${entry.name.replace(/"/g,'&quot;')}" data-video-caption="${(entry.ref||'').replace(/"/g,'&quot;')}">▶️ Regarder ici</button></div>`;
-      return `<div class="entry-link-row"><a class="btn btn-gold btn-sm" href="${entry.externalUrl}" target="_blank" rel="noopener">${entry.linkLabel || 'En savoir plus ↗'}</a></div>`;
+      if(ytId) return `<div class="entry-link-row"><button class="btn btn-gold btn-sm" data-video-id="${ytId}" data-video-title="${locName.replace(/"/g,'&quot;')}" data-video-caption="${(locRef||'').replace(/"/g,'&quot;')}">▶️ Regarder ici</button></div>`;
+      return `<div class="entry-link-row"><a class="btn btn-gold btn-sm" href="${entry.externalUrl}" target="_blank" rel="noopener">${loc(entry,'linkLabel') || (LANG==='en'?'Learn more ↗':'En savoir plus ↗')}</a></div>`;
     })()}
     ${usageKey ? `
     <div class="card" style="margin-top:14px;">
@@ -5822,7 +5851,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
     ${favMeta && REPEATABLE_PRAYER_COMPKEYS.includes(favMeta.compKey) ? `
     <div class="card" style="margin-top:10px;">
       <p class="eyebrow" style="color:var(--gold);">📿 Chapelet de répétitions</p>
-      <p class="entry-detail-text" style="font-style:italic; margin-bottom:8px;">« ${entry.summary} »</p>
+      <p class="entry-detail-text" style="font-style:italic; margin-bottom:8px;">« ${locSummary} »</p>
       <p class="studio-note" style="margin:2px 0 8px;">Répétez ce texte à chaque perle — touchez une perle pour avancer, ou utilisez « + 1 ».</p>
       <div class="bead-chaplet" id="bead-chaplet"></div>
       <div style="display:flex; align-items:center; gap:14px; justify-content:center; margin-top:10px;">
@@ -6034,7 +6063,7 @@ function renderPrieresHub(){
     const group = PRIERES.find(g=>g.id===ENTRY_OPEN.groupId);
     const entry = group.entries[ENTRY_OPEN.idx];
     let html = `<div class="detail-wrap">
-      <button class="back-link" id="back-btn">← ${group.title}</button>
+      <button class="back-link" id="back-btn">← ${loc(group,'title')}</button>
       ${entryDetailHTML(entry, ENTRY_OPEN.idx, group.entries.length, halo, {primary:PRIMARY, sub:SUBTAB[PRIMARY], compKey, groupId:group.id})}
     </div>`;
     document.getElementById('screen').innerHTML = html;
@@ -6067,7 +6096,7 @@ function renderPrieresHub(){
     html += `<div class="grid">${results.map(r=>`
       <div class="entry-card" data-group="${r.group.id}" data-idx="${r.idx}">
         <div class="entry-avatar">${r.entry.avatar||'🙏'}</div>
-        <div class="entry-body"><p class="entry-name">${r.entry.name}</p><p class="entry-summary">${(PRIERES_CAT_META[r.group.id]||{}).icon||''} ${r.group.title}</p></div>
+        <div class="entry-body"><p class="entry-name">${loc(r.entry,'name')}</p><p class="entry-summary">${(PRIERES_CAT_META[r.group.id]||{}).icon||''} ${loc(r.group,'title')}</p></div>
       </div>`).join('')}</div>`;
     document.getElementById('screen').innerHTML = html;
     wirePrieresSearch();
@@ -6082,7 +6111,7 @@ function renderPrieresHub(){
       <div class="grid">${PRIERES.map(g=>`
         <div class="card prieres-cat-card" data-cat="${g.id}" style="cursor:pointer;">
           <span style="font-size:26px;">${(PRIERES_CAT_META[g.id]||{}).icon||'📿'}</span>
-          <p class="day-title" style="font-size:15px; margin:6px 0 2px;">${g.title}</p>
+          <p class="day-title" style="font-size:15px; margin:6px 0 2px;">${loc(g,'title')}</p>
           <p class="studio-note" style="margin:0;">${g.entries.length} prière${g.entries.length>1?'s':''}</p>
           <p class="entry-summary" style="margin-top:4px;">${(PRIERES_CAT_META[g.id]||{}).short||''}</p>
         </div>`).join('')}</div>`;
@@ -6096,8 +6125,8 @@ function renderPrieresHub(){
 
   const group = PRIERES.find(g=>g.id===PRIERES_CATEGORY);
   html += `<div style="margin-bottom:10px;"><button class="back-link" id="cat-back-btn">← Toutes les catégories</button></div>
-    <h2 class="section-title" style="font-size:17px;">${(PRIERES_CAT_META[group.id]||{}).icon||''} ${group.title}</h2>
-    <p class="section-desc">${group.desc||''}</p>
+    <h2 class="section-title" style="font-size:17px;">${(PRIERES_CAT_META[group.id]||{}).icon||''} ${loc(group,'title')}</h2>
+    <p class="section-desc">${loc(group,'desc')||''}</p>
     <div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   wirePrieresSearch();
@@ -9124,46 +9153,51 @@ function rosaryCurrentSet(){
   return ROSARY_SETS[ROSARY_STATE.setKey] || ROSARY_SETS.joyeux;
 }
 const ROSARY_DAY_NAMES = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const ROSARY_DAY_NAMES_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const ROSARY_SCHEDULE_ORDER = ['joyeux','douloureux','glorieux','lumineux'];
+/* Raccourci local : fr/en selon LANG, pour les textes d'interface propres
+   à l'écran du chapelet (pas de passage par le dictionnaire I18N global,
+   le module est assez autonome pour rester lisible avec un simple ternaire). */
+function rl(fr, en){ return LANG === 'en' ? en : fr; }
 /* ---- écran 1 : choix du chapelet (catalogue) ---- */
 function chapletCatalogueHTML(){
   const list = CHAPLET_CATALOGUE.filter(c=> CHAPLET_CAT_TAB==='tous' || (CHAPLET_CAT_TAB==='classiques'&&c.cat==='classique') || (CHAPLET_CAT_TAB==='thematiques'&&c.cat==='thematique'));
   const todayKeySet = todaysRosarySet();
   const todaySet = ROSARY_SETS[todayKeySet];
-  const todayName = ROSARY_DAY_NAMES[new Date().getDay()];
-  return `<h2 class="section-title">Le chapelet</h2>
-    <p class="section-desc">Un temps de prière avec Marie pour confier votre vie à Dieu.</p>
-    <button type="button" class="rosary-today-hero" id="rosary-today-hero" style="--rosary-today-color:${todaySet.color};" aria-label="Prier le chapelet du jour">
+  const todayName = (LANG==='en' ? ROSARY_DAY_NAMES_EN : ROSARY_DAY_NAMES)[new Date().getDay()];
+  return `<h2 class="section-title">${rl('Le chapelet','The Rosary')}</h2>
+    <p class="section-desc">${rl('Un temps de prière avec Marie pour confier votre vie à Dieu.','A time of prayer with Mary, to entrust your life to God.')}</p>
+    <button type="button" class="rosary-today-hero" id="rosary-today-hero" style="--rosary-today-color:${todaySet.color};" aria-label="${rl('Prier le chapelet du jour','Pray today’s Rosary')}">
       <img src="${todaySet.image}" alt="" loading="lazy" onerror="this.style.display='none'">
       <div class="rosary-today-hero-scrim"></div>
       <div class="rosary-today-hero-content">
-        <span class="rosary-today-hero-eyebrow">Aujourd'hui, ${todayName}</span>
-        <span class="rosary-today-hero-title">${todaySet.label}</span>
-        <span class="rosary-today-hero-cta">Prier le chapelet du jour →</span>
+        <span class="rosary-today-hero-eyebrow">${rl('Aujourd’hui, ','Today, ')}${todayName}</span>
+        <span class="rosary-today-hero-title">${loc(todaySet,'label')}</span>
+        <span class="rosary-today-hero-cta">${rl('Prier le chapelet du jour →','Pray today’s Rosary →')}</span>
       </div>
     </button>
     <div class="card rosary-schedule-card">
-      <p class="eyebrow" style="color:var(--gold);">📅 Les mystères, jour par jour</p>
+      <p class="eyebrow" style="color:var(--gold);">📅 ${rl('Les mystères, jour par jour','The mysteries, day by day')}</p>
       ${ROSARY_SCHEDULE_ORDER.map(k=>{
         const s = ROSARY_SETS[k];
         return `<div class="rosary-schedule-row ${k===todayKeySet?'active':''}">
           <span class="rosary-schedule-dot" style="background:${s.color};"></span>
-          <span class="rosary-schedule-label">${s.label}</span>
-          <span class="rosary-schedule-days">${s.days}</span>
+          <span class="rosary-schedule-label">${loc(s,'label')}</span>
+          <span class="rosary-schedule-days">${loc(s,'days')}</span>
         </div>`;
       }).join('')}
     </div>
     <div class="chip-row" style="margin-top:14px;">
-      <button class="chip ${CHAPLET_CAT_TAB==='tous'?'active':''}" data-cattab="tous">Tous</button>
-      <button class="chip ${CHAPLET_CAT_TAB==='classiques'?'active':''}" data-cattab="classiques">Classiques</button>
-      <button class="chip ${CHAPLET_CAT_TAB==='thematiques'?'active':''}" data-cattab="thematiques">Thématiques</button>
+      <button class="chip ${CHAPLET_CAT_TAB==='tous'?'active':''}" data-cattab="tous">${rl('Tous','All')}</button>
+      <button class="chip ${CHAPLET_CAT_TAB==='classiques'?'active':''}" data-cattab="classiques">${rl('Classiques','Classic')}</button>
+      <button class="chip ${CHAPLET_CAT_TAB==='thematiques'?'active':''}" data-cattab="thematiques">${rl('Thématiques','Thematic')}</button>
     </div>
     <div class="rosary-catalogue-list">
       ${list.map(c=>`<button type="button" class="rosary-catalogue-row" data-chaplet="${c.id}">
         <img src="${c.img}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="rosary-catalogue-info">
-          <span class="rosary-catalogue-title">${c.title}</span>
-          <span class="rosary-catalogue-sub">${c.sub}</span>
+          <span class="rosary-catalogue-title">${loc(c,'title')}</span>
+          <span class="rosary-catalogue-sub">${loc(c,'sub')}</span>
         </span>
         <span class="rosary-catalogue-arrow">›</span>
       </button>`).join('')}
@@ -9173,39 +9207,39 @@ function chapletCatalogueHTML(){
 function chapletSelectHTML(){
   const set = ROSARY_SETS[ROSARY_STATE.setKey];
   const variant = rosaryVariantMeta(ROSARY_STATE.variantId||'traditionnel');
-  const fav = {type:'vreader-text', title:'Chapelet — '+variant.title, reference:variant.sub||'', text:set.quote||''};
+  const fav = {type:'vreader-text', title:rl('Chapelet — ','Rosary — ')+loc(variant,'title'), reference:loc(variant,'sub')||'', text:loc(set,'quote')||''};
   return `<div class="rosary-select-head">
-      <button type="button" class="rosary-icon-btn" id="rosary-back-catalogue" aria-label="Retour au chapelet">←</button>
-      <h2 class="rosary-select-head-title">${variant.title}</h2>
+      <button type="button" class="rosary-icon-btn" id="rosary-back-catalogue" aria-label="${rl('Retour au chapelet','Back to Rosary')}">←</button>
+      <h2 class="rosary-select-head-title">${loc(variant,'title')}</h2>
       ${favStarHTML(fav).replace('fav-star', 'fav-star rosary-icon-btn')}
     </div>
     <div class="chip-row">${['joyeux','lumineux','douloureux','glorieux'].map(k=>
-      `<button class="chip ${ROSARY_STATE.setKey===k?'active':''}" data-set="${k}">${ROSARY_SETS[k].label}</button>`
+      `<button class="chip ${ROSARY_STATE.setKey===k?'active':''}" data-set="${k}">${loc(ROSARY_SETS[k],'label')}</button>`
     ).join('')}</div>
     <figure class="rosary-select-hero">
       <img src="${set.image}" alt="" loading="lazy" onerror="this.style.display='none'">
     </figure>
-    <h1 class="day-title" style="text-align:center; margin-top:10px;">${set.label}</h1>
-    <p class="section-desc" style="text-align:center;">${set.summary}</p>
-    <div class="card" style="text-align:center;"><p class="vreader-text" style="font-style:italic;">« ${set.quote} »</p></div>
-    <div style="text-align:center; margin:14px 0 8px;"><button class="btn btn-primary" id="rosary-start-btn">Commencer</button></div>
-    <div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="rosary-list-btn">${ROSARY_STATE.showList ? 'Masquer les mystères' : 'Voir les mystères en détail'}</button></div>
+    <h1 class="day-title" style="text-align:center; margin-top:10px;">${loc(set,'label')}</h1>
+    <p class="section-desc" style="text-align:center;">${loc(set,'summary')}</p>
+    <div class="card" style="text-align:center;"><p class="vreader-text" style="font-style:italic;">« ${loc(set,'quote')} »</p></div>
+    <div style="text-align:center; margin:14px 0 8px;"><button class="btn btn-primary" id="rosary-start-btn">${rl('Commencer','Begin')}</button></div>
+    <div style="text-align:center;"><button class="btn btn-ghost btn-sm" id="rosary-list-btn">${ROSARY_STATE.showList ? rl('Masquer les mystères','Hide the mysteries') : rl('Voir les mystères en détail','View the mysteries in detail')}</button></div>
     ${ROSARY_STATE.showList ? `<div class="card" style="margin-top:10px;">${set.mysteres.map((m,i)=>{
       const expanded = ROSARY_STATE.expandIdx === i;
       return `<div class="rosary-mystery-browse-item">
         <button type="button" class="rosary-mystery-browse-row" data-expand-myst="${i}">
           <span class="rosary-mystery-browse-num">${i+1}</span>
           <span class="rosary-mystery-browse-text">
-            <span class="rosary-mystery-browse-title">${m.title}</span>
-            <span class="rosary-mystery-browse-ref">${m.ref}</span>
+            <span class="rosary-mystery-browse-title">${loc(m,'title')}</span>
+            <span class="rosary-mystery-browse-ref">${loc(m,'ref')}</span>
           </span>
           <span class="rosary-mystery-browse-arrow">${expanded?'▴':'▾'}</span>
         </button>
         ${expanded ? `<div class="rosary-mystery-browse-detail">
           <figure class="rosary-mystery-browse-img"><img src="${m.img}" alt="" loading="lazy" onerror="this.style.display='none'"></figure>
-          <p class="vreader-text" style="font-style:italic;">« ${m.quote} »</p>
-          <p class="entry-detail-text" style="margin-top:6px;">${m.medit}</p>
-          <p class="eyebrow" style="color:var(--gold); margin-top:8px;">✨ Fruit à demander : ${m.fruit}</p>
+          <p class="vreader-text" style="font-style:italic;">« ${loc(m,'quote')} »</p>
+          <p class="entry-detail-text" style="margin-top:6px;">${loc(m,'medit')}</p>
+          <p class="eyebrow" style="color:var(--gold); margin-top:8px;">✨ ${rl('Fruit à demander','Grace to ask for')} : ${loc(m,'fruit')}</p>
         </div>` : ''}
       </div>`;
     }).join('')}</div>` : ''}`;
@@ -9217,33 +9251,33 @@ function chapletOverviewHTML(){
   const pi = ROSARY_STATE.previewIdx||0;
   const pm = set.mysteres[pi];
   return `<div class="rosary-head-row">
-    <span class="rosary-set-pill">🔗 ${set.label}</span>
-    ${rosaryTopIconsHTML({title:set.label, sub:'Ouverture du chapelet'})}
+    <span class="rosary-set-pill">🔗 ${loc(set,'label')}</span>
+    ${rosaryTopIconsHTML({title:loc(set,'label'), sub:rl('Ouverture du chapelet','Opening the Rosary')})}
   </div>
-  <p class="eyebrow" style="color:var(--gold); text-align:center; margin-top:8px;">${set.label}</p>
-  <h1 class="day-title" style="text-align:center; margin-top:2px;">${pi+1}${pi===0?'er':'e'} mystère • ${pm.title}</h1>
-  <p class="section-desc" style="text-align:center;">${pi+1} sur ${set.mysteres.length}</p>
+  <p class="eyebrow" style="color:var(--gold); text-align:center; margin-top:8px;">${loc(set,'label')}</p>
+  <h1 class="day-title" style="text-align:center; margin-top:2px;">${rl(`${pi+1}${pi===0?'er':'e'} mystère`, `Mystery ${pi+1}`)} • ${loc(pm,'title')}</h1>
+  <p class="section-desc" style="text-align:center;">${rl(`${pi+1} sur ${set.mysteres.length}`, `${pi+1} of ${set.mysteres.length}`)}</p>
   <figure class="rosary-overview-photo"><img src="${pm.img||set.image}" alt="" loading="lazy" onerror="this.src='./images/rosary.svg'; this.classList.add('rosary-overview-photo-fallback');"></figure>
   <div class="rosary-preview-pager">
-    <button type="button" class="bible-reader-nav-arrow" id="rosary-preview-prev" aria-label="Mystère précédent">‹</button>
+    <button type="button" class="bible-reader-nav-arrow" id="rosary-preview-prev" aria-label="${rl('Mystère précédent','Previous mystery')}">‹</button>
     <div class="rosary-preview-dots">${set.mysteres.map((_,i)=>`<span class="rosary-preview-dot ${i===pi?'active':''}" data-preview-idx="${i}"></span>`).join('')}</div>
-    <button type="button" class="bible-reader-nav-arrow" id="rosary-preview-next" aria-label="Mystère suivant">›</button>
+    <button type="button" class="bible-reader-nav-arrow" id="rosary-preview-next" aria-label="${rl('Mystère suivant','Next mystery')}">›</button>
   </div>
   <div class="card">
-    <p class="eyebrow" style="color:var(--gold);">✝️ Signe de croix</p>
-    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">Au nom du Père, et du Fils, et du Saint-Esprit. Amen.</p>
-    <button type="button" class="rosary-expand-toggle" id="rosary-open-expand">${expanded ? '▴ Masquer les autres prières d’ouverture' : '▾ Voir les autres prières d’ouverture'}</button>
+    <p class="eyebrow" style="color:var(--gold);">✝️ ${rl('Signe de croix','Sign of the Cross')}</p>
+    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${rl('Au nom du Père, et du Fils, et du Saint-Esprit. Amen.','In the name of the Father, and of the Son, and of the Holy Spirit. Amen.')}</p>
+    <button type="button" class="rosary-expand-toggle" id="rosary-open-expand">${expanded ? rl('▴ Masquer les autres prières d’ouverture','▴ Hide the other opening prayers') : rl('▾ Voir les autres prières d’ouverture','▾ View the other opening prayers')}</button>
     ${expanded && ROSARY_SETTINGS.showText ? `
-    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">Je crois en Dieu</p>
-    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Je crois en Dieu']}</p>
-    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">Notre Père</p>
-    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Notre Père']}</p>
-    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">Trois Je vous salue Marie — foi, espérance, charité</p>
-    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}</p>
-    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">Gloire au Père</p>
-    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Gloire au Père']}</p>` : ''}
+    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">${rl('Je crois en Dieu','The Apostles’ Creed')}</p>
+    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${chapletText('Je crois en Dieu')}</p>
+    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">${rl('Notre Père','Our Father')}</p>
+    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${chapletText('Notre Père')}</p>
+    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">${rl('Trois Je vous salue Marie — foi, espérance, charité','Three Hail Marys — faith, hope, charity')}</p>
+    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${chapletText('Je vous salue Marie')}</p>
+    <p class="eyebrow" style="color:var(--gold); margin-top:12px;">${rl('Gloire au Père','Glory Be')}</p>
+    <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${chapletText('Gloire au Père')}</p>` : ''}
   </div>
-  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary btn-sm" id="rosary-begin-mysteries">Voir les mystères →</button></div>`;
+  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary btn-sm" id="rosary-begin-mysteries">${rl('Voir les mystères →','View the mysteries →')}</button></div>`;
 }
 /* ---- écran 6 : méditation du mystère (tabs Méditation / Texte biblique / Fruit spirituel) ---- */
 function chapletMeditHTML(){
@@ -9251,16 +9285,16 @@ function chapletMeditHTML(){
   const mi = ROSARY_STATE.mysteryIdx;
   const myst = set.mysteres[mi];
   return `<div class="rosary-head-row">
-    <span class="rosary-set-pill">🔗 ${set.label}</span>
-    ${rosaryTopIconsHTML({title:myst.title, sub:myst.ref, text:myst.medit})}
+    <span class="rosary-set-pill">🔗 ${loc(set,'label')}</span>
+    ${rosaryTopIconsHTML({title:loc(myst,'title'), sub:loc(myst,'ref'), text:loc(myst,'medit')})}
   </div>
   <div class="bible-reader-nav" style="justify-content:center;">
     <div class="bible-reader-nav-title">
-      <p class="bible-reader-book">${mi+1}${mi===0?'er':'e'} mystère${rosaryVariantMeta(ROSARY_STATE.variantId||'traditionnel').cat==='thematique' && ROSARY_STATE.variantId==='defunts' ? ' — pour nos défunts' : ''}</p>
-      <p class="bible-reader-chapter">${myst.title}</p>
+      <p class="bible-reader-book">${rl(`${mi+1}${mi===0?'er':'e'} mystère`, `Mystery ${mi+1}`)}${rosaryVariantMeta(ROSARY_STATE.variantId||'traditionnel').cat==='thematique' && ROSARY_STATE.variantId==='defunts' ? rl(' — pour nos défunts',' — for our deceased') : ''}</p>
+      <p class="bible-reader-chapter">${loc(myst,'title')}</p>
     </div>
   </div>
-  <div class="bible-reader-tabs">${[['meditation','Méditation'],['biblique','Texte biblique'],['fruit','Fruit spirituel']].map(([k,l])=>
+  <div class="bible-reader-tabs">${[['meditation',rl('Méditation','Meditation')],['biblique',rl('Texte biblique','Scripture')],['fruit',rl('Fruit spirituel','Spiritual fruit')]].map(([k,l])=>
     `<button class="bible-reader-tab ${ROSARY_TAB===k?'active':''}" data-rtab="${k}">${l}</button>`
   ).join('')}</div>
   <figure class="bible-reader-hero rosary-mystery-hero">
@@ -9268,61 +9302,61 @@ function chapletMeditHTML(){
     <div class="bible-reader-hero-scrim"></div>
   </figure>
   ${ROSARY_TAB==='meditation' ? `<div class="card">
-      <p class="eyebrow" style="color:var(--gold);">🕯️ Méditation</p>
-      <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${myst.medit}</p>
+      <p class="eyebrow" style="color:var(--gold);">🕯️ ${rl('Méditation','Meditation')}</p>
+      <p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${loc(myst,'medit')}</p>
     </div>`
   : ROSARY_TAB==='biblique' ? `<div class="card">
-      <p class="eyebrow" style="color:var(--gold);">${myst.ref}</p>
-      <p class="vreader-text" style="font-style:italic; font-size:${13.5*ROSARY_SETTINGS.textScale}px;">« ${myst.quote} »</p>
+      <p class="eyebrow" style="color:var(--gold);">${loc(myst,'ref')}</p>
+      <p class="vreader-text" style="font-style:italic; font-size:${13.5*ROSARY_SETTINGS.textScale}px;">« ${loc(myst,'quote')} »</p>
     </div>`
   : `<div class="card">
-      <p class="eyebrow" style="color:var(--gold);">✨ Fruit spirituel</p>
-      <p class="day-title" style="margin:4px 0;">${myst.fruit}</p>
-      <p class="section-desc">Demandez cette grâce à Dieu en méditant ce mystère.</p>
+      <p class="eyebrow" style="color:var(--gold);">✨ ${rl('Fruit spirituel','Spiritual fruit')}</p>
+      <p class="day-title" style="margin:4px 0;">${loc(myst,'fruit')}</p>
+      <p class="section-desc">${rl('Demandez cette grâce à Dieu en méditant ce mystère.','Ask God for this grace as you meditate on this mystery.')}</p>
     </div>`}
-  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary" id="rosary-after-medit">Prière du mystère suivant →</button></div>`;
+  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary" id="rosary-after-medit">${rl('Prière du mystère suivant →','Prayer for the next mystery →')}</button></div>`;
 }
 /* ---- écran intermédiaire : Notre Père ---- */
 function chapletPaterHTML(){
   const set = rosaryCurrentSet();
   const mi = ROSARY_STATE.mysteryIdx;
-  return `<div class="rosary-head-row"><span class="rosary-set-pill">🔗 ${set.label}</span>${rosaryTopIconsHTML({title:'Notre Père', noFav:true})}</div>
-  <p class="eyebrow" style="color:var(--gold); text-align:center;">${mi+1}${mi===0?'er':'e'} mystère · ${set.mysteres[mi].title}</p>
-  <h1 class="day-title" style="text-align:center;">Notre Père</h1>
+  return `<div class="rosary-head-row"><span class="rosary-set-pill">🔗 ${loc(set,'label')}</span>${rosaryTopIconsHTML({title:rl('Notre Père','Our Father'), noFav:true})}</div>
+  <p class="eyebrow" style="color:var(--gold); text-align:center;">${rl(`${mi+1}${mi===0?'er':'e'} mystère`, `Mystery ${mi+1}`)} · ${loc(set.mysteres[mi],'title')}</p>
+  <h1 class="day-title" style="text-align:center;">${rl('Notre Père','Our Father')}</h1>
   <figure class="rosary-gloria-figure"><img src="${ROSARY_PATERNOSTER_IMG}" alt="" loading="lazy" onerror="this.style.display='none'"></figure>
-  ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Notre Père']}</p></div>` : ''}
-  ${rosaryAudioBlockHTML(CHAPLET_PRAYER_TEXTS['Notre Père'], 'pater')}
-  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary" id="rosary-after-pater">Je vous salue Marie →</button></div>`;
+  ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${chapletText('Notre Père')}</p></div>` : ''}
+  ${rosaryAudioBlockHTML(chapletText('Notre Père'), 'pater')}
+  <div style="text-align:center; margin-top:12px;"><button class="btn btn-primary" id="rosary-after-pater">${rl('Je vous salue Marie →','Hail Mary →')}</button></div>`;
 }
 /* ---- écran 4 : récitation guidée (Ave Maria) ---- */
 function chapletAveHTML(){
   const set = rosaryCurrentSet();
   const mi = ROSARY_STATE.mysteryIdx;
   const n = ROSARY_STATE.aveCount||0;
-  return `<div class="rosary-head-row"><span class="rosary-set-pill">🔗 ${set.label}</span>${rosaryTopIconsHTML({title:'Je vous salue Marie', noFav:true})}</div>
-  <p class="eyebrow" style="color:var(--gold); text-align:center;">${mi+1}${mi===0?'er':'e'} mystère · ${set.mysteres[mi].title}</p>
-  <h1 class="day-title" style="text-align:center;">Je vous salue Marie</h1>
-  <p class="section-desc" style="text-align:center;">${n+1} sur 10</p>
-  ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${CHAPLET_PRAYER_TEXTS['Je vous salue Marie']}</p></div>` : ''}
-  <div class="real-chaplet-wrap" role="group" aria-label="Dizaine en cours">${realChapletArcHTML(n, 10)}</div>
-  <p class="studio-note" style="text-align:center;">${n} / 10${ROSARY_SETTINGS.guided ? ' — touchez la perle suivante pour avancer' : ''}</p>
-  ${rosaryAudioBlockHTML(CHAPLET_PRAYER_TEXTS['Je vous salue Marie'], 'ave')}`;
+  return `<div class="rosary-head-row"><span class="rosary-set-pill">🔗 ${loc(set,'label')}</span>${rosaryTopIconsHTML({title:rl('Je vous salue Marie','Hail Mary'), noFav:true})}</div>
+  <p class="eyebrow" style="color:var(--gold); text-align:center;">${rl(`${mi+1}${mi===0?'er':'e'} mystère`, `Mystery ${mi+1}`)} · ${loc(set.mysteres[mi],'title')}</p>
+  <h1 class="day-title" style="text-align:center;">${rl('Je vous salue Marie','Hail Mary')}</h1>
+  <p class="section-desc" style="text-align:center;">${rl(`${n+1} sur 10`, `${n+1} of 10`)}</p>
+  ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${chapletText('Je vous salue Marie')}</p></div>` : ''}
+  <div class="real-chaplet-wrap" role="group" aria-label="${rl('Dizaine en cours','Decade in progress')}">${realChapletArcHTML(n, 10)}</div>
+  <p class="studio-note" style="text-align:center;">${n} / 10${ROSARY_SETTINGS.guided ? rl(' — touchez la perle suivante pour avancer',' — touch the next bead to advance') : ''}</p>
+  ${rosaryAudioBlockHTML(chapletText('Je vous salue Marie'), 'ave')}`;
 }
 /* ---- écran 5 : fin de dizaine (Gloire au Père) ---- */
 function chapletGloriaHTML(){
   const set = rosaryCurrentSet();
   const mi = ROSARY_STATE.mysteryIdx;
   const isDefunts = ROSARY_STATE.variantId === 'defunts';
-  const text = isDefunts ? ROSARY_ETERNAL_REST : CHAPLET_PRAYER_TEXTS['Gloire au Père'];
-  return `<div class="rosary-head-row"><span class="rosary-set-pill">🔗 ${set.label}</span>${rosaryTopIconsHTML({title: isDefunts?'Éternel repos':'Gloire au Père', noFav:true})}</div>
+  const text = isDefunts ? (LANG==='en'?ROSARY_ETERNAL_REST_EN:ROSARY_ETERNAL_REST) : chapletText('Gloire au Père');
+  return `<div class="rosary-head-row"><span class="rosary-set-pill">🔗 ${loc(set,'label')}</span>${rosaryTopIconsHTML({title: isDefunts?rl('Éternel repos','Eternal Rest'):rl('Gloire au Père','Glory Be'), noFav:true})}</div>
   <figure class="rosary-gloria-figure">
     <img src="${ROSARY_CRUCIFIX_IMG}" alt="" loading="lazy" onerror="this.outerHTML='&lt;div class=&quot;rosary-gloria-cross&quot;&gt;✝&lt;/div&gt;';">
   </figure>
-  <h1 class="day-title" style="text-align:center;">${isDefunts ? 'Éternel repos' : 'Gloire au Père'}</h1>
+  <h1 class="day-title" style="text-align:center;">${isDefunts ? rl('Éternel repos','Eternal Rest') : rl('Gloire au Père','Glory Be')}</h1>
   ${ROSARY_SETTINGS.showText ? `<div class="card"><p class="entry-detail-text" style="text-align:center; font-size:${13.5*ROSARY_SETTINGS.textScale}px;">${text}</p></div>` : ''}
   <div class="card" style="text-align:center;">
-    <p class="day-title" style="margin:0;">✓ Dizaine terminée !</p>
-    <button class="btn btn-primary btn-sm" id="rosary-after-gloria" style="margin-top:10px;">${mi<4 ? 'Passer à la méditation' : 'Terminer le chapelet →'}</button>
+    <p class="day-title" style="margin:0;">${rl('✓ Dizaine terminée !','✓ Decade complete!')}</p>
+    <button class="btn btn-primary btn-sm" id="rosary-after-gloria" style="margin-top:10px;">${mi<4 ? rl('Passer à la méditation','Move to the meditation') : rl('Terminer le chapelet →','Finish the Rosary →')}</button>
   </div>`;
 }
 /* ---- écran 7 : fin du chapelet ---- */
@@ -9330,16 +9364,16 @@ function chapletDoneHTML(){
   return `<div class="rosary-done-hero">
     <img src="${ROSARY_MARIE_IMG}" alt="" loading="lazy" onerror="this.style.display='none'">
     <div class="rosary-done-hero-scrim"></div>
-    <button type="button" class="rosary-done-close" id="rosary-done-close" aria-label="Fermer">✕</button>
+    <button type="button" class="rosary-done-close" id="rosary-done-close" aria-label="${rl('Fermer','Close')}">✕</button>
     <div class="rosary-done-hero-content">
-      <p class="day-title" style="color:#fff; margin:0;">Chapelet terminé !</p>
-      <p class="section-desc" style="color:#F0E6D8;">Merci, Marie, pour ce temps de prière. Que ces mystères portent du fruit dans ma vie et dans le monde.</p>
+      <p class="day-title" style="color:#fff; margin:0;">${rl('Chapelet terminé !','Rosary complete!')}</p>
+      <p class="section-desc" style="color:#F0E6D8;">${rl('Merci, Marie, pour ce temps de prière. Que ces mystères portent du fruit dans ma vie et dans le monde.','Thank you, Mary, for this time of prayer. May these mysteries bear fruit in my life and in the world.')}</p>
     </div>
   </div>
   <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
-    <button class="btn btn-primary btn-sm" id="rosary-restart">↻ Recommencer</button>
-    <button class="btn btn-ghost btn-sm" id="rosary-change-chaplet">Choisir un autre chapelet</button>
-    <button class="btn btn-ghost btn-sm" id="rosary-share">⤴ Partager cette prière</button>
+    <button class="btn btn-primary btn-sm" id="rosary-restart">${rl('↻ Recommencer','↻ Start again')}</button>
+    <button class="btn btn-ghost btn-sm" id="rosary-change-chaplet">${rl('Choisir un autre chapelet','Choose another Rosary')}</button>
+    <button class="btn btn-ghost btn-sm" id="rosary-share">${rl('⤴ Partager cette prière','⤴ Share this prayer')}</button>
   </div>`;
 }
 function rosaryAudioBlockHTML(text, key){
@@ -9348,28 +9382,28 @@ function rosaryAudioBlockHTML(text, key){
   return `<div class="hoz-podcast-card" style="margin-top:10px;">
     <button class="hoz-podcast-btn" id="rosary-audio-btn" data-audio-key="${key}" data-audio-text="${text.replace(/"/g,'&quot;')}">
       <span class="hoz-podcast-play-icon">${playing?'⏸':'▶'}</span>
-      <span>${playing?'Pause':'Écouter cette prière'} (${ROSARY_SETTINGS.speed}x)</span>
+      <span>${playing?rl('Pause','Pause'):rl('Écouter cette prière','Listen to this prayer')} (${ROSARY_SETTINGS.speed}x)</span>
     </button>
   </div>`;
 }
 /* ---- panneau réglages (contrôles et options) ---- */
 function rosarySettingsPanelHTML(){
   const speeds = [0.75,1,1.25,1.5];
-  const modes = [['classique','Classique'],['lumineux','Lumineux'],['sombre','Sombre']];
+  const modes = [['classique',rl('Classique','Classic')],['lumineux',rl('Lumineux','Bright')],['sombre',rl('Sombre','Dark')]];
   const colors = Object.keys(ROSARY_BEAD_COLORS);
   return `<div class="rosary-settings-panel">
       <div class="rosary-settings-head">
-        <p class="day-title" style="margin:0;">Contrôles et options</p>
+        <p class="day-title" style="margin:0;">${rl('Contrôles et options','Controls and options')}</p>
         <button class="back-link" id="rosary-settings-close">✕</button>
       </div>
-      <p class="eyebrow" style="color:var(--gold); margin-top:10px;">Mode d'affichage</p>
+      <p class="eyebrow" style="color:var(--gold); margin-top:10px;">${rl('Mode d\'affichage','Display mode')}</p>
       <div class="chip-row">${modes.map(([k,l])=>`<button class="chip ${ROSARY_SETTINGS.mode===k?'active':''}" data-rmode="${k}">${l}</button>`).join('')}</div>
-      <div class="rosary-settings-row"><span>Audio de la prière</span><button class="rosary-toggle ${ROSARY_SETTINGS.audio?'on':''}" data-toggle="audio"></button></div>
-      <div class="rosary-settings-row"><span>Vitesse de lecture</span><button class="btn btn-ghost btn-sm" id="rosary-speed-btn">${ROSARY_SETTINGS.speed}x</button></div>
-      <div class="rosary-settings-row"><span>Instructions guidées</span><button class="rosary-toggle ${ROSARY_SETTINGS.guided?'on':''}" data-toggle="guided"></button></div>
-      <div class="rosary-settings-row"><span>Vibration (optionnelle)</span><button class="rosary-toggle ${ROSARY_SETTINGS.vibration?'on':''}" data-toggle="vibration"></button></div>
-      <div class="rosary-settings-row"><span>Affichage du texte</span><button class="rosary-toggle ${ROSARY_SETTINGS.showText?'on':''}" data-toggle="showText"></button></div>
-      <div class="rosary-settings-row"><span>Taille du texte</span>
+      <div class="rosary-settings-row"><span>${rl('Audio de la prière','Prayer audio')}</span><button class="rosary-toggle ${ROSARY_SETTINGS.audio?'on':''}" data-toggle="audio"></button></div>
+      <div class="rosary-settings-row"><span>${rl('Vitesse de lecture','Playback speed')}</span><button class="btn btn-ghost btn-sm" id="rosary-speed-btn">${ROSARY_SETTINGS.speed}x</button></div>
+      <div class="rosary-settings-row"><span>${rl('Instructions guidées','Guided instructions')}</span><button class="rosary-toggle ${ROSARY_SETTINGS.guided?'on':''}" data-toggle="guided"></button></div>
+      <div class="rosary-settings-row"><span>${rl('Vibration (optionnelle)','Vibration (optional)')}</span><button class="rosary-toggle ${ROSARY_SETTINGS.vibration?'on':''}" data-toggle="vibration"></button></div>
+      <div class="rosary-settings-row"><span>${rl('Affichage du texte','Text display')}</span><button class="rosary-toggle ${ROSARY_SETTINGS.showText?'on':''}" data-toggle="showText"></button></div>
+      <div class="rosary-settings-row"><span>${rl('Taille du texte','Text size')}</span>
         <span class="rosary-text-size-ctl"><button class="btn btn-ghost btn-sm" id="rosary-text-minus">A-</button><button class="btn btn-ghost btn-sm" id="rosary-text-plus">A+</button></span>
       </div>
       <p class="eyebrow" style="color:var(--gold); margin-top:12px;">Couleur des grains</p>
@@ -9494,8 +9528,8 @@ function wireRosaryEvents(){
   if(changeChapletBtn) changeChapletBtn.onclick = ()=>{ ROSARY_STATE = null; render(); };
   const shareBtn = document.getElementById('rosary-share');
   if(shareBtn) shareBtn.onclick = ()=>{
-    const text = `J'ai prié le chapelet (${rosaryCurrentSet().label}) sur Lumen 📿`;
-    if(navigator.share){ navigator.share({text}).catch(()=>{}); } else { showToast('Partage non disponible sur cet appareil'); }
+    const text = rl(`J'ai prié le chapelet (${loc(rosaryCurrentSet(),'label')}) sur Lumen 📿`, `I prayed the Rosary (${loc(rosaryCurrentSet(),'label')}) on Lumen 📿`);
+    if(navigator.share){ navigator.share({text}).catch(()=>{}); } else { showToast(rl('Partage non disponible sur cet appareil','Sharing is not available on this device')); }
   };
   /* icônes du haut */
   const modeBtn = document.getElementById('rosary-mode-btn');
@@ -9532,7 +9566,7 @@ function wireRosaryEvents(){
       if(ROSARY_AUDIO_PLAYING === key){ try{ window.speechSynthesis.cancel(); }catch(e){} ROSARY_AUDIO_PLAYING = null; render(); return; }
       try{ window.speechSynthesis.cancel(); }catch(e){}
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'fr-FR'; u.rate = ROSARY_SETTINGS.speed; applyNaturalVoice(u);
+      u.lang = LANG==='en' ? 'en-US' : 'fr-FR'; u.rate = ROSARY_SETTINGS.speed; applyNaturalVoice(u);
       u.onend = ()=>{ if(ROSARY_AUDIO_PLAYING===key){ ROSARY_AUDIO_PLAYING=null; render(); } };
       ROSARY_AUDIO_PLAYING = key;
       window.speechSynthesis.speak(u);
@@ -13087,6 +13121,58 @@ const WALLPAPER_LIST = [
 ];
 let BG_WALLPAPER = 'aucun';
 let THEME_MODE = 'auto';
+/* ================= langue (fr / en) =================
+   Phase 1 : l'habillage de l'application (navigation, barre d'outils,
+   recherche, bouton Prier, onglets, accueil, en-têtes des rubriques
+   principales). Le contenu religieux (psaumes, saints, méditations,
+   prières, etc.) reste en français pour l'instant — c'est un chantier
+   à part, bien plus long, à traiter rubrique par rubrique ensuite. */
+let LANG = 'fr';
+const I18N = {
+  fr: {
+    refuge:'Refuge', refugeTitle:'Un lieu sûr',
+    guide:'Guide', guideTitle:"Qu'aimeriez-vous faire ?",
+    autoVoice:'Voix auto', autoNarrateTitle:'Lecture automatique à chaque page',
+    music:'Musique', ambianceTitle:'Ambiance sonore de fond',
+    listen:'Écouter', readPageTitle:'Écouter cette page',
+    search:'Chercher', searchTitle:'Rechercher',
+    theme:'Thème', themeTitle:'Changer de thème',
+    smaller:'Petit', fontMinusTitle:'Réduire le texte',
+    bigger:'Grand', fontPlusTitle:'Agrandir le texte',
+    searchInviteLabel:'Chercher une prière, un saint, un psaume…', searchInviteTitle:"Rechercher dans toute l'application",
+    fabPrier:'Prier maintenant', fabPrierTitle:'Prier maintenant',
+    searchInputPlaceholder:'Rechercher un psaume, un saint, une prière…', voiceSearchTitle:'Recherche vocale',
+    tabAccueil:'Accueil', tabPrier:'Prier', tabBible:'Bible', tabDecouvrir:'Découvrir', tabChapelle:'Ma chapelle',
+    goodMorning:'Bonjour', goodEvening:'Bonsoir', homeSubtitle:'Un moment avec Dieu pour aujourd’hui',
+    contentNotice:"Le contenu de cette page (prières, textes) est encore en français — seule l'interface est traduite pour l'instant."
+  },
+  en: {
+    refuge:'Refuge', refugeTitle:'A safe place',
+    guide:'Guide', guideTitle:'What would you like to do?',
+    autoVoice:'Auto voice', autoNarrateTitle:'Automatic reading on every page',
+    music:'Music', ambianceTitle:'Background ambiance',
+    listen:'Listen', readPageTitle:'Listen to this page',
+    search:'Search', searchTitle:'Search',
+    theme:'Theme', themeTitle:'Change theme',
+    smaller:'Smaller', fontMinusTitle:'Shrink text',
+    bigger:'Bigger', fontPlusTitle:'Enlarge text',
+    searchInviteLabel:'Search a prayer, a saint, a psalm…', searchInviteTitle:'Search the whole app',
+    fabPrier:'Pray now', fabPrierTitle:'Pray now',
+    searchInputPlaceholder:'Search a psalm, a saint, a prayer…', voiceSearchTitle:'Voice search',
+    tabAccueil:'Home', tabPrier:'Pray', tabBible:'Bible', tabDecouvrir:'Discover', tabChapelle:'My Chapel',
+    goodMorning:'Good morning', goodEvening:'Good evening', homeSubtitle:'A moment with God, for today',
+    contentNotice:"This page's content (prayers, texts) is still in French — only the interface is translated for now."
+  }
+};
+function t(key){
+  return (I18N[LANG] && I18N[LANG][key]) || I18N.fr[key] || key;
+}
+function applyLanguage(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{ el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ el.placeholder = t(el.dataset.i18nPlaceholder); });
+}
 let BRIGHTNESS = 100;
 let CUSTOM_ACCENT = '';
 function computeAutoTheme(){
@@ -13094,6 +13180,7 @@ function computeAutoTheme(){
   return (h>=7 && h<20) ? 'light' : 'dark';
 }
 function applyThemeAndFont(){
+  applyLanguage();
   if(THEME_MODE === 'auto') THEME = computeAutoTheme();
   if(!THEMES_LIST.some(t=>t.key===THEME)) THEME = 'light';
   document.body.setAttribute('data-theme', THEME);
@@ -13156,6 +13243,19 @@ function openThemePicker(){
   }
 
   list.innerHTML = `
+    <h2 class="section-title" style="font-size:14px;">🌐 Langue / Language</h2>
+    <p class="section-desc" style="margin-top:-6px;">L'interface se traduit ; les textes de prière restent en français pour l'instant.</p>
+    <div class="grid" style="grid-template-columns:repeat(2,1fr); margin-bottom:16px;">
+      <button class="card theme-swatch-btn ${LANG==='fr'?'theme-active':''}" data-lang-key="fr" style="text-align:center; cursor:pointer; border:none; padding-top:10px;">
+        <span style="font-size:20px;">🇫🇷</span>
+        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:4px 0 0; color:var(--ink);">Français</p>
+      </button>
+      <button class="card theme-swatch-btn ${LANG==='en'?'theme-active':''}" data-lang-key="en" style="text-align:center; cursor:pointer; border:none; padding-top:10px;">
+        <span style="font-size:20px;">🇬🇧</span>
+        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:4px 0 0; color:var(--ink);">English</p>
+      </button>
+    </div>
+
     <button class="card theme-swatch-btn ${THEME_MODE==='auto'?'theme-active':''}" id="theme-auto-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:14px;">
       <span style="font-size:22px;">🔄</span>
       <span>
@@ -13208,6 +13308,15 @@ function openThemePicker(){
     closeAmbiancePicker();
     showToast('🔄 Mode automatique activé');
   };
+  list.querySelectorAll('[data-lang-key]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      LANG = btn.dataset.langKey;
+      applyThemeAndFont();
+      await savePrefs();
+      showToast(LANG === 'en' ? '🇬🇧 Language set to English' : '🇫🇷 Langue réglée sur le français');
+      openThemePicker();
+    };
+  });
   list.querySelectorAll('[data-theme-key]').forEach(btn=>{
     btn.onclick = async ()=>{
       THEME_MODE = 'manual';
@@ -13683,6 +13792,7 @@ async function startApp(){
   THEME_MODE = (prefs.themeMode === 'manual') ? 'manual' : 'auto';
   BG_PATTERN = prefs.bgPattern || 'croix';
   BG_WALLPAPER = prefs.bgWallpaper || 'aucun';
+  LANG = prefs.lang === 'en' ? 'en' : 'fr';
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);
   FAMILY_CODE = prefs.familyCode || null;
