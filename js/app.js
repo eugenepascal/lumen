@@ -4025,8 +4025,8 @@ function renderTabbar(){
   const activeTabKey = primaryToTabKey(PRIMARY);
   document.getElementById('tabbar').innerHTML =
     `<div class="tabbar-brand"><span class="tabbar-brand-flame">🕯️</span><span class="tabbar-brand-name">Lumen</span></div>` +
-    tabs.map(tb =>
-      `<button class="tab-btn ${activeTabKey===tb.key?'active':''}" data-tab="${tb.key}">${ICONS[tb.key]||''}<span>${TAB_I18N_KEYS[tb.key]?t(TAB_I18N_KEYS[tb.key]):tb.label}</span></button>`
+    tabs.map(t =>
+      `<button class="tab-btn ${activeTabKey===t.key?'active':''}" data-tab="${t.key}">${ICONS[t.key]||''}<span>${TAB_I18N_KEYS[t.key]?t(TAB_I18N_KEYS[t.key]):t.label}</span></button>`
     ).join('');
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.onclick = ()=>{
