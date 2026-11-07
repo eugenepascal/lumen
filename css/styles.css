@@ -21,6 +21,13 @@
     --glow-gold: 0 0 18px rgba(201,162,39,0.5);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  /* Repère visuel du focus clavier sur les rubriques rendues accessibles au
+     clavier par initKeyboardAccessibility() (js/app.js) — sans ce style,
+     le focus est bien réel (lecteurs d'écran, Tab) mais invisible à l'œil. */
+  .rubric-row:focus-visible, .entry-card:focus-visible, .novena-card:focus-visible, [data-hub-goto]:focus-visible{
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+  }
   html,body{margin:0; padding:0; height:100%;}
   body{
     background:
@@ -1980,7 +1987,7 @@
     --vellum: #EAF2F8;
     --vellum-light: #F7FBFD;
     --ink: #1F3A52;
-    --ink-soft: #5C7A91;
+    --ink-soft: #506A7E;
     --wine: #3B6EA5;
     --wine-dark: #274D74;
     --gold: #D9B36C;
