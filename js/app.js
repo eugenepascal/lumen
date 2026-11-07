@@ -4923,7 +4923,7 @@ const JESUS_HUB_CATEGORIES = [
   {label:'Méditations', desc:'Sur la Sainte Famille, le pardon, les grands thèmes', icon:'💭', goto:'meditations-sainte-famille', color:'#B8863B'}
 ];
 function renderJesusHub(){
-  renderCategoryHubGeneric('✝️ Jésus', 'La vie de Jésus, de Marie, et des méditations pour approfondir votre foi.', JESUS_HUB_CATEGORIES, (goto)=>{ GROUP_SEL['jesus:main'] = goto; render(); }, '✝️', HUB_HERO_IMAGES.jesus, HUB_HERO_POS.jesus);
+  renderCategoryHubGeneric('✝️ La vie de Jésus', 'La vie de Jésus, Marie et Joseph, et des méditations pour approfondir votre foi.', JESUS_HUB_CATEGORIES, (goto)=>{ GROUP_SEL['jesus:main'] = goto; render(); }, '✝️', HUB_HERO_IMAGES.jesus, HUB_HERO_POS.jesus);
 }
 
 const ESPACE_HUB_CATEGORIES = [
@@ -4961,17 +4961,17 @@ function renderSagesseHub(){
   renderCategoryHubGeneric('🌿 Sagesse', 'Approfondir sa foi, comprendre, et grandir spirituellement.', SAGESSE_HUB_CATEGORIES, (goto)=>{ SUBTAB.sagesse = goto; render(); }, '🌿', HUB_HERO_IMAGES.sagesse, HUB_HERO_POS.sagesse);
 }
 
-/* Onglet "Explorer" — regroupe Jésus & Marie, Église et Sagesse, qui restent
+/* Onglet "Explorer" — regroupe La vie de Jésus, Église et Sagesse, qui restent
    chacun une rubrique complète par ailleurs (atteignable aussi depuis les
    liens internes existants) ; cette page est juste le nouveau point d'entrée
    unique depuis la barre d'onglets. */
 const EXPLORER_HUB_CATEGORIES = [
-  {label:'Jésus & Marie', desc:'Vie de Jésus, vie de Marie, grands thèmes de méditation', icon:'✝️', cross:{primary:'jesus', resetJesusHub:true}, color:'#7C1F2E'},
+  {label:'La vie de Jésus', desc:"De l'Annonciation à l'Assomption, avec Marie et Joseph, et les grandes méditations", icon:'✝️', cross:{primary:'jesus', resetJesusHub:true}, color:'#7C1F2E'},
   {label:'Église', desc:'Saints, vie liturgique, calendrier, pèlerinages', icon:'⛪', cross:{primary:'eglise', sub:'accueil-eglise'}, color:'#4A3D6B'},
   {label:'Sagesse & enseignements', desc:'Vie spirituelle, sacrements, enseignements, lexique', icon:'🌿', cross:{primary:'sagesse', sub:'accueil-sagesse'}, color:'#5C6E58'}
 ];
 function renderExplorerHub(){
-  renderCategoryHubGeneric('🧭 Explorer', 'Jésus, Marie, les saints, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse, HUB_HERO_POS.sagesse);
+  renderCategoryHubGeneric('🧭 Explorer', 'Jésus, l’Église et la sagesse spirituelle, à parcourir librement.', EXPLORER_HUB_CATEGORIES, ()=>{}, '🧭', HUB_HERO_IMAGES.sagesse, HUB_HERO_POS.sagesse);
 }
 
 const ECRITURES_HUB_CATEGORIES = [
@@ -13658,7 +13658,7 @@ function renderScreen(){
   }
   if(PRIMARY === 'jesus'){
     if(!GROUP_SEL['jesus:main']) return renderJesusHub();
-    return renderGenericSection(JESUS, 'jesus:main', 'Jésus');
+    return renderGenericSection(JESUS, 'jesus:main', 'La vie de Jésus');
   }
   if(PRIMARY === 'eglise'){
     const sub = SUBTAB.eglise || 'accueil-eglise';
