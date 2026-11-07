@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#241319"/><stop offset="1" stop-color="#4E1420"/></linearGradient>
+</defs>
+<rect width="900" height="620" rx="30" fill="url(#bg)"/>
+<text x="36" y="46" fill="#F1D493" font-family="Georgia,serif" font-size="22" font-weight="700">Plan d'une église, vue du ciel</text>
+<text x="36" y="70" fill="#F7EFE0" opacity=".72" font-family="Arial,sans-serif" font-size="13">Pour repérer chaque partie citée ci-dessous</text>
+
+<!-- floor plan, cruciform (Latin cross), drawn as outline on parchment tone -->
+<g transform="translate(40,95)" fill="#F3E7CE" fill-opacity=".92" stroke="#7C1F2E" stroke-width="2.5">
+  <!-- narthex -->
+  <rect x="170" y="0" width="140" height="46" rx="4"/>
+  <!-- nave -->
+  <rect x="150" y="46" width="180" height="230" />
+  <!-- transept -->
+  <rect x="60" y="230" width="360" height="90" />
+  <!-- choir -->
+  <rect x="170" y="320" width="140" height="110" />
+  <!-- apse (rounded end) -->
+  <path d="M170 430 L310 430 A70 70 0 0 1 170 430 Z" />
+  <!-- side chapels along the nave -->
+  <rect x="104" y="80" width="46" height="60" rx="4"/>
+  <rect x="330" y="80" width="46" height="60" rx="4"/>
+  <!-- baptistery, near narthex -->
+  <rect x="330" y="0" width="60" height="46" rx="4"/>
+  <!-- sacristy, near choir -->
+  <rect x="310" y="330" width="60" height="60" rx="4"/>
+  <!-- confessional, in nave -->
+  <rect x="104" y="150" width="46" height="40" rx="4"/>
+  <!-- bell tower, attached to narthex corner -->
+  <rect x="104" y="-46" width="46" height="46" rx="4"/>
+  <!-- altar mark, inside choir -->
+  <rect x="222" y="345" width="36" height="18" rx="2" fill="#B8863B" stroke="none"/>
+</g>
+
+<!-- numbered markers -->
+<g font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">
+  <circle cx="150" cy="140" r="13" fill="#B8863B"/><text x="150" y="145" text-anchor="middle">9</text>
+  <circle cx="265" cy="113" r="13" fill="#B8863B"/><text x="265" y="118" text-anchor="middle">1</text>
+  <circle cx="265" cy="190" r="13" fill="#B8863B"/><text x="265" y="195" text-anchor="middle">2</text>
+  <circle cx="150" cy="200" r="13" fill="#B8863B"/><text x="150" y="205" text-anchor="middle">10</text>
+  <circle cx="265" cy="270" r="13" fill="#B8863B"/><text x="265" y="275" text-anchor="middle">3</text>
+  <circle cx="400" cy="140" r="13" fill="#B8863B"/><text x="400" y="145" text-anchor="middle">7</text>
+  <circle cx="115" cy="150" r="13" fill="#B8863B" opacity="0"/>
+  <circle cx="400" cy="420" r="13" fill="#B8863B"/><text x="400" y="425" text-anchor="middle">8</text>
+  <circle cx="265" cy="390" r="13" fill="#B8863B"/><text x="265" y="395" text-anchor="middle">4</text>
+  <circle cx="265" cy="443" r="13" fill="#B8863B"/><text x="265" y="448" text-anchor="middle">5</text>
+  <circle cx="120" cy="46" r="13" fill="#B8863B"/><text x="120" y="51" text-anchor="middle">6</text>
+</g>
+
+<!-- legend -->
+<g font-family="Arial,sans-serif" font-size="15" fill="#F7EFE0">
+  <text x="470" y="118">① Le narthex</text>
+  <text x="470" y="146">② La nef</text>
+  <text x="470" y="174">③ Le transept</text>
+  <text x="470" y="202">④ Le chœur</text>
+  <text x="470" y="230">⑤ L'abside / l'autel</text>
+  <text x="470" y="258">⑥ Le clocher</text>
+  <text x="470" y="286">⑦ Le baptistère</text>
+  <text x="470" y="314">⑧ La sacristie</text>
+  <text x="470" y="342">⑨ Les chapelles latérales</text>
+  <text x="470" y="370">⑩ Le confessionnal</text>
+</g>
+<text x="40" y="600" fill="#F7EFE0" opacity=".6" font-family="Arial,sans-serif" font-size="12">Schéma simplifié — illustration Lumen</text>
+</svg>

@@ -2550,18 +2550,18 @@ const EGLISE = [
     title:"Les objets de l'église et de la messe",
     desc:"Le vocabulaire des principaux objets utilisés pendant la célébration.",
     entries:[
-      {name:"Le calice", dates:"", tag:null, ref:"Contient le vin consacré", avatar:"🍷", summary:"La coupe, souvent en métal précieux, dans laquelle le vin est consacré et devient le Sang du Christ pendant la messe."},
-      {name:"La patène", dates:"", tag:null, ref:"Petite assiette pour l'hostie", avatar:"🥣", summary:"Une petite assiette, généralement assortie au calice, sur laquelle repose l'hostie qui sera consacrée pendant la messe."},
-      {name:"Le ciboire", dates:"", tag:null, ref:"Conserve les hosties consacrées", avatar:"🏺", summary:"Un vase muni d'un couvercle, en forme de coupe, qui contient les hosties consacrées destinées à la communion des fidèles ou conservées dans le tabernacle."},
-      {name:"L'ostensoir", dates:"", tag:null, ref:"Pour l'adoration eucharistique", avatar:"☀️", summary:"Un objet souvent en forme de soleil rayonnant, muni d'une fenêtre en son centre, utilisé pour exposer l'hostie consacrée à l'adoration des fidèles en dehors de la messe."},
-      {name:"La custode", dates:"", tag:null, ref:"Petite boîte de transport", avatar:"📦", summary:"Une petite boîte plate permettant de transporter discrètement une hostie consacrée, notamment pour la communion des malades."},
-      {name:"Les burettes", dates:"", tag:null, ref:"Pour l'eau et le vin", avatar:"🫙", summary:"Deux petits flacons, l'un pour l'eau et l'autre pour le vin, utilisés lors de la préparation des dons à l'offertoire."},
-      {name:"L'encensoir et la navette", dates:"", tag:null, ref:"Pour l'encensement", avatar:"🕳️", summary:"L'encensoir est le récipient suspendu à des chaînettes dans lequel brûle l'encens ; la navette est le petit contenant où l'on puise les grains d'encens pour les y déposer, lors des célébrations les plus solennelles."},
-      {name:"Le bénitier et l'aspersoir", dates:"", tag:null, ref:"Pour l'eau bénite", avatar:"💦", summary:"Le bénitier contient l'eau bénite ; l'aspersoir, souvent en forme de petit bâton perforé ou de branche métallique, sert au prêtre à asperger l'assemblée ou un objet en signe de bénédiction."},
-      {name:"Le missel romain", dates:"", tag:null, ref:"Livre du prêtre", avatar:"📕", summary:"Le livre liturgique qui rassemble les prières et les textes que le prêtre prononce tout au long de l'année pour la célébration de la messe."},
+      {name:"Le calice", dates:"", tag:null, ref:"Contient le vin consacré", avatar:"🍷", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Chalice.jpeg?width=900", summary:"La coupe, souvent en métal précieux, dans laquelle le vin est consacré et devient le Sang du Christ pendant la messe."},
+      {name:"La patène", dates:"", tag:null, ref:"Petite assiette pour l'hostie", avatar:"🥣", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Paten_pietre_dure_Louvre_OA11878.jpg?width=900", summary:"Une petite assiette, généralement assortie au calice, sur laquelle repose l'hostie qui sera consacrée pendant la messe."},
+      {name:"Le ciboire", dates:"", tag:null, ref:"Conserve les hosties consacrées", avatar:"🏺", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Ziborium_Messkelch_St._Foillan.jpg?width=900", summary:"Un vase muni d'un couvercle, en forme de coupe, qui contient les hosties consacrées destinées à la communion des fidèles ou conservées dans le tabernacle."},
+      {name:"L'ostensoir", dates:"", tag:null, ref:"Pour l'adoration eucharistique", avatar:"☀️", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Grotko_Augustyn_Kordecki's_monstrance_01.jpg?width=900", summary:"Un objet souvent en forme de soleil rayonnant, muni d'une fenêtre en son centre, utilisé pour exposer l'hostie consacrée à l'adoration des fidèles en dehors de la messe."},
+      {name:"La custode", dates:"", tag:null, ref:"Petite boîte de transport", avatar:"📦", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Custode_cuivre_émaillé_et_doré_03428.jpg?width=900", summary:"Une petite boîte plate permettant de transporter discrètement une hostie consacrée, notamment pour la communion des malades."},
+      {name:"Les burettes", dates:"", tag:null, ref:"Pour l'eau et le vin", avatar:"🫙", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Mair_Pair_of_cruets_set_with_gemstones_02.jpg?width=900", summary:"Deux petits flacons, l'un pour l'eau et l'autre pour le vin, utilisés lors de la préparation des dons à l'offertoire."},
+      {name:"L'encensoir et la navette", dates:"", tag:null, ref:"Pour l'encensement", avatar:"🕳️", img:"https://commons.wikimedia.org/wiki/Special:FilePath/ThuribleAndBoat.jpg?width=900", summary:"L'encensoir est le récipient suspendu à des chaînettes dans lequel brûle l'encens ; la navette est le petit contenant où l'on puise les grains d'encens pour les y déposer, lors des célébrations les plus solennelles."},
+      {name:"Le bénitier et l'aspersoir", dates:"", tag:null, ref:"Pour l'eau bénite", avatar:"💦", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Holy_water_vessel_(Aspersorium)_MET_ES3627.jpg?width=900", summary:"Le bénitier contient l'eau bénite ; l'aspersoir, souvent en forme de petit bâton perforé ou de branche métallique, sert au prêtre à asperger l'assemblée ou un objet en signe de bénédiction."},
+      {name:"Le missel romain", dates:"", tag:null, ref:"Livre du prêtre", avatar:"📕", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Missale_Romanum.jpg?width=900", summary:"Le livre liturgique qui rassemble les prières et les textes que le prêtre prononce tout au long de l'année pour la célébration de la messe."},
       {name:"Le lectionnaire", dates:"", tag:null, ref:"Livre des lectures", avatar:"📗", summary:"Le livre contenant les textes bibliques proclamés à l'ambon durant la messe, organisés selon un cycle de lectures réparti sur plusieurs années."},
-      {name:"Le cierge pascal", dates:"", tag:null, ref:"Allumé à Pâques", avatar:"🕯️", summary:"Un grand cierge béni et allumé lors de la Vigile pascale, symbole du Christ ressuscité, lumière qui vainc les ténèbres. Il reste ensuite près de l'autel ou des fonts baptismaux durant toute l'année."},
-      {name:"Les vêtements liturgiques (chasuble, étole, aube)", dates:"", tag:null, ref:"Portés par le prêtre", avatar:"👘", summary:"L'aube est la longue tunique blanche portée sous les autres vêtements ; l'étole, une bande de tissu autour du cou, marque l'ordination ; la chasuble, portée par-dessus, change de couleur selon le temps liturgique (violet, blanc, vert, rouge)."},
+      {name:"Le cierge pascal", dates:"", tag:null, ref:"Allumé à Pâques", avatar:"🕯️", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Manila_Cathedral_Paschal_Candle_(003)_2024-04-07.jpg?width=900", summary:"Un grand cierge béni et allumé lors de la Vigile pascale, symbole du Christ ressuscité, lumière qui vainc les ténèbres. Il reste ensuite près de l'autel ou des fonts baptismaux durant toute l'année."},
+      {name:"Les vêtements liturgiques (chasuble, étole, aube)", dates:"", tag:null, ref:"Portés par le prêtre", avatar:"👘", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Chasuble_de_Saint-François-de-Sales.JPG?width=900", summary:"L'aube est la longue tunique blanche portée sous les autres vêtements ; l'étole, une bande de tissu autour du cou, marque l'ordination ; la chasuble, portée par-dessus, change de couleur selon le temps liturgique (violet, blanc, vert, rouge)."},
       {name:"Le corporal et le purificatoire", dates:"", tag:null, ref:"Linges liturgiques", avatar:"🧻", summary:"Le corporal est le linge carré déplié sur l'autel sur lequel reposent le calice et la patène ; le purificatoire, un petit linge, sert à essuyer le calice après la communion."}
     ]
   },
@@ -2590,14 +2590,27 @@ const EGLISE = [
 const JESUS = [
   {
     id:"vie-de-jesus",
-    title:"La vie de Jésus",
-    desc:"Un parcours chronologique à travers les évangiles, de l'annonce de sa naissance à l'Ascension.",
+    title:"La vie de Jésus, Marie et Joseph",
+    desc:"Un parcours chronologique unique à travers les évangiles — Jésus, mais aussi Marie et Joseph à ses côtés — de l'Annonciation à l'Assomption.",
     entries:[
-      {name:"L'annonce et la naissance", dates:"", tag:null, avatar:"👼", ref:"Luc 1 à 2 ; Matthieu 1 à 2", link:"Luke 2", summary:"L'ange Gabriel annonce à Marie qu'elle enfantera le Fils de Dieu, alors qu'elle n'est encore que fiancée à Joseph. Un décret de recensement les conduit à Bethléem, où Jésus naît dans des conditions modestes, accueilli par des bergers avertis par des anges, puis par des mages venus d'Orient guidés par une étoile."},
+      {name:"L'Immaculée Conception", dates:"", tag:null, avatar:"✨", ref:"Dogme proclamé en 1854", summary:"L'Église enseigne que Marie a été conçue sans la tache du péché originel, préservée par avance en vue de sa mission unique de porter le Fils de Dieu. Ce privilège ne vient pas de ses propres mérites, mais d'une grâce anticipée de la Rédemption apportée par son Fils."},
+      {name:"Un homme juste, promis à Marie", dates:"", tag:null, avatar:"🔨", ref:"Matthieu 1:18-19", link:"Matthew 1:18-19", summary:"Joseph, charpentier de Nazareth, est fiancé à Marie lorsqu'il découvre qu'elle attend un enfant qui n'est pas de lui. L'évangile le décrit comme un homme juste, qui envisage de rompre discrètement les fiançailles plutôt que de l'exposer publiquement."},
+      {name:"Le songe de l'ange", dates:"", tag:null, avatar:"💭", ref:"Matthieu 1:20-25", link:"Matthew 1:20-25", summary:"Un ange apparaît à Joseph en songe et lui révèle que l'enfant conçu en Marie vient de l'Esprit Saint. Joseph obéit sans discuter, prend Marie chez lui, et donnera à l'enfant le nom de Jésus, assumant ainsi pleinement sa paternité légale."},
+      {name:"L'Annonciation", dates:"", tag:null, avatar:"🕊️", ref:"Luc 1:26-38", link:"Luke 1:26-38", summary:"L'ange Gabriel annonce à Marie, jeune fille de Nazareth fiancée à Joseph, qu'elle concevra par l'Esprit Saint le Fils de Dieu. Malgré son trouble devant l'ampleur de l'annonce, elle répond librement : « Qu'il me soit fait selon ta parole », un oui qui devient le modèle de toute foi confiante."},
+      {name:"La Visitation", dates:"", tag:null, avatar:"🤰", ref:"Luc 1:39-56", link:"Luke 1:39-56", summary:"Marie se rend en hâte chez sa cousine Élisabeth, elle-même enceinte de Jean-Baptiste malgré son âge avancé. À son arrivée, l'enfant tressaille dans le sein d'Élisabeth, qui salue Marie comme la mère du Seigneur. C'est là que Marie prononce le Magnificat, son chant de louange."},
+      {name:"L'annonce et la naissance", dates:"", tag:null, avatar:"👼", ref:"Luc 1 à 2 ; Matthieu 1 à 2", link:"Luke 2", summary:"Un décret de recensement conduit Marie et Joseph à Bethléem, où Jésus naît dans des conditions modestes, accueilli par des bergers avertis par des anges, puis par des mages venus d'Orient guidés par une étoile."},
+      {name:"La naissance à Bethléem", dates:"", tag:null, avatar:"⭐", ref:"Luc 2:1-7", link:"Luke 2:1-7", summary:"C'est Joseph qui conduit Marie à Bethléem pour le recensement, et qui cherche un abri pour la naissance. Sa présence discrète soutient et protège Marie dans un moment de grande vulnérabilité, loin de chez eux."},
+      {name:"La naissance de Jésus", dates:"", tag:null, avatar:"⭐", ref:"Luc 2:1-20", link:"Luke 2:1-20", summary:"Marie met au monde Jésus à Bethléem, dans des conditions modestes, faute de place ailleurs. Les évangiles la montrent gardant en silence, dans son cœur, tout ce qui se dit et se vit autour de cette naissance."},
+      {name:"La Présentation au Temple", dates:"", tag:null, avatar:"🕯️", ref:"Luc 2:22-38", link:"Luke 2:22-38", summary:"Selon la Loi juive, Marie et Joseph présentent Jésus au Temple. Le vieillard Syméon reconnaît en lui le salut attendu, mais annonce aussi à Marie qu'une épée lui transpercera l'âme — une prophétie de la douleur à venir."},
       {name:"L'enfance et la vie cachée", dates:"", tag:null, avatar:"🏠", ref:"Matthieu 2 ; Luc 2:22-52", link:"Luke 2:22-52", summary:"Après la naissance, la famille fuit en Égypte pour échapper à une menace du roi Hérode, avant de revenir s'installer à Nazareth. Un seul épisode de son enfance est rapporté en détail : à douze ans, resté en arrière à Jérusalem, Jésus est retrouvé par ses parents en train d'enseigner parmi les docteurs de la Loi au Temple."},
+      {name:"La fuite en Égypte, vécue par Marie", dates:"", tag:null, avatar:"🐎", ref:"Matthieu 2:13-15", link:"Matthew 2:13-15", summary:"Avertis en songe du danger que représente le roi Hérode, Joseph, Marie et l'enfant fuient de nuit vers l'Égypte, vivant l'exil et la précarité avant de pouvoir revenir s'installer à Nazareth."},
+      {name:"La fuite en Égypte, vécue par Joseph", dates:"", tag:null, avatar:"🐎", ref:"Matthieu 2:13-15", link:"Matthew 2:13-15", summary:"Averti en songe d'une menace du roi Hérode, Joseph n'hésite pas : il part de nuit avec Marie et l'enfant vers l'Égypte. Il devra encore attendre un nouveau songe pour savoir quand et où revenir en sécurité."},
+      {name:"La vie cachée à Nazareth", dates:"", tag:null, avatar:"🏠", ref:"Matthieu 13:55 ; Luc 2:51-52", link:"Luke 2:51-52", summary:"Pendant près de trente ans, Joseph élève Jésus dans son métier de charpentier, dans une vie ordinaire et sans éclat. C'est dans cette discrétion que Jésus grandit « en sagesse, en taille et en grâce »."},
+      {name:"Jésus retrouvé au Temple, vu par Marie", dates:"", tag:null, avatar:"🔍", ref:"Luc 2:41-52", link:"Luke 2:41-52", summary:"À douze ans, Jésus reste à Jérusalem à l'insu de ses parents. Après trois jours d'angoisse, Marie et Joseph le retrouvent au Temple, en train d'enseigner. Marie garde, là encore, cet épisode dans son cœur sans tout en comprendre immédiatement."},
+      {name:"Jésus retrouvé au Temple, vu par Joseph", dates:"", tag:null, avatar:"🔍", ref:"Luc 2:41-52", link:"Luke 2:41-52", summary:"Comme Marie, Joseph vit l'angoisse de chercher Jésus resté à Jérusalem, puis le soulagement de le retrouver au Temple. C'est la dernière scène des évangiles où Joseph apparaît explicitement."},
       {name:"Le baptême et la tentation au désert", dates:"", tag:null, avatar:"🕊️", ref:"Matthieu 3 à 4 ; Marc 1:9-13 ; Luc 3 à 4", link:"Matthew 4", summary:"Vers l'âge de trente ans, Jésus est baptisé par Jean-Baptiste dans le Jourdain, un épisode marqué par la descente de l'Esprit sous forme de colombe et une voix céleste. Il se retire ensuite quarante jours au désert, où il repousse trois tentations en citant l'Écriture, avant de commencer son ministère public."},
       {name:"L'appel des premiers disciples", dates:"", tag:null, avatar:"🎣", ref:"Matthieu 4:18-22 ; Jean 1:35-51", link:"John 1:35-51", summary:"Jésus appelle ses premiers disciples, des pêcheurs de Galilée dont Pierre, André, Jacques et Jean, qui laissent leurs filets pour le suivre. Il constituera progressivement un groupe de douze apôtres formés pour poursuivre sa mission."},
-      {name:"Les noces de Cana", dates:"", tag:null, avatar:"🍷", ref:"Jean 2:1-11", link:"John 2:1-11", summary:"Lors d'un mariage à Cana, Jésus change de l'eau en vin à la demande de sa mère, un épisode présenté comme le premier de ses signes publics, qui manifeste sa gloire et fortifie la foi de ses disciples."},
+      {name:"Les noces de Cana", dates:"", tag:null, avatar:"🍷", ref:"Jean 2:1-11", link:"John 2:1-11", summary:"Lors d'un mariage à Cana, Jésus change de l'eau en vin à la demande de sa mère, un épisode présenté comme le premier de ses signes publics, qui manifeste sa gloire et fortifie la foi de ses disciples. Marie, qui a remarqué que le vin venait à manquer, dit simplement aux serviteurs : « Faites tout ce qu'il vous dira » — la dernière parole que lui rapportent les évangiles."},
       {name:"Le Sermon sur la montagne", dates:"", tag:null, avatar:"⛰️", ref:"Matthieu 5 à 7", link:"Matthew 5-7", summary:"Un long enseignement fondateur, incluant les Béatitudes, où Jésus propose une manière d'être heureux fondée sur la pauvreté de cœur, la douceur et la miséricorde, plutôt que sur la richesse ou le pouvoir, et approfondit le sens de la Loi reçue par Moïse."},
       {name:"Les paraboles", dates:"", tag:null, avatar:"🌾", ref:"Matthieu 13 ; Luc 15", link:"Luke 15", summary:"Jésus enseigne abondamment par des paraboles, de courts récits image tirés de la vie quotidienne (le semeur, le fils prodigue, le bon Samaritain...) pour expliquer la nature du royaume de Dieu et la miséricorde offerte à tous, y compris aux plus éloignés."},
       {name:"Les miracles et guérisons", dates:"", tag:null, avatar:"🤲", ref:"Marc 1 à 8 ; Jean 9 ; Jean 11", link:"John 11", summary:"Les évangiles rapportent de nombreuses guérisons (aveugles, lépreux, paralysés), des expulsions d'esprits impurs, l'apaisement d'une tempête, la multiplication des pains pour nourrir des foules, et la résurrection de son ami Lazare, présentés comme des signes de son autorité et de sa compassion."},
@@ -2607,41 +2620,13 @@ const JESUS = [
       {name:"Gethsémani et l'arrestation", dates:"", tag:null, avatar:"🌑", ref:"Matthieu 26:36-56", link:"Matthew 26:36-56", summary:"Dans le jardin de Gethsémani, Jésus prie dans une angoisse intense face à ce qui l'attend, tandis que ses disciples s'endorment. Il est ensuite arrêté après avoir été livré par Judas, l'un des Douze, au moyen d'un baiser convenu comme signal."},
       {name:"Le procès et la condamnation", dates:"", tag:null, avatar:"⚖️", ref:"Matthieu 26:57 à 27:26", link:"Matthew 26:57-27:26", summary:"Jésus comparaît successivement devant le grand conseil juif, qui le juge coupable de blasphème, puis devant le gouverneur romain Ponce Pilate, qui le fait finalement crucifier sous la pression de la foule malgré ses hésitations."},
       {name:"La crucifixion et la mort", dates:"", tag:null, avatar:"✝️", ref:"Matthieu 27:27-56 ; Jean 19:16-37", link:"John 19:16-37", summary:"Jésus est crucifié au lieu-dit Golgotha entre deux malfaiteurs, moqué par certains témoins. Après plusieurs heures d'agonie, il meurt en prononçant quelques dernières paroles rapportées différemment selon les évangiles, tandis que le voile du Temple se déchire."},
-      {name:"La résurrection", dates:"", tag:null, avatar:"🌅", ref:"Matthieu 28 ; Jean 20", link:"John 20", summary:"Le troisième jour, des femmes venues au tombeau le trouvent vide et sont averties par des anges que Jésus est ressuscité. C'est l'événement central de la foi chrétienne, célébré chaque année à Pâques."},
-      {name:"Les apparitions et l'Ascension", dates:"", tag:null, avatar:"☁️", ref:"Luc 24 ; Actes 1:1-11", link:"Acts 1:1-11", summary:"Durant quarante jours, Jésus ressuscité apparaît à plusieurs reprises à ses disciples, les instruit et les encourage, avant d'être élevé au ciel sous leurs yeux, avec la promesse de l'envoi prochain de l'Esprit Saint."}
-    ]
-  },
-  {
-    id:"vie-de-marie",
-    title:"La vie de Marie",
-    desc:"Le parcours de Marie à travers les évangiles et la tradition de l'Église, de sa conception à son Assomption.",
-    entries:[
-      {name:"L'Immaculée Conception", dates:"", tag:null, avatar:"✨", ref:"Dogme proclamé en 1854", summary:"L'Église enseigne que Marie a été conçue sans la tache du péché originel, préservée par avance en vue de sa mission unique de porter le Fils de Dieu. Ce privilège ne vient pas de ses propres mérites, mais d'une grâce anticipée de la Rédemption apportée par son Fils."},
-      {name:"L'Annonciation", dates:"", tag:null, avatar:"🕊️", ref:"Luc 1:26-38", link:"Luke 1:26-38", summary:"L'ange Gabriel annonce à Marie, jeune fille de Nazareth fiancée à Joseph, qu'elle concevra par l'Esprit Saint le Fils de Dieu. Malgré son trouble devant l'ampleur de l'annonce, elle répond librement : « Qu'il me soit fait selon ta parole », un oui qui devient le modèle de toute foi confiante."},
-      {name:"La Visitation", dates:"", tag:null, avatar:"🤰", ref:"Luc 1:39-56", link:"Luke 1:39-56", summary:"Marie se rend en hâte chez sa cousine Élisabeth, elle-même enceinte de Jean-Baptiste malgré son âge avancé. À son arrivée, l'enfant tressaille dans le sein d'Élisabeth, qui salue Marie comme la mère du Seigneur. C'est là que Marie prononce le Magnificat, son chant de louange."},
-      {name:"La naissance de Jésus", dates:"", tag:null, avatar:"⭐", ref:"Luc 2:1-20", link:"Luke 2:1-20", summary:"Marie met au monde Jésus à Bethléem, dans des conditions modestes, faute de place ailleurs. Les évangiles la montrent gardant en silence, dans son cœur, tout ce qui se dit et se vit autour de cette naissance."},
-      {name:"La Présentation au Temple", dates:"", tag:null, avatar:"🕯️", ref:"Luc 2:22-38", link:"Luke 2:22-38", summary:"Selon la Loi juive, Marie et Joseph présentent Jésus au Temple. Le vieillard Syméon reconnaît en lui le salut attendu, mais annonce aussi à Marie qu'une épée lui transpercera l'âme — une prophétie de la douleur à venir."},
-      {name:"La fuite en Égypte", dates:"", tag:null, avatar:"🐎", ref:"Matthieu 2:13-15", link:"Matthew 2:13-15", summary:"Avertis en songe du danger que représente le roi Hérode, Joseph, Marie et l'enfant fuient de nuit vers l'Égypte, vivant l'exil et la précarité avant de pouvoir revenir s'installer à Nazareth."},
-      {name:"Jésus retrouvé au Temple", dates:"", tag:null, avatar:"🔍", ref:"Luc 2:41-52", link:"Luke 2:41-52", summary:"À douze ans, Jésus reste à Jérusalem à l'insu de ses parents. Après trois jours d'angoisse, Marie et Joseph le retrouvent au Temple, en train d'enseigner. Marie garde, là encore, cet épisode dans son cœur sans tout en comprendre immédiatement."},
-      {name:"Les noces de Cana", dates:"", tag:null, avatar:"🍷", ref:"Jean 2:1-11", link:"John 2:1-11", summary:"Lors d'un mariage, Marie remarque que le vin vient à manquer et intervient discrètement auprès de Jésus, avant de dire aux serviteurs : « Faites tout ce qu'il vous dira. » Cette parole, la dernière que lui rapportent les évangiles, résume toute son attitude de confiance."},
       {name:"Au pied de la croix", dates:"", tag:null, avatar:"🖤", ref:"Jean 19:25-27", link:"John 19:25-27", summary:"Marie se tient debout au pied de la croix, sans fuir la souffrance de son fils. Jésus la confie alors au disciple qu'il aimait, et le disciple à elle — un geste que la tradition comprend comme Marie devenant mère de tous les disciples."},
+      {name:"Le silence et la disparition des récits", dates:"", tag:null, avatar:"🌑", ref:"Tradition de l'Église", summary:"Après l'épisode du Temple, Joseph n'est plus mentionné dans les évangiles. La tradition en déduit qu'il est mort avant le début de la vie publique de Jésus, entouré selon toute vraisemblance de Jésus et Marie — ce qui a fait de lui le patron de la bonne mort."},
+      {name:"La résurrection", dates:"", tag:null, avatar:"🌅", ref:"Matthieu 28 ; Jean 20", link:"John 20", summary:"Le troisième jour, des femmes venues au tombeau le trouvent vide et sont averties par des anges que Jésus est ressuscité. C'est l'événement central de la foi chrétienne, célébré chaque année à Pâques."},
+      {name:"Les apparitions et l'Ascension", dates:"", tag:null, avatar:"☁️", ref:"Luc 24 ; Actes 1:1-11", link:"Acts 1:1-11", summary:"Durant quarante jours, Jésus ressuscité apparaît à plusieurs reprises à ses disciples, les instruit et les encourage, avant d'être élevé au ciel sous leurs yeux, avec la promesse de l'envoi prochain de l'Esprit Saint."},
       {name:"La Pentecôte", dates:"", tag:null, avatar:"🔥", ref:"Actes 1:14", link:"Acts 1:14", summary:"Après l'Ascension, Marie est mentionnée priant avec les apôtres rassemblés, en attente de l'Esprit Saint promis. Elle accompagne ainsi la naissance de l'Église, comme elle avait accompagné la naissance de son Fils."},
+      {name:"Patron de l'Église universelle", dates:"", tag:null, avatar:"⛪", ref:"Déclaré par Pie IX en 1870", summary:"En reconnaissance de son rôle de protecteur silencieux de la Sainte Famille, l'Église a proclamé Joseph patron de l'Église universelle, invoqué pour la protection des familles, des travailleurs et de ceux qui traversent une mort proche."},
       {name:"L'Assomption", dates:"", tag:null, avatar:"👑", ref:"Dogme proclamé en 1950", summary:"L'Église enseigne qu'au terme de sa vie terrestre, Marie a été élevée corps et âme dans la gloire céleste. Cette fête, célébrée le 15 août, est comprise comme l'accomplissement anticipé de ce qui est promis à tout croyant."}
-    ]
-  },
-  {
-    id:"vie-de-joseph",
-    title:"La vie de Joseph",
-    desc:"Le parcours discret mais essentiel de Joseph, époux de Marie et père adoptif de Jésus.",
-    entries:[
-      {name:"Un homme juste, promis à Marie", dates:"", tag:null, avatar:"🔨", ref:"Matthieu 1:18-19", link:"Matthew 1:18-19", summary:"Joseph, charpentier de Nazareth, est fiancé à Marie lorsqu'il découvre qu'elle attend un enfant qui n'est pas de lui. L'évangile le décrit comme un homme juste, qui envisage de rompre discrètement les fiançailles plutôt que de l'exposer publiquement."},
-      {name:"Le songe de l'ange", dates:"", tag:null, avatar:"💭", ref:"Matthieu 1:20-25", link:"Matthew 1:20-25", summary:"Un ange apparaît à Joseph en songe et lui révèle que l'enfant conçu en Marie vient de l'Esprit Saint. Joseph obéit sans discuter, prend Marie chez lui, et donnera à l'enfant le nom de Jésus, assumant ainsi pleinement sa paternité légale."},
-      {name:"La naissance à Bethléem", dates:"", tag:null, avatar:"⭐", ref:"Luc 2:1-7", link:"Luke 2:1-7", summary:"C'est Joseph qui conduit Marie à Bethléem pour le recensement, et qui cherche un abri pour la naissance. Sa présence discrète soutient et protège Marie dans un moment de grande vulnérabilité, loin de chez eux."},
-      {name:"La fuite en Égypte", dates:"", tag:null, avatar:"🐎", ref:"Matthieu 2:13-15", link:"Matthew 2:13-15", summary:"Averti en songe d'une menace du roi Hérode, Joseph n'hésite pas : il part de nuit avec Marie et l'enfant vers l'Égypte. Il devra encore attendre un nouveau songe pour savoir quand et où revenir en sécurité."},
-      {name:"La vie cachée à Nazareth", dates:"", tag:null, avatar:"🏠", ref:"Matthieu 13:55 ; Luc 2:51-52", link:"Luke 2:51-52", summary:"Pendant près de trente ans, Joseph élève Jésus dans son métier de charpentier, dans une vie ordinaire et sans éclat. C'est dans cette discrétion que Jésus grandit « en sagesse, en taille et en grâce »."},
-      {name:"Jésus retrouvé au Temple", dates:"", tag:null, avatar:"🔍", ref:"Luc 2:41-52", link:"Luke 2:41-52", summary:"Comme Marie, Joseph vit l'angoisse de chercher Jésus resté à Jérusalem, puis le soulagement de le retrouver au Temple. C'est la dernière scène des évangiles où Joseph apparaît explicitement."},
-      {name:"Le silence et la disparition des récits", dates:"", tag:null, avatar:"🌑", ref:"Tradition de l'Église", summary:"Après cet épisode, Joseph n'est plus mentionné dans les évangiles. La tradition en déduit qu'il est mort avant le début de la vie publique de Jésus, entouré selon toute vraisemblance de Jésus et Marie — ce qui a fait de lui le patron de la bonne mort."},
-      {name:"Patron de l'Église universelle", dates:"", tag:null, avatar:"⛪", ref:"Déclaré par Pie IX en 1870", summary:"En reconnaissance de son rôle de protecteur silencieux de la Sainte Famille, l'Église a proclamé Joseph patron de l'Église universelle, invoqué pour la protection des familles, des travailleurs et de ceux qui traversent une mort proche."}
     ]
   },
   {
@@ -4934,8 +4919,7 @@ function renderDevotionsHub(){
   renderCategoryHubGeneric('📿 Dévotions', 'Des prières et dévotions pour nourrir votre foi au quotidien.', DEVOTIONS_HUB_CATEGORIES, (goto)=>{ SUBTAB.devotions = goto; render(); }, '📿', HUB_HERO_IMAGES.devotions, HUB_HERO_POS.devotions);
 }
 const JESUS_HUB_CATEGORIES = [
-  {label:'Vie de Jésus', desc:"Sa naissance, son ministère, sa passion", icon:'✝️', goto:'vie-de-jesus', color:'#7C1F2E'},
-  {label:'Vie de Marie', desc:"L'Annonciation, sa vie auprès de Jésus", icon:'🕊️', goto:'vie-de-marie', color:'#4A3D6B'},
+  {label:'Vie de Jésus, Marie et Joseph', desc:"De l'Annonciation à l'Assomption, en une seule ligne du temps", icon:'✝️', goto:'vie-de-jesus', color:'#7C1F2E'},
   {label:'Méditations', desc:'Sur la Sainte Famille, le pardon, les grands thèmes', icon:'💭', goto:'meditations-sainte-famille', color:'#B8863B'}
 ];
 function renderJesusHub(){
@@ -6093,10 +6077,14 @@ function renderPrieresHub(){
       });
     });
     html += `<p class="studio-note" style="margin-bottom:8px;">${results.length} résultat${results.length>1?'s':''} pour « ${q} »</p>`;
-    html += `<div class="grid">${results.map(r=>`
-      <div class="entry-card" data-group="${r.group.id}" data-idx="${r.idx}">
-        <div class="entry-avatar">${r.entry.avatar||'🙏'}</div>
-        <div class="entry-body"><p class="entry-name">${loc(r.entry,'name')}</p><p class="entry-summary">${(PRIERES_CAT_META[r.group.id]||{}).icon||''} ${loc(r.group,'title')}</p></div>
+    html += `<div class="rubric-list">${results.map(r=>`
+      <div class="rubric-row entry-card" data-group="${r.group.id}" data-idx="${r.idx}">
+        <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${r.entry.avatar||'🙏'}</div>
+        <div class="rubric-row-text">
+          <span class="rubric-row-title">${loc(r.entry,'name')}</span>
+          <span class="rubric-row-desc">${(PRIERES_CAT_META[r.group.id]||{}).icon||''} ${loc(r.group,'title')}</span>
+        </div>
+        <span class="rubric-row-chevron">›</span>
       </div>`).join('')}</div>`;
     document.getElementById('screen').innerHTML = html;
     wirePrieresSearch();
@@ -6127,7 +6115,7 @@ function renderPrieresHub(){
   html += `<div style="margin-bottom:10px;"><button class="back-link" id="cat-back-btn">← Toutes les catégories</button></div>
     <h2 class="section-title" style="font-size:17px;">${(PRIERES_CAT_META[group.id]||{}).icon||''} ${loc(group,'title')}</h2>
     <p class="section-desc">${loc(group,'desc')||''}</p>
-    <div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
+    <div class="rubric-list">${group.entries.map((e,i)=>entryRowHTML(e,i)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   wirePrieresSearch();
   document.getElementById('cat-back-btn').onclick = ()=>{ PRIERES_CATEGORY = null; render(); };
@@ -6358,6 +6346,25 @@ function saintCardHTML(entry, groupId, idx){
     ${tagLabel ? `<p class="saint-grid-tag">${tagLabel}</p>` : ''}
   </div>`;
 }
+/* Ligne verticale (style rubric-list), pour afficher la bibliothèque des
+   saints comme les autres pages de l'app plutôt qu'en grille de cartes. */
+function saintRowHTML(entry, groupId, idx){
+  const art = lumenSacredArtFor(entry);
+  const imgUrl = entry.img || (art ? art.url : null);
+  const iconHTML = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📖').replace(/'/g,"\\'")}'">` : (entry.avatar || '📖');
+  const tags = saintCategoryTags(entry);
+  const tagLabel = tags.length ? (SAINT_CATEGORY_META[tags[0]]||{}).label : '';
+  const feast = saintFeastShort(entry.dates)||'';
+  const desc = [feast, tagLabel].filter(Boolean).join(' · ');
+  return `<div class="rubric-row saint-grid-card" data-group="${groupId}" data-idx="${idx}">
+    <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${iconHTML}</div>
+    <div class="rubric-row-text">
+      <span class="rubric-row-title">${entry.name}</span>
+      ${desc ? `<span class="rubric-row-desc">${desc}</span>` : ''}
+    </div>
+    <span class="rubric-row-chevron">›</span>
+  </div>`;
+}
 let SAINT_SEARCH = '';
 let SAINT_CAT_VIEW = 'tous';
 let SAINT_CAT_FILTER = null;
@@ -6404,7 +6411,7 @@ function renderSaintsCatalogue(groups, compKey, sectionLabel){
   if(q){
     const results = list.filter(x=> (x.entry.name+' '+(x.entry.ref||'')+' '+(x.entry.summary||'')).toLowerCase().includes(q));
     html += `<p class="studio-note" style="margin-bottom:8px;">${results.length} résultat${results.length>1?'s':''} pour « ${q} »</p>
-      <div class="grid">${results.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+      <div class="rubric-list">${results.map(x=>saintRowHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
     document.getElementById('screen').innerHTML = html;
     wireSaintsCatalogueChrome(groups, compKey);
     return;
@@ -6430,7 +6437,7 @@ function renderSaintsCatalogue(groups, compKey, sectionLabel){
     const entries = group.entries
       .map((e,i)=>({entry:e, groupId:group.id, idx:i}))
       .filter(x=> !SAINT_CAT_FILTER || saintCategoryTags(x.entry).includes(SAINT_CAT_FILTER));
-    html += `<div class="grid">${entries.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+    html += `<div class="rubric-list">${entries.map(x=>saintRowHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
   } else if(SAINT_CAT_VIEW === 'mois'){
     const byMonth = Array.from({length:12}, ()=>[]);
     list.forEach(x=>{
@@ -6440,10 +6447,10 @@ function renderSaintsCatalogue(groups, compKey, sectionLabel){
     byMonth.forEach((arr, mi)=>{
       if(!arr.length) return;
       html += `<p class="eyebrow" style="color:var(--gold); margin:16px 0 6px; text-transform:capitalize;">${MONTH_NAMES_FR[mi]}</p>
-        <div class="grid">${arr.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+        <div class="rubric-list">${arr.map(x=>saintRowHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
     });
   } else {
-    html += `<div class="grid">${list.map(x=>saintCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+    html += `<div class="rubric-list">${list.map(x=>saintRowHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
   }
 
   document.getElementById('screen').innerHTML = html;
@@ -6723,6 +6730,24 @@ function historyCardHTML(entry, groupId, idx){
     ${tagMeta ? `<p class="saint-grid-tag">${tagMeta.icon} ${tagMeta.label}</p>` : ''}
   </div>`;
 }
+/* Ligne verticale (style rubric-list), pour afficher Bible & Histoire
+   comme les autres pages de l'app plutôt qu'en grille de cartes. */
+function historyRowHTML(entry, groupId, idx){
+  const tagMeta = entry.tag && HISTORY_TAG_META[entry.tag];
+  const art = lumenSacredArtFor(entry, {nameOnly:true});
+  const themeArt = historyThemeArtFor(entry, groupId);
+  const imgUrl = entry.img || (art ? art.url : null) || (themeArt ? themeArt.url : null);
+  const iconHTML = imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${(entry.avatar||'📜').replace(/'/g,"\\'")}'">` : (entry.avatar || '📜');
+  const desc = [entry.dates, tagMeta ? `${tagMeta.icon} ${tagMeta.label}` : ''].filter(Boolean).join(' · ') || (entry.ref||'');
+  return `<div class="rubric-row saint-grid-card" data-group="${groupId}" data-idx="${idx}">
+    <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">${iconHTML}</div>
+    <div class="rubric-row-text">
+      <span class="rubric-row-title">${entry.name}</span>
+      ${desc ? `<span class="rubric-row-desc">${desc}</span>` : ''}
+    </div>
+    <span class="rubric-row-chevron">›</span>
+  </div>`;
+}
 let HISTORY_SEARCH = '';
 let HISTORY_PROFILE_TAB = null;
 let HISTORY_PROFILE_KEY = null;
@@ -6759,7 +6784,7 @@ function renderFiguresCatalogue(groups, compKey, sectionLabel){
   if(q){
     const results = list.filter(x=> (x.entry.name+' '+(x.entry.ref||'')+' '+(x.entry.summary||'')).toLowerCase().includes(q));
     html += `<p class="studio-note" style="margin-bottom:8px;">${results.length} résultat${results.length>1?'s':''} pour « ${q} »</p>
-      <div class="grid">${results.map(x=>historyCardHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
+      <div class="rubric-list">${results.map(x=>historyRowHTML(x.entry, x.groupId, x.idx)).join('')}</div>`;
     document.getElementById('screen').innerHTML = html;
     wireFiguresCatalogueChrome(groups, compKey);
     return;
@@ -6780,7 +6805,7 @@ function renderFiguresCatalogue(groups, compKey, sectionLabel){
     </div>`;
   }).join('')}</div>
   <p class="section-desc">${group.desc||''}</p>
-  <div class="grid">${group.entries.map((e,i)=>historyCardHTML(e, group.id, i)).join('')}</div>`;
+  <div class="rubric-list">${group.entries.map((e,i)=>historyRowHTML(e, group.id, i)).join('')}</div>`;
 
   document.getElementById('screen').innerHTML = html;
   wireFiguresCatalogueChrome(groups, compKey);
@@ -6988,7 +7013,7 @@ function renderGenericSection(groups, compKey, sectionLabel){
 
   let html = `<h2 class="section-title">✦ ${sectionLabel}</h2>`;
   const JESUS_CAT_GROUPS = [
-    {label:'✝️ Vies', ids:['vie-de-jesus','vie-de-marie','vie-de-joseph','vie-des-apotres']},
+    {label:'✝️ Vies', ids:['vie-de-jesus','vie-des-apotres']},
     {label:'💭 Méditations', ids:['meditations-sainte-famille','meditations-pardon','grands-themes-meditation']},
     {label:'📜 Repères', ids:['genealogie-jesus']}
   ];
@@ -7017,6 +7042,10 @@ function renderGenericSection(groups, compKey, sectionLabel){
     html += `<div class="hub-hero-banner" style="background:#180C0C; height:170px;">
       <img class="hub-hero-banner-img" style="object-position:center 58%;" src="https://commons.wikimedia.org/wiki/Special:FilePath/SacredHeartBatoni.jpg?width=900" alt="" onerror="this.remove(); this.closest('.hub-hero-banner').insertAdjacentHTML('beforeend','<span class=\\'hub-hero-emoji\\'>✝️</span>');"><div class="hub-hero-scrim"></div>
     </div>`;
+  }
+
+  if(group.id === 'parties-eglise-batiment'){
+    html += `<div class="card" style="padding:8px;"><img src="images/church-floorplan.svg" alt="Plan d'une église, vue du ciel, avec ses différentes parties numérotées" style="width:100%; display:block; border-radius:14px;" onerror="this.closest('.card').remove();"></div>`;
   }
 
   if(group.id === 'neuvaines' && NEUVAINE_MONTH_VIEW){
@@ -7079,10 +7108,9 @@ function renderGenericSection(groups, compKey, sectionLabel){
     return;
   }
 
-  const BOOK_LIST_COMPKEYS = ['ecritures:psaumes', 'ecritures:recits', 'ecritures:reperes', 'jesus:main', 'eglise:vie-eglise', 'eglise:pelerinages', 'eglise:calendrier', 'eglise:actualites', 'sagesse:spiritualite', 'sagesse:enseignements', 'prier:famille', 'combat:prieres', 'combat:temoins'];
-  html += BOOK_LIST_COMPKEYS.includes(compKey)
-    ? `<div class="rubric-list">${group.entries.map((e,i)=>entryRowHTML(e,i)).join('')}</div>`
-    : `<div class="grid">${group.entries.map((e,i)=>entryCardHTML(e,i,halo)).join('')}</div>`;
+  /* Toutes les rubriques génériques s'affichent désormais en liste verticale
+     (comme les autres pages de l'app), plutôt qu'en grille de cartes. */
+  html += `<div class="rubric-list">${group.entries.map((e,i)=>entryRowHTML(e,i)).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   wireGroupChips(compKey);
   const monthToggle = document.getElementById('neuvaine-month-toggle');
@@ -7252,7 +7280,7 @@ function renderPatronSearch(){
     </div>`;
   if(q){
     html += results.length
-      ? `<div class="grid">${results.map(r=>entryCardHTML(r.entry, r.idx, true)).join('')}</div>`
+      ? `<div class="rubric-list">${results.map(r=>entryRowHTML(r.entry, r.idx)).join('')}</div>`
       : `<p class="section-desc">Aucun saint trouvé pour « ${q} ». Essayez une orthographe différente.</p>`;
   } else {
     html += `<p class="studio-note">Tapez un prénom ci-dessus pour commencer la recherche.</p>`;
