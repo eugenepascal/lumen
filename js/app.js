@@ -11528,16 +11528,8 @@ function renderTextesDuJour(){
       <a href="${url}" target="_blank" rel="noopener" class="btn btn-gold btn-sm" style="margin-top:6px; display:inline-block;">Lire ce chapitre ↗</a>
     </div>
 
-    <div style="text-align:center; margin-top:14px;">
-      <button class="btn btn-primary btn-sm" id="textes-jour-fait-btn">✓ J'ai lu les textes d'aujourd'hui</button>
-    </div>
   `;
   document.getElementById('screen').innerHTML = html;
-  document.getElementById('textes-jour-fait-btn').onclick = async ()=>{
-    await markPrayedToday('lecture', 'Textes du jour');
-    showToast('📖 Amen.');
-    fireCelebration();
-  };
   document.getElementById('textes-jour-reading-btn').onclick = enableReadingMode;
   document.getElementById('psaume-jour-reader-btn').onclick = ()=>{
     openTextCover('scroll', psEntry.name, 'Psaume du jour', ()=>{
@@ -11931,7 +11923,6 @@ function renderBiblePlan(){
       if(!completed.includes(activeIdx)) completed.push(activeIdx);
       BIBLE_PLAN_PROGRESS.completedDays = completed;
       await saveBiblePlanProgress(BIBLE_PLAN_PROGRESS);
-      await markPrayedToday('lecture', 'Plan de lecture biblique');
       if(completed.length >= BIBLE_PLAN_365.length) fireCelebration();
       showToast('Un chapitre de plus 📖');
       renderBiblePlan();
