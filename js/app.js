@@ -3887,6 +3887,19 @@ async function saveCaremeCommunityMember(code, patch){
   if(!ok) showToast('⚠️ Connexion impossible : votre progression ne sera pas visible par votre communauté tant que la connexion ne sera pas rétablie.');
   return list;
 }
+/* Même principe que le moment de prière commun du groupe de prière, mais
+   pour la communauté de Carême : une heure fixée pour prier ensemble (le
+   chemin de croix, ou simplement le pas du jour), avec rappel local et un
+   simple indicateur de présence — pas de synchronisation en direct. */
+let CAREME_MOMENT = null; // {label, time, completions: {'YYYY-MM-DD': [deviceId, ...]}}
+async function loadCaremeMoment(code){
+  try{ const d = await sharedGet('careme-moment:'+code); return (d && d.value) ? JSON.parse(d.value) : null; }catch(e){ return null; }
+}
+async function saveCaremeMoment(code, moment){
+  const ok = await sharedSet('careme-moment:'+code, JSON.stringify(moment));
+  if(!ok) showToast('⚠️ Connexion impossible : ce moment ne sera pas visible par votre communauté tant que la connexion ne sera pas rétablie.');
+  return ok;
+}
 function caremeCommunityBlockHTML(){
   if(!CAREME_COMMUNITY_CODE){
     return `<div class="card" style="margin-top:14px;">
@@ -3909,7 +3922,8 @@ function caremeCommunityBlockHTML(){
       ${shareInviteRowHTML('careme', CAREME_COMMUNITY_CODE, 'Prions ensemble le Carême sur Lumen 🕯️')}
     </div>
     <div id="careme-community-members" style="text-align:left;"><p class="studio-note">Chargement…</p></div>
-  </div>`;
+  </div>
+  <div class="card" id="careme-moment-card" style="text-align:center; margin-top:14px;"><p class="studio-note">Chargement…</p></div>`;
 }
 function wireCaremeCommunityBlock(onChange){
   wireShareInviteButtons();
@@ -3948,6 +3962,75 @@ function wireCaremeCommunityBlock(onChange){
         </div>`).join('');
     });
   }
+  renderCaremeMomentCard();
+}
+function caremeMomentCardHTML(){
+  if(!CAREME_MOMENT || !CAREME_MOMENT.time){
+    return `<p class="day-title" style="font-size:15px;">🕯️ Moment de prière commun</p>
+      <p class="section-desc">Fixez une heure pour prier ensemble (ex. le chemin de croix le vendredi à 18h) — chacun recevra un rappel, sans avoir à suivre le rythme des autres.</p>
+      <button class="btn btn-primary btn-sm" id="careme-moment-set-btn">🕯️ Fixer un moment</button>`;
+  }
+  const today = todayISO();
+  const count = ((CAREME_MOMENT.completions||{})[today]||[]).length;
+  const already = ((CAREME_MOMENT.completions||{})[today]||[]).includes(getDeviceId());
+  return `<p class="eyebrow" style="color:var(--gold);">Moment de prière commun</p>
+    <p class="day-title" style="font-size:19px;">✝️ ${CAREME_MOMENT.label||'Prière commune'} — ${CAREME_MOMENT.time}</p>
+    <p class="studio-note" style="margin:4px 0 10px;">🕯️ ${count} personne${count===1?'':'s'} ${count===1?'a':'ont'} prié ce moment aujourd'hui</p>
+    <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-gold btn-sm" id="careme-moment-done-btn" ${already?'disabled':''}>${already?'✓ Déjà confirmé':'🕯️ J’ai prié ce moment'}</button>
+      <button class="btn btn-ghost btn-sm" id="careme-moment-edit-btn">✎ Modifier</button>
+      <button class="btn btn-ghost btn-sm" id="careme-moment-clear-btn">Supprimer</button>
+    </div>`;
+}
+async function promptSetCaremeMoment(){
+  const label = prompt('Que priez-vous ensemble ? (ex. "Chemin de croix du vendredi")', CAREME_MOMENT && CAREME_MOMENT.label || '');
+  if(label === null) return;
+  const time = prompt('À quelle heure, chaque jour ? (format HH:MM, ex. 18:00)', CAREME_MOMENT && CAREME_MOMENT.time || '18:00');
+  if(time === null) return;
+  const trimmed = (time||'').trim();
+  if(!/^([01]\d|2[0-3]):([0-5]\d)$/.test(trimmed)){ showToast('Format attendu : HH:MM, par exemple 18:00'); return; }
+  if(window.Notification && Notification.permission === 'default'){ try{ await Notification.requestPermission(); }catch(e){} }
+  CAREME_MOMENT = {label:(label||'').trim()||'Prière commune', time:trimmed, completions:(CAREME_MOMENT&&CAREME_MOMENT.completions)||{}};
+  await saveCaremeMoment(CAREME_COMMUNITY_CODE, CAREME_MOMENT);
+  showToast('Moment fixé ✦ — votre communauté le verra aussi');
+  renderCaremeMomentCard();
+}
+function wireCaremeMomentCard(){
+  const setBtn = document.getElementById('careme-moment-set-btn');
+  if(setBtn) setBtn.onclick = promptSetCaremeMoment;
+  const editBtn = document.getElementById('careme-moment-edit-btn');
+  if(editBtn) editBtn.onclick = promptSetCaremeMoment;
+  const clearBtn = document.getElementById('careme-moment-clear-btn');
+  if(clearBtn) clearBtn.onclick = async ()=>{
+    CAREME_MOMENT = null;
+    await saveCaremeMoment(CAREME_COMMUNITY_CODE, null);
+    showToast('Moment supprimé');
+    renderCaremeMomentCard();
+  };
+  const doneBtn = document.getElementById('careme-moment-done-btn');
+  if(doneBtn) doneBtn.onclick = async ()=>{
+    const today = todayISO();
+    const completions = CAREME_MOMENT.completions || {};
+    const list = completions[today] || [];
+    const id = getDeviceId();
+    if(!list.includes(id)) list.push(id);
+    completions[today] = list;
+    CAREME_MOMENT.completions = completions;
+    await saveCaremeMoment(CAREME_COMMUNITY_CODE, CAREME_MOMENT);
+    await markPrayedToday('careme', 'Moment de prière commun');
+    showToast('Amen 🕯️');
+    renderCaremeMomentCard();
+  };
+}
+function renderCaremeMomentCard(){
+  const card = document.getElementById('careme-moment-card');
+  if(!card || !CAREME_COMMUNITY_CODE) return;
+  loadCaremeMoment(CAREME_COMMUNITY_CODE).then(m=>{
+    CAREME_MOMENT = m;
+    if(!document.body.contains(card)) return;
+    card.innerHTML = caremeMomentCardHTML();
+    wireCaremeMomentCard();
+  });
 }
 async function loadAdventProgress(){
   try{ const r = await window.storage.get('advent-progress', false); return r ? JSON.parse(r.value) : {}; }catch(e){ return {}; }
@@ -12827,6 +12910,12 @@ function checkReminders(){
     }
     checkReminders._last = hm+'group-moment';
   }
+  if(CAREME_COMMUNITY_CODE && CAREME_MOMENT && CAREME_MOMENT.time && CAREME_MOMENT.time===hm && checkReminders._last!==hm+'careme-moment'){
+    if(window.Notification && Notification.permission === 'granted'){
+      new Notification('Lumen', {body: `✝️ C'est l'heure de votre moment de prière commun du Carême${CAREME_MOMENT.label ? ' : '+CAREME_MOMENT.label : ''}`});
+    }
+    checkReminders._last = hm+'careme-moment';
+  }
 }
 
 /* ================= export calendrier (.ics) ================= */
@@ -14374,6 +14463,7 @@ async function startApp(){
   FAMILY_CODE = prefs.familyCode || null;
   CAREME_COMMUNITY_CODE = prefs.caremeCommunityCode || '';
   CAREME_MEMBER_ID = prefs.caremeMemberId || ('m-'+Math.random().toString(36).slice(2,10));
+  if(CAREME_COMMUNITY_CODE){ CAREME_MOMENT = await loadCaremeMoment(CAREME_COMMUNITY_CODE); }
   applyRecueillement();
   FONT_SIZE = prefs.fontSize || 'md';
   DYSLEXIC_FONT = !!prefs.dyslexicFont;
@@ -14415,6 +14505,7 @@ async function startApp(){
       if(code){
         CAREME_COMMUNITY_CODE = code;
         await savePrefs();
+        CAREME_MOMENT = await loadCaremeMoment(code);
         PRIMARY = 'prier'; SUBTAB.prier = 'careme40';
         showToast('Communauté de Carême rejointe ✦');
       }
