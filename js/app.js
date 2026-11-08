@@ -13110,26 +13110,41 @@ function renderGlossary(){
 }
 
 /* ================= global search ================= */
+// Catégories de filtre proposées dans la recherche universelle.
+const SEARCH_CATEGORIES = [
+  {key:'tout', label:'Tout', icon:'🔎'},
+  {key:'bible', label:'Bible', icon:'📖'},
+  {key:'psaumes', label:'Psaumes', icon:'🎶'},
+  {key:'prieres', label:'Prières', icon:'🙏'},
+  {key:'saints', label:'Saints', icon:'🕊️'},
+  {key:'neuvaines', label:'Neuvaines', icon:'🕯️'},
+  {key:'audio', label:'Audio', icon:'🎧'},
+];
+let SEARCH_FILTER = 'tout';
 function buildSearchIndex(){
   const idx = [];
-  function addGroups(groups, primary, sub, compKey){
+  // hasAudio:true = contenu lisible via le lecteur de carte partagé (openVerseReader) ou le lecteur audio des neuvaines.
+  function addGroups(groups, primary, sub, compKey, cat, hasAudio){
     groups.forEach(g=>{
       (g.entries||[]).forEach((e,i)=>{
-        idx.push({name:e.name, summary:e.summary, avatar:e.avatar, primary, sub, compKey, groupId:g.id, idx:i});
+        idx.push({name:e.name, summary:e.summary, avatar:e.avatar, primary, sub, compKey, groupId:g.id, idx:i, cat, hasAudio});
       });
     });
   }
-  addGroups(PSALM_GROUPS, 'ecritures','psaumes','ecritures:psaumes');
-  addGroups(HISTORY, 'ecritures','bible','ecritures:bible');
-  addGroups(RECITS_GROUPS.filter(g=>!g.special && !g.diagram), 'ecritures','recits','ecritures:recits');
-  addGroups(JESUS, 'jesus',null,'jesus:main');
-  addGroups(SAINTS_LIBRARY, 'eglise','saints','eglise:saints');
-  addGroups(EGLISE, 'eglise','vie-eglise','eglise:vie-eglise');
-  addGroups(ACTUALITES, 'eglise','actualites','eglise:actualites');
-  addGroups(SPIRITUALITE, 'sagesse','spiritualite','sagesse:spiritualite');
-  addGroups(ENSEIGNEMENTS_ALL, 'sagesse','enseignements','sagesse:enseignements');
-  addGroups(PRIERES, 'prier','prieres','prier:prieres');
-  SAINTS.forEach(s=> idx.push({name:s.name, summary:s.bio, avatar:'🕊️', primary:'eglise', sub:'calendrier', isCalSaint:true}));
+  addGroups(PSALM_GROUPS, 'ecritures','psaumes','ecritures:psaumes','psaumes',true);
+  addGroups(HISTORY, 'ecritures','bible','ecritures:bible','bible',true);
+  addGroups(RECITS_GROUPS.filter(g=>!g.special && !g.diagram), 'ecritures','recits','ecritures:recits','bible',true);
+  addGroups(JESUS, 'jesus',null,'jesus:main','bible',true);
+  addGroups(SAINTS_LIBRARY, 'eglise','saints','eglise:saints','saints',true);
+  addGroups(EGLISE, 'eglise','vie-eglise','eglise:vie-eglise',null,true);
+  addGroups(ACTUALITES, 'eglise','actualites','eglise:actualites',null,true);
+  addGroups(SPIRITUALITE, 'sagesse','spiritualite','sagesse:spiritualite',null,true);
+  addGroups(ENSEIGNEMENTS_ALL, 'sagesse','enseignements','sagesse:enseignements',null,true);
+  addGroups(PRIERES, 'prier','prieres','prier:prieres','prieres',true);
+  SAINTS.forEach(s=> idx.push({name:s.name, summary:s.bio, avatar:'🕊️', primary:'eglise', sub:'calendrier', isCalSaint:true, cat:'saints', hasAudio:false}));
+  (NOVENAS||[]).forEach(n=>{
+    idx.push({name:n.title, summary:n.sub||'', avatar:'🕯️', isNovena:true, novenaId:n.id, cat:'neuvaines', hasAudio:true});
+  });
   return idx;
 }
 let SEARCH_INDEX = null;
@@ -13137,14 +13152,30 @@ function runSearch(query){
   if(!SEARCH_INDEX) SEARCH_INDEX = buildSearchIndex();
   const q = query.trim().toLowerCase();
   if(q.length < 2) return [];
-  return SEARCH_INDEX.filter(item =>
-    item.name.toLowerCase().includes(q) || (item.summary||'').toLowerCase().includes(q)
-  ).slice(0, 30);
+  return SEARCH_INDEX.filter(item =>{
+    if(SEARCH_FILTER === 'audio' && !item.hasAudio) return false;
+    if(SEARCH_FILTER !== 'tout' && SEARCH_FILTER !== 'audio' && item.cat !== SEARCH_FILTER) return false;
+    return item.name.toLowerCase().includes(q) || (item.summary||'').toLowerCase().includes(q);
+  }).slice(0, 30);
+}
+function renderSearchFilters(){
+  const box = document.getElementById('search-filters');
+  if(!box) return;
+  box.innerHTML = SEARCH_CATEGORIES.map(c=>
+    `<button type="button" class="chip${SEARCH_FILTER===c.key?' active':''}" data-cat="${c.key}">${c.icon} ${c.label}</button>`
+  ).join('');
+  box.querySelectorAll('.chip').forEach(el=>{
+    el.onclick = ()=>{
+      SEARCH_FILTER = el.dataset.cat;
+      renderSearchFilters();
+      renderSearchResults(document.getElementById('search-input').value);
+    };
+  });
 }
 function renderSearchResults(query){
   const results = runSearch(query);
   const box = document.getElementById('search-results');
-  if(!query.trim()){ box.innerHTML = '<p class="section-desc">Tapez au moins deux lettres pour chercher un psaume, un saint, une prière…</p>'; return; }
+  if(!query.trim()){ box.innerHTML = '<p class="section-desc">Tapez au moins deux lettres pour chercher un psaume, un saint, une prière, une neuvaine…</p>'; return; }
   if(results.length===0){ box.innerHTML = '<p class="section-desc">Aucun résultat pour cette recherche.</p>'; return; }
   box.innerHTML = results.map((r,i)=>`<div class="search-result-item" data-idx="${i}">
     <div class="entry-avatar" style="width:32px;height:32px;font-size:14px;">${r.avatar||'📖'}</div>
@@ -13154,6 +13185,12 @@ function renderSearchResults(query){
     el.onclick = ()=>{
       const r = results[parseInt(el.dataset.idx,10)];
       closeSearch();
+      if(r.isNovena){
+        PRIMARY = 'prier'; SUBTAB.prier = 'neuvaines';
+        OPEN_NOVENA = r.novenaId; NOVENA_OPEN_DAY = null; NOVENA_FULLTEXT = false; NOVENA_DAY_DONE_SCREEN = null;
+        render();
+        return;
+      }
       if(r.isCalSaint){ goTo('eglise','calendrier'); return; }
       PRIMARY = r.primary; SUBTAB[r.primary] = r.sub;
       GROUP_SEL[r.compKey] = r.groupId;
@@ -13166,6 +13203,8 @@ function openSearch(){
   document.getElementById('search-overlay').classList.remove('hidden');
   document.getElementById('search-input').value = '';
   document.getElementById('search-results').innerHTML = '';
+  SEARCH_FILTER = 'tout';
+  renderSearchFilters();
   setTimeout(()=> document.getElementById('search-input').focus(), 50);
 }
 function closeSearch(){ document.getElementById('search-overlay').classList.add('hidden'); }
