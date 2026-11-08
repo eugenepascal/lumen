@@ -16,6 +16,56 @@ const firebaseConfig = {
   measurementId: "G-18S3XQWSFK"
 };
 let fbApp = null, fbAuth = null, fbDb = null, FIREBASE_READY = false;
+/* Connexion Firebase dédiée au contenu partagé (groupe de prière, carnet
+   familial, communauté de Carême) : une appli secondaire, avec sa propre
+   session anonyme, indépendante du compte personnel. Avant cela, le contenu
+   "partagé" passait par window.storage avec shared:true — ce qui, en mode
+   invité (déployé sur GitHub Pages, sans window.storage natif), retombait
+   sur le localStorage du navigateur : chaque personne ne voyait QUE ses
+   propres données, sans aucun partage réel entre elles. Cette appli dédiée,
+   toujours connectée à Firestore (même sans compte personnel), corrige ça. */
+let sharedFbApp = null, sharedFbAuth = null, sharedFbDb = null, SHARED_FIREBASE_READY = false;
+try{
+  sharedFbApp = firebase.initializeApp(firebaseConfig, 'lumen-shared');
+  sharedFbAuth = sharedFbApp.auth();
+  sharedFbDb = sharedFbApp.firestore();
+  SHARED_FIREBASE_READY = true;
+}catch(e){ console.warn('Firebase (contenu partagé) indisponible :', e); }
+let SHARED_AUTH_READY_PROMISE = null;
+function ensureSharedAuth(){
+  if(!SHARED_FIREBASE_READY) return Promise.resolve(false);
+  if(SHARED_AUTH_READY_PROMISE) return SHARED_AUTH_READY_PROMISE;
+  SHARED_AUTH_READY_PROMISE = new Promise((resolve)=>{
+    let settled = false;
+    const unsub = sharedFbAuth.onAuthStateChanged((user)=>{
+      if(settled) return;
+      if(user){ settled = true; unsub(); resolve(true); return; }
+      sharedFbAuth.signInAnonymously().catch((e)=>{
+        console.warn('Connexion anonyme (contenu partagé) impossible :', e);
+        if(!settled){ settled = true; resolve(false); }
+      });
+    });
+  });
+  return SHARED_AUTH_READY_PROMISE;
+}
+/* Lecture/écriture d'un document partagé, accessible par n'importe qui
+   connaissant la clé (code de groupe, de famille...) — invité ou non. */
+async function sharedGet(key){
+  const ok = await ensureSharedAuth();
+  if(!ok) return null;
+  try{
+    const snap = await sharedFbDb.collection('shared').doc(key).get();
+    return snap.exists ? snap.data() : null;
+  }catch(e){ console.warn('sharedGet', key, e); return null; }
+}
+async function sharedSet(key, value){
+  const ok = await ensureSharedAuth();
+  if(!ok) return false;
+  try{
+    await sharedFbDb.collection('shared').doc(key).set({ value, updatedAt: Date.now() });
+    return true;
+  }catch(e){ console.warn('sharedSet', key, e); return false; }
+}
 try{
   fbApp = firebase.initializeApp(firebaseConfig);
   fbAuth = firebase.auth();
@@ -3819,6 +3869,86 @@ async function loadCaremeProgress(){
 async function saveCaremeProgress(progress){
   try{ await window.storage.set('careme-progress', JSON.stringify(progress), false); }catch(e){}
 }
+/* ================= communauté de Carême (partagée, en famille ou entre proches) =================
+   Un petit espace partagé — par code, comme le groupe de prière — pour
+   avancer ensemble pendant le Carême et le chemin de croix : chacun y voit
+   la progression des autres membres (jours de Carême, chemins de croix
+   priés) et peut inviter par lien ou WhatsApp. */
+async function loadCaremeCommunity(code){
+  try{ const d = await sharedGet('careme-community:'+code); return (d && d.value) ? JSON.parse(d.value) : []; }catch(e){ return []; }
+}
+async function saveCaremeCommunityMember(code, patch){
+  const list = await loadCaremeCommunity(code);
+  const idx = list.findIndex(m=>m.id===CAREME_MEMBER_ID);
+  const base = idx>=0 ? list[idx] : {id:CAREME_MEMBER_ID, name:USER_NAME||'Quelqu’un', completedCount:0, croixCount:0};
+  const updated = Object.assign({}, base, patch, {name:USER_NAME||base.name||'Quelqu’un', lastActive:Date.now()});
+  if(idx>=0) list[idx] = updated; else list.push(updated);
+  const ok = await sharedSet('careme-community:'+code, JSON.stringify(list));
+  if(!ok) showToast('⚠️ Connexion impossible : votre progression ne sera pas visible par votre communauté tant que la connexion ne sera pas rétablie.');
+  return list;
+}
+function caremeCommunityBlockHTML(){
+  if(!CAREME_COMMUNITY_CODE){
+    return `<div class="card" style="margin-top:14px;">
+      <p class="day-title" style="font-size:15px;">🤝 Prier en communauté</p>
+      <p class="section-desc">Créez ou rejoignez une petite communauté pour avancer ensemble dans le Carême et le chemin de croix — en famille ou entre amis.</p>
+      <button class="btn btn-primary btn-sm" id="careme-community-create-btn">✦ Créer une communauté</button>
+      <div class="add-intention-box" style="margin-top:10px;">
+        <input type="text" id="careme-community-join-input" placeholder="Code de communauté (ex. AB12CD)" style="text-transform:uppercase;">
+        <button class="btn btn-gold btn-sm" id="careme-community-join-btn" style="margin-top:8px;">Rejoindre</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="card" style="margin-top:14px; text-align:center;">
+    <p class="eyebrow" style="color:var(--gold);">Votre communauté de Carême</p>
+    <p class="day-title" style="font-size:20px; letter-spacing:2px;">${CAREME_COMMUNITY_CODE}</p>
+    <div style="display:flex; gap:8px; justify-content:center; margin:8px 0; flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" id="careme-community-leave-btn">Quitter la communauté</button>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
+      ${shareInviteRowHTML('careme', CAREME_COMMUNITY_CODE, 'Prions ensemble le Carême sur Lumen 🕯️')}
+    </div>
+    <div id="careme-community-members" style="text-align:left;"><p class="studio-note">Chargement…</p></div>
+  </div>`;
+}
+function wireCaremeCommunityBlock(onChange){
+  wireShareInviteButtons();
+  const createBtn = document.getElementById('careme-community-create-btn');
+  if(createBtn) createBtn.onclick = async ()=>{
+    CAREME_COMMUNITY_CODE = generateGroupCode();
+    await savePrefs();
+    showToast('Communauté créée ✦ — invitez les vôtres !');
+    onChange();
+  };
+  const joinBtn = document.getElementById('careme-community-join-btn');
+  if(joinBtn) joinBtn.onclick = async ()=>{
+    const input = document.getElementById('careme-community-join-input');
+    const code = (input.value||'').trim().toUpperCase();
+    if(!code){ return; }
+    CAREME_COMMUNITY_CODE = code;
+    await savePrefs();
+    showToast('Communauté rejointe ✦');
+    onChange();
+  };
+  const leaveBtn = document.getElementById('careme-community-leave-btn');
+  if(leaveBtn) leaveBtn.onclick = async ()=>{
+    CAREME_COMMUNITY_CODE = '';
+    await savePrefs();
+    onChange();
+  };
+  const membersWrap = document.getElementById('careme-community-members');
+  if(membersWrap && CAREME_COMMUNITY_CODE){
+    loadCaremeCommunity(CAREME_COMMUNITY_CODE).then(list=>{
+      if(!document.body.contains(membersWrap)) return;
+      if(!list.length){ membersWrap.innerHTML = `<p class="studio-note">Personne d'autre pour l'instant — invitez les vôtres avec le lien ci-dessus !</p>`; return; }
+      membersWrap.innerHTML = list.slice().sort((a,b)=>(b.completedCount||0)-(a.completedCount||0)).map(m=>`
+        <div class="rubric-row" style="cursor:default;">
+          <div class="entry-avatar" style="width:32px;height:32px;font-size:14px;">${m.id===CAREME_MEMBER_ID?'🕯️':'🙏'}</div>
+          <div class="rubric-row-text"><span class="rubric-row-title">${m.name}${m.id===CAREME_MEMBER_ID?' (vous)':''}</span><span class="rubric-row-desc">${m.completedCount||0} jour(s) de Carême · ${m.croixCount||0} chemin(s) de croix</span></div>
+        </div>`).join('');
+    });
+  }
+}
 async function loadAdventProgress(){
   try{ const r = await window.storage.get('advent-progress', false); return r ? JSON.parse(r.value) : {}; }catch(e){ return {}; }
 }
@@ -3928,10 +4058,11 @@ async function savePrayerGroupCode(code){
   try{ await window.storage.set('prayer-group-code', code, false); }catch(e){}
 }
 async function loadGroupIntentions(code){
-  try{ const r = await window.storage.get('group-intentions:'+code, true); return r ? JSON.parse(r.value) : []; }catch(e){ return []; }
+  try{ const d = await sharedGet('group-intentions:'+code); return (d && d.value) ? JSON.parse(d.value) : []; }catch(e){ return []; }
 }
 async function saveGroupIntentions(code, list){
-  try{ await window.storage.set('group-intentions:'+code, JSON.stringify(list), true); }catch(e){}
+  const ok = await sharedSet('group-intentions:'+code, JSON.stringify(list));
+  if(!ok) showToast('⚠️ Connexion impossible : vos proches ne verront pas cette intention tant que la connexion ne sera pas rétablie.');
 }
 async function loadPrefsAndData(){
   const defaults = { favorites:[], recent:[], streak:{count:0,lastDate:null}, theme:'light', themeMode:'auto', fontSize:'md', onboardingSeen:false, seenMilestones:[], lastSummarySeen:'', userName:'', dyslexicFont:false };
@@ -3944,7 +4075,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID
     }), false);
   }catch(e){}
 }
@@ -3958,6 +4089,8 @@ let MEMORIAL = [];
 let OBJECTIFS = [];
 let PARCOURS_PROGRESS = { completedDays: [] };
 let CAREME_PROGRESS = { completedDays: [] };
+let CAREME_COMMUNITY_CODE = '';
+let CAREME_MEMBER_ID = '';
 let ADVENT_PROGRESS = {};
 let REMINDERS = {morning:'', evening:''};
 let SEEN_MILESTONES = [];
@@ -7398,6 +7531,40 @@ function generateGroupCode(){
   for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
   return code;
 }
+/* ================= invitations (lien + WhatsApp) =================
+   Un même petit composant pour inviter des proches à rejoindre un groupe
+   de prière ou une communauté de Carême : un lien qui pré-remplit
+   automatiquement le code à l'ouverture (paramètre d'URL), et un bouton
+   WhatsApp qui envoie ce même lien dans un message prêt à l'emploi. */
+function inviteLinkFor(param, code){
+  try{
+    const url = new URL(window.location.href);
+    url.search = ''; url.hash = '';
+    url.searchParams.set(param, code);
+    return url.toString();
+  }catch(e){ return window.location.href; }
+}
+function shareInviteRowHTML(param, code, message){
+  return `<div class="share-invite-row" data-invite-param="${param}" data-invite-code="${code}" data-invite-message="${message.replace(/"/g,'&quot;')}">
+    <button type="button" class="btn btn-ghost btn-sm" data-invite-action="copy">🔗 Copier le lien d'invitation</button>
+    <button type="button" class="btn btn-ghost btn-sm" data-invite-action="whatsapp">💬 Inviter sur WhatsApp</button>
+  </div>`;
+}
+function wireShareInviteButtons(root){
+  (root||document).querySelectorAll('.share-invite-row').forEach(row=>{
+    const param = row.dataset.inviteParam, code = row.dataset.inviteCode, message = row.dataset.inviteMessage;
+    const link = inviteLinkFor(param, code);
+    const copyBtn = row.querySelector('[data-invite-action="copy"]');
+    if(copyBtn) copyBtn.onclick = ()=>{
+      navigator.clipboard.writeText(message+' '+link).then(()=> showToast('Lien d\'invitation copié 🔗'))
+        .catch(()=> showToast("Impossible de copier le lien sur cet appareil"));
+    };
+    const waBtn = row.querySelector('[data-invite-action="whatsapp"]');
+    if(waBtn) waBtn.onclick = ()=>{
+      window.open('https://wa.me/?text='+encodeURIComponent(message+' '+link), '_blank');
+    };
+  });
+}
 function renderPrayerGroup(){
   let html = `<h2 class="section-title">👥 Groupe de prière</h2>`;
   if(!PRAYER_GROUP_CODE){
@@ -7433,10 +7600,13 @@ function renderPrayerGroup(){
   html += `<div class="card" style="text-align:center; border-left:4px solid var(--gold);">
       <p class="eyebrow" style="color:var(--gold);">Code de votre groupe</p>
       <p class="day-title" style="font-size:24px; letter-spacing:3px;">${PRAYER_GROUP_CODE}</p>
-      <p class="section-desc" style="margin:4px 0 0;">Partagez ce code à vos proches pour qu'ils rejoignent le même groupe.</p>
-      <div style="display:flex; gap:8px; justify-content:center; margin-top:8px;">
+      <p class="section-desc" style="margin:4px 0 0;">Partagez ce code (ou le lien ci-dessous) à vos proches pour qu'ils rejoignent le même groupe.</p>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
         <button class="btn btn-ghost btn-sm" id="copy-group-code-btn">📋 Copier le code</button>
         <button class="btn btn-ghost btn-sm" id="leave-group-btn">Quitter le groupe</button>
+      </div>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
+        ${shareInviteRowHTML('groupe', PRAYER_GROUP_CODE, 'Rejoins mon groupe de prière sur Lumen 🕯️')}
       </div>
     </div>
     <div class="card add-intention-box">
@@ -7458,6 +7628,7 @@ function renderPrayerGroup(){
       </div>`).join('')}</div>`;
   }
   document.getElementById('screen').innerHTML = html;
+  wireShareInviteButtons();
   document.getElementById('copy-group-code-btn').onclick = ()=>{
     navigator.clipboard.writeText(PRAYER_GROUP_CODE).then(()=> showToast('Code copié 📋'));
   };
@@ -10693,12 +10864,12 @@ let PELERINAGE_VIEW = {site:null, step:0};
 let FAMILY_CODE = null;
 async function loadFamilyIntentions(){
   if(!FAMILY_CODE) return [];
-  const res = await window.storage.get('family-intentions-'+FAMILY_CODE, true);
-  return (res && res.value) || [];
+  try{ const d = await sharedGet('family-intentions:'+FAMILY_CODE); return (d && d.value) ? JSON.parse(d.value) : []; }catch(e){ return []; }
 }
 async function saveFamilyIntentions(list){
   if(!FAMILY_CODE) return;
-  await window.storage.set('family-intentions-'+FAMILY_CODE, list, true);
+  const ok = await sharedSet('family-intentions:'+FAMILY_CODE, JSON.stringify(list));
+  if(!ok) showToast('⚠️ Connexion impossible : les vôtres ne verront pas cette intention tant que la connexion ne sera pas rétablie.');
 }
 const APP_GUIDE_SECTIONS = [
   {icon:'🏠', title:'Accueil', text:"Votre point de départ chaque jour : un verset, votre série de prière, le saint du jour, et un accès rapide à tout le reste."},
@@ -12033,8 +12204,11 @@ function renderCheminDeCroix(){
   const station = CHEMIN_DE_CROIX[CROIX_STATE];
   let html = `<h2 class="section-title">✝️ Chemin de croix</h2>
     <p class="section-desc">Les quatorze stations de la Passion, particulièrement priées le vendredi et pendant le Carême.</p>
-    <div class="step-progress">${CHEMIN_DE_CROIX.map((_,i)=>`<span class="${i<CROIX_STATE?'done':i===CROIX_STATE?'current':''}"></span>`).join('')}</div>
-    <div class="card">
+    <div class="step-progress">${CHEMIN_DE_CROIX.map((_,i)=>`<span class="${i<CROIX_STATE?'done':i===CROIX_STATE?'current':''}"></span>`).join('')}</div>`;
+  if(CAREME_COMMUNITY_CODE && CROIX_STATE > 0){
+    html += `<p class="studio-note" style="text-align:center; margin-bottom:6px;">🤝 Vous priez avec votre communauté de Carême (${CAREME_COMMUNITY_CODE})</p>`;
+  }
+  html += `<div class="card">
       <p class="eyebrow" style="color:var(--gold);">${CROIX_STATE+1}ᵉ station / ${CHEMIN_DE_CROIX.length}</p>
       <p class="day-title">${station.title}</p>
       <p class="entry-detail-text">${station.text}</p>
@@ -12043,10 +12217,20 @@ function renderCheminDeCroix(){
         <button class="btn btn-primary btn-sm" id="croix-next">${CROIX_STATE<CHEMIN_DE_CROIX.length-1?'Station suivante →':'Terminer'}</button>
       </div>
     </div>`;
+  if(CROIX_STATE === 0) html += caremeCommunityBlockHTML();
   document.getElementById('screen').innerHTML = html;
+  if(CROIX_STATE === 0) wireCaremeCommunityBlock(()=> render());
   document.getElementById('croix-next').onclick = async ()=>{
     if(CROIX_STATE < CHEMIN_DE_CROIX.length-1){ CROIX_STATE++; render(); }
-    else { await markPrayedToday('chemin-croix', 'Chemin de croix'); CROIX_STATE=null; showToast('Chemin de croix terminé ✝️'); render(); }
+    else {
+      await markPrayedToday('chemin-croix', 'Chemin de croix');
+      if(CAREME_COMMUNITY_CODE){
+        const list = await loadCaremeCommunity(CAREME_COMMUNITY_CODE);
+        const mine = list.find(m=>m.id===CAREME_MEMBER_ID);
+        await saveCaremeCommunityMember(CAREME_COMMUNITY_CODE, {croixCount: ((mine&&mine.croixCount)||0)+1});
+      }
+      CROIX_STATE=null; showToast('Chemin de croix terminé ✝️'); render();
+    }
   };
 }
 
@@ -12159,6 +12343,7 @@ function renderCareme40(){
       else if(i===activeIdx && !allDone) cls += ' current';
       return `<div class="${cls}" style="width:26px; height:26px; font-size:11px;">${completed.includes(i)?'✓':i+1}</div>`;
     }).join('')}</div>`;
+  html += caremeCommunityBlockHTML();
 
   if(allDone){
     html += `<div class="card" style="text-align:center;">
@@ -12186,6 +12371,7 @@ function renderCareme40(){
     </div>`;
   }
   document.getElementById('screen').innerHTML = html;
+  wireCaremeCommunityBlock(renderCareme40);
   document.querySelectorAll('.careme-action-btn').forEach(btn=>{
     btn.onclick = ()=> goTo(btn.dataset.primary, btn.dataset.sub);
   });
@@ -12204,6 +12390,7 @@ function renderCareme40(){
       CAREME_PROGRESS.completedDays = completed;
       await saveCaremeProgress(CAREME_PROGRESS);
       await markPrayedToday('careme', 'Jour de Carême');
+      if(CAREME_COMMUNITY_CODE) await saveCaremeCommunityMember(CAREME_COMMUNITY_CODE, {completedCount: completed.length});
       showToast('Un jour de plus sur le chemin ✝️');
       if(completed.length >= CAREME_JOURS.length) fireCelebration();
       renderCareme40();
@@ -14087,6 +14274,8 @@ async function startApp(){
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);
   FAMILY_CODE = prefs.familyCode || null;
+  CAREME_COMMUNITY_CODE = prefs.caremeCommunityCode || '';
+  CAREME_MEMBER_ID = prefs.caremeMemberId || ('m-'+Math.random().toString(36).slice(2,10));
   applyRecueillement();
   FONT_SIZE = prefs.fontSize || 'md';
   DYSLEXIC_FONT = !!prefs.dyslexicFont;
@@ -14105,6 +14294,38 @@ async function startApp(){
   }
   LAST_OPEN_DATE = todayISO();
   savePrefs();
+
+  // Rejoindre automatiquement un groupe de prière ou une communauté de
+  // Carême si l'app est ouverte via un lien d'invitation (?groupe=CODE ou
+  // ?careme=CODE), généré par le bouton « Copier le lien »/WhatsApp.
+  try{
+    const inviteParams = new URLSearchParams(window.location.search);
+    const inviteGroupe = inviteParams.get('groupe');
+    const inviteCareme = inviteParams.get('careme');
+    if(inviteGroupe){
+      const code = inviteGroupe.trim().toUpperCase();
+      if(code){
+        PRAYER_GROUP_CODE = code;
+        await savePrayerGroupCode(code);
+        GROUP_INTENTIONS = await loadGroupIntentions(code);
+        PRIMARY = 'prier'; SUBTAB.prier = 'groupe';
+        showToast('Groupe de prière rejoint ✦');
+      }
+    } else if(inviteCareme){
+      const code = inviteCareme.trim().toUpperCase();
+      if(code){
+        CAREME_COMMUNITY_CODE = code;
+        await savePrefs();
+        PRIMARY = 'prier'; SUBTAB.prier = 'careme40';
+        showToast('Communauté de Carême rejointe ✦');
+      }
+    }
+    if(inviteGroupe || inviteCareme){
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('groupe'); cleanUrl.searchParams.delete('careme');
+      history.replaceState(null, '', cleanUrl.toString());
+    }
+  }catch(e){ console.warn('Lien d\'invitation illisible :', e); }
 
   applyThemeAndFont();
   render();

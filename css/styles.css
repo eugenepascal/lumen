@@ -900,6 +900,7 @@
   .intention-footer{ display:flex; justify-content:space-between; align-items:center; }
   .prayer-count{ font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); }
   .add-intention-box{ margin-bottom:18px; }
+  .share-invite-row{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
   textarea, input[type=text]{
     width:100%; font-family:'Lora',serif; font-size:14px; padding:10px 12px;
     border:1.5px solid var(--hairline); border-radius:10px; background:var(--vellum-light); color:var(--ink);
