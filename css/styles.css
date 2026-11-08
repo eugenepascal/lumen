@@ -966,6 +966,8 @@
   .lumen-player-icon{ font-size:16px; flex-shrink:0; }
   .lumen-player-label{ flex:1; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #lumen-player-bar .icon-btn{ background:rgba(255,255,255,0.15); color:#fff; border:none; width:28px; height:28px; border-radius:50%; font-size:12px; cursor:pointer; flex-shrink:0; }
+  #lumen-player-bar .icon-btn:disabled{ opacity:0.35; cursor:default; }
+  #lumen-player-speed{ width:auto !important; border-radius:999px !important; padding:0 8px; font-family:'Inter',sans-serif; font-weight:700; font-size:11px !important; }
   .lumen-player-thumb{ width:38px; height:38px; border-radius:9px; flex-shrink:0; background:rgba(0,0,0,0.3); }
 
   /* ===== lecteur d'ambiance : petite fenêtre flottante sur le côté, pas une

@@ -8521,7 +8521,6 @@ function speakText(text){
 }
 
 /* ================= lecture vocale de la page entière ================= */
-let READING_PAGE = false;
 function extractScreenText(){
   const screen = document.getElementById('screen');
   if(!screen) return '';
@@ -8530,25 +8529,21 @@ function extractScreenText(){
   return clone.innerText.replace(/\s+/g,' ').trim();
 }
 function toggleReadPage(){
-  const btn = document.getElementById('read-page-btn');
   if(!window.speechSynthesis){ showToast("Lecture vocale indisponible sur ce navigateur"); return; }
-  if(READING_PAGE){
-    window.speechSynthesis.cancel();
-    READING_PAGE = false;
-    if(btn){ const ic=btn.querySelector('.tool-btn-icon'); if(ic) ic.textContent='🔊'; else btn.textContent='🔊'; btn.classList.remove('tool-active'); }
+  const active = LUMEN_PLAYER_STATE.active && LUMEN_PLAYER_STATE.kind==='speech' && LUMEN_SPEECH_CTX && LUMEN_SPEECH_CTX.source==='page';
+  if(active){
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    lumenPlayerHide();
     return;
   }
   const text = extractScreenText();
   if(!text){ showToast("Rien à lire sur cet écran"); return; }
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text.slice(0, 6000));
-  applyNaturalVoice(u);
-  u.onend = ()=>{ READING_PAGE = false; if(btn){ const ic=btn.querySelector('.tool-btn-icon'); if(ic) ic.textContent='🔊'; else btn.textContent='🔊'; btn.classList.remove('tool-active'); } };
-  u.onerror = u.onend;
-  window.speechSynthesis.speak(u);
-  READING_PAGE = true;
-  if(btn){ const ic=btn.querySelector('.tool-btn-icon'); if(ic) ic.textContent='⏹'; else btn.textContent='⏹'; btn.classList.add('tool-active'); }
-  showToast('🔊 Lecture de la page…');
+  const titleEl = document.querySelector('#screen h2.section-title, #screen h1');
+  const label = (titleEl ? titleEl.textContent : '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').trim() || 'Lecture de la page';
+  // La lecture persiste désormais pendant la navigation : le mini-lecteur
+  // global (barre en bas) reste affiché et pilotable même si on change d'écran.
+  lumenSpeak({ text: text.slice(0, 6000), label: '🔊 ' + label, source: 'page' });
+  showToast('🔊 Lecture de la page — elle continue même si vous changez d\'écran');
 }
 
 /* ================= ambiance sonore de fond =================
@@ -8671,29 +8666,112 @@ function lumenPlayerShow(label, kind){
 }
 function lumenPlayerHide(){
   LUMEN_PLAYER_STATE = {active:false, label:'', kind:null, paused:false};
+  LUMEN_SPEECH_CTX = null;
+  renderLumenPlayer();
+  syncReadPageIcon();
+}
+/* ================= mini-lecteur global de lecture vocale (kind:'speech') =================
+   Permet à une lecture à voix haute (page entière, chapitre…) de continuer
+   pendant la navigation, avec pause/reprise, vitesse réglable et, quand
+   l'appelant fournit des callbacks onPrev/onNext, un passage à l'élément
+   suivant/précédent façon « playlist » (ex. chapitre suivant). */
+let LUMEN_SPEECH_RATE = 0.96;
+let LUMEN_SPEECH_CTX = null; // { text, label, source, onEnd?, onPrev?, onNext?, hasPrev?, hasNext? }
+const LUMEN_SPEECH_RATES = [0.8, 0.96, 1.15, 1.35];
+function lumenSpeak(ctx){
+  LUMEN_SPEECH_CTX = ctx;
+  LUMEN_PLAYER_STATE = {active:true, kind:'speech', label: ctx.label||'', paused:false};
+  lumenSpeechStart();
   renderLumenPlayer();
 }
-/* La petite barre persistante ne sert plus qu'au fond sonore local en boucle
-   (pluie, chant...), qui continue réellement pendant la navigation. Pour la
-   vidéo YouTube et Spotify, la fenêtre elle-même (ambiance-player-overlay)
-   est l'unique interface, comme avant : pas de miniature à repositionner. */
+function lumenSpeechStart(){
+  if(!window.speechSynthesis || !LUMEN_SPEECH_CTX) return;
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(LUMEN_SPEECH_CTX.text);
+  applyNaturalVoice(u);
+  u.rate = LUMEN_SPEECH_RATE;
+  u.onend = ()=>{
+    if(LUMEN_SPEECH_CTX && LUMEN_SPEECH_CTX.onEnd) LUMEN_SPEECH_CTX.onEnd();
+    else lumenPlayerHide();
+  };
+  u.onerror = u.onend;
+  window.speechSynthesis.speak(u);
+  syncReadPageIcon();
+}
+function syncReadPageIcon(){
+  const btn = document.getElementById('read-page-btn');
+  if(!btn) return;
+  const active = LUMEN_PLAYER_STATE.active && LUMEN_PLAYER_STATE.kind==='speech' && LUMEN_SPEECH_CTX && LUMEN_SPEECH_CTX.source==='page' && !LUMEN_PLAYER_STATE.paused;
+  const ic = btn.querySelector('.tool-btn-icon');
+  if(ic) ic.textContent = active ? '⏹' : '🔊'; else btn.textContent = active ? '⏹' : '🔊';
+  btn.classList.toggle('tool-active', active);
+}
+/* La petite barre persistante gère le fond sonore local en boucle (pluie,
+   chant...) et désormais aussi la lecture vocale (page, chapitre…), qui
+   continue réellement pendant la navigation. Pour la vidéo YouTube et
+   Spotify, la fenêtre elle-même (ambiance-player-overlay) reste l'unique
+   interface, comme avant : pas de miniature à repositionner pour celles-ci. */
 function renderLumenPlayer(){
   const bar = document.getElementById('lumen-player-bar');
   if(!bar) return;
-  if(!LUMEN_PLAYER_STATE.active || LUMEN_PLAYER_STATE.kind !== 'loop'){ bar.classList.add('hidden'); return; }
+  if(!LUMEN_PLAYER_STATE.active || (LUMEN_PLAYER_STATE.kind !== 'loop' && LUMEN_PLAYER_STATE.kind !== 'speech')){ bar.classList.add('hidden'); syncReadPageIcon(); return; }
   bar.classList.remove('hidden');
-  bar.innerHTML = `
-    <div class="lumen-player-handle" id="lumen-player-handle"></div>
-    <div class="lumen-player-row">
-      <span class="lumen-player-icon">${LUMEN_PLAYER_STATE.paused ? '⏸' : '🎵'}</span>
-      <span class="lumen-player-label">${LUMEN_PLAYER_STATE.label}</span>
-      <button class="icon-btn" id="lumen-player-toggle" title="${LUMEN_PLAYER_STATE.paused?'Reprendre':'Pause'}">${LUMEN_PLAYER_STATE.paused?'▶':'⏸'}</button>
-      <button class="icon-btn" id="lumen-player-close" title="Arrêter">✕</button>
-    </div>
-  `;
+  if(LUMEN_PLAYER_STATE.kind === 'speech'){
+    const ctx = LUMEN_SPEECH_CTX || {};
+    bar.innerHTML = `
+      <div class="lumen-player-handle" id="lumen-player-handle"></div>
+      <div class="lumen-player-row">
+        <span class="lumen-player-icon">${LUMEN_PLAYER_STATE.paused ? '⏸' : '🔊'}</span>
+        <span class="lumen-player-label">${LUMEN_PLAYER_STATE.label}</span>
+        ${ctx.onPrev ? `<button class="icon-btn" id="lumen-player-prev" title="Précédent" ${ctx.hasPrev===false?'disabled':''}>⏮</button>` : ''}
+        <button class="icon-btn" id="lumen-player-toggle" title="${LUMEN_PLAYER_STATE.paused?'Reprendre':'Pause'}">${LUMEN_PLAYER_STATE.paused?'▶':'⏸'}</button>
+        ${ctx.onNext ? `<button class="icon-btn" id="lumen-player-next" title="Suivant" ${ctx.hasNext===false?'disabled':''}>⏭</button>` : ''}
+        <button class="icon-btn" id="lumen-player-speed" title="Vitesse de lecture">${LUMEN_SPEECH_RATE}×</button>
+        <button class="icon-btn" id="lumen-player-close" title="Arrêter">✕</button>
+      </div>
+    `;
+  } else {
+    bar.innerHTML = `
+      <div class="lumen-player-handle" id="lumen-player-handle"></div>
+      <div class="lumen-player-row">
+        <span class="lumen-player-icon">${LUMEN_PLAYER_STATE.paused ? '⏸' : '🎵'}</span>
+        <span class="lumen-player-label">${LUMEN_PLAYER_STATE.label}</span>
+        <button class="icon-btn" id="lumen-player-toggle" title="${LUMEN_PLAYER_STATE.paused?'Reprendre':'Pause'}">${LUMEN_PLAYER_STATE.paused?'▶':'⏸'}</button>
+        <button class="icon-btn" id="lumen-player-close" title="Arrêter">✕</button>
+      </div>
+    `;
+  }
   wireLumenPlayer();
+  syncReadPageIcon();
 }
 function wireLumenPlayer(){
+  if(LUMEN_PLAYER_STATE.kind === 'speech'){
+    const toggleBtn = document.getElementById('lumen-player-toggle');
+    if(toggleBtn) toggleBtn.onclick = ()=>{
+      try{
+        if(LUMEN_PLAYER_STATE.paused){ window.speechSynthesis.resume(); }
+        else { window.speechSynthesis.pause(); }
+      }catch(e){}
+      LUMEN_PLAYER_STATE.paused = !LUMEN_PLAYER_STATE.paused;
+      renderLumenPlayer();
+    };
+    const prevBtn = document.getElementById('lumen-player-prev');
+    if(prevBtn) prevBtn.onclick = ()=>{ if(LUMEN_SPEECH_CTX && LUMEN_SPEECH_CTX.onPrev) LUMEN_SPEECH_CTX.onPrev(); };
+    const nextBtn = document.getElementById('lumen-player-next');
+    if(nextBtn) nextBtn.onclick = ()=>{ if(LUMEN_SPEECH_CTX && LUMEN_SPEECH_CTX.onNext) LUMEN_SPEECH_CTX.onNext(); };
+    const speedBtn = document.getElementById('lumen-player-speed');
+    if(speedBtn) speedBtn.onclick = ()=>{
+      const i = LUMEN_SPEECH_RATES.indexOf(LUMEN_SPEECH_RATE);
+      LUMEN_SPEECH_RATE = LUMEN_SPEECH_RATES[(i+1) % LUMEN_SPEECH_RATES.length];
+      LUMEN_PLAYER_STATE.paused = false;
+      lumenSpeechStart();
+      renderLumenPlayer();
+    };
+    const closeBtn = document.getElementById('lumen-player-close');
+    if(closeBtn) closeBtn.onclick = ()=>{ try{ window.speechSynthesis.cancel(); }catch(e){} lumenPlayerHide(); };
+    wireLumenPlayerDrag();
+    return;
+  }
   const toggleBtn = document.getElementById('lumen-player-toggle');
   if(toggleBtn) toggleBtn.onclick = ()=>{
     LUMEN_PLAYER_STATE.paused = !LUMEN_PLAYER_STATE.paused;
@@ -8703,6 +8781,9 @@ function wireLumenPlayer(){
   };
   const closeBtn = document.getElementById('lumen-player-close');
   if(closeBtn) closeBtn.onclick = ()=>{ stopAllAmbiance(); lumenPlayerHide(); };
+  wireLumenPlayerDrag();
+}
+function wireLumenPlayerDrag(){
   const handle = document.getElementById('lumen-player-handle');
   const bar = document.getElementById('lumen-player-bar');
   if(handle && bar){
@@ -13936,15 +14017,12 @@ function render(){
   if(screenKey !== LAST_SCREEN_KEY){
     const screenEl = document.getElementById('screen');
     if(screenEl) screenEl.scrollTop = 0;
-    if(READING_PAGE){
-      window.speechSynthesis.cancel();
-      READING_PAGE = false;
-      const rpBtn = document.getElementById('read-page-btn');
-      if(rpBtn){ const ic=rpBtn.querySelector('.tool-btn-icon'); if(ic) ic.textContent='🔊'; else rpBtn.textContent='🔊'; rpBtn.classList.remove('tool-active'); }
-    }
+    // La lecture de page (mini-lecteur global, kind:'speech') continue
+    // volontairement pendant la navigation : on ne l'annule plus ici.
     LAST_SCREEN_KEY = screenKey;
     maybeAutoNarrate();
   }
+  syncReadPageIcon();
 
   if(ENTRY_OPEN){
     const groups = { 'ecritures:psaumes':PSALM_GROUPS,'ecritures:bible':HISTORY,'ecritures:recits':RECITS_GROUPS,'jesus:main':JESUS,
