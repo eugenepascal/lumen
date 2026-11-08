@@ -2925,6 +2925,9 @@ const LOUANGES_VIDEOS = [
   {title:"Pas assez", artist:"David Okit", videoId:"abzU1pGy2pY", tag:"Louange congolaise"},
   {title:"Shonen", artist:"David Okit", videoId:"1EbYvNz17bg", tag:"Louange congolaise"},
   {title:"Les choses", artist:"David Okit", videoId:"S71oyHtV7sU", tag:"Louange congolaise"},
+  {title:"Medley d'adoration (ko zanga yo na sambue + sanjola, feat. Jonathan Yafu)", artist:"Frère Emmanuel Musongo", videoId:"Zw3TQKwavu4", tag:"Louange congolaise"},
+  {title:"Medley d'adoration (oint moi, soutien-moi Jésus + descend sur nous Dieu, Live)", artist:"Frère Emmanuel Musongo", videoId:"17sgQaXGiJY", tag:"Louange congolaise"},
+  {title:"Tika Ngai Na Yemba (Concert Lubumbashi, feat. Jonathan Yafu)", artist:"Frère Emmanuel Musongo", videoId:"O5m2HVV4SQ4", tag:"Louange congolaise"},
   {title:"Fort en Jésus", artist:"Fulgence Gackou", videoId:"FBZNAKN9jc0", tag:"Louange sénégalaise"},
   {title:"Il m'a libéré", artist:"Fulgence Gackou", videoId:"0EXC5BQ3hXc", tag:"Louange sénégalaise"},
   {title:"Diambaar", artist:"Fulgence Gackou", videoId:"BgUeTdCsIjw", tag:"Louange sénégalaise"},
@@ -8975,7 +8978,6 @@ function toggleReadPage(){
    restaient peu fiables ; ce lecteur intégré, visible, avec ses vrais
    contrôles YouTube, est la version qui fonctionnait à l'origine. */
 let BG_YT_VIDEO_ID = null;
-let BG_SPOTIFY_ACTIVE = false;
 let AMBIANCE_SHUFFLE_MODE = false;
 let AMBIANCE_SHUFFLE_LAST = null;
 let AMBIANCE_VIDEO_OPEN = false;
@@ -9060,7 +9062,7 @@ function createYtPlayer(videoId, loopSingle, onError){
     });
   });
 }
-function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID || BG_SPOTIFY_ACTIVE; }
+function isBgAmbiancePlaying(){ return !!CURRENT_LOOP || !!BG_YT_VIDEO_ID; }
 function syncBgAmbianceIcon(){
   const btn = document.getElementById('bg-ambiance-btn');
   if(btn) btn.classList.toggle('tool-active', isBgAmbiancePlaying());
@@ -9070,7 +9072,6 @@ function stopAllAmbiance(){
   destroyYtPlayer();
   AMBIANCE_CURRENT_POOL = null;
   BG_YT_VIDEO_ID = null;
-  BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_SHUFFLE_MODE = false;
   AMBIANCE_VIDEO_OPEN = false;
   const host = document.getElementById('ambiance-player-overlay');
@@ -9127,9 +9128,9 @@ function syncReadPageIcon(){
 }
 /* La petite barre persistante gère le fond sonore local en boucle (pluie,
    chant...) et désormais aussi la lecture vocale (page, chapitre…), qui
-   continue réellement pendant la navigation. Pour la vidéo YouTube et
-   Spotify, la fenêtre elle-même (ambiance-player-overlay) reste l'unique
-   interface, comme avant : pas de miniature à repositionner pour celles-ci. */
+   continue réellement pendant la navigation. Pour la vidéo YouTube, la
+   fenêtre elle-même (ambiance-player-overlay) reste l'unique interface,
+   comme avant : pas de miniature à repositionner pour celle-ci. */
 function renderLumenPlayer(){
   const bar = document.getElementById('lumen-player-bar');
   if(!bar) return;
@@ -9229,11 +9230,10 @@ function wireLumenPlayerDrag(){
     window.addEventListener('touchend', onUp);
   }
 }
-/* Le cadre flottant qui affiche directement la vidéo YouTube (ou
-   l'intégration Spotify). Le lecteur YouTube reste toujours visible ici
-   — jamais réduit ou caché — pour ne pas être traité comme suspect par
-   YouTube. Fermer le cadre (✕ ou « Arrêter ») coupe le son en détruisant
-   le lecteur. */
+/* Le cadre flottant qui affiche directement la vidéo YouTube. Le lecteur
+   reste toujours visible ici — jamais réduit ou caché — pour ne pas être
+   traité comme suspect par YouTube. Fermer le cadre (✕ ou « Arrêter »)
+   coupe le son en détruisant le lecteur. */
 let AMBIANCE_YT_PAUSED = false;
 let AMBIANCE_YT_STARTED = false;
 function renderAmbianceYtControls(){
@@ -9286,20 +9286,7 @@ function renderAmbianceVideoWindow(){
   if(!host) return;
   if(!AMBIANCE_VIDEO_OPEN){ destroyYtPlayer(); host.classList.add('hidden'); host.innerHTML = ''; return; }
   host.classList.remove('hidden');
-  if(BG_SPOTIFY_ACTIVE){
-    destroyYtPlayer();
-    host.innerHTML = `
-      <div class="ambiance-player-panel">
-        <div class="ambiance-player-top" id="ambiance-player-drag">
-          <span class="ambiance-player-drag-hint" aria-hidden="true">⠿</span>
-          <p class="ambiance-player-title">🟢 Spotify</p>
-          <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
-        </div>
-        <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
-        <div class="ambiance-player-embed"><iframe src="${BG_SPOTIFY_ACTIVE}" style="width:100%; height:100%; border:none; border-radius:10px;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-        <div class="ambiance-player-controls"><button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Fermer</button></div>
-      </div>`;
-  } else if(BG_YT_VIDEO_ID){
+  if(BG_YT_VIDEO_ID){
     AMBIANCE_YT_STARTED = false;
     AMBIANCE_YT_PAUSED = false;
     host.innerHTML = `
@@ -9377,7 +9364,6 @@ function playBgYoutube(videoId, label, opts){
   AMBIANCE_SHUFFLE_MODE = false;
   AMBIANCE_CURRENT_POOL = opts.pool || null;
   BG_YT_VIDEO_ID = videoId;
-  BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_VIDEO_OPEN = true;
   AMBIANCE_VIDEO_LABEL = label;
   lumenPlayerHide();
@@ -9399,7 +9385,6 @@ function playRandomAmbiance(isAutoAdvance){
   AMBIANCE_SHUFFLE_LAST = pick;
   stopLoop();
   AMBIANCE_CURRENT_POOL = LOUANGES_VIDEOS;
-  BG_SPOTIFY_ACTIVE = false;
   BG_YT_VIDEO_ID = pick.videoId;
   AMBIANCE_VIDEO_OPEN = true;
   AMBIANCE_VIDEO_LABEL = '🔀 ' + pick.title + ' — ' + pick.artist;
@@ -9412,21 +9397,9 @@ function startAmbianceShuffle(){
   AMBIANCE_SHUFFLE_MODE = true;
   playRandomAmbiance(false);
 }
-function playBgSpotify(spotifyArtistId, label){
-  stopLoop();
-  AMBIANCE_SHUFFLE_MODE = false;
-  BG_YT_VIDEO_ID = null;
-  BG_SPOTIFY_ACTIVE = `https://open.spotify.com/embed/artist/${spotifyArtistId}?utm_source=generator&theme=0`;
-  AMBIANCE_VIDEO_OPEN = true;
-  AMBIANCE_VIDEO_LABEL = label;
-  lumenPlayerHide();
-  renderAmbianceVideoWindow();
-  syncBgAmbianceIcon();
-}
 function playBgLoop(key, label){
   destroyYtPlayer();
   BG_YT_VIDEO_ID = null;
-  BG_SPOTIFY_ACTIVE = false;
   AMBIANCE_VIDEO_OPEN = false;
   const host = document.getElementById('ambiance-player-overlay');
   if(host){ host.classList.add('hidden'); host.innerHTML = ''; }
@@ -9440,11 +9413,6 @@ function toggleBgAmbiance(){
 }
 const ARTIST_COLORS = ['#7C1F2E','#B8863B','#3F6B2E','#1F6F8B','#8A4B8A','#B85C10','#4E6E7A','#A9556A','#5C6E45','#E07A1F'];
 function artistInitial(name){ return name.trim()[0].toUpperCase(); }
-const SPOTIFY_ARTIST_IDS = {
-  'KS Bloom': '0iSX5EqjPdp2xkU7fgw7bp',
-  'David Okit': '2TNEke8iPCbFBj8Tp9KlnJ',
-  'Dena Mwana': '3hI9YP4rI93GyoPk5E9zT3'
-};
 function artistColor(name){
   let hash = 0;
   for(let i=0;i<name.length;i++) hash = name.charCodeAt(i) + ((hash<<5)-hash);
@@ -9487,10 +9455,6 @@ function renderAmbianceList(){
           <span class="artist-avatar" style="background:${artistColor(artist)};">${artistInitial(artist)}</span>
           <span class="artist-group-name">${artist}</span>
           <span class="artist-group-count">${byArtist[artist].length}</span>
-          ${SPOTIFY_ARTIST_IDS[artist]
-            ? `<button class="spotify-link-btn" data-spotify-artist="${SPOTIFY_ARTIST_IDS[artist]}" data-spotify-label="${artist.replace(/"/g,'&quot;')}" title="Écouter ${artist} sur Spotify">🟢</button>`
-            : `<a class="spotify-link-btn" href="https://open.spotify.com/search/${encodeURIComponent(artist)}" target="_blank" rel="noopener" title="Chercher ${artist} sur Spotify">🟢</a>`
-          }
         </div>
         <div class="artist-tracks">${byArtist[artist].map(v => `
           <div class="track-row" data-yt-id="${v.videoId}" data-yt-label="${v.title.replace(/"/g,'&quot;')}">
@@ -9500,15 +9464,6 @@ function renderAmbianceList(){
         </div>
       </div>`).join('')}
     </div>` : `<p class="section-desc">Aucun résultat.</p>`;
-
-  const spotifySearchHTML = `<div class="card" style="margin-top:14px;">
-    <p class="eyebrow" style="color:#1DB954;">🟢 Chercher n'importe quoi sur Spotify</p>
-    <p class="studio-note" style="margin:4px 0 8px;">Tape un artiste ou un titre — ça ouvre Spotify directement (hors de l'application).</p>
-    <div style="display:flex; gap:8px;">
-      <input type="text" id="spotify-free-search" placeholder="Ex. Moïse Mbiye, un titre précis...">
-      <button class="btn btn-gold btn-sm" id="spotify-free-search-btn" style="flex-shrink:0;">🔍 Ouvrir</button>
-    </div>
-  </div>`;
 
   const synthHTML = `<details class="synth-collapse">
     <summary>🎧 Sons générés (boucles douces)</summary>
@@ -9528,7 +9483,7 @@ function renderAmbianceList(){
       <input type="text" id="ambiance-search-input" placeholder="🔍 Chercher un artiste, un titre..." value="${AMBIANCE_SEARCH.replace(/"/g,'&quot;')}">
     </div>
     ${tagChipsHTML}
-    ${heroHTML}${artistHTML}${spotifySearchHTML}${synthHTML}${stopHTML}
+    ${heroHTML}${artistHTML}${synthHTML}${stopHTML}
   `;
 
   document.getElementById('ambiance-search-input').oninput = (e)=>{
@@ -9541,14 +9496,6 @@ function renderAmbianceList(){
   list.querySelectorAll('[data-tag]').forEach(chip=>{
     chip.onclick = ()=>{ AMBIANCE_TAG_FILTER = chip.dataset.tag; renderAmbianceList(); };
   });
-  list.querySelectorAll('[data-spotify-artist]').forEach(btn=>{
-    btn.onclick = ()=>{ playBgSpotify(btn.dataset.spotifyArtist, btn.dataset.spotifyLabel); closeAmbiancePicker(); };
-  });
-  document.getElementById('spotify-free-search-btn').onclick = ()=>{
-    const q = document.getElementById('spotify-free-search').value.trim();
-    if(!q) return;
-    window.open('https://open.spotify.com/search/' + encodeURIComponent(q), '_blank');
-  };
   const heroBtn = document.getElementById('ambiance-hero-play');
   if(heroBtn) heroBtn.onclick = ()=>{ playBgYoutube(heroPick.videoId, heroPick.title + ' — ' + heroPick.artist, {pool: LOUANGES_VIDEOS}); closeAmbiancePicker(); };
   list.querySelectorAll('[data-loop-key]').forEach(btn=>{
@@ -13671,10 +13618,8 @@ function renderRefugeContent(){
     <p class="refuge-prayer">${REFUGE_PRAYER}</p>
     <div class="refuge-help-box">
       <p class="refuge-help-title">Si vous traversez un moment très difficile</p>
-      <p class="refuge-help-line">Ces lignes d'écoute sont gratuites, confidentielles et disponibles 24h/24, 7j/7 :</p>
-      <p class="refuge-help-line"><b>3114</b> — numéro national de prévention du suicide (France)</p>
-      <p class="refuge-help-line"><b>09 72 39 40 50</b> — SOS Amitié</p>
-      <p class="refuge-help-line">En cas de danger immédiat : <b>112</b> ou <b>15</b> (SAMU)</p>
+      <p class="refuge-help-line">Parlez-en à quelqu'un en qui vous avez confiance, ou contactez les services d'urgence ou une ligne d'écoute de votre pays — la plupart sont gratuites, confidentielles et disponibles 24h/24, 7j/7.</p>
+      <p class="refuge-help-line"><a href="https://findahelpline.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">findahelpline.com</a> recense des lignes d'écoute dans de nombreux pays, pour vous aider à trouver celle qui correspond à votre pays.</p>
     </div>
     <div class="refuge-actions">
       <button class="btn btn-gold btn-sm" id="refuge-another-verse">Un autre verset</button>

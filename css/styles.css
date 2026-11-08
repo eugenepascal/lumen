@@ -2682,8 +2682,6 @@
   }
   .artist-group-name{ font-family:'Inter',sans-serif; font-weight:700; font-size:13px; color:var(--ink); flex:1; }
   .artist-group-count{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); background:var(--vellum); border-radius:999px; padding:1px 8px; }
-  .spotify-link-btn{ font-size:14px; text-decoration:none; padding:2px 4px; border-radius:6px; flex-shrink:0; background:none; border:none; cursor:pointer; }
-  .spotify-link-btn:hover{ background:var(--vellum); }
   .artist-tracks{ border-top:1px solid var(--hairline); }
   .track-row{ display:flex; align-items:center; gap:10px; padding:8px 10px; cursor:pointer; transition:background 0.15s ease; }
   .track-row:hover{ background:var(--vellum); }
