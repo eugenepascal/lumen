@@ -24,12 +24,11 @@ let fbApp = null, fbAuth = null, fbDb = null, FIREBASE_READY = false;
    sur le localStorage du navigateur : chaque personne ne voyait QUE ses
    propres données, sans aucun partage réel entre elles. Cette appli dédiée,
    toujours connectée à Firestore (même sans compte personnel), corrige ça. */
-let sharedFbApp = null, sharedFbAuth = null, sharedFbDb = null, sharedFbStorage = null, SHARED_FIREBASE_READY = false;
+let sharedFbApp = null, sharedFbAuth = null, sharedFbDb = null, SHARED_FIREBASE_READY = false;
 try{
   sharedFbApp = firebase.initializeApp(firebaseConfig, 'lumen-shared');
   sharedFbAuth = sharedFbApp.auth();
   sharedFbDb = sharedFbApp.firestore();
-  sharedFbStorage = sharedFbApp.storage();
   SHARED_FIREBASE_READY = true;
 }catch(e){ console.warn('Firebase (contenu partagé) indisponible :', e); }
 let SHARED_AUTH_READY_PROMISE = null;
@@ -66,32 +65,6 @@ async function sharedSet(key, value){
     await sharedFbDb.collection('shared').doc(key).set({ value, updatedAt: Date.now() });
     return true;
   }catch(e){ console.warn('sharedSet', key, e); return false; }
-}
-/* Dépôt d'un fichier (image ou PDF) joint à une intention de groupe —
-   même logique que sharedGet/sharedSet : accessible à quiconque connaît le
-   chemin, pas de compte requis. Limité en taille pour rester raisonnable
-   côté coût de stockage et temps d'upload sur mobile. */
-const SHARED_FILE_MAX_BYTES = 8 * 1024 * 1024; // 8 Mo
-async function uploadSharedFile(path, file){
-  if(!file) return null;
-  if(file.size > SHARED_FILE_MAX_BYTES){
-    showToast('⚠️ Fichier trop volumineux (8 Mo max)');
-    return null;
-  }
-  const ok = await ensureSharedAuth();
-  if(!ok){
-    showToast('⚠️ Connexion impossible : le fichier n’a pas pu être envoyé.');
-    return null;
-  }
-  try{
-    const ref = sharedFbStorage.ref().child(path);
-    await ref.put(file, { contentType: file.type || undefined });
-    return await ref.getDownloadURL();
-  }catch(e){
-    console.warn('uploadSharedFile', path, e);
-    showToast('⚠️ Envoi du fichier impossible.');
-    return null;
-  }
 }
 try{
   fbApp = firebase.initializeApp(firebaseConfig);
@@ -7812,8 +7785,6 @@ function renderPrayerGroup(){
     <div class="card" id="group-moment-card" style="text-align:center;"><p class="studio-note">Chargement…</p></div>
     <div class="card add-intention-box">
       <textarea id="group-int-text" rows="3" placeholder="Écrire une intention pour le groupe…"></textarea>
-      <label class="studio-note" style="display:block; margin-top:8px;">Joindre une image ou un document (PDF) — facultatif, 8 Mo max</label>
-      <input type="file" id="group-int-file" accept="image/*,.pdf" style="margin-top:4px;">
       <button class="btn btn-primary btn-sm" id="add-group-int-btn" style="margin-top:10px;">Partager avec le groupe</button>
     </div>
     <h2 class="section-title" style="font-size:16px;">🕯️ Intentions du groupe</h2>`;
@@ -7824,9 +7795,6 @@ function renderPrayerGroup(){
       <div class="card intention-card" data-gid="${it.id}">
         <p class="intention-author">${it.name||'Anonyme'}</p>
         <p class="intention-text">${it.text}</p>
-        ${it.fileUrl ? (it.fileType==='image'
-          ? `<img src="${it.fileUrl}" alt="${it.fileName||''}" class="intention-image">`
-          : `<a href="${it.fileUrl}" target="_blank" rel="noopener" class="intention-file-link">📄 ${it.fileName||'Document'}</a>`) : ''}
         <div class="reaction-row">
           ${GROUP_REACTION_EMOJIS.map(emo=>{
             const members = (it.reactions && it.reactions[emo]) || [];
@@ -7862,19 +7830,10 @@ function renderPrayerGroup(){
   };
   document.getElementById('add-group-int-btn').onclick = async ()=>{
     const textEl = document.getElementById('group-int-text');
-    const fileEl = document.getElementById('group-int-file');
     const text = textEl.value.trim();
-    const file = fileEl && fileEl.files && fileEl.files[0];
-    if(!text && !file) { textEl.focus(); return; }
-    const btn = document.getElementById('add-group-int-btn');
+    if(!text) { textEl.focus(); return; }
     const id = 'g-'+Date.now();
     const newIntention = {id, name:USER_NAME||'Anonyme', text, prayers:0, createdAt:Date.now(), comments:[], reactions:{}};
-    if(file){
-      btn.disabled = true; btn.textContent = 'Envoi…';
-      const fileType = (file.type||'').startsWith('image/') ? 'image' : 'pdf';
-      const url = await uploadSharedFile(`groups/${PRAYER_GROUP_CODE}/${id}/${file.name}`, file);
-      if(url){ newIntention.fileUrl = url; newIntention.fileType = fileType; newIntention.fileName = file.name; }
-    }
     GROUP_INTENTIONS.unshift(newIntention);
     await saveGroupIntentions(PRAYER_GROUP_CODE, GROUP_INTENTIONS);
     renderPrayerGroup();
