@@ -8144,6 +8144,15 @@ function renderApropos(){
       <button class="btn btn-primary btn-sm" id="apropos-share-btn">Partager l'application</button>
     </div>
 
+    <div class="card" style="margin-top:12px; text-align:center;">
+      <p class="eyebrow" style="color:var(--gold);">🔖 Mentions légales</p>
+      <p class="entry-detail-text" style="margin-bottom:10px;">Comment vos données sont utilisées, et les conditions d'utilisation de l'application.</p>
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <a class="btn btn-ghost btn-sm" style="text-decoration:none;" href="privacy.html" target="_blank" rel="noopener">🔒 Politique de confidentialité</a>
+        <a class="btn btn-ghost btn-sm" style="text-decoration:none;" href="terms.html" target="_blank" rel="noopener">📜 Conditions d'utilisation</a>
+      </div>
+    </div>
+
     <div class="card lumen-signature-card" style="margin-top:12px; text-align:center;">
       <div class="lumen-signature-badge">EPY</div>
       <p class="lumen-signature-script">Eugène Pascal Yaro</p>
@@ -8153,7 +8162,7 @@ function renderApropos(){
   `;
   document.getElementById('screen').innerHTML = html;
   document.getElementById('apropos-contact-btn').onclick = ()=>{
-    window.open('mailto:?subject=' + encodeURIComponent('Remarque sur Lumen') + '&body=' + encodeURIComponent('Bonjour,\n\nJ\u2019utilise l\u2019application Lumen et je voulais partager ceci :\n\n'), '_blank');
+    window.open('mailto:pasou1000@gmail.com?subject=' + encodeURIComponent('Remarque sur Lumen') + '&body=' + encodeURIComponent('Bonjour,\n\nJ\u2019utilise l\u2019application Lumen et je voulais partager ceci :\n\n'), '_blank');
   };
   document.getElementById('apropos-share-btn').onclick = async ()=>{
     const text = "Je découvre Lumen, une application pour prier chaque jour — neuvaines, psaumes, saints, et bien plus. À découvrir !";

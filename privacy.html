@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--
+  Lumen — © 2026 Eugène Pascal Yaro. Tous droits réservés.
+  Dépôt original : https://github.com/eugenepascal/lumen
+-->
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politique de confidentialité — Lumen</title>
+<meta name="description" content="Politique de confidentialité de l'application Lumen : quelles données sont collectées, pourquoi, et comment elles sont protégées.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<meta name="theme-color" content="#2a0a13">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Lora:ital,wght@0,400;0,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --vellum:#FBF4E8; --vellum-light:#FFFBF2; --ink:#2A1C14; --ink-soft:#5A4A3C;
+    --wine:#7C1F2E; --wine-dark:#5A1620; --gold:#B8863B; --gold-light:#D9B36C;
+    --hairline:rgba(42,28,20,0.12);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--vellum); color:var(--ink);
+    font-family:'Lora',serif; line-height:1.7; font-size:15.5px;
+  }
+  .wrap{ max-width:720px; margin:0 auto; padding:40px 22px 80px; }
+  header{ text-align:center; margin-bottom:8px; }
+  .brand{ font-family:'Fraunces',serif; font-weight:600; font-size:30px; color:var(--wine-dark); margin:0; }
+  .sub{ font-family:'Inter',sans-serif; font-size:13px; color:var(--gold); letter-spacing:0.4px; margin:4px 0 36px; text-align:center; }
+  h1{ font-family:'Fraunces',serif; font-size:26px; font-weight:600; color:var(--ink); margin:36px 0 10px; }
+  h2{ font-family:'Fraunces',serif; font-size:19px; font-weight:600; color:var(--wine-dark); margin:30px 0 8px; }
+  p{ margin:0 0 14px; }
+  ul{ margin:0 0 14px; padding-left:22px; }
+  li{ margin-bottom:6px; }
+  a{ color:var(--wine); }
+  .meta{ font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); text-align:center; margin-bottom:30px; }
+  .card{ background:var(--vellum-light); border:1px solid var(--hairline); border-radius:14px; padding:18px 20px; margin:16px 0; }
+  .back{ display:inline-block; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--wine); text-decoration:none; margin-bottom:26px; }
+  .back:hover{ text-decoration:underline; }
+  footer{ text-align:center; font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); margin-top:50px; opacity:0.85; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">← Retour à Lumen</a>
+  <header>
+    <p class="brand">Lumen</p>
+  </header>
+  <p class="sub">Politique de confidentialité</p>
+  <p class="meta">Dernière mise à jour : 8 novembre 2026</p>
+
+  <div class="card">
+    <p>Lumen est une application indépendante de prière catholique, créée et maintenue par une seule personne, Eugène Pascal Yaro. Cette page explique simplement quelles données sont collectées, pourquoi, et comment elles sont protégées.</p>
+  </div>
+
+  <h2>1. Quelles données sont collectées</h2>
+  <p>Lumen peut fonctionner <b>sans aucune création de compte</b> : dans ce cas, vos données (journal, prières, progression, réglages) restent uniquement sur votre appareil.</p>
+  <p>Si vous créez un compte (pour retrouver vos données sur un autre appareil), Lumen conserve :</p>
+  <ul>
+    <li>Un identifiant de connexion (email ou compte Google, selon la méthode choisie) ;</li>
+    <li>Votre journal personnel, vos prières, intentions privées, favoris, progression dans les neuvaines/parcours, réglages et préférences d'affichage ;</li>
+    <li>Si vous rejoignez ou créez un <b>groupe de prière</b> : les intentions, commentaires et réactions que vous choisissez volontairement d'y publier, visibles par les autres membres du groupe (ce contenu n'est jamais privé une fois publié dans un groupe).</li>
+  </ul>
+  <p>Lumen ne demande jamais d'informations sensibles (numéro de carte bancaire, document d'identité) et ne contient aucune publicité.</p>
+
+  <h2>2. Ce que Lumen ne fait pas</h2>
+  <ul>
+    <li>Aucun outil d'analyse ou de traçage publicitaire tiers (pas de Google Analytics, pas de pixels publicitaires, pas de revente de données) ;</li>
+    <li>Aucune donnée n'est vendue ou louée à qui que ce soit ;</li>
+    <li>Aucune localisation précise n'est collectée.</li>
+  </ul>
+
+  <h2>3. Services techniques utilisés</h2>
+  <p>Pour fonctionner, Lumen s'appuie sur quelques services techniques, qui n'ont accès qu'à ce qui est strictement nécessaire à leur rôle :</p>
+  <ul>
+    <li><b>Firebase (Google)</b> — hébergement du compte et de la base de données, avec des règles d'accès strictes : chaque utilisateur ne peut lire ou modifier que ses propres données privées ;</li>
+    <li><b>GitHub Pages</b> — hébergement du site lui-même ;</li>
+    <li><b>AELF</b> — pour les textes liturgiques officiels (offices, lectures) ;</li>
+    <li><b>YouTube</b> — pour les vidéos de louange/musique d'ambiance, lues directement depuis YouTube ;</li>
+    <li><b>rss2json.com</b> — un service gratuit utilisé uniquement pour afficher les actualités catholiques publiques (Vatican News, Aleteia, etc.) ;</li>
+    <li><b>findahelpline.com</b> — un annuaire de lignes d'écoute, utilisé dans l'espace « Réconfort » pour orienter vers de l'aide locale.</li>
+  </ul>
+  <p>Ces services tiers ont leur propre politique de confidentialité, indépendante de celle de Lumen.</p>
+
+  <h2>4. Durée de conservation et suppression</h2>
+  <p>Vos données sont conservées tant que votre compte existe. Vous pouvez à tout moment demander la suppression complète de votre compte et de vos données en écrivant à <a href="mailto:pasou1000@gmail.com">pasou1000@gmail.com</a>. La demande est traitée dans un délai raisonnable.</p>
+
+  <h2>5. Sécurité</h2>
+  <p>Les échanges entre l'application et les serveurs sont chiffrés (HTTPS). L'accès aux données personnelles est protégé par des règles de sécurité qui limitent chaque utilisateur à ses propres informations, sauf pour ce qu'il choisit explicitement de partager dans un groupe de prière.</p>
+
+  <h2>6. Mineurs</h2>
+  <p>Lumen s'adresse à un public général et ne collecte pas sciemment de données auprès d'enfants. Un parent constatant que son enfant a créé un compte peut demander la suppression des données à tout moment à l'adresse ci-dessous.</p>
+
+  <h2>7. Vos droits</h2>
+  <p>Vous pouvez à tout moment demander l'accès, la rectification, l'export ou la suppression de vos données en écrivant à <a href="mailto:pasou1000@gmail.com">pasou1000@gmail.com</a>.</p>
+
+  <h2>8. Modifications</h2>
+  <p>Cette politique peut évoluer avec l'application. La date de dernière mise à jour est indiquée en haut de cette page.</p>
+
+  <h2>9. Contact</h2>
+  <p>Pour toute question sur cette politique ou sur vos données : <a href="mailto:pasou1000@gmail.com">pasou1000@gmail.com</a>.</p>
+
+  <footer>Lumen — © 2026 Eugène Pascal Yaro · <a href="terms.html">Conditions d'utilisation</a></footer>
+</div>
+</body>
+</html>
