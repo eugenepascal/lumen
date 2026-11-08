@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://eugenepascal.github.io/lumen/sitemap.xml
+Sitemap: https://lumenapp.website/sitemap.xml
