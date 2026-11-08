@@ -2920,6 +2920,29 @@ const SECTION_ICONS = {
   "armure":"🛡️", "prieres-combat":"⚔️", "temoins":"🕯️", "famille":"👨‍👩‍👧", "couturier-xixe":"📿", "grands-recits":"📖"
 };
 
+/* Couvertures illustrées par rubrique : un dégradé et une icône du système de
+   design (pas d'image sur mesure par entrée) pour donner à chaque grande
+   rubrique une identité visuelle propre, cohérente et reconnaissable. */
+const RUBRIC_COVERS = {
+  'ecritures:psaumes': {icon:'🎶', gradient:'linear-gradient(135deg, #3a0f1a 0%, #7C1F2E 55%, #B8863B 100%)'},
+  'ecritures:bible': {icon:'📖', gradient:'linear-gradient(135deg, #15232e 0%, #2d4a5e 55%, #9fc2ae 100%)'},
+  'ecritures:recits': {icon:'📜', gradient:'linear-gradient(135deg, #241a0f 0%, #6b4423 55%, #d9a860 100%)'},
+  'jesus:main': {icon:'✝️', gradient:'linear-gradient(135deg, #1a0a10 0%, #7C1F2E 55%, #E8CC7E 100%)'},
+  'eglise:saints': {icon:'🕊️', gradient:'linear-gradient(135deg, #0f1a2a 0%, #2d4a6e 55%, #cfd9e8 100%)'},
+  'eglise:vie-eglise': {icon:'⛪', gradient:'linear-gradient(135deg, #1a1420 0%, #4a2d5e 55%, #c3a8e0 100%)'},
+  'eglise:actualites': {icon:'📰', gradient:'linear-gradient(135deg, #0f1f1a 0%, #2d5e4a 55%, #a6e0c3 100%)'},
+  'sagesse:spiritualite': {icon:'💭', gradient:'linear-gradient(135deg, #1a0f1f 0%, #5e2d4a 55%, #e0a8c3 100%)'},
+  'sagesse:enseignements': {icon:'🎓', gradient:'linear-gradient(135deg, #0f1420 0%, #2d3e5e 55%, #a8bfe0 100%)'},
+  'prier:prieres': {icon:'📿', gradient:'linear-gradient(135deg, #1f140f 0%, #7C1F2E 55%, #E8CC7E 100%)'},
+  'neuvaines': {icon:'🕯️', gradient:'linear-gradient(135deg, #140a14 0%, #6b2d5e 55%, #E8CC7E 100%)'},
+  'offices': {icon:'🕯️', gradient:'linear-gradient(135deg, #0a0f1a 0%, #2d3e6b 55%, #d9c89a 100%)'},
+};
+function rubricCoverHTML(key){
+  const c = RUBRIC_COVERS[key];
+  if(!c) return '';
+  return `<div class="hub-hero-banner" style="background:${c.gradient};"><span class="hub-hero-emoji">${c.icon}</span></div>`;
+}
+
 
 /* ---------- derived / merged datasets from the Psautier ---------- */
 /* ---------- psaumes au texte intégral (Louis Segond, 1910, domaine public) ----------
@@ -4837,7 +4860,7 @@ function renderNovenas(){
   if(OPEN_NOVENA){ renderNovenaDetail(OPEN_NOVENA); return; }
   const inProgressNovenas = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
   const missedToday = inProgressNovenas.length > 0 && STREAK.lastDate !== todayISO();
-  let html = `<h2 class="section-title">🕯️ Neuvaines</h2>
+  let html = `<h2 class="section-title">🕯️ Neuvaines</h2>${rubricCoverHTML('neuvaines')}
     <p class="section-desc">Confiez vos intentions et cheminez, neuf jours durant.</p>
     <div class="novena-search-row"><input type="search" id="novena-search-input" class="novena-search-input" placeholder="Rechercher une neuvaine…" value="${NOVENA_SEARCH.replace(/"/g,'&quot;')}"></div>
     <div class="chip-row" id="novena-filter-row">${NOVENA_FILTERS.map(f=>`<button class="chip ${NOVENA_FILTER===f.key?'active':''}" data-novena-filter="${f.key}">${f.label}</button>`).join('')}</div>`;
@@ -6127,7 +6150,7 @@ function renderPrieresHub(){
   const totalCount = PRIERES.reduce((s,g)=>s+g.entries.length, 0);
   const q = PRIERES_SEARCH.trim().toLowerCase();
 
-  let html = `<h2 class="section-title">📿 Prières (${totalCount})</h2>
+  let html = `<h2 class="section-title">📿 Prières (${totalCount})</h2>${rubricCoverHTML('prier:prieres')}
     <div class="ambiance-search-wrap">
       <input type="text" id="prieres-search-input" placeholder="🔍 Chercher une prière, un saint, un mot-clé…" value="${PRIERES_SEARCH.replace(/"/g,'&quot;')}">
     </div>`;
@@ -6466,7 +6489,7 @@ function renderSaintsCatalogue(groups, compKey, sectionLabel){
   let list = allSaintEntries(groups);
   if(SAINT_CAT_FILTER) list = list.filter(x=> saintCategoryTags(x.entry).includes(SAINT_CAT_FILTER));
 
-  let html = `<h2 class="section-title">${sectionLabel}</h2>
+  let html = `<h2 class="section-title">${sectionLabel}</h2>${rubricCoverHTML('eglise:saints')}
     <p class="section-desc">Découvrez leur vie, leurs enseignements et priez avec eux.</p>
     <div class="ambiance-search-wrap">
       <input type="text" id="saints-search-input" placeholder="🔍 Rechercher un saint…" value="${SAINT_SEARCH.replace(/"/g,'&quot;')}">
@@ -6839,7 +6862,7 @@ function wireFiguresCatalogueChrome(groups, compKey){
 function renderFiguresCatalogue(groups, compKey, sectionLabel){
   const q = HISTORY_SEARCH.trim().toLowerCase();
   const list = allHistoryEntries(groups);
-  let html = `<h2 class="section-title">${sectionLabel}</h2>
+  let html = `<h2 class="section-title">${sectionLabel}</h2>${rubricCoverHTML('ecritures:bible')}
     <p class="section-desc">Rois, prophètes et grandes figures de l'Ancien et du Nouveau Testament — leur vie, leurs épreuves et ce qu'elles nous enseignent.</p>
     <div class="ambiance-search-wrap">
       <input type="text" id="history-search-input" placeholder="🔍 Rechercher une figure…" value="${HISTORY_SEARCH.replace(/"/g,'&quot;')}">
@@ -7075,7 +7098,7 @@ function renderGenericSection(groups, compKey, sectionLabel){
   GROUP_SEL[compKey] = activeId;
   const group = groups.find(g=>g.id===activeId) || groups[0];
 
-  let html = `<h2 class="section-title">✦ ${sectionLabel}</h2>`;
+  let html = `<h2 class="section-title">✦ ${sectionLabel}</h2>${rubricCoverHTML(compKey)}`;
   const JESUS_CAT_GROUPS = [
     {label:'✝️ Vies', ids:['vie-de-jesus','vie-des-apotres']},
     {label:'💭 Méditations', ids:['meditations-sainte-famille','meditations-pardon','grands-themes-meditation']},
@@ -11864,7 +11887,7 @@ function renderOffices(){
   else if(now>=15 && now<17) currentKey='none';
   else if(now>=17 && now<21) currentKey='vepres';
   else if(now>=21 || now<5) currentKey='compline';
-  const html = `<h2 class="section-title">🕯️ Liturgie des Heures — les Offices</h2>
+  const html = `<h2 class="section-title">🕯️ Liturgie des Heures — les Offices</h2>${rubricCoverHTML('offices')}
     <p class="section-desc">La prière officielle de l'Église, rythmée tout au long du jour. L'office du moment est mis en lumière.</p>
     <div class="offices-list">${OFFICES_LIST.map(o=>`
       <button class="offices-row ${o.key===currentKey?'current':''}" data-office="${o.key}">
