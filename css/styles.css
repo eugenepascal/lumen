@@ -533,6 +533,10 @@
   .welcome-splash-title{ font-family:'Fraunces',serif; font-size:40px; font-weight:600; color:var(--ink); margin:0; }
   .welcome-splash-tagline{ font-family:'Inter',sans-serif; font-size:13px; color:var(--gold); letter-spacing:0.5px; margin:4px 0 22px; }
   .welcome-splash-text{ font-family:'Lora',serif; font-size:14.5px; line-height:1.7; color:var(--ink-soft); max-width:400px; margin:0 0 28px; }
+  .welcome-splash-avatar-wrap{ width:96px; height:96px; margin-bottom:14px; }
+  .welcome-splash-avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:2px solid var(--gold-light); box-shadow:var(--shadow-warm); }
+  .welcome-splash-avatar-fallback{ width:96px; height:96px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--vellum-light); border:2px solid var(--gold-light); transform:scale(1.1); }
+  .welcome-splash-video-btn{ margin-bottom:10px; }
   #guide-overlay{
     position:fixed; inset:0; z-index:9997; background:rgba(15,10,8,0.82);
     display:flex; align-items:flex-end; justify-content:center; padding:0;

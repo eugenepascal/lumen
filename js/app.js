@@ -4500,27 +4500,50 @@ function homeTitleRowHTML(emoji, text, tint, linkLabel, linkId, linkIsStatic){
 }
 let HOME_PAGE_IDX = 0;
 let WELCOME_SEEN_THIS_SESSION = false;
+/* chemins des médias de bienvenue (avatar + vidéo de l'auteur) — à fournir par l'auteur, dégradation élégante si absents */
+const WELCOME_AVATAR_IMG = 'images/author-welcome.jpg';
+const WELCOME_VIDEO_SRC = 'videos/bienvenue.mp4';
 function renderWelcomeSplash(){
   const hour = new Date().getHours();
   const saluTime = hour<5 ? 'Bonsoir' : hour<12 ? 'Bonjour' : hour<18 ? 'Bon après-midi' : 'Bonsoir';
   document.getElementById('screen').innerHTML = `
     <div class="welcome-splash">
-      <div class="welcome-splash-candle">
-        <div class="lumen-flame lumen-flame-blaze lit" style="margin:0 auto;">
-          <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
+      <div class="welcome-splash-avatar-wrap">
+        <img src="${WELCOME_AVATAR_IMG}" alt="" class="welcome-splash-avatar" id="welcome-splash-avatar"
+          onerror="this.onerror=null; this.style.display='none'; document.getElementById('welcome-splash-avatar-fallback').style.display='flex';">
+        <div class="welcome-splash-avatar-fallback" id="welcome-splash-avatar-fallback" style="display:none;">
+          <div class="lumen-flame lumen-flame-blaze lit" style="margin:0 auto;">
+            <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
+          </div>
         </div>
       </div>
       <h1 class="welcome-splash-title">Lumen</h1>
       <p class="welcome-splash-tagline">Une lumière pour chaque jour</p>
       <p class="welcome-splash-text">${saluTime}${USER_NAME ? ', <b>'+USER_NAME+'</b>' : ''} ✦<br>
       Lumen est un espace pour prier, lire la Parole, suivre une neuvaine, et vous recueillir — à votre rythme, chaque jour.</p>
+      <button class="btn btn-ghost welcome-splash-video-btn" id="welcome-video-btn" style="width:100%; max-width:280px;">▶ Message de bienvenue</button>
       <button class="btn btn-primary" id="welcome-enter-btn" style="width:100%; max-width:280px;">Entrer →</button>
     </div>`;
+  document.getElementById('welcome-video-btn').onclick = openWelcomeVideoModal;
   document.getElementById('welcome-enter-btn').onclick = ()=>{
     WELCOME_SEEN_THIS_SESSION = true;
     render();
     openGuide();
   };
+}
+/* vidéo de bienvenue locale (enregistrement réel de l'auteur) — réutilise le lecteur modal mais avec une balise <video>, et un message gracieux si le fichier n'est pas encore disponible */
+function openWelcomeVideoModal(){
+  document.getElementById('video-modal-title').textContent = 'Un mot de bienvenue';
+  document.getElementById('video-modal-caption').textContent = '';
+  document.getElementById('video-modal-body').innerHTML =
+    `<video src="${WELCOME_VIDEO_SRC}" controls autoplay playsinline style="width:100%; height:100%; background:#000;" id="welcome-video-el"></video>`;
+  document.getElementById('welcome-video-el').addEventListener('error', ()=>{
+    document.getElementById('video-modal-body').innerHTML =
+      `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:24px; text-align:center; color:#fff;">
+        <p style="margin:0; font-size:15px; line-height:1.5;">La vidéo de bienvenue sera bientôt disponible 🙏</p>
+      </div>`;
+  });
+  document.getElementById('video-modal-overlay').classList.remove('hidden');
 }
 function renderHome(){
   document.getElementById('screen').innerHTML = `
