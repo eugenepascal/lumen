@@ -11044,12 +11044,20 @@ async function fetchVaticanNews(){
     if(!res.ok) throw new Error('vatican http '+res.status);
     const xmlText = await res.text();
     const dom = new DOMParser().parseFromString(xmlText, 'text/xml');
-    const items = Array.from(dom.querySelectorAll('item')).slice(0, 15).map(it=>({
-      title: it.querySelector('title')?.textContent || '',
-      link: it.querySelector('link')?.textContent || '',
-      date: it.querySelector('pubDate')?.textContent || '',
-      desc: (it.querySelector('description')?.textContent || '').replace(/<[^>]+>/g,'').slice(0,160)
-    }));
+    const items = Array.from(dom.querySelectorAll('item')).slice(0, 15).map(it=>{
+      const enclosure = it.querySelector('enclosure');
+      const mediaContent = it.getElementsByTagName('media:content')[0] || it.getElementsByTagName('media:thumbnail')[0];
+      const img = (enclosure && enclosure.getAttribute('url'))
+        || (mediaContent && mediaContent.getAttribute('url'))
+        || '';
+      return {
+        title: it.querySelector('title')?.textContent || '',
+        link: it.querySelector('link')?.textContent || '',
+        date: it.querySelector('pubDate')?.textContent || '',
+        desc: (it.querySelector('description')?.textContent || '').replace(/<[^>]+>/g,'').slice(0,160),
+        img
+      };
+    });
     VATICAN_NEWS_CACHE = items;
     return items;
   }catch(e){
@@ -11274,11 +11282,13 @@ function renderActualitesVatican(){
       </div>`;
       return;
     }
-    body.innerHTML = `<div class="rubric-list">${items.map(it=>`
-      <a href="${it.link}" target="_blank" rel="noopener" class="rubric-row entry-card" style="text-decoration:none;">
-        <div class="entry-avatar entry-avatar-photo rubric-row-photo-icon">📰</div>
-        <div class="rubric-row-text"><span class="rubric-row-title">${it.title}</span><span class="rubric-row-desc">${it.desc}</span></div>
-        <span class="rubric-row-chevron">›</span>
+    body.innerHTML = `<div class="news-carousel">${items.map(it=>`
+      <a href="${it.link}" target="_blank" rel="noopener" class="news-card">
+        ${it.img ? `<img src="${it.img}" alt="" class="news-card-img" loading="lazy" onerror="this.style.display='none'">` : `<div class="news-card-img news-card-img-fallback">📰</div>`}
+        <div class="news-card-body">
+          <p class="news-card-title">${it.title}</p>
+          <p class="news-card-desc">${it.desc}</p>
+        </div>
       </a>`).join('')}</div>` + `<p class="studio-note" style="text-align:center; margin-top:12px;">Source : <a href="https://www.vaticannews.va/fr.html" target="_blank" rel="noopener">Vatican News</a></p>`;
   });
 }
