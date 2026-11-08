@@ -11036,32 +11036,72 @@ function aelfOfficeHTML(officeKey, json){
   }
   return html || null;
 }
-let VATICAN_NEWS_CACHE = undefined;
-async function fetchVaticanNews(){
-  if(VATICAN_NEWS_CACHE !== undefined) return VATICAN_NEWS_CACHE;
+/* ================= actualités catholiques (multi-sources, gratuit) =================
+   Vatican News autorise le CORS en direct (fetch XML simple). Les autres
+   flux RSS (Aleteia, Zenit, La Croix, CNA) ne l'autorisent pas depuis un
+   navigateur, donc on passe par rss2json.com — un proxy RSS→JSON gratuit,
+   sans clé pour un usage raisonnable — qui ajoute les en-têtes CORS
+   nécessaires. Chaque source a son propre cache ; en cas d'échec d'une
+   source (flux, proxy ou connexion), l'écran propose simplement d'en
+   choisir une autre plutôt que de rester bloqué. */
+const CATHOLIC_NEWS_SOURCES = [
+  {key:'vatican', label:'Vatican News', siteUrl:'https://www.vaticannews.va/fr.html'},
+  {key:'aleteia', label:'Aleteia', siteUrl:'https://fr.aleteia.org/'},
+  {key:'zenit', label:'Zenit', siteUrl:'https://fr.zenit.org/'},
+  {key:'lacroix', label:'La Croix', siteUrl:'https://www.la-croix.com/'},
+  {key:'cna', label:'CNA (anglais)', siteUrl:'https://www.catholicnewsagency.com/'}
+];
+const CATHOLIC_NEWS_CACHE = {};
+async function fetchVaticanNewsDirect(){
+  const res = await fetch('https://www.vaticannews.va/fr.rss.xml');
+  if(!res.ok) throw new Error('vatican http '+res.status);
+  const xmlText = await res.text();
+  const dom = new DOMParser().parseFromString(xmlText, 'text/xml');
+  return Array.from(dom.querySelectorAll('item')).slice(0, 15).map(it=>{
+    const enclosure = it.querySelector('enclosure');
+    const mediaContent = it.getElementsByTagName('media:content')[0] || it.getElementsByTagName('media:thumbnail')[0];
+    const img = (enclosure && enclosure.getAttribute('url'))
+      || (mediaContent && mediaContent.getAttribute('url'))
+      || '';
+    return {
+      title: it.querySelector('title')?.textContent || '',
+      link: it.querySelector('link')?.textContent || '',
+      desc: (it.querySelector('description')?.textContent || '').replace(/<[^>]+>/g,'').slice(0,160),
+      img
+    };
+  });
+}
+async function fetchViaRss2Json(feedUrl){
+  const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feedUrl));
+  if(!res.ok) throw new Error('rss2json http '+res.status);
+  const data = await res.json();
+  if(data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('rss2json status '+data.status);
+  return data.items.slice(0, 15).map(it=>{
+    const imgMatch = (it.description||'').match(/<img[^>]+src=["']([^"']+)["']/i);
+    return {
+      title: (it.title||'').replace(/<[^>]+>/g,''),
+      link: it.link || '',
+      desc: (it.description||'').replace(/<[^>]+>/g,'').slice(0,160),
+      img: it.thumbnail || (it.enclosure && it.enclosure.link) || (imgMatch && imgMatch[1]) || ''
+    };
+  });
+}
+const CATHOLIC_NEWS_FEED_URLS = {
+  aleteia: 'https://fr.aleteia.org/feed/',
+  zenit: 'https://fr.zenit.org/feed/',
+  lacroix: 'https://www.la-croix.com/rss.xml',
+  cna: 'https://www.catholicnewsagency.com/rss/news.xml'
+};
+async function fetchCatholicNews(sourceKey){
+  if(CATHOLIC_NEWS_CACHE[sourceKey] !== undefined) return CATHOLIC_NEWS_CACHE[sourceKey];
   try{
-    const res = await fetch('https://www.vaticannews.va/fr.rss.xml');
-    if(!res.ok) throw new Error('vatican http '+res.status);
-    const xmlText = await res.text();
-    const dom = new DOMParser().parseFromString(xmlText, 'text/xml');
-    const items = Array.from(dom.querySelectorAll('item')).slice(0, 15).map(it=>{
-      const enclosure = it.querySelector('enclosure');
-      const mediaContent = it.getElementsByTagName('media:content')[0] || it.getElementsByTagName('media:thumbnail')[0];
-      const img = (enclosure && enclosure.getAttribute('url'))
-        || (mediaContent && mediaContent.getAttribute('url'))
-        || '';
-      return {
-        title: it.querySelector('title')?.textContent || '',
-        link: it.querySelector('link')?.textContent || '',
-        date: it.querySelector('pubDate')?.textContent || '',
-        desc: (it.querySelector('description')?.textContent || '').replace(/<[^>]+>/g,'').slice(0,160),
-        img
-      };
-    });
-    VATICAN_NEWS_CACHE = items;
+    const items = sourceKey === 'vatican'
+      ? await fetchVaticanNewsDirect()
+      : await fetchViaRss2Json(CATHOLIC_NEWS_FEED_URLS[sourceKey]);
+    CATHOLIC_NEWS_CACHE[sourceKey] = items;
     return items;
   }catch(e){
-    VATICAN_NEWS_CACHE = null;
+    CATHOLIC_NEWS_CACHE[sourceKey] = null;
     return null;
   }
 }
@@ -11267,18 +11307,26 @@ function renderMeditationsAudio(){
     };
   });
 }
+let CATHOLIC_NEWS_SOURCE = 'vatican';
 function renderActualitesVatican(){
+  const current = CATHOLIC_NEWS_SOURCES.find(s=>s.key===CATHOLIC_NEWS_SOURCE) || CATHOLIC_NEWS_SOURCES[0];
   document.getElementById('screen').innerHTML = `
-    <h2 class="section-title">📰 Actualités du Vatican</h2>
-    <p class="section-desc">Les dernières nouvelles du Pape et de l'Église, directement depuis Vatican News — source officielle, en français.</p>
-    <div id="vatican-news-body"><p class="studio-note">Chargement…</p></div>`;
-  fetchVaticanNews().then(items=>{
+    <h2 class="section-title">📰 Actualités catholiques</h2>
+    <p class="section-desc">Les dernières nouvelles du Pape et de l'Église — choisissez votre source.</p>
+    <div class="chip-row" id="catholic-news-source-chips">${CATHOLIC_NEWS_SOURCES.map(s=>
+      `<button class="chip ${s.key===CATHOLIC_NEWS_SOURCE?'active':''}" data-news-source="${s.key}">${s.label}</button>`).join('')}</div>
+    <div id="vatican-news-body" style="margin-top:10px;"><p class="studio-note">Chargement…</p></div>`;
+  document.querySelectorAll('[data-news-source]').forEach(chip=>{
+    chip.onclick = ()=>{ CATHOLIC_NEWS_SOURCE = chip.dataset.newsSource; renderActualitesVatican(); };
+  });
+  fetchCatholicNews(CATHOLIC_NEWS_SOURCE).then(items=>{
     const body = document.getElementById('vatican-news-body');
     if(!body) return;
     if(!items || !items.length){
       body.innerHTML = `<div class="card empty-state" style="text-align:left;">
-        Les actualités n'ont pas pu être chargées ici.
-        <br><a href="https://www.vaticannews.va/fr.html" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px;">Les consulter sur VaticanNews.va ↗</a>
+        Les actualités n'ont pas pu être chargées depuis ${current.label} pour l'instant.
+        <br><a href="${current.siteUrl}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:8px;">Consulter ${current.label} directement ↗</a>
+        <br><span class="studio-note">Vous pouvez aussi essayer une autre source ci-dessus.</span>
       </div>`;
       return;
     }
@@ -11289,7 +11337,7 @@ function renderActualitesVatican(){
           <p class="news-card-title">${it.title}</p>
           <p class="news-card-desc">${it.desc}</p>
         </div>
-      </a>`).join('')}</div>` + `<p class="studio-note" style="text-align:center; margin-top:12px;">Source : <a href="https://www.vaticannews.va/fr.html" target="_blank" rel="noopener">Vatican News</a></p>`;
+      </a>`).join('')}</div>` + `<p class="studio-note" style="text-align:center; margin-top:12px;">Source : <a href="${current.siteUrl}" target="_blank" rel="noopener">${current.label}</a></p>`;
   });
 }
 let AELF_OFFICE_LAST_PLAIN_TEXT = '';
