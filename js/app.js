@@ -11087,6 +11087,7 @@ async function fetchViaRss2Json(feedUrl){
   });
 }
 const CATHOLIC_NEWS_FEED_URLS = {
+  vatican: 'https://www.vaticannews.va/fr.rss.xml',
   aleteia: 'https://fr.aleteia.org/feed/',
   zenit: 'https://fr.zenit.org/feed/',
   lacroix: 'https://www.la-croix.com/rss.xml',
@@ -11094,10 +11095,18 @@ const CATHOLIC_NEWS_FEED_URLS = {
 };
 async function fetchCatholicNews(sourceKey){
   if(CATHOLIC_NEWS_CACHE[sourceKey] !== undefined) return CATHOLIC_NEWS_CACHE[sourceKey];
+  // Vatican News autorise le CORS direct la plupart du temps (plus rapide,
+  // sans dépendre d'un service tiers) — mais si ça échoue (indisponibilité
+  // ponctuelle, CORS retiré...), on retombe sur le même proxy rss2json que
+  // les autres sources, plutôt que d'afficher un échec évitable.
   try{
-    const items = sourceKey === 'vatican'
-      ? await fetchVaticanNewsDirect()
-      : await fetchViaRss2Json(CATHOLIC_NEWS_FEED_URLS[sourceKey]);
+    let items;
+    if(sourceKey === 'vatican'){
+      try{ items = await fetchVaticanNewsDirect(); }
+      catch(e){ items = await fetchViaRss2Json(CATHOLIC_NEWS_FEED_URLS.vatican); }
+    } else {
+      items = await fetchViaRss2Json(CATHOLIC_NEWS_FEED_URLS[sourceKey]);
+    }
     CATHOLIC_NEWS_CACHE[sourceKey] = items;
     return items;
   }catch(e){
