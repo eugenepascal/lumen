@@ -4771,6 +4771,9 @@ function homePage2HTML(){
       </div>`).join('')}
     </div>
 
+    ${homeTitleRowHTML('📰','Actualités catholiques','linear-gradient(160deg, #8AA6C9, #4A6E9A)', 'Voir tout →', 'p2-news-all')}
+    <div id="home-news-body"><p class="studio-note">Chargement…</p></div>
+
     <div class="home-divider"><span>✦</span></div>
     <div class="card home-verse-banner">
       <div class="lumen-flame lumen-flame-steady lit" style="margin:0 auto 8px;"><div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div></div>
@@ -4820,6 +4823,31 @@ function wireHomePage2(){
   });
   const discoverAllBtn = document.getElementById('p2-discover-all');
   if(discoverAllBtn) discoverAllBtn.onclick = ()=> goTo('prier','neuvaines');
+
+  const newsAllBtn = document.getElementById('p2-news-all');
+  if(newsAllBtn) newsAllBtn.onclick = ()=> goTo('eglise','actualites');
+  loadHomeNewsCarousel();
+}
+/* Aperçu des actualités sur l'accueil : reprend la source choisie par
+   l'utilisateur sur l'écran Église → Actualités (ou Vatican News par
+   défaut), même cache, même logique de repli — "Voir tout →" renvoie
+   vers cet écran pour changer de source ou lire la suite. */
+function loadHomeNewsCarousel(){
+  fetchCatholicNews(CATHOLIC_NEWS_SOURCE || 'vatican').then(items=>{
+    const body = document.getElementById('home-news-body');
+    if(!body) return;
+    if(!items || !items.length){
+      body.innerHTML = `<div class="card empty-state" style="text-align:left;">Les actualités n'ont pas pu être chargées pour l'instant.</div>`;
+      return;
+    }
+    body.innerHTML = `<div class="news-carousel">${items.slice(0,8).map(it=>`
+      <a href="${it.link}" target="_blank" rel="noopener" class="news-card">
+        ${it.img ? `<img src="${it.img}" alt="" class="news-card-img" loading="lazy" onerror="this.style.display='none'">` : `<div class="news-card-img news-card-img-fallback">📰</div>`}
+        <div class="news-card-body">
+          <p class="news-card-title">${it.title}</p>
+        </div>
+      </a>`).join('')}</div>`;
+  });
 }
 
 const NOVENA_ICONS = {
