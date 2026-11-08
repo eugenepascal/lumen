@@ -4064,6 +4064,27 @@ async function saveGroupIntentions(code, list){
   const ok = await sharedSet('group-intentions:'+code, JSON.stringify(list));
   if(!ok) showToast('⚠️ Connexion impossible : vos proches ne verront pas cette intention tant que la connexion ne sera pas rétablie.');
 }
+/* ================= moment de prière commun (groupe de prière) =================
+   Plutôt qu'une synchronisation en direct (chacun avance à son rythme, ce
+   qui est normal en prière), un moment fixé à l'avance (ex. "Chapelet du
+   soir à 20h") : chacun reçoit un rappel local à cette heure, et voit un
+   simple indicateur de présence ("X personnes ont prié ce moment
+   aujourd'hui"), sans détail de progression de chacun. */
+let GROUP_MOMENT = null; // {label, time, completions: {'YYYY-MM-DD': [deviceId, ...]}}
+function getDeviceId(){
+  // Identifiant anonyme propre à cet appareil, déjà utilisé pour la
+  // communauté de Carême — réutilisé ici pour dédupliquer "qui a déjà
+  // confirmé avoir prié aujourd'hui", sans compte ni inscription.
+  return CAREME_MEMBER_ID || (CAREME_MEMBER_ID = 'm-'+Math.random().toString(36).slice(2,10));
+}
+async function loadGroupMoment(code){
+  try{ const d = await sharedGet('group-moment:'+code); return (d && d.value) ? JSON.parse(d.value) : null; }catch(e){ return null; }
+}
+async function saveGroupMoment(code, moment){
+  const ok = await sharedSet('group-moment:'+code, JSON.stringify(moment));
+  if(!ok) showToast('⚠️ Connexion impossible : ce moment ne sera pas visible par vos proches tant que la connexion ne sera pas rétablie.');
+  return ok;
+}
 async function loadPrefsAndData(){
   const defaults = { favorites:[], recent:[], streak:{count:0,lastDate:null}, theme:'light', themeMode:'auto', fontSize:'md', onboardingSeen:false, seenMilestones:[], lastSummarySeen:'', userName:'', dyslexicFont:false };
   try{
@@ -7565,6 +7586,74 @@ function wireShareInviteButtons(root){
     };
   });
 }
+function groupMomentCardHTML(){
+  if(!GROUP_MOMENT || !GROUP_MOMENT.time){
+    return `<p class="day-title" style="font-size:15px;">🕯️ Moment de prière commun</p>
+      <p class="section-desc">Fixez une heure pour prier ensemble (ex. un chapelet à 20h) — chacun recevra un rappel, sans que personne n'ait à suivre le rythme des autres.</p>
+      <button class="btn btn-primary btn-sm" id="group-moment-set-btn">🕯️ Fixer un moment</button>`;
+  }
+  const today = todayISO();
+  const count = ((GROUP_MOMENT.completions||{})[today]||[]).length;
+  const already = ((GROUP_MOMENT.completions||{})[today]||[]).includes(getDeviceId());
+  return `<p class="eyebrow" style="color:var(--gold);">Moment de prière commun</p>
+    <p class="day-title" style="font-size:19px;">📿 ${GROUP_MOMENT.label||'Prière commune'} — ${GROUP_MOMENT.time}</p>
+    <p class="studio-note" style="margin:4px 0 10px;">🕯️ ${count} personne${count===1?'':'s'} ${count===1?'a':'ont'} prié ce moment aujourd'hui</p>
+    <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-gold btn-sm" id="group-moment-done-btn" ${already?'disabled':''}>${already?'✓ Déjà confirmé':'🕯️ J’ai prié ce moment'}</button>
+      <button class="btn btn-ghost btn-sm" id="group-moment-edit-btn">✎ Modifier</button>
+      <button class="btn btn-ghost btn-sm" id="group-moment-clear-btn">Supprimer</button>
+    </div>`;
+}
+async function promptSetGroupMoment(){
+  const label = prompt('Que priez-vous ensemble ? (ex. "Chapelet du soir")', GROUP_MOMENT && GROUP_MOMENT.label || '');
+  if(label === null) return;
+  const time = prompt('À quelle heure, chaque jour ? (format HH:MM, ex. 20:00)', GROUP_MOMENT && GROUP_MOMENT.time || '20:00');
+  if(time === null) return;
+  const trimmed = (time||'').trim();
+  if(!/^([01]\d|2[0-3]):([0-5]\d)$/.test(trimmed)){ showToast('Format attendu : HH:MM, par exemple 20:00'); return; }
+  if(window.Notification && Notification.permission === 'default'){ try{ await Notification.requestPermission(); }catch(e){} }
+  GROUP_MOMENT = {label:(label||'').trim()||'Prière commune', time:trimmed, completions:(GROUP_MOMENT&&GROUP_MOMENT.completions)||{}};
+  await saveGroupMoment(PRAYER_GROUP_CODE, GROUP_MOMENT);
+  showToast('Moment fixé ✦ — vos proches le verront aussi');
+  renderGroupMomentCard();
+}
+function wireGroupMomentCard(){
+  const setBtn = document.getElementById('group-moment-set-btn');
+  if(setBtn) setBtn.onclick = promptSetGroupMoment;
+  const editBtn = document.getElementById('group-moment-edit-btn');
+  if(editBtn) editBtn.onclick = promptSetGroupMoment;
+  const clearBtn = document.getElementById('group-moment-clear-btn');
+  if(clearBtn) clearBtn.onclick = async ()=>{
+    GROUP_MOMENT = null;
+    await saveGroupMoment(PRAYER_GROUP_CODE, null);
+    showToast('Moment supprimé');
+    renderGroupMomentCard();
+  };
+  const doneBtn = document.getElementById('group-moment-done-btn');
+  if(doneBtn) doneBtn.onclick = async ()=>{
+    const today = todayISO();
+    const completions = GROUP_MOMENT.completions || {};
+    const list = completions[today] || [];
+    const id = getDeviceId();
+    if(!list.includes(id)) list.push(id);
+    completions[today] = list;
+    GROUP_MOMENT.completions = completions;
+    await saveGroupMoment(PRAYER_GROUP_CODE, GROUP_MOMENT);
+    await markPrayedToday('groupe', 'Moment de prière commun');
+    showToast('Amen 🕯️');
+    renderGroupMomentCard();
+  };
+}
+function renderGroupMomentCard(){
+  const card = document.getElementById('group-moment-card');
+  if(!card || !PRAYER_GROUP_CODE) return;
+  loadGroupMoment(PRAYER_GROUP_CODE).then(m=>{
+    GROUP_MOMENT = m;
+    if(!document.body.contains(card)) return;
+    card.innerHTML = groupMomentCardHTML();
+    wireGroupMomentCard();
+  });
+}
 function renderPrayerGroup(){
   let html = `<h2 class="section-title">👥 Groupe de prière</h2>`;
   if(!PRAYER_GROUP_CODE){
@@ -7609,6 +7698,7 @@ function renderPrayerGroup(){
         ${shareInviteRowHTML('groupe', PRAYER_GROUP_CODE, 'Rejoins mon groupe de prière sur Lumen 🕯️')}
       </div>
     </div>
+    <div class="card" id="group-moment-card" style="text-align:center;"><p class="studio-note">Chargement…</p></div>
     <div class="card add-intention-box">
       <textarea id="group-int-text" rows="3" placeholder="Écrire une intention pour le groupe…"></textarea>
       <button class="btn btn-primary btn-sm" id="add-group-int-btn">Partager avec le groupe</button>
@@ -7629,12 +7719,14 @@ function renderPrayerGroup(){
   }
   document.getElementById('screen').innerHTML = html;
   wireShareInviteButtons();
+  renderGroupMomentCard();
   document.getElementById('copy-group-code-btn').onclick = ()=>{
     navigator.clipboard.writeText(PRAYER_GROUP_CODE).then(()=> showToast('Code copié 📋'));
   };
   document.getElementById('leave-group-btn').onclick = async ()=>{
     PRAYER_GROUP_CODE = '';
     GROUP_INTENTIONS = [];
+    GROUP_MOMENT = null;
     await savePrayerGroupCode('');
     renderPrayerGroup();
   };
@@ -12729,6 +12821,12 @@ function checkReminders(){
       checkReminders._last = hm+'novena-'+novenaId;
     }
   });
+  if(PRAYER_GROUP_CODE && GROUP_MOMENT && GROUP_MOMENT.time && GROUP_MOMENT.time===hm && checkReminders._last!==hm+'group-moment'){
+    if(window.Notification && Notification.permission === 'granted'){
+      new Notification('Lumen', {body: `🕯️ C'est l'heure de votre moment de prière commun${GROUP_MOMENT.label ? ' : '+GROUP_MOMENT.label : ''}`});
+    }
+    checkReminders._last = hm+'group-moment';
+  }
 }
 
 /* ================= export calendrier (.ics) ================= */
@@ -14256,7 +14354,7 @@ async function startApp(){
   ACTIVITY_LOG = activityLog || [];
   HOME_LAYOUT = homeLayout;
   PRAYER_GROUP_CODE = groupCode || '';
-  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); }
+  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); }
   if(savedBeat && savedBeat.pattern){
     SEQ_INSTRUMENTS.forEach(inst=>{
       if(savedBeat.pattern[inst.key]) SEQ_PATTERN[inst.key] = savedBeat.pattern[inst.key];
@@ -14308,6 +14406,7 @@ async function startApp(){
         PRAYER_GROUP_CODE = code;
         await savePrayerGroupCode(code);
         GROUP_INTENTIONS = await loadGroupIntentions(code);
+        GROUP_MOMENT = await loadGroupMoment(code);
         PRIMARY = 'prier'; SUBTAB.prier = 'groupe';
         showToast('Groupe de prière rejoint ✦');
       }
