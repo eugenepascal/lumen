@@ -14700,4 +14700,95 @@ async function startApp(){
   }
 }
 
+/* ================= navigation "retour en arrière" (bouton physique / geste du téléphone / navigateur) =================
+   Chaque écran de l'appli change simplement quelques variables puis appelle render().
+   On capture ici un instantané des variables qui définissent "où on est" avant chaque
+   changement d'écran, et on le met dans l'historique du navigateur (history.pushState).
+   Le bouton retour du téléphone / du navigateur déclenche alors popstate, qui restaure
+   l'instantané précédent et redessine l'écran — exactement comme si on avait cliqué sur
+   le bouton "← Retour" de l'écran, mais depuis le bouton retour natif, sur n'importe
+   quelle page de l'appli. */
+let NAV_STACK = [];
+let NAV_CURRENT_SNAPSHOT = null;
+let NAV_RESTORING = false;
+
+function navCaptureState(){
+  return {
+    PRIMARY, SUBTAB: {...SUBTAB},
+    ENTRY_OPEN, OPEN_NOVENA, NOVENA_FULLTEXT, NOVENA_OPEN_DAY, NOVENA_STEP_INDEX, NOVENA_DAY_DONE_SCREEN, NEUVAINE_MONTH_VIEW,
+    PRIERES_CATEGORY, SAINT_CAT_VIEW, SAINT_CAT_FILTER, SAINT_PROFILE_TAB, SAINT_PROFILE_KEY, SAINT_ZOOM_OVERLAY,
+    HISTORY_PROFILE_TAB, HISTORY_PROFILE_KEY,
+    CAL_VIEW, CAL_SELECTED,
+    MP_VIEW: {...MP_VIEW},
+    BIBLE_VIEW_MODE, AELF_BIBLE_CURRENT, AELF_BIBLE_TAB,
+    AELF_OFFICE_VIEW, AELF_OFFICE_TAB, AELF_OFFICE_GROUP_OPEN,
+    ETAT_SELECTED,
+    OFFICE_STATE, COMPLINE_STATE, LAUDES_STATE, MIDI_STATE, TIERCE_STATE, SEXTE_STATE, NONE_STATE, VEPRES_STATE, CROIX_STATE,
+    READER_STATE,
+    RECUEILLEMENT_MODE, RECONFORT_SELECTED, SACREMENT_OPEN,
+    PELERINAGE_VIEW: {...PELERINAGE_VIEW},
+    EXAMEN_STATE, LECTIO_STATE, MISERICORDE_STATE, QUIZ_STATE,
+    ROSARY_STATE, ROSARY_TAB, ROSARY_SETTINGS_OPEN,
+    GUIDED_CHAPLET_STATE, CHAPLET_CAT_TAB,
+    HOME_PAGE_IDX
+  };
+}
+function navRestoreState(s){
+  PRIMARY=s.PRIMARY; SUBTAB=s.SUBTAB;
+  ENTRY_OPEN=s.ENTRY_OPEN; OPEN_NOVENA=s.OPEN_NOVENA; NOVENA_FULLTEXT=s.NOVENA_FULLTEXT; NOVENA_OPEN_DAY=s.NOVENA_OPEN_DAY;
+  NOVENA_STEP_INDEX=s.NOVENA_STEP_INDEX; NOVENA_DAY_DONE_SCREEN=s.NOVENA_DAY_DONE_SCREEN; NEUVAINE_MONTH_VIEW=s.NEUVAINE_MONTH_VIEW;
+  PRIERES_CATEGORY=s.PRIERES_CATEGORY; SAINT_CAT_VIEW=s.SAINT_CAT_VIEW; SAINT_CAT_FILTER=s.SAINT_CAT_FILTER;
+  SAINT_PROFILE_TAB=s.SAINT_PROFILE_TAB; SAINT_PROFILE_KEY=s.SAINT_PROFILE_KEY; SAINT_ZOOM_OVERLAY=s.SAINT_ZOOM_OVERLAY;
+  HISTORY_PROFILE_TAB=s.HISTORY_PROFILE_TAB; HISTORY_PROFILE_KEY=s.HISTORY_PROFILE_KEY;
+  CAL_VIEW=s.CAL_VIEW; CAL_SELECTED=s.CAL_SELECTED;
+  MP_VIEW=s.MP_VIEW;
+  BIBLE_VIEW_MODE=s.BIBLE_VIEW_MODE; AELF_BIBLE_CURRENT=s.AELF_BIBLE_CURRENT; AELF_BIBLE_TAB=s.AELF_BIBLE_TAB;
+  AELF_OFFICE_VIEW=s.AELF_OFFICE_VIEW; AELF_OFFICE_TAB=s.AELF_OFFICE_TAB; AELF_OFFICE_GROUP_OPEN=s.AELF_OFFICE_GROUP_OPEN;
+  ETAT_SELECTED=s.ETAT_SELECTED;
+  OFFICE_STATE=s.OFFICE_STATE; COMPLINE_STATE=s.COMPLINE_STATE; LAUDES_STATE=s.LAUDES_STATE; MIDI_STATE=s.MIDI_STATE;
+  TIERCE_STATE=s.TIERCE_STATE; SEXTE_STATE=s.SEXTE_STATE; NONE_STATE=s.NONE_STATE; VEPRES_STATE=s.VEPRES_STATE; CROIX_STATE=s.CROIX_STATE;
+  READER_STATE=s.READER_STATE;
+  RECUEILLEMENT_MODE=s.RECUEILLEMENT_MODE; RECONFORT_SELECTED=s.RECONFORT_SELECTED; SACREMENT_OPEN=s.SACREMENT_OPEN;
+  PELERINAGE_VIEW=s.PELERINAGE_VIEW;
+  EXAMEN_STATE=s.EXAMEN_STATE; LECTIO_STATE=s.LECTIO_STATE; MISERICORDE_STATE=s.MISERICORDE_STATE; QUIZ_STATE=s.QUIZ_STATE;
+  ROSARY_STATE=s.ROSARY_STATE; ROSARY_TAB=s.ROSARY_TAB; ROSARY_SETTINGS_OPEN=s.ROSARY_SETTINGS_OPEN;
+  GUIDED_CHAPLET_STATE=s.GUIDED_CHAPLET_STATE; CHAPLET_CAT_TAB=s.CHAPLET_CAT_TAB;
+  HOME_PAGE_IDX=s.HOME_PAGE_IDX;
+}
+function navSafeClone(obj){
+  try{ return JSON.parse(JSON.stringify(obj)); }catch(e){ return obj; }
+}
+function navSameSignature(a, b){
+  try{ return JSON.stringify(a) === JSON.stringify(b); }catch(e){ return false; }
+}
+
+const _navInnerRender = render;
+render = function(){
+  _navInnerRender();
+  if(NAV_RESTORING){
+    NAV_RESTORING = false;
+    NAV_CURRENT_SNAPSHOT = navSafeClone(navCaptureState());
+    return;
+  }
+  const newSnap = navSafeClone(navCaptureState());
+  if(NAV_CURRENT_SNAPSHOT === null){
+    NAV_CURRENT_SNAPSHOT = newSnap;
+    try{ history.replaceState({lumenNavId:0}, '', location.href); }catch(e){}
+    return;
+  }
+  if(!navSameSignature(newSnap, NAV_CURRENT_SNAPSHOT)){
+    NAV_STACK.push(NAV_CURRENT_SNAPSHOT);
+    try{ history.pushState({lumenNavId:NAV_STACK.length}, '', location.href); }catch(e){}
+  }
+  NAV_CURRENT_SNAPSHOT = newSnap;
+};
+
+window.addEventListener('popstate', ()=>{
+  if(NAV_STACK.length === 0) return; // rien à défaire dans l'appli : laisse le comportement natif (ex. quitter l'appli)
+  const prevSnap = NAV_STACK.pop();
+  NAV_RESTORING = true;
+  navRestoreState(prevSnap);
+  render();
+});
+
 startAuthFlow();
