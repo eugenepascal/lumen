@@ -406,6 +406,10 @@
   .bible-verse{ font-family:'Fraunces',serif; font-size:15.5px; line-height:1.65; color:var(--ink); margin:0 0 12px; }
   .bible-reader-body--big .bible-verse{ font-size:19px; }
   .bible-verse-num{ font-family:'Inter',sans-serif; font-weight:700; font-size:11.5px; color:var(--wine); vertical-align:super; margin-right:4px; }
+  .bible-verse-actions{ display:inline-flex; align-items:center; gap:2px; margin-left:6px; vertical-align:middle; }
+  .bible-verse-actions .fav-star{ font-size:14px; }
+  .bible-verse-note-btn{ background:none; border:none; cursor:pointer; font-size:13px; padding:0 2px; color:var(--hairline); }
+  .bible-verse-note-text{ display:block; font-family:'Inter',sans-serif; font-style:italic; font-size:13px; color:var(--wine-dark); background:rgba(107,37,69,0.06); border-radius:8px; padding:6px 10px; margin-top:4px; }
   .bible-reader-toolbar{ display:flex; justify-content:center; gap:10px; padding:14px 18px 22px; }
   .rosary-head-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
   .office-head-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }

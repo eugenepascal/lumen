@@ -5079,6 +5079,18 @@ async function saveNovenaReminder(id, time){
   else delete NOVENA_REMINDERS[id];
   try{ await window.storage.set('novena-reminders', JSON.stringify(NOVENA_REMINDERS), false); }catch(e){}
 }
+/* Note personnelle libre laissée sur un verset précis de la Bible (clé :
+   "code|chapitre|numéro de verset"), affichée sous le verset concerné. */
+let BIBLE_VERSE_NOTES = {};
+function bibleVerseNoteKey(code, chapter, verse){ return code+'|'+chapter+'|'+verse; }
+async function loadBibleVerseNotes(){
+  try{ const r = await window.storage.get('bible-verse-notes', false); return r ? JSON.parse(r.value) : {}; }catch(e){ return {}; }
+}
+async function saveBibleVerseNote(key, text){
+  if(text && text.trim()) BIBLE_VERSE_NOTES[key] = text.trim();
+  else delete BIBLE_VERSE_NOTES[key];
+  try{ await window.storage.set('bible-verse-notes', JSON.stringify(BIBLE_VERSE_NOTES), false); }catch(e){}
+}
 function wireNovenaPresentationHeader(n){
   const introBtn = document.getElementById('read-intro-btn');
   if(introBtn) introBtn.onclick = ()=>{
@@ -8296,6 +8308,7 @@ function favKey(f){
   if(!f) return '';
   if(f.type === 'novena') return 'novena|' + f.id;
   if(f.type === 'bible-chapter') return 'bible|' + f.code + '|' + f.chapter;
+  if(f.type === 'bible-verse') return 'bible-verse|' + f.code + '|' + f.chapter + '|' + f.verse;
   if(f.type === 'office') return 'office|' + f.key;
   if(f.type === 'vreader-text') return 'vreader|' + (f.title||'') + '|' + (f.reference||f.subtitle||'');
   return 'entry|' + (f.compKey||'') + '|' + (f.groupId||'') + '|' + (f.idx!=null?f.idx:'');
@@ -8368,6 +8381,7 @@ function renderFavoris(){
       if(f.type==='entry'){ PRIMARY = f.primary; SUBTAB[f.primary] = f.sub; GROUP_SEL[f.compKey] = f.groupId; ENTRY_OPEN = {compKey:f.compKey, groupId:f.groupId, idx:f.idx}; render(); }
       else if(f.type==='novena'){ goTo('prier','neuvaines'); OPEN_NOVENA = f.id; NOVENA_OPEN_DAY = null; NOVENA_FULLTEXT = false; NOVENA_DAY_DONE_SCREEN = null; render(); }
       else if(f.type==='bible-chapter'){ AELF_BIBLE_CURRENT = {code:f.code, name:f.name, chapter:f.chapter}; goTo('ecritures','aelf-bible-chapter'); }
+      else if(f.type==='bible-verse'){ AELF_BIBLE_CURRENT = {code:f.code, name:f.name, chapter:f.chapter}; goTo('ecritures','aelf-bible-chapter'); }
       else if(f.type==='office'){ AELF_OFFICE_VIEW = f.key; AELF_OFFICE_TAB = 'texte'; goTo('prier', OFFICE_KEY_TO_SUB[f.key]||'laudes'); }
       else if(f.type==='vreader-text'){ openVerseReader({title:f.title, subtitle:f.subtitle, text:f.text, reference:f.reference}); }
     };
@@ -11278,9 +11292,30 @@ async function renderAelfBibleBody(){
   }
   AELF_BIBLE_LAST_PLAIN_TEXT = verses.map(v=>v.text).join(' ');
   if(AELF_BIBLE_TAB === 'texte'){
-    body.innerHTML = `<div class="bible-verses">${verses.map(v=>
-      `<p class="bible-verse">${v.number?`<span class="bible-verse-num">${v.number}</span>`:''}${v.text}</p>`
-    ).join('')}</div>`;
+    body.innerHTML = `<div class="bible-verses">${verses.map(v=>{
+      const noteKey = bibleVerseNoteKey(code, chapter, v.number);
+      const note = BIBLE_VERSE_NOTES[noteKey];
+      const vFav = {type:'bible-verse', code, chapter, verse:v.number, name, avatar:'📖', summary:`${name}${code!=='Ps'?' '+chapter:''}, verset ${v.number}`};
+      return `<p class="bible-verse">${v.number?`<span class="bible-verse-num">${v.number}</span>`:''}${v.text}
+        <span class="bible-verse-actions">
+          ${v.number ? favStarHTML(vFav) : ''}
+          ${v.number ? `<button type="button" class="bible-verse-note-btn" data-verse-note="${v.number}" aria-label="${note?'Modifier ma note':'Ajouter une note'}" title="${note?'Modifier ma note':'Ajouter une note'}">${note?'📝':'🗒️'}</button>` : ''}
+        </span>
+        ${note ? `<span class="bible-verse-note-text">✎ « ${note.replace(/</g,'&lt;')} »</span>` : ''}
+      </p>`;
+    }).join('')}</div>`;
+    wireFavStars();
+    document.querySelectorAll('[data-verse-note]').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const vnum = btn.dataset.verseNote;
+        const key = bibleVerseNoteKey(code, chapter, vnum);
+        const current = BIBLE_VERSE_NOTES[key] || '';
+        const text = prompt(`Votre note personnelle sur le verset ${vnum}${code!=='Ps'?` de ${name} ${chapter}`:''} (laissez vide pour supprimer) :`, current);
+        if(text === null) return;
+        await saveBibleVerseNote(key, text);
+        renderAelfBibleBody();
+      };
+    });
   } else if(AELF_BIBLE_TAB === 'meditation'){
     const first = verses[0];
     body.innerHTML = `<div class="bible-meditation">
@@ -13903,7 +13938,7 @@ function render(){
 /* ---------- init ---------- */
 async function startApp(){
   document.getElementById('screen').innerHTML = '<div class="loading"><svg class="loading-emblem" viewBox="0 0 24 24"><defs><linearGradient id="flameGrad3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#7C1F2E"/><stop offset="55%" stop-color="#B8863B"/><stop offset="100%" stop-color="#FFF3C4"/></linearGradient></defs><path fill="url(#flameGrad3)" d="M12 2c-2.2 4-6 6.2-6 11a6 6 0 0 0 12 0c0-2.1-1-3.4-2-4.4.4 2-1 3-1 3 .6-3.2-1.1-5.4-3-9.6z"/></svg>Un instant, on allume les lumières…</div>';
-  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages, novenaIntentions, novenaReminders, rosaryState, activityLog] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages(), loadNovenaIntentions(), loadNovenaReminders(), loadRosaryState(), loadActivityLog()]);
+  const [p, ints, jour, prefs, privInts, bibleProg, memorial, objectifs, adventProg, reminders, companions, savedBeat, parcoursProg, gratitude, confessionDate, prayedDates, homeLayout, groupCode, caremeProg, histoire, souvenirs, prayerUsage, anniversaires, biblePlanProg, mesPrieres, prayerImages, novenaIntentions, novenaReminders, rosaryState, activityLog, bibleVerseNotes] = await Promise.all([loadProgress(), loadIntentions(), loadJournal(), loadPrefsAndData(), loadPrivateIntentions(), loadBibleProgress(), loadMemorial(), loadObjectifs(), loadAdventProgress(), loadReminders(), loadNovenaCompanions(), loadBeatPattern(), loadParcoursProgress(), loadGratitude(), loadConfessionDate(), loadPrayedDates(), loadHomeLayout(), loadPrayerGroup(), loadCaremeProgress(), loadHistoire(), loadSouvenirs(), loadPrayerUsage(), loadAnniversaires(), loadBiblePlanProgress(), loadMesPrieres(), loadPrayerImages(), loadNovenaIntentions(), loadNovenaReminders(), loadRosaryState(), loadActivityLog(), loadBibleVerseNotes()]);
   PROGRESS = p;
   if(rosaryState && rosaryState.variantId && rosaryState.phase && rosaryState.phase !== 'catalogue'){ ROSARY_STATE = rosaryState; }
   INTENTIONS = ints;
@@ -13917,6 +13952,7 @@ async function startApp(){
   NOVENA_COMPANIONS = companions;
   NOVENA_INTENTIONS = novenaIntentions || {};
   NOVENA_REMINDERS = novenaReminders || {};
+  BIBLE_VERSE_NOTES = bibleVerseNotes || {};
   PARCOURS_PROGRESS = parcoursProg || { completedDays: [] };
   CAREME_PROGRESS = caremeProg || { completedDays: [] };
   GRATITUDE_ENTRIES = gratitude || [];
