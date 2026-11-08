@@ -24,11 +24,12 @@ let fbApp = null, fbAuth = null, fbDb = null, FIREBASE_READY = false;
    sur le localStorage du navigateur : chaque personne ne voyait QUE ses
    propres données, sans aucun partage réel entre elles. Cette appli dédiée,
    toujours connectée à Firestore (même sans compte personnel), corrige ça. */
-let sharedFbApp = null, sharedFbAuth = null, sharedFbDb = null, SHARED_FIREBASE_READY = false;
+let sharedFbApp = null, sharedFbAuth = null, sharedFbDb = null, sharedFbStorage = null, SHARED_FIREBASE_READY = false;
 try{
   sharedFbApp = firebase.initializeApp(firebaseConfig, 'lumen-shared');
   sharedFbAuth = sharedFbApp.auth();
   sharedFbDb = sharedFbApp.firestore();
+  sharedFbStorage = sharedFbApp.storage();
   SHARED_FIREBASE_READY = true;
 }catch(e){ console.warn('Firebase (contenu partagé) indisponible :', e); }
 let SHARED_AUTH_READY_PROMISE = null;
@@ -65,6 +66,32 @@ async function sharedSet(key, value){
     await sharedFbDb.collection('shared').doc(key).set({ value, updatedAt: Date.now() });
     return true;
   }catch(e){ console.warn('sharedSet', key, e); return false; }
+}
+/* Dépôt d'un fichier (image ou PDF) joint à une intention de groupe —
+   même logique que sharedGet/sharedSet : accessible à quiconque connaît le
+   chemin, pas de compte requis. Limité en taille pour rester raisonnable
+   côté coût de stockage et temps d'upload sur mobile. */
+const SHARED_FILE_MAX_BYTES = 8 * 1024 * 1024; // 8 Mo
+async function uploadSharedFile(path, file){
+  if(!file) return null;
+  if(file.size > SHARED_FILE_MAX_BYTES){
+    showToast('⚠️ Fichier trop volumineux (8 Mo max)');
+    return null;
+  }
+  const ok = await ensureSharedAuth();
+  if(!ok){
+    showToast('⚠️ Connexion impossible : le fichier n’a pas pu être envoyé.');
+    return null;
+  }
+  try{
+    const ref = sharedFbStorage.ref().child(path);
+    await ref.put(file, { contentType: file.type || undefined });
+    return await ref.getDownloadURL();
+  }catch(e){
+    console.warn('uploadSharedFile', path, e);
+    showToast('⚠️ Envoi du fichier impossible.');
+    return null;
+  }
 }
 try{
   fbApp = firebase.initializeApp(firebaseConfig);
@@ -4222,6 +4249,7 @@ let ACTIVITY_LOG = [];
 let HOME_LAYOUT = null;
 let PRAYER_GROUP_CODE = '';
 let GROUP_INTENTIONS = [];
+const GROUP_REACTION_EMOJIS = ['🙏','❤️','🕯️'];
 let JOURNAL = [];
 let PRIMARY = 'accueil';
 let SUBTAB = {};
@@ -7784,7 +7812,9 @@ function renderPrayerGroup(){
     <div class="card" id="group-moment-card" style="text-align:center;"><p class="studio-note">Chargement…</p></div>
     <div class="card add-intention-box">
       <textarea id="group-int-text" rows="3" placeholder="Écrire une intention pour le groupe…"></textarea>
-      <button class="btn btn-primary btn-sm" id="add-group-int-btn">Partager avec le groupe</button>
+      <label class="studio-note" style="display:block; margin-top:8px;">Joindre une image ou un document (PDF) — facultatif, 8 Mo max</label>
+      <input type="file" id="group-int-file" accept="image/*,.pdf" style="margin-top:4px;">
+      <button class="btn btn-primary btn-sm" id="add-group-int-btn" style="margin-top:10px;">Partager avec le groupe</button>
     </div>
     <h2 class="section-title" style="font-size:16px;">🕯️ Intentions du groupe</h2>`;
   if(GROUP_INTENTIONS.length === 0){
@@ -7794,9 +7824,26 @@ function renderPrayerGroup(){
       <div class="card intention-card" data-gid="${it.id}">
         <p class="intention-author">${it.name||'Anonyme'}</p>
         <p class="intention-text">${it.text}</p>
+        ${it.fileUrl ? (it.fileType==='image'
+          ? `<img src="${it.fileUrl}" alt="${it.fileName||''}" class="intention-image">`
+          : `<a href="${it.fileUrl}" target="_blank" rel="noopener" class="intention-file-link">📄 ${it.fileName||'Document'}</a>`) : ''}
+        <div class="reaction-row">
+          ${GROUP_REACTION_EMOJIS.map(emo=>{
+            const members = (it.reactions && it.reactions[emo]) || [];
+            const mine = members.includes(getDeviceId());
+            return `<button class="reaction-btn ${mine?'active':''}" data-gid="${it.id}" data-emo="${emo}">${emo} ${members.length||''}</button>`;
+          }).join('')}
+        </div>
         <div class="intention-footer">
           <span class="prayer-count">🕯️ ${it.prayers||0} personnes ont prié</span>
           <button class="btn btn-gold btn-sm group-pray-btn" data-gid="${it.id}">🕯️ Je prie</button>
+        </div>
+        <div class="comment-list">
+          ${(it.comments||[]).map(c=>`<p class="comment-row"><span class="comment-author">${c.name||'Anonyme'} :</span> ${c.text}</p>`).join('')}
+        </div>
+        <div class="comment-form">
+          <input type="text" class="comment-input" data-gid="${it.id}" placeholder="Répondre…">
+          <button class="btn btn-ghost btn-sm comment-send-btn" data-gid="${it.id}">Envoyer</button>
         </div>
       </div>`).join('')}</div>`;
   }
@@ -7815,9 +7862,20 @@ function renderPrayerGroup(){
   };
   document.getElementById('add-group-int-btn').onclick = async ()=>{
     const textEl = document.getElementById('group-int-text');
+    const fileEl = document.getElementById('group-int-file');
     const text = textEl.value.trim();
-    if(!text) { textEl.focus(); return; }
-    GROUP_INTENTIONS.unshift({id:'g-'+Date.now(), name:USER_NAME||'Anonyme', text, prayers:0, createdAt:Date.now()});
+    const file = fileEl && fileEl.files && fileEl.files[0];
+    if(!text && !file) { textEl.focus(); return; }
+    const btn = document.getElementById('add-group-int-btn');
+    const id = 'g-'+Date.now();
+    const newIntention = {id, name:USER_NAME||'Anonyme', text, prayers:0, createdAt:Date.now(), comments:[], reactions:{}};
+    if(file){
+      btn.disabled = true; btn.textContent = 'Envoi…';
+      const fileType = (file.type||'').startsWith('image/') ? 'image' : 'pdf';
+      const url = await uploadSharedFile(`groups/${PRAYER_GROUP_CODE}/${id}/${file.name}`, file);
+      if(url){ newIntention.fileUrl = url; newIntention.fileType = fileType; newIntention.fileName = file.name; }
+    }
+    GROUP_INTENTIONS.unshift(newIntention);
     await saveGroupIntentions(PRAYER_GROUP_CODE, GROUP_INTENTIONS);
     renderPrayerGroup();
   };
@@ -7826,6 +7884,34 @@ function renderPrayerGroup(){
       const it = GROUP_INTENTIONS.find(x=>x.id===btn.dataset.gid);
       if(!it) return;
       it.prayers = (it.prayers||0)+1;
+      await saveGroupIntentions(PRAYER_GROUP_CODE, GROUP_INTENTIONS);
+      renderPrayerGroup();
+    };
+  });
+  document.querySelectorAll('.reaction-btn').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const it = GROUP_INTENTIONS.find(x=>x.id===btn.dataset.gid);
+      if(!it) return;
+      const emo = btn.dataset.emo;
+      it.reactions = it.reactions || {};
+      const list = it.reactions[emo] || [];
+      const id = getDeviceId();
+      const idx = list.indexOf(id);
+      if(idx>=0) list.splice(idx,1); else list.push(id);
+      it.reactions[emo] = list;
+      await saveGroupIntentions(PRAYER_GROUP_CODE, GROUP_INTENTIONS);
+      renderPrayerGroup();
+    };
+  });
+  document.querySelectorAll('.comment-send-btn').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const it = GROUP_INTENTIONS.find(x=>x.id===btn.dataset.gid);
+      const input = document.querySelector(`.comment-input[data-gid="${btn.dataset.gid}"]`);
+      if(!it || !input) return;
+      const text = input.value.trim();
+      if(!text){ input.focus(); return; }
+      it.comments = it.comments || [];
+      it.comments.push({id:'c-'+Date.now(), name:USER_NAME||'Anonyme', text, createdAt:Date.now()});
       await saveGroupIntentions(PRAYER_GROUP_CODE, GROUP_INTENTIONS);
       renderPrayerGroup();
     };
