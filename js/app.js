@@ -92,6 +92,18 @@ function showToast(message){
   TOAST_HIDE_TIMER = setTimeout(()=> el.classList.remove('show'), 2200);
 }
 
+/* Échappement HTML pour tout texte saisi par une personne (intention, prénom,
+   commentaire, code de famille/groupe...) avant de l'insérer dans du HTML.
+   Indispensable dès qu'un contenu est partagé (tableau d'intentions public,
+   groupe de prière, carnet familial) : sans ça, n'importe qui — y compris
+   un compte anonyme — pourrait écrire du HTML/JavaScript dans son "intention"
+   et l'exécuter dans le navigateur de toutes les personnes qui lisent ce
+   même groupe. On échappe aussi le contenu non partagé, par précaution. */
+function escapeHtml(str){
+  if(str == null) return '';
+  return String(str).replace(/[&<>"']/g, (c)=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 /* window.storage only exists inside Claude.ai artifacts. Once deployed standalone
    (e.g. GitHub Pages), it's undefined — this polyfill makes "guest mode" (sans compte)
    actually work by using the browser's own localStorage instead. */
@@ -3923,7 +3935,7 @@ function caremeCommunityBlockHTML(){
   }
   return `<div class="card" style="margin-top:14px; text-align:center;">
     <p class="eyebrow" style="color:var(--gold);">Votre communauté de Carême</p>
-    <p class="day-title" style="font-size:20px; letter-spacing:2px;">${CAREME_COMMUNITY_CODE}</p>
+    <p class="day-title" style="font-size:20px; letter-spacing:2px;">${escapeHtml(CAREME_COMMUNITY_CODE)}</p>
     <div style="display:flex; gap:8px; justify-content:center; margin:8px 0; flex-wrap:wrap;">
       <button class="btn btn-ghost btn-sm" id="careme-community-leave-btn">Quitter la communauté</button>
     </div>
@@ -3983,7 +3995,7 @@ function caremeMomentCardHTML(){
   const count = ((CAREME_MOMENT.completions||{})[today]||[]).length;
   const already = ((CAREME_MOMENT.completions||{})[today]||[]).includes(getDeviceId());
   return `<p class="eyebrow" style="color:var(--gold);">Moment de prière commun</p>
-    <p class="day-title" style="font-size:19px;">✝️ ${CAREME_MOMENT.label||'Prière commune'} — ${CAREME_MOMENT.time}</p>
+    <p class="day-title" style="font-size:19px;">✝️ ${escapeHtml(CAREME_MOMENT.label)||'Prière commune'} — ${escapeHtml(CAREME_MOMENT.time)}</p>
     <p class="studio-note" style="margin:4px 0 10px;">🕯️ ${count} personne${count===1?'':'s'} ${count===1?'a':'ont'} prié ce moment aujourd'hui</p>
     <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
       <button class="btn btn-gold btn-sm" id="careme-moment-done-btn" ${already?'disabled':''}>${already?'✓ Déjà confirmé':'🕯️ J’ai prié ce moment'}</button>
@@ -6061,8 +6073,8 @@ function wireNovenaBeadSequences(){
 function intentionCardHTML(it){
   return `<div class="card intention-card ${it.answered?'intention-answered':''}" data-id="${it.id}">
     ${it.answered ? `<p class="intention-answered-badge">✨ Prière exaucée</p>` : ''}
-    <p class="intention-author">${it.private ? '🔒 Intention privée' : it.name}</p>
-    <p class="intention-text">${it.text}</p>
+    <p class="intention-author">${it.private ? '🔒 Intention privée' : escapeHtml(it.name)}</p>
+    <p class="intention-text">${escapeHtml(it.text)}</p>
     <div class="intention-footer">
       <div class="candle-wrap">${candleHTML(it.prayers>0, 'candle-'+it.id)}<span class="prayer-count">${it.prayers} personnes ont prié</span></div>
       <div style="display:flex; gap:6px;">
@@ -7741,7 +7753,7 @@ function inviteLinkFor(param, code){
   }catch(e){ return window.location.href; }
 }
 function shareInviteRowHTML(param, code, message){
-  return `<div class="share-invite-row" data-invite-param="${param}" data-invite-code="${code}" data-invite-message="${message.replace(/"/g,'&quot;')}">
+  return `<div class="share-invite-row" data-invite-param="${param}" data-invite-code="${escapeHtml(code)}" data-invite-message="${escapeHtml(message)}">
     <button type="button" class="btn btn-ghost btn-sm" data-invite-action="copy">🔗 Copier le lien d'invitation</button>
     <button type="button" class="btn btn-ghost btn-sm" data-invite-action="whatsapp">💬 Inviter sur WhatsApp</button>
   </div>`;
@@ -7771,7 +7783,7 @@ function groupMomentCardHTML(){
   const count = ((GROUP_MOMENT.completions||{})[today]||[]).length;
   const already = ((GROUP_MOMENT.completions||{})[today]||[]).includes(getDeviceId());
   return `<p class="eyebrow" style="color:var(--gold);">Moment de prière commun</p>
-    <p class="day-title" style="font-size:19px;">📿 ${GROUP_MOMENT.label||'Prière commune'} — ${GROUP_MOMENT.time}</p>
+    <p class="day-title" style="font-size:19px;">📿 ${escapeHtml(GROUP_MOMENT.label)||'Prière commune'} — ${escapeHtml(GROUP_MOMENT.time)}</p>
     <p class="studio-note" style="margin:4px 0 10px;">🕯️ ${count} personne${count===1?'':'s'} ${count===1?'a':'ont'} prié ce moment aujourd'hui</p>
     <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
       <button class="btn btn-gold btn-sm" id="group-moment-done-btn" ${already?'disabled':''}>${already?'✓ Déjà confirmé':'🕯️ J’ai prié ce moment'}</button>
@@ -7863,7 +7875,7 @@ function renderPrayerGroup(){
   }
   html += `<div class="card" style="text-align:center; border-left:4px solid var(--gold);">
       <p class="eyebrow" style="color:var(--gold);">Code de votre groupe</p>
-      <p class="day-title" style="font-size:24px; letter-spacing:3px;">${PRAYER_GROUP_CODE}</p>
+      <p class="day-title" style="font-size:24px; letter-spacing:3px;">${escapeHtml(PRAYER_GROUP_CODE)}</p>
       <p class="section-desc" style="margin:4px 0 0;">Partagez ce code (ou le lien ci-dessous) à vos proches pour qu'ils rejoignent le même groupe.</p>
       <div style="display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
         <button class="btn btn-ghost btn-sm" id="copy-group-code-btn">📋 Copier le code</button>
@@ -7884,8 +7896,8 @@ function renderPrayerGroup(){
   } else {
     html += `<div class="grid">${GROUP_INTENTIONS.slice().sort((a,b)=>b.createdAt-a.createdAt).map(it=>`
       <div class="card intention-card" data-gid="${it.id}">
-        <p class="intention-author">${it.name||'Anonyme'}</p>
-        <p class="intention-text">${it.text}</p>
+        <p class="intention-author">${escapeHtml(it.name)||'Anonyme'}</p>
+        <p class="intention-text">${escapeHtml(it.text)}</p>
         <div class="reaction-row">
           ${GROUP_REACTION_EMOJIS.map(emo=>{
             const members = (it.reactions && it.reactions[emo]) || [];
@@ -7898,7 +7910,7 @@ function renderPrayerGroup(){
           <button class="btn btn-gold btn-sm group-pray-btn" data-gid="${it.id}">🕯️ Je prie</button>
         </div>
         <div class="comment-list">
-          ${(it.comments||[]).map(c=>`<p class="comment-row"><span class="comment-author">${c.name||'Anonyme'} :</span> ${c.text}</p>`).join('')}
+          ${(it.comments||[]).map(c=>`<p class="comment-row"><span class="comment-author">${escapeHtml(c.name)||'Anonyme'} :</span> ${escapeHtml(c.text)}</p>`).join('')}
         </div>
         <div class="comment-form">
           <input type="text" class="comment-input" data-gid="${it.id}" placeholder="Répondre…">
@@ -11274,7 +11286,7 @@ function renderFamilyIntentions(){
     return;
   }
   document.getElementById('screen').innerHTML = `<h2 class="section-title">👨‍👩‍👧‍👦 Carnet familial</h2>
-    <p class="section-desc">Code actuel : <b>${FAMILY_CODE}</b> — partagez-le aux vôtres pour qu'ils rejoignent ce même carnet.</p>
+    <p class="section-desc">Code actuel : <b>${escapeHtml(FAMILY_CODE)}</b> — partagez-le aux vôtres pour qu'ils rejoignent ce même carnet.</p>
     <div class="card add-intention-box">
       <input type="text" id="family-intent-input" placeholder="Une intention à porter ensemble...">
       <button class="btn btn-primary btn-sm" id="family-intent-add-btn" style="margin-top:8px;">Ajouter au carnet familial</button>
@@ -11296,8 +11308,8 @@ function renderFamilyIntentions(){
     if(!list.length){ wrap.innerHTML = `<div class="card empty-state">Ce carnet est vide — soyez le premier à y déposer une intention.</div>`; return; }
     wrap.innerHTML = list.map(it=>`
       <div class="card entry-card" style="flex-direction:column; align-items:flex-start;">
-        <p class="entry-detail-text">${it.text}</p>
-        <p class="studio-note" style="margin:4px 0 8px;">— ${it.author}</p>
+        <p class="entry-detail-text">${escapeHtml(it.text)}</p>
+        <p class="studio-note" style="margin:4px 0 8px;">— ${escapeHtml(it.author)}</p>
         <button class="btn btn-ghost btn-sm" data-family-pray="${it.id}">🙏 J'ai prié pour ça (${it.prayers||0})</button>
       </div>`).join('');
     wrap.querySelectorAll('[data-family-pray]').forEach(btn=>{
