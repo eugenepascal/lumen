@@ -15,6 +15,23 @@ const firebaseConfig = {
   appId: "1:672206073820:web:3b0477c97b98e6c73c6919",
   measurementId: "G-18S3XQWSFK"
 };
+/* Clé de site reCAPTCHA v3 (publique, sans risque à exposer ici) utilisée par
+   Firebase App Check pour vérifier que les requêtes vers Firestore viennent
+   bien de ce site et non d'un script tiers muni de la seule clé API. */
+const RECAPTCHA_V3_SITE_KEY = "6LcN0BguAAAAAO9K0F3OVuIbTksPuZz313rdH0gr";
+/* Active App Check sur une instance Firebase donnée (défensif : si le script
+   App Check n'a pas pu se charger, ou si la clé est absente, on continue sans
+   bloquer l'appli — tant que l'application Firestore n'est pas en mode
+   « Appliquer » côté console, ça reste sans danger). */
+function activateAppCheck(app, label){
+  try{
+    if(!RECAPTCHA_V3_SITE_KEY || typeof firebase.appCheck !== 'function') return;
+    firebase.appCheck(app).activate(
+      new firebase.appCheck.ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+      true
+    );
+  }catch(e){ console.warn('App Check indisponible (' + label + ') :', e); }
+}
 let fbApp = null, fbAuth = null, fbDb = null, FIREBASE_READY = false;
 /* Connexion Firebase dédiée au contenu partagé (groupe de prière, carnet
    familial, communauté de Carême) : une appli secondaire, avec sa propre
@@ -30,6 +47,7 @@ try{
   sharedFbAuth = sharedFbApp.auth();
   sharedFbDb = sharedFbApp.firestore();
   SHARED_FIREBASE_READY = true;
+  activateAppCheck(sharedFbApp, 'contenu partagé');
 }catch(e){ console.warn('Firebase (contenu partagé) indisponible :', e); }
 let SHARED_AUTH_READY_PROMISE = null;
 function ensureSharedAuth(){
@@ -71,6 +89,7 @@ try{
   fbAuth = firebase.auth();
   fbDb = firebase.firestore();
   FIREBASE_READY = true;
+  activateAppCheck(fbApp, 'compte personnel');
 }catch(e){ console.warn('Firebase indisponible :', e); }
 
 /* Petit message discret en bas de l'écran (confirmation d'une action : "Texte copié",
