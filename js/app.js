@@ -8117,6 +8117,29 @@ function renderApropos(){
       <p class="entry-detail-text">Une application pour prier chaque jour, au rythme de la tradition catholique — neuvaines, psaumes, saints, calendrier liturgique et bien plus.</p>
     </div>
 
+    <div class="card" style="margin-top:12px;">
+      <p class="eyebrow" style="color:var(--wine);">📲 Installer l'application</p>
+      <p class="entry-detail-text" style="margin-bottom:10px;">Lumen s'installe directement depuis votre navigateur, sans passer par un App Store — elle apparaît ensuite comme une vraie application, en plein écran et même hors connexion.</p>
+      <div class="grid" style="margin-top:6px;">
+        <div class="card" style="box-shadow:none; border:1px solid var(--hairline); padding:12px;">
+          <p class="day-title" style="font-size:14px; margin-bottom:4px;">💻 Mac</p>
+          <p class="entry-detail-text">Dans Chrome ou Edge, ouvrez lumenapp.website puis cliquez sur l'icône d'installation dans la barre d'adresse (ou menu ⋮ → « Installer Lumen »).</p>
+        </div>
+        <div class="card" style="box-shadow:none; border:1px solid var(--hairline); padding:12px;">
+          <p class="day-title" style="font-size:14px; margin-bottom:4px;">🖥️ PC Windows</p>
+          <p class="entry-detail-text">Même procédure que sur Mac, dans Chrome ou Edge : icône d'installation dans la barre d'adresse, ou menu ⋮ → « Applications » → « Installer Lumen ».</p>
+        </div>
+        <div class="card" style="box-shadow:none; border:1px solid var(--hairline); padding:12px;">
+          <p class="day-title" style="font-size:14px; margin-bottom:4px;">🤖 Android (téléphone ou tablette)</p>
+          <p class="entry-detail-text">Dans Chrome, un bandeau « Ajouter à l'écran d'accueil » apparaît automatiquement — sinon menu ⋮ → « Installer l'application ».</p>
+        </div>
+        <div class="card" style="box-shadow:none; border:1px solid var(--hairline); padding:12px;">
+          <p class="day-title" style="font-size:14px; margin-bottom:4px;">📱 iPhone / iPad</p>
+          <p class="entry-detail-text">Dans Safari (obligatoire, pas Chrome), appuyez sur le bouton Partager, puis « Sur l'écran d'accueil ».</p>
+        </div>
+      </div>
+    </div>
+
     <div class="card" style="border-left:4px solid var(--gold); margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">⚠️ Précision importante</p>
       <p class="entry-detail-text">Lumen est une application indépendante, créée avec soin par une personne passionnée de foi catholique. <b>Ce n'est pas une application officielle de l'Église catholique</b>, ni éditée par un diocèse, un éditeur liturgique ou toute autre institution ecclésiale. Les textes liturgiques précis de la messe ou des lectures du jour n'y sont pas reproduits — consultez un missel paroissial ou un site liturgique officiel pour cela.</p>
@@ -8171,6 +8194,7 @@ function renderApropos(){
 }
 
 const FAQ_ITEMS = [
+  {q:"Comment installer Lumen sur mon téléphone ou mon ordinateur ?", a:"Lumen s'installe directement depuis le navigateur, sans App Store : sur Mac ou PC (Chrome/Edge), cliquez sur l'icône d'installation dans la barre d'adresse ; sur Android, un bandeau « Ajouter à l'écran d'accueil » apparaît dans Chrome ; sur iPhone/iPad, utilisez le bouton Partager de Safari puis « Sur l'écran d'accueil ». Le détail par appareil est dans « À propos »."},
   {q:"Est-ce que mes données sont privées ?", a:"Oui. Votre journal, vos prières personnelles et votre progression restent liés uniquement à votre compte. Rien n'est visible publiquement, sauf ce que vous choisissez vous-même de partager (par exemple dans un groupe de prière)."},
   {q:"Dois-je créer un compte pour utiliser l'application ?", a:"Non, l'application fonctionne sans compte — vos données restent alors uniquement sur cet appareil. Créer un compte permet de retrouver vos données sur un autre appareil en vous reconnectant."},
   {q:"Les textes de la messe du dimanche sont-ils exacts ?", a:"Le guide « Messe du dimanche » explique le déroulement général de la célébration, mais ne contient pas les lectures précises de chaque dimanche, qui suivent un calendrier liturgique officiel — consultez un missel ou un site liturgique pour ces lectures exactes."},
