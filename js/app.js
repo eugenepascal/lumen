@@ -1557,6 +1557,22 @@ const ENSEIGNEMENTS = [
     entries:[
       {name:"Exhortation — Retraite des femmes (octobre 2021)", dates:"23-24 octobre 2021", avatar:"🕊️", tag:null, ref:"Radio Misericordia — webradio catholique", externalUrl:"https://www.youtube.com/watch?v=eMoAsa3n9nw", linkLabel:"Regarder ↗", summary:"Une exhortation donnée par Emilie Faye Cabral lors d'une retraite des femmes, diffusée par Radio Misericordia, une webradio catholique consacrée à la musique religieuse, aux prédications, aux prières et aux témoignages."}
     ]
+  },
+  {
+    id:"enseignements-livre-henoch",
+    title:"Le livre d'Hénoch",
+    desc:"Un écrit juif ancien (entre le IIIe siècle av. J.-C. et le Ier siècle av. J.-C.), célèbre pour ses visions sur les anges déchus et le jugement dernier. Précision importante : il n'appartient pas au canon biblique catholique — aucune Bible catholique ne le contient —, mais il reste pleinement canonique dans l'Église orthodoxe éthiopienne, et une courte citation en est faite dans l'épître de saint Jude (Jude 1, 14-15) du Nouveau Testament. Il est proposé ici à titre de texte apocryphe, pour sa valeur historique et littéraire, et non comme un enseignement doctrinal catholique.",
+    entries:[
+      {name:"Le livre d'Hénoch (éthiopien) — texte intégral", dates:"", tag:"Texte apocryphe", avatar:"📜", ref:"Traduction française (version éthiopienne), Wikisource", externalUrl:"https://fr.wikisource.org/wiki/Livre_d%E2%80%99H%C3%A9noch_(%C3%A9thiopien)/Livre_d%E2%80%99H%C3%A9noch", linkLabel:"Lire le texte complet ↗", summary:"Attribué au patriarche Hénoch, arrière-grand-père de Noé (Genèse 5, 21-24, où il est dit qu'« Hénoch marcha avec Dieu, puis il disparut, car Dieu l'avait enlevé »), ce texte rapporte des visions sur la chute des anges, leur union avec les filles des hommes, et le jugement final réservé aux justes et aux impies. Il a profondément influencé l'imaginaire juif et chrétien autour des anges et des fins dernières, bien qu'il soit resté en dehors du canon retenu par l'Église catholique."}
+    ]
+  },
+  {
+    id:"enseignements-livre-revelations",
+    title:"Le livre des Révélations (Apocalypse de Jean)",
+    desc:"Le tout dernier livre du Nouveau Testament, attribué à saint Jean, qui clôt la Bible catholique par une vision prophétique du combat entre le bien et le mal et de la victoire finale du Christ. À la différence du livre d'Hénoch, ce texte appartient pleinement au canon biblique catholique — son texte complet est aussi disponible dans l'appli, dans Bible › Lire la Bible.",
+    entries:[
+      {name:"Apocalypse de Jean — texte complet (Louis Segond)", dates:"", tag:"Livre biblique", avatar:"🔥", ref:"Nouveau Testament, dernier livre du canon catholique", externalUrl:"https://www.biblegateway.com/passage/?search=Apocalypse%201&version=LSG", linkLabel:"Lire le texte complet ↗", summary:"Écrit sous forme de visions symboliques adressées à sept Églises d'Asie Mineure, ce livre annonce, à travers des images puissantes (les sceaux, les trompettes, les fléaux, la Bête, la Nouvelle Jérusalem), l'affrontement final entre le Christ et les forces du mal, et l'espérance d'un monde nouveau où « Dieu essuiera toute larme de leurs yeux » (Apocalypse 21, 4)."}
+    ]
   }
 ];
 
