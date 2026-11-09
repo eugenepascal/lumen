@@ -4182,7 +4182,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, welcomeDemoVersion: WELCOME_DEMO_LAST_SEEN_VERSION, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID
     }), false);
   }catch(e){}
 }
@@ -4238,6 +4238,13 @@ let STREAK = {count:0, lastDate:null};
 let THEME = 'light';
 let FONT_SIZE = 'md';
 let ONBOARDING_SEEN = false;
+/* Numéro de version de l'écran de bienvenue : incrémenté chaque fois que son
+   contenu change de façon notable (ex. ajout de la vidéo de démo), pour que
+   les utilisateurs déjà connus (onboardingSeen=true, via Google par exemple)
+   revoient une fois le nouvel écran, sans pour autant le revoir à chaque
+   connexion une fois qu'ils l'ont vu. */
+const WELCOME_DEMO_VERSION = 1;
+let WELCOME_DEMO_LAST_SEEN_VERSION = 0;
 let ROSARY_STATE = null;
 let ROSARY_TAB = 'meditation';
 let ROSARY_AUDIO_PLAYING = null;
@@ -4262,7 +4269,7 @@ const PRIMARY_TABS = [
   {key:'prier', label:'Prier'},
   {key:'ecritures', label:'Bible'},
   {key:'explorer', label:'Découvrir'},
-  {key:'espace', label:'Ma chapelle'}
+  {key:'espace', label:'Mon espace'}
 ];
 /* quelles anciennes rubriques comptent comme "actives" pour chaque onglet visible */
 const TAB_GROUP_MEMBERS = {
@@ -4528,6 +4535,8 @@ function renderWelcomeSplash(){
   document.getElementById('welcome-audio-btn').onclick = openWelcomeVideoModal;
   document.getElementById('welcome-enter-btn').onclick = ()=>{
     WELCOME_SEEN_THIS_SESSION = true;
+    WELCOME_DEMO_LAST_SEEN_VERSION = WELCOME_DEMO_VERSION;
+    savePrefs();
     render();
     openGuide();
   };
@@ -4600,6 +4609,9 @@ function homePage1HTML(){
 
   return `
     <div class="home-plain-header">
+      ${CURRENT_USER ? `<div style="display:flex; justify-content:flex-end; margin-bottom:4px;">
+        <button class="btn btn-ghost btn-sm" id="home-quick-logout-btn" title="Se déconnecter">🚪 Déconnexion</button>
+      </div>` : ''}
       ${dayIsFeast ? `<p class="home-plain-date">✦ Fête de ${dayFeastSaint.name}</p>` : ''}
       <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
       <p class="home-plain-sub">${t('homeSubtitle')}.</p>
@@ -4710,6 +4722,9 @@ function wireHomePage1(){
   const cta0 = document.getElementById('home-evangile-cta');
   if(cta0) cta0.onclick = ()=> goTo('prier','textes-du-jour');
   loadHomeEvangileCard();
+
+  const quickLogoutBtn = document.getElementById('home-quick-logout-btn');
+  if(quickLogoutBtn) quickLogoutBtn.onclick = async ()=>{ await fbAuth.signOut(); window.location.reload(); };
 
   const guideCardP1 = document.getElementById('p1-guide-card');
   if(guideCardP1) guideCardP1.onclick = ()=> openGuide();
@@ -11164,13 +11179,13 @@ async function saveFamilyIntentions(list){
 }
 const APP_GUIDE_SECTIONS = [
   {icon:'🏠', title:'Accueil', text:"Votre point de départ chaque jour : un verset, votre série de prière, le saint du jour, et un accès rapide à tout le reste."},
-  {icon:'🙏', title:'Prier', text:"Les textes et offices du jour, les neuvaines, vos propres prières écrites, le carnet familial partagé, et des prières selon votre état d'esprit."},
-  {icon:'📿', title:'Dévotions', text:"Chapelet, chemin de croix, Miséricorde divine, Lectio Divina, et des ressources pour le combat spirituel."},
+  {icon:'🙏', title:'Prier', text:"Les textes et offices du jour (laudes, tierce, vêpres, complies, angélus, examen...), les neuvaines, un parcours de Carême en 40 jours, vos propres prières, un groupe de prière privé entre proches, le carnet familial partagé, et des prières selon votre état d'esprit."},
+  {icon:'📿', title:'Dévotions', text:"Chapelet, chemin de croix, Miséricorde divine, Lectio Divina, préparation à la confession, prière en famille, et des ressources pour le combat spirituel."},
   {icon:'📖', title:'Écritures', title2:'(Bible)', text:"La Bible complète, les psaumes classés par thème, le texte officiel AELF, et un plan de lecture sur un an."},
   {icon:'✝️', title:'Jésus', text:"La vie de Jésus, de Marie, de Joseph, et des méditations sur la Sainte Famille et le pardon."},
-  {icon:'⛪', title:'Église', text:"Le calendrier des saints, la vie liturgique, les actualités du Vatican en direct, et des pèlerinages virtuels à Lourdes et Fatima."},
+  {icon:'⛪', title:'Église', text:"Le calendrier des saints et un outil pour trouver votre saint patron, la vie liturgique (Avent, Carême, messe du dimanche), les actualités de l'Église, et des pèlerinages virtuels à Lourdes et Fatima."},
   {icon:'🌿', title:'Sagesse', text:"Vie spirituelle, enseignements, sacrements expliqués, un lexique catholique, un quiz, et des méditations audio."},
-  {icon:'👤', title:'Mon espace', text:"Votre compte, votre journal intérieur, vos favoris, vos statistiques, et tous les réglages de l'application."},
+  {icon:'👤', title:'Mon espace', text:"Votre compte et votre parcours, un journal intérieur (carnet de grâces, souvenirs), un espace de réconfort guidé et de mémorial pour vos défunts, vos favoris, une playlist de louanges, vos statistiques, et tous les réglages de l'application."},
   {icon:'🧭', title:'Le Guide', text:"Le bouton boussole en haut de l'écran : posez-vous la question « que voulez-vous faire ? » et laissez-vous guider."},
   {icon:'🕊️', title:'Mode Recueillement', text:"Un cadre plus calme et épuré, pour un moment de prière plus profond, sans distraction visuelle."},
   {icon:'💥', title:'Mode Bande Dessinée', text:"Un habillage plus coloré et ludique, pensé pour les plus jeunes."},
@@ -13889,7 +13904,7 @@ const I18N = {
     searchInviteLabel:'Chercher une prière, un saint, un psaume…', searchInviteTitle:"Rechercher dans toute l'application",
     fabPrier:'Prier maintenant', fabPrierTitle:'Prier maintenant',
     searchInputPlaceholder:'Rechercher un psaume, un saint, une prière…', voiceSearchTitle:'Recherche vocale',
-    tabAccueil:'Accueil', tabPrier:'Prier', tabBible:'Bible', tabDecouvrir:'Découvrir', tabChapelle:'Ma chapelle',
+    tabAccueil:'Accueil', tabPrier:'Prier', tabBible:'Bible', tabDecouvrir:'Découvrir', tabChapelle:'Mon espace',
     goodMorning:'Bonjour', goodEvening:'Bonsoir', homeSubtitle:'Un moment avec Dieu pour aujourd’hui',
     contentNotice:"Le contenu de cette page (prières, textes) est encore en français — seule l'interface est traduite pour l'instant."
   },
@@ -13906,7 +13921,7 @@ const I18N = {
     searchInviteLabel:'Search a prayer, a saint, a psalm…', searchInviteTitle:'Search the whole app',
     fabPrier:'Pray now', fabPrierTitle:'Pray now',
     searchInputPlaceholder:'Search a psalm, a saint, a prayer…', voiceSearchTitle:'Voice search',
-    tabAccueil:'Home', tabPrier:'Pray', tabBible:'Bible', tabDecouvrir:'Discover', tabChapelle:'My Chapel',
+    tabAccueil:'Home', tabPrier:'Pray', tabBible:'Bible', tabDecouvrir:'Discover', tabChapelle:'My Space',
     goodMorning:'Good morning', goodEvening:'Good evening', homeSubtitle:'A moment with God, for today',
     contentNotice:"This page's content (prayers, texts) is still in French — only the interface is translated for now."
   }
@@ -14308,14 +14323,18 @@ function renderBreadcrumb(){
 
 /* ================= main dispatcher ================= */
 function renderScreen(){
-  const isHomeCarousel = PRIMARY === 'accueil' && (ONBOARDING_SEEN || WELCOME_SEEN_THIS_SESSION);
+  const welcomeDemoIsNew = WELCOME_DEMO_LAST_SEEN_VERSION < WELCOME_DEMO_VERSION;
+  const showWelcomeSplash = (!ONBOARDING_SEEN || welcomeDemoIsNew) && !WELCOME_SEEN_THIS_SESSION;
+  const isHomeCarousel = PRIMARY === 'accueil' && !showWelcomeSplash;
   document.getElementById('screen').classList.toggle('screen-carousel-mode', isHomeCarousel);
   if(PRIMARY === 'accueil'){
-    /* Deux écrans distincts : "Bienvenue" (courte présentation, uniquement pour
-       les nouveaux utilisateurs pas encore passés par l'accueil guidé) et
-       "Lumen Aujourd'hui" (accès direct au contenu spirituel du jour, pour
-       tous les utilisateurs réguliers — sans écran intermédiaire à traverser). */
-    if(!ONBOARDING_SEEN && !WELCOME_SEEN_THIS_SESSION) return renderWelcomeSplash();
+    /* Deux écrans distincts : "Bienvenue" (courte présentation + mini-démo,
+       montrée aux nouveaux utilisateurs pas encore passés par l'accueil guidé,
+       et une fois de plus aux utilisateurs déjà connus quand son contenu change
+       — voir WELCOME_DEMO_VERSION) et "Lumen Aujourd'hui" (accès direct au
+       contenu spirituel du jour, pour tous les utilisateurs réguliers — sans
+       écran intermédiaire à traverser). */
+    if(showWelcomeSplash) return renderWelcomeSplash();
     return renderHome();
   }
 
@@ -14588,6 +14607,7 @@ async function startApp(){
   TITLE_FONT = prefs.titleFont || 'fraunces';
   TAB_ORDER = prefs.tabOrder || [];
   ONBOARDING_SEEN = !!prefs.onboardingSeen;
+  WELCOME_DEMO_LAST_SEEN_VERSION = prefs.welcomeDemoVersion || 0;
   SEEN_MILESTONES = prefs.seenMilestones || [];
   LAST_SUMMARY_SEEN = prefs.lastSummarySeen || '';
   USER_NAME = prefs.userName || (CURRENT_USER && CURRENT_USER.displayName ? CURRENT_USER.displayName.split(' ')[0] : '');

@@ -1069,7 +1069,7 @@
   /* Liste de rubriques façon maquette : rangées plates (icône rond + titre +
      sous-titre + chevron), séparées par un simple filet, sans encadré de
      carte — utilisée par tous les écrans "hub" (Prier, Bible, Découvrir,
-     Église, Dévotions, Jésus, Sagesse, Ma chapelle). */
+     Église, Dévotions, Jésus, Sagesse, Mon espace). */
   .rubric-list{ display:flex; flex-direction:column; }
   /* Carousel d'actualités (ex. Vatican News) : défilement horizontal,
      une carte image+titre+résumé par brève, avec accroche visuelle au
