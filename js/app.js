@@ -11273,9 +11273,14 @@ function renderFamilyIntentions(){
       <div class="card">
         <label style="font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); display:block; margin-bottom:6px;">Code de famille (inventez-en un, et partagez-le aux vôtres)</label>
         <input type="text" id="family-code-input" placeholder="ex. Dupont2024">
-        <button class="btn btn-primary btn-sm" id="family-code-join-btn" style="margin-top:10px; width:100%;">Rejoindre / créer ce carnet</button>
+        <button class="btn btn-ghost btn-sm" id="family-code-generate-btn" style="margin-top:8px; width:100%;">🎲 Générer un code aléatoire plus sûr</button>
+        <button class="btn btn-primary btn-sm" id="family-code-join-btn" style="margin-top:8px; width:100%;">Rejoindre / créer ce carnet</button>
       </div>
-      <p class="studio-note" style="margin-top:10px; text-align:center;">⚠️ Toute personne connaissant ce code pourra voir et modifier le carnet — choisissez un code que seule votre famille connaît.</p>`;
+      <p class="studio-note" style="margin-top:10px; text-align:center;">⚠️ Toute personne connaissant ce code pourra voir et modifier le carnet — un code facile à deviner (prénom, année) est moins sûr qu'un code aléatoire. Choisissez-en un que seule votre famille connaît, et évitez de le publier publiquement.</p>`;
+    const generateBtn = document.getElementById('family-code-generate-btn');
+    if(generateBtn) generateBtn.onclick = ()=>{
+      document.getElementById('family-code-input').value = generateGroupCode();
+    };
     document.getElementById('family-code-join-btn').onclick = async ()=>{
       const val = document.getElementById('family-code-input').value.trim();
       if(!val){ showToast('Entrez un code'); return; }
