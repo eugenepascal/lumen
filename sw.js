@@ -6,7 +6,7 @@
    contenu dynamique ou qui ne nous appartient pas.
    Changez CACHE_VERSION pour forcer les navigateurs à rafraîchir le cache
    après une mise à jour du shell. */
-const CACHE_VERSION = 'lumen-shell-v1';
+const CACHE_VERSION = 'lumen-shell-v2';
 
 const SHELL_ASSETS = [
   './',
@@ -19,6 +19,9 @@ const SHELL_ASSETS = [
   './images/icons/icon-192.png',
   './images/icons/icon-512.png',
   './images/icons/apple-touch-icon.png',
+  './images/author-welcome.jpg',
+  './audio/bienvenue.m4a',
+  './videos/demo.mp4',
   './images/annunciation.svg',
   './images/assumption.svg',
   './images/bible.svg',
