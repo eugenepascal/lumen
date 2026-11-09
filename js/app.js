@@ -1522,21 +1522,6 @@ const SPIRITUALITE = [
   }
 ];
 
-const AUTRES_TEXTES = [
-  {
-    id:"comparaison-textes",
-    title:"D'autres textes sacrés",
-    desc:"Un aperçu factuel de quelques grandes écritures religieuses, avec leurs points communs et leurs divergences par rapport à la Bible.",
-    entries:[
-      {name:"La Torah (judaïsme)", dates:"", avatar:"📚", tag:null, ref:"Genèse à Deutéronome, les cinq premiers livres", summary:"Point commun majeur : la Torah correspond aux cinq premiers livres de la Bible chrétienne, partageant les mêmes récits fondateurs — création, patriarches, Exode, alliance du Sinaï, lois données à Moïse. Divergence principale : le judaïsme ne reconnaît pas le Nouveau Testament ni Jésus comme messie, et place à côté de la Torah écrite une tradition orale immense, consignée dans le Talmud, jugée tout aussi essentielle à son interprétation. La Torah y reste une loi vivante à étudier et à pratiquer plutôt qu'un simple récit historique."},
-      {name:"Le Coran (islam)", dates:"", avatar:"📚", tag:null, ref:"114 sourates, révélées au VIIe siècle", summary:"Point commun : le Coran reprend plusieurs figures bibliques, Abraham, Moïse, Marie et Jésus y occupent une place importante, ce dernier étant reconnu comme un prophète né d'une naissance virginale. Divergence majeure : l'islam rejette la divinité de Jésus, sa mort en croix telle que rapportée dans les évangiles, et la Trinité, insistant sur une unicité stricte de Dieu. Le Coran est considéré par la tradition musulmane comme la révélation finale, corrigeant des altérations qu'elle attribue aux textes juifs et chrétiens antérieurs."},
-      {name:"Les textes hindous (Véda, Bhagavad-Gîtâ)", dates:"", avatar:"📚", tag:null, ref:"Corpus védique, composé sur plus d'un millénaire", summary:"Divergence de fond : l'hindouisme n'a pas de texte fondateur unique ni de figure historique centrale comparable à Abraham ou Jésus ; ses écrits combinent hymnes, philosophie et récits épiques développés sur une très longue période. La conception du divin y varie aussi fortement, du polythéisme rituel des Véda à des visions plus unitaires dans les textes philosophiques ultérieurs. Point commun limité : une quête de sens face à la souffrance et une place importante donnée à la discipline spirituelle, bien que le cadre reste celui de la réincarnation et de la libération plutôt que de la résurrection et de la grâce."},
-      {name:"Les textes bouddhistes (Tripitaka)", dates:"", avatar:"📚", tag:null, ref:"Discours attribués au Bouddha, rédigés après sa mort", summary:"Divergence essentielle : le bouddhisme classique ne repose pas sur un dieu créateur révélant sa volonté, mais sur l'enseignement d'un homme sur la nature de la souffrance et les moyens de s'en libérer. La notion de salut y diffère radicalement : il s'agit d'atteindre l'éveil par un cheminement personnel plutôt que de recevoir un pardon offert par grâce. Point commun : une attention comparable portée à l'éthique du quotidien, à la compassion envers autrui et à la maîtrise de soi, des thèmes également présents dans l'enseignement biblique."},
-      {name:"Le Livre de Mormon (mouvement mormon)", dates:"", avatar:"📚", tag:null, ref:"Publié en 1830, aux États-Unis", summary:"Point commun : ce texte se présente comme un complément à la Bible plutôt qu'un remplacement, et revendique la même filiation avec le christianisme, y compris la figure de Jésus-Christ. Divergence : il ajoute un récit distinct situé en Amérique précolombienne, et son autorité n'est reconnue ni par le judaïsme, ni par l'islam, ni par la grande majorité des confessions chrétiennes historiques, qui considèrent le canon biblique déjà clos."}
-    ]
-  }
-];
-
 const GENEALOGY = [
   {era:"Les origines"},
   {label:"Adam", note:"Genèse 2 à 3"},
@@ -2948,7 +2933,6 @@ const SECTION_ICONS = {
   "recit-creation":"🌍", "cycle-schema":"🔄", "douze-juges":"⚔️", "villes-jugees":"🔥",
   "anges-missions":"👼", "fin-des-temps":"📜", "vie-spirituelle":"🕯️", "satan-esprits":"🗡️",
   "peches-capitaux":"⚖️",
-  "comparaison-textes":"📚",
   "enseignements-emilie-faye-cabral":"🕊️",
   "prieres-fondamentales":"📿", "neuvaines":"🕯️",
   "apotres-martyrs":"⛓️", "peres-eglise":"📖", "moyen-age":"🏰", "temps-modernes":"⛪", "epoque-contemporaine":"✨",
@@ -3065,7 +3049,7 @@ const GRANDS_RECITS = {
 const RECITS_GROUPS = [...CREATION, ...CYCLE, ...VILLES, ...ANGES, ...APOCALYPSE, GRANDS_RECITS,
   { id:"genealogie", title:"Généalogie biblique", desc:"Une ligne du temps simplifiée, des origines à Jésus.", special:"genealogy", entries:[] }
 ];
-const ENSEIGNEMENTS_ALL = [...ENSEIGNEMENTS, ...AUTRES_TEXTES];
+const ENSEIGNEMENTS_ALL = ENSEIGNEMENTS;
 
 const BIBLE_BOOKS_AT = [
   "Genèse|Genesis","Exode|Exodus","Lévitique|Leviticus","Nombres|Numbers","Deutéronome|Deuteronomy",
@@ -5336,7 +5320,7 @@ function renderEspaceHub(){
 }
 const SAGESSE_HUB_CATEGORIES = [
   {label:'Vie spirituelle', desc:'Discernement, vertus, grandir dans la foi', icon:'💡', goto:'spiritualite', color:'#4A3D6B'},
-  {label:'Enseignements', desc:"Doctrine, catéchisme, autres traditions", icon:'🎓', goto:'enseignements', color:'#7C1F2E'},
+  {label:'Enseignements', desc:"Doctrine, catéchisme, témoignages", icon:'🎓', goto:'enseignements', color:'#7C1F2E'},
   {label:'Sacrements', desc:'Les 7 sacrements expliqués simplement', icon:'✨', goto:'sacrements', color:'#B8863B'},
   {label:'Lexique', desc:'Les mots de la foi catholique expliqués', icon:'🔤', goto:'lexique', color:'#5C6E58'},
   {label:'Quiz', desc:'Testez et approfondissez vos connaissances', icon:'❓', goto:'quiz', color:'#3F6B2E'},
@@ -14403,7 +14387,7 @@ function renderScreen(){
     const sub = SUBTAB.sagesse || 'accueil-sagesse';
     if(sub === 'accueil-sagesse') return renderSagesseHub();
     if(sub === 'spiritualite') return renderGenericSection(SPIRITUALITE, 'sagesse:spiritualite', 'Vie spirituelle');
-    if(sub === 'enseignements') return renderGenericSection(ENSEIGNEMENTS_ALL, 'sagesse:enseignements', 'Enseignements & autres traditions');
+    if(sub === 'enseignements') return renderGenericSection(ENSEIGNEMENTS_ALL, 'sagesse:enseignements', 'Enseignements');
     if(sub === 'sacrements') return renderSacrements();
     if(sub === 'lexique') return renderGlossary();
     if(sub === 'quiz') return renderQuiz();
