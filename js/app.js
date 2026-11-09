@@ -3319,7 +3319,7 @@ const QUIZ_QUESTIONS = [
 const ONBOARDING_SLIDES = [
   {icon:"🕯️", title:"Bienvenue sur Lumen", text:"Une application pour prier chaque jour : neuvaines, intentions, psaumes, saints, calendrier et bien plus."},
   {icon:"👤", title:"Faisons connaissance", text:"welcome-personal"},
-  {icon:"🧭", title:"Sept grandes sections", text:"Accueil, Prier, Dévotions, Écritures, Jésus, Église, Sagesse et Mon espace — chacune avec ses propres rubriques, accessibles depuis la barre de navigation."},
+  {icon:"🧭", title:"Cinq grandes sections", text:"Accueil, Prier, Bible, Découvrir (la vie de Jésus, l'Église et la sagesse spirituelle) et Mon espace — chacune avec ses propres rubriques, accessibles depuis la barre de navigation."},
   {icon:"🔍", title:"Tout retrouver facilement", text:"Utilisez la loupe en haut de l'écran pour rechercher un psaume, un saint ou une prière, où qu'il se trouve dans l'application."},
   {icon:"⭐", title:"Vos favoris et votre suivi", text:"Épinglez ce qui compte pour vous, suivez votre série de prière, et gardez un journal personnel dans « Mon espace »."},
   {icon:"🗺️", title:"Par où commencer ?", text:"guide"}
