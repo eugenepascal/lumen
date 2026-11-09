@@ -4525,8 +4525,10 @@ function renderWelcomeSplash(){
           </div>
         </div>
       </div>
-      <div class="welcome-splash-candle lumen-flame lumen-flame-blaze" id="welcome-splash-flame">
-        <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
+      <div class="welcome-splash-candle-wrap">
+        <div class="welcome-splash-candle lumen-flame lumen-flame-blaze" id="welcome-splash-flame">
+          <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
+        </div>
       </div>
       <h1 class="welcome-splash-title">Lumen</h1>
       <p class="welcome-splash-tagline">Une lumière pour chaque jour</p>
