@@ -14004,20 +14004,12 @@ function openThemePicker(){
       </button>`;
   }
 
+  /* Sélecteur de langue masqué tant que la traduction anglaise du contenu
+     (saints, neuvaines, textes bibliques...) n'est pas terminée — seule
+     une partie de l'interface est traduite pour l'instant, ce qui donnerait
+     un mélange français/anglais déroutant pour le public. LANG reste forcé
+     à 'fr' (voir loadUserPrefs) jusqu'à ce que ce soit prêt à être réactivé. */
   list.innerHTML = `
-    <h2 class="section-title" style="font-size:14px;">🌐 Langue / Language</h2>
-    <p class="section-desc" style="margin-top:-6px;">L'interface se traduit ; les textes de prière restent en français pour l'instant.</p>
-    <div class="grid" style="grid-template-columns:repeat(2,1fr); margin-bottom:16px;">
-      <button class="card theme-swatch-btn ${LANG==='fr'?'theme-active':''}" data-lang-key="fr" style="text-align:center; cursor:pointer; border:none; padding-top:10px;">
-        <span style="font-size:20px;">🇫🇷</span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:4px 0 0; color:var(--ink);">Français</p>
-      </button>
-      <button class="card theme-swatch-btn ${LANG==='en'?'theme-active':''}" data-lang-key="en" style="text-align:center; cursor:pointer; border:none; padding-top:10px;">
-        <span style="font-size:20px;">🇬🇧</span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; margin:4px 0 0; color:var(--ink);">English</p>
-      </button>
-    </div>
-
     <button class="card theme-swatch-btn ${THEME_MODE==='auto'?'theme-active':''}" id="theme-auto-btn" style="width:100%; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; border:none; margin-bottom:14px;">
       <span style="font-size:22px;">🔄</span>
       <span>
@@ -14591,7 +14583,9 @@ async function startApp(){
   THEME_MODE = (prefs.themeMode === 'manual') ? 'manual' : 'auto';
   BG_PATTERN = prefs.bgPattern || 'croix';
   BG_WALLPAPER = prefs.bgWallpaper || 'aucun';
-  LANG = prefs.lang === 'en' ? 'en' : 'fr';
+  /* Forcé en français tant que le sélecteur de langue est masqué (voir openThemePicker) :
+     la traduction anglaise du contenu n'est pas encore terminée. */
+  LANG = 'fr';
   RECUEILLEMENT_MODE = !!prefs.recueillementMode;
   document.body.classList.toggle('comic-mode', !!prefs.comicMode);
   FAMILY_CODE = prefs.familyCode || null;
