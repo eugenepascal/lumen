@@ -182,6 +182,27 @@ function makeFirestoreShim(uid){
    favoris... On recopie les données locales (stockées via NATIVE_STORAGE)
    vers le nouveau compte Firestore, sans jamais écraser une donnée déjà
    présente sur ce compte (cas d'une connexion à un compte existant). */
+/* Même si le compte a déjà ses propres préférences (donc pas de migration
+   complète de 'lumen-prefs' ci-dessous), on reporte quand même l'état "démo
+   d'accueil déjà vue" si l'invité l'a vue plus récemment — sinon, voir la
+   démo sans compte puis se connecter à un compte existant la refaisait
+   réapparaître indéfiniment à chaque connexion. */
+async function mergeWelcomeSeenForward(remote, remoteRaw, localRaw){
+  try{
+    const remotePrefs = JSON.parse(remoteRaw);
+    const localPrefs = JSON.parse(localRaw);
+    let changed = false;
+    if((localPrefs.welcomeDemoVersion||0) > (remotePrefs.welcomeDemoVersion||0)){
+      remotePrefs.welcomeDemoVersion = localPrefs.welcomeDemoVersion;
+      changed = true;
+    }
+    if(localPrefs.onboardingSeen && !remotePrefs.onboardingSeen){
+      remotePrefs.onboardingSeen = true;
+      changed = true;
+    }
+    if(changed) await remote.set('lumen-prefs', JSON.stringify(remotePrefs), false);
+  }catch(e){ console.warn('Report de l’état « démo vue » ignoré :', e); }
+}
 async function migrateGuestDataToAccount(uid){
   try{
     const listing = await NATIVE_STORAGE.list();
@@ -192,8 +213,13 @@ async function migrateGuestDataToAccount(uid){
     for(const key of keys){
       try{
         const existing = await remote.get(key, false);
-        if(existing && existing.value != null) continue;
         const local = await NATIVE_STORAGE.get(key, false);
+        if(existing && existing.value != null){
+          if(key === 'lumen-prefs' && local && local.value != null){
+            await mergeWelcomeSeenForward(remote, existing.value, local.value);
+          }
+          continue;
+        }
         if(local && local.value != null){
           await remote.set(key, local.value, false);
           migrated++;
