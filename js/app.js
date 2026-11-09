@@ -1566,19 +1566,6 @@ const GENEALOGY = [
 
 const ENSEIGNEMENTS = [
   {
-    id:"enseignements-madiama-fall",
-    title:"Enseignements du Pr Madiama Fall",
-    desc:"Un index par thèmes des enseignements du Professeur Madiama Fall, érudit sénégalais (islamologie, astronomie, sciences). Chaque vidéo se regarde directement ici, sans quitter l'application.",
-    entries:[
-      {name:"L'histoire du prophète Adam", dates:"", avatar:"🎓", tag:null, ref:"Récit complet, tradition coranique", externalUrl:"https://www.youtube.com/watch?v=W-32hrQmLJk", linkLabel:"Regarder ↗", summary:"Le récit complet du prophète Adam, présenté par le Professeur Madiama Fall, avec une mise en lien avec des enseignements comme l'humilité et la confiance en Dieu. La figure d'Adam est aussi centrale dans la tradition biblique, avec un récit parfois convergent et parfois différent entre les deux traditions."},
-      {name:"L'histoire du prophète Ibrahim (Abraham)", dates:"", avatar:"🎓", tag:null, ref:"« Le père des prophètes », tradition coranique", externalUrl:"https://www.youtube.com/watch?v=oGgzddY67so", linkLabel:"Regarder ↗", summary:"Le récit complet du prophète Ibrahim, figure centrale à la fois dans l'islam, le christianisme et le judaïsme, présenté par le Professeur Madiama Fall."},
-      {name:"L'astronomie dans toutes ses étapes", dates:"", avatar:"🎓", tag:null, ref:"Émission « Al Kawn », astronomie et islam", externalUrl:"https://www.youtube.com/watch?v=oF8TAIs68U8", linkLabel:"Regarder ↗", summary:"Une émission consacrée à l'astronomie, mise en relation avec une réflexion islamique sur la création et l'univers, dans l'esprit d'un dialogue entre foi et savoir scientifique."},
-      {name:"Spiritualité et vie quotidienne", dates:"", avatar:"🎓", tag:null, ref:"Épisodes sur les rêves, la dépression, l'amour, la vie de couple", externalUrl:"https://open.spotify.com/show/2jY0XCjQPy9aYjivRG7QkP", linkLabel:"Écouter sur Spotify ↗", summary:"Des sujets de vie quotidienne — la spiritualité des rêves, la dépression, l'amour, la vie de couple — traités à partir d'une perspective islamique et d'une sagesse pratique destinée à un large public."},
-      {name:"Histoire, culture et société", dates:"", avatar:"🎓", tag:null, ref:"Épisodes sur l'histoire de l'islam, la culture et l'éducation", externalUrl:"https://podcasts.apple.com/us/podcast/pr-madiama-fall/id1770772872", linkLabel:"Écouter sur Apple Podcasts ↗", summary:"Des analyses de société et d'histoire, dont un épisode sur ce qui est présenté comme les causes et conséquences d'une désarabisation de l'islam, ainsi que des réflexions sur la culture et l'éducation. Ce sont des sujets de débat au sein même du monde musulman ; l'épisode présente le point de vue du Professeur, pas un consensus."},
-      {name:"Questions Impossibles — épisode avec Oustaz Ndiaga Samb", dates:"", avatar:"🎓", tag:null, ref:"Série de dialogues avec Ndiaga Samb (Oustaz Ndiaga)", externalUrl:"https://www.youtube.com/watch?v=MyM8dxOvUkI", linkLabel:"Regarder ↗", summary:"Une série de questions-réponses entre le Professeur Madiama Fall et Ndiaga Samb, abordant des sujets présentés comme fascinants, mystérieux ou spirituels, à la croisée de l'islam et des sciences."}
-    ]
-  },
-  {
     id:"enseignements-emilie-faye-cabral",
     title:"Témoignage d'Emilie Faye Cabral",
     desc:"Emilie Faye Cabral était une femme de foi sénégalaise, convertie de l'islam au catholicisme, connue pour ses témoignages et prédications lors de retraites. Elle est aujourd'hui décédée — que son âme repose en paix. Voici l'un de ses enseignements retrouvés, à regarder directement ici.",
@@ -2962,7 +2949,7 @@ const SECTION_ICONS = {
   "anges-missions":"👼", "fin-des-temps":"📜", "vie-spirituelle":"🕯️", "satan-esprits":"🗡️",
   "peches-capitaux":"⚖️",
   "comparaison-textes":"📚",
-  "enseignements-madiama-fall":"🎓", "enseignements-emilie-faye-cabral":"🕊️",
+  "enseignements-emilie-faye-cabral":"🕊️",
   "prieres-fondamentales":"📿", "neuvaines":"🕯️",
   "apotres-martyrs":"⛓️", "peres-eglise":"📖", "moyen-age":"🏰", "temps-modernes":"⛪", "epoque-contemporaine":"✨",
   "temps-liturgiques":"🗓️", "fetes-fixes":"⭐", "fetes-mobiles":"🌙",
