@@ -4516,6 +4516,9 @@ function renderWelcomeSplash(){
   const saluTime = hour<5 ? 'Bonsoir' : hour<12 ? 'Bonjour' : hour<18 ? 'Bon après-midi' : 'Bonsoir';
   document.getElementById('screen').innerHTML = `
     <div class="welcome-splash">
+      <div class="welcome-splash-candle lumen-flame lumen-flame-strong" id="welcome-splash-flame">
+        <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
+      </div>
       <div class="welcome-splash-avatar-wrap">
         <img src="${WELCOME_AVATAR_IMG}" alt="" class="welcome-splash-avatar" id="welcome-splash-avatar"
           onerror="this.onerror=null; this.style.display='none'; document.getElementById('welcome-splash-avatar-fallback').style.display='flex';">
@@ -4540,6 +4543,10 @@ function renderWelcomeSplash(){
     render();
     openGuide();
   };
+  /* La bougie s'allume juste après l'arrivée sur l'écran, comme si on venait
+     de la craquer — un petit geste d'accueil avant même d'entrer dans l'appli. */
+  const splashFlame = document.getElementById('welcome-splash-flame');
+  if(splashFlame) setTimeout(()=> splashFlame.classList.add('lit'), 550);
 }
 /* message vocal de bienvenue + mini-démo de l'appli : un tour d'horizon en vidéo,
    avec la photo de l'auteur en image d'aperçu (poster) et sa voix de bienvenue
