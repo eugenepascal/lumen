@@ -4500,9 +4500,9 @@ function homeTitleRowHTML(emoji, text, tint, linkLabel, linkId, linkIsStatic){
 }
 let HOME_PAGE_IDX = 0;
 let WELCOME_SEEN_THIS_SESSION = false;
-/* chemins des médias de bienvenue (avatar + vidéo de l'auteur) — à fournir par l'auteur, dégradation élégante si absents */
+/* chemins des médias de bienvenue (avatar + message vocal de l'auteur) — dégradation élégante si absents */
 const WELCOME_AVATAR_IMG = 'images/author-welcome.jpg';
-const WELCOME_VIDEO_SRC = 'videos/bienvenue.mp4';
+const WELCOME_AUDIO_SRC = 'audio/bienvenue.m4a';
 function renderWelcomeSplash(){
   const hour = new Date().getHours();
   const saluTime = hour<5 ? 'Bonsoir' : hour<12 ? 'Bonjour' : hour<18 ? 'Bon après-midi' : 'Bonsoir';
@@ -4521,26 +4521,29 @@ function renderWelcomeSplash(){
       <p class="welcome-splash-tagline">Une lumière pour chaque jour</p>
       <p class="welcome-splash-text">${saluTime}${USER_NAME ? ', <b>'+USER_NAME+'</b>' : ''} ✦<br>
       Lumen est un espace pour prier, lire la Parole, suivre une neuvaine, et vous recueillir — à votre rythme, chaque jour.</p>
-      <button class="btn btn-ghost welcome-splash-video-btn" id="welcome-video-btn" style="width:100%; max-width:280px;">▶ Message de bienvenue</button>
+      <button class="btn btn-ghost welcome-splash-video-btn" id="welcome-audio-btn" style="width:100%; max-width:280px;">🔊 Message de bienvenue</button>
       <button class="btn btn-primary" id="welcome-enter-btn" style="width:100%; max-width:280px;">Entrer →</button>
     </div>`;
-  document.getElementById('welcome-video-btn').onclick = openWelcomeVideoModal;
+  document.getElementById('welcome-audio-btn').onclick = openWelcomeAudioModal;
   document.getElementById('welcome-enter-btn').onclick = ()=>{
     WELCOME_SEEN_THIS_SESSION = true;
     render();
     openGuide();
   };
 }
-/* vidéo de bienvenue locale (enregistrement réel de l'auteur) — réutilise le lecteur modal mais avec une balise <video>, et un message gracieux si le fichier n'est pas encore disponible */
-function openWelcomeVideoModal(){
+/* message vocal de bienvenue local (enregistrement réel de l'auteur) — réutilise le lecteur modal mais avec une balise <audio>, et un message gracieux si le fichier n'est pas encore disponible */
+function openWelcomeAudioModal(){
   document.getElementById('video-modal-title').textContent = 'Un mot de bienvenue';
   document.getElementById('video-modal-caption').textContent = '';
   document.getElementById('video-modal-body').innerHTML =
-    `<video src="${WELCOME_VIDEO_SRC}" controls autoplay playsinline style="width:100%; height:100%; background:#000;" id="welcome-video-el"></video>`;
-  document.getElementById('welcome-video-el').addEventListener('error', ()=>{
+    `<div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:24px;">
+      <img src="${WELCOME_AVATAR_IMG}" alt="" style="width:84px; height:84px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.4);" onerror="this.style.display='none';">
+      <audio src="${WELCOME_AUDIO_SRC}" controls autoplay style="width:100%; max-width:320px;" id="welcome-audio-el"></audio>
+    </div>`;
+  document.getElementById('welcome-audio-el').addEventListener('error', ()=>{
     document.getElementById('video-modal-body').innerHTML =
       `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:24px; text-align:center; color:#fff;">
-        <p style="margin:0; font-size:15px; line-height:1.5;">La vidéo de bienvenue sera bientôt disponible 🙏</p>
+        <p style="margin:0; font-size:15px; line-height:1.5;">Le message de bienvenue sera bientôt disponible 🙏</p>
       </div>`;
   });
   document.getElementById('video-modal-overlay').classList.remove('hidden');
