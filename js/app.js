@@ -7405,10 +7405,16 @@ function renderGenericSection(groups, compKey, sectionLabel){
     html += `<div class="subnav-grouped">${catGroups.map(cat=>{
       const chips = cat.ids.filter(id=>byId[id]);
       if(!chips.length) return '';
-      return `<div class="subnav-group">
-        <span class="subnav-group-label">${cat.label}</span>
-        <div class="chip-row" style="margin:0;">${chips.map(id=>
-          `<button class="chip ${id===group.id?'active':''}" data-group="${id}">${(SECTION_ICONS[id]||'')} ${byId[id].title}</button>`
+      const m = cat.label.match(/^(\S+)\s*(.*)$/);
+      const icon = m ? m[1] : '🔸';
+      const title = m ? m[2] : cat.label;
+      return `<div class="subnav-group expanded">
+        <span class="subnav-group-head" style="cursor:default;">
+          <span class="subnav-group-icon">${icon}</span>
+          <span class="subnav-group-title">${title}</span>
+        </span>
+        <div class="subnav-list">${chips.map(id=>
+          `<button class="subnav-item chip ${id===group.id?'active':''}" data-group="${id}"><span>${(SECTION_ICONS[id]||'')} ${byId[id].title}</span><span class="subnav-chevron">›</span></button>`
         ).join('')}</div>
       </div>`;
     }).join('')}</div>`;
