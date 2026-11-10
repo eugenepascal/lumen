@@ -28,8 +28,15 @@
     outline: 3px solid var(--gold);
     outline-offset: 2px;
   }
+  /* Couleur de fond posée aussi sur <html> (pas seulement <body>) : sur
+     mobile, l'effet "élastique" en bas de page (ou le repli de la barre
+     d'adresse) laisse voir l'arrière-plan par défaut du document, qui est
+     blanc tant qu'on ne le colore pas explicitement ici. On neutralise
+     aussi le rebond élastique lui-même pour éviter l'effet visuel. */
+  html{ background:#2a0a13; overscroll-behavior-y:none; }
   html,body{margin:0; padding:0; height:100%;}
   body{
+    overscroll-behavior-y:none;
     background:
       radial-gradient(circle at 22% -8%, rgba(201,162,39,0.16), transparent 45%),
       radial-gradient(circle at 82% 105%, rgba(124,31,46,0.22), transparent 55%),
