@@ -5850,6 +5850,7 @@ function renderNovenaDayPage(n, info, dayIndex){
       u.lang = 'fr-FR';
       applyNaturalVoice(u);
       u.onend = ()=>{ if(NOVENA_DAY_AUDIO_PLAYING === playId){ NOVENA_DAY_AUDIO_PLAYING = null; render(); } };
+      u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
       NOVENA_DAY_AUDIO_PLAYING = playId;
       window.speechSynthesis.speak(u);
       render();
@@ -9148,12 +9149,35 @@ function applyNaturalVoice(u){
 if(window.speechSynthesis){
   window.speechSynthesis.onvoiceschanged = ()=>{ BEST_FR_VOICE_CACHE = getBestFrenchVoice(); };
 }
+// La synthèse vocale dépend entièrement du moteur TTS du navigateur/appareil
+// (pas de fichier audio envoyé par nos serveurs). Si ce moteur échoue, le
+// navigateur déclenche un évènement "error" silencieux : sans ce handler,
+// l'appli affichait "lecture en cours" sans qu'aucun son ne sorte, avec
+// aucun moyen de comprendre pourquoi. On ignore les annulations volontaires
+// (canceled/interrupted, déclenchées par nous à chaque changement de page)
+// et on explique les vraies pannes.
+function ttsErrorToast(e){
+  const code = e && e.error;
+  if(code === 'canceled' || code === 'interrupted') return; // normal, pas une panne
+  const messages = {
+    'audio-busy': "🔇 Lecture vocale impossible : le haut-parleur est occupé par une autre application.",
+    'audio-hardware': "🔇 Lecture vocale impossible : problème avec le haut-parleur de l'appareil.",
+    'not-allowed': "🔇 Lecture vocale bloquée par le navigateur. Vérifiez que l'onglet n'est pas en sourdine (clic droit sur l'onglet → Activer le son).",
+    'synthesis-unavailable': "🔇 Aucune voix de synthèse disponible sur cet appareil. Sur Android, vérifiez que « Google Text-to-Speech » est installé et activé dans Paramètres → Accessibilité.",
+    'synthesis-failed': "🔇 La synthèse vocale a échoué sur cet appareil.",
+    'voice-unavailable': "🔇 La voix française n'est pas installée sur cet appareil.",
+    'language-unavailable': "🔇 Aucune voix française disponible sur cet appareil.",
+    'network': "🔇 Lecture vocale impossible : la voix choisie nécessite une connexion internet.",
+  };
+  showToast(messages[code] || ("🔇 Lecture vocale indisponible (" + (code || 'erreur inconnue') + "). Vérifiez le volume et que l'onglet n'est pas en sourdine."));
+}
 function speakText(text){
   try{
     if(!window.speechSynthesis){ showToast("Lecture vocale indisponible sur ce navigateur"); return; }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     applyNaturalVoice(u);
+    u.onerror = ttsErrorToast;
     window.speechSynthesis.speak(u);
   }catch(e){ showToast("Lecture vocale indisponible"); }
 }
@@ -9330,7 +9354,7 @@ function lumenSpeechStart(){
     if(LUMEN_SPEECH_CTX && LUMEN_SPEECH_CTX.onEnd) LUMEN_SPEECH_CTX.onEnd();
     else lumenPlayerHide();
   };
-  u.onerror = u.onend;
+  u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
   window.speechSynthesis.speak(u);
   syncReadPageIcon();
 }
@@ -10352,6 +10376,7 @@ function wireRosaryEvents(){
       const u = new SpeechSynthesisUtterance(text);
       u.lang = LANG==='en' ? 'en-US' : 'fr-FR'; u.rate = ROSARY_SETTINGS.speed; applyNaturalVoice(u);
       u.onend = ()=>{ if(ROSARY_AUDIO_PLAYING===key){ ROSARY_AUDIO_PLAYING=null; render(); } };
+      u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
       ROSARY_AUDIO_PLAYING = key;
       window.speechSynthesis.speak(u);
       render();
@@ -11510,6 +11535,7 @@ function renderMeditationsAudio(){
       const u = new SpeechSynthesisUtterance(MEDITATIONS[idx].title + '. ' + MEDITATIONS[idx].text);
       applyNaturalVoice(u); u.rate = 0.9;
       u.onend = ()=>{ MEDITATION_AUDIO_PLAYING = null; renderMeditationsAudio(); };
+      u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
       window.speechSynthesis.speak(u);
       MEDITATION_AUDIO_PLAYING = idx;
       renderMeditationsAudio();
@@ -13373,7 +13399,7 @@ function speakWithProgress(text, totalSeconds, onTick, onEnd){
     const textLen = Math.max(1, text.length);
     u.onboundary = (e)=>{ if(typeof e.charIndex === 'number') onTick(Math.min(1, e.charIndex/textLen)); };
     u.onend = ()=>{ onTick(1); onEnd(); };
-    u.onerror = ()=>{ onEnd(); };
+    u.onerror = (e)=>{ ttsErrorToast(e); onEnd(); };
     window.speechSynthesis.speak(u);
     return u;
   }catch(e){ showToast("Lecture vocale indisponible"); onEnd(); return null; }
