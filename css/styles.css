@@ -2172,7 +2172,7 @@
      une seule ligne) et déborde du cadre plutôt que de passer à la ligne,
      ce qui le faisait dépasser hors de l'écran sur téléphone (le dernier
      bouton, « A+ », devenait invisible, caché par #topbar{overflow:hidden}). */
-  .topbar-tools{ display:flex; gap:4px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; min-width:0; }
+  .topbar-tools{ display:flex; gap:4px; flex-shrink:1; flex-wrap:wrap; justify-content:flex-end; min-width:0; max-width:100%; }
   .tool-btn{
     background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); color:var(--vellum-light);
     border-radius:8px; min-width:40px; height:40px; padding:3px 4px; cursor:pointer; font-family:'Inter',sans-serif;
