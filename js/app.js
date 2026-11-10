@@ -4553,15 +4553,6 @@ function renderWelcomeSplash(){
   const saluTime = hour<5 ? 'Bonsoir' : hour<12 ? 'Bonjour' : hour<18 ? 'Bon après-midi' : 'Bonsoir';
   document.getElementById('screen').innerHTML = `
     <div class="welcome-splash">
-      <div class="welcome-splash-avatar-wrap">
-        <img src="${WELCOME_AVATAR_IMG}" alt="" class="welcome-splash-avatar" id="welcome-splash-avatar"
-          onerror="this.onerror=null; this.style.display='none'; document.getElementById('welcome-splash-avatar-fallback').style.display='flex';">
-        <div class="welcome-splash-avatar-fallback" id="welcome-splash-avatar-fallback" style="display:none;">
-          <div class="lumen-flame lumen-flame-blaze lit" style="margin:0 auto;">
-            <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
-          </div>
-        </div>
-      </div>
       <div class="welcome-splash-candle-wrap">
         <div class="welcome-splash-candle lumen-flame lumen-flame-blaze" id="welcome-splash-flame">
           <div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div>
@@ -4571,7 +4562,7 @@ function renderWelcomeSplash(){
       <p class="welcome-splash-tagline">Une lumière pour chaque jour</p>
       <p class="welcome-splash-text">${saluTime}${USER_NAME ? ', <b>'+USER_NAME+'</b>' : ''} ✦<br>
       Lumen est un espace pour prier, lire la Parole, suivre une neuvaine, et vous recueillir — à votre rythme, chaque jour.</p>
-      <button class="btn btn-ghost welcome-splash-video-btn" id="welcome-audio-btn" style="width:100%; max-width:280px;">🎬 Message de bienvenue & démo</button>
+      <button class="btn btn-ghost welcome-splash-video-btn" id="welcome-audio-btn" style="width:100%; max-width:280px;">▶️ Revoir la démo</button>
       <button class="btn btn-primary" id="welcome-enter-btn" style="width:100%; max-width:280px;">Entrer →</button>
     </div>`;
   document.getElementById('welcome-audio-btn').onclick = openWelcomeVideoModal;
@@ -4586,6 +4577,10 @@ function renderWelcomeSplash(){
      de la craquer — un petit geste d'accueil avant même d'entrer dans l'appli. */
   const splashFlame = document.getElementById('welcome-splash-flame');
   if(splashFlame) setTimeout(()=> splashFlame.classList.add('lit'), 550);
+  /* La fenêtre de démo s'ouvre directement à l'arrivée — plus besoin de
+     toucher un bouton pour la voir. Le bouton « Revoir la démo » reste
+     disponible si la personne la ferme trop vite et veut la relancer. */
+  setTimeout(openWelcomeVideoModal, 450);
 }
 /* message vocal de bienvenue + mini-démo de l'appli : un tour d'horizon en vidéo,
    avec la photo de l'auteur en image d'aperçu (poster) et sa voix de bienvenue
@@ -4595,9 +4590,8 @@ function openWelcomeVideoModal(){
   document.getElementById('video-modal-title').textContent = 'Un mot de bienvenue';
   document.getElementById('video-modal-caption').textContent = '';
   document.getElementById('video-modal-body').innerHTML =
-    `<div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px;">
-      <video src="${WELCOME_VIDEO_SRC}" poster="${WELCOME_AVATAR_IMG}" controls autoplay playsinline style="width:100%; max-width:640px; border-radius:10px; background:#000;" id="welcome-video-el"></video>
-    </div>`;
+    `<video src="${WELCOME_VIDEO_SRC}" poster="${WELCOME_AVATAR_IMG}" controls autoplay playsinline
+      style="width:100%; height:100%; display:block; object-fit:cover; background:#000;" id="welcome-video-el"></video>`;
   document.getElementById('welcome-video-el').addEventListener('error', ()=>{
     document.getElementById('video-modal-body').innerHTML =
       `<div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:24px;">

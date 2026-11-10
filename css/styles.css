@@ -2195,6 +2195,21 @@
     display:flex; gap:10px; align-items:center; padding:10px 6px; border-bottom:1px solid var(--hairline); cursor:pointer;
   }
   .search-result-item:hover{ background: rgba(184,134,59,0.08); }
+  /* Fenêtre vidéo (démo, bienvenue, saints...) : présentation "cinéma" plus
+     immersive qu'un panneau crème classique — fond sombre, cadre doré fin,
+     vidéo plus grande, pour une impression de meilleure qualité visuelle. */
+  .video-modal-panel{
+    max-width:640px !important;
+    background: linear-gradient(175deg, #241013 0%, #150a0c 100%) !important;
+    border:1px solid rgba(232,204,126,0.3);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(232,204,126,0.12);
+  }
+  .video-modal-head{ border-bottom:1px solid rgba(232,204,126,0.18); margin-bottom:0 !important; }
+  .video-modal-panel #video-modal-title{ color:var(--gold-light) !important; }
+  .video-modal-close-btn{ background:rgba(255,255,255,0.08); color:var(--vellum-light); }
+  .video-modal-caption-text{ color:rgba(244,239,228,0.65) !important; }
+  #video-modal-body video{ display:block; }
+  @media (min-width:600px){ .video-modal-panel{ max-width:720px !important; } }
   .search-result-name{ font-family:'Fraunces',serif; font-weight:600; font-size:14px; }
   .search-result-meta{ font-family:'Inter',sans-serif; font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.4px; }
 
