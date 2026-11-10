@@ -348,6 +348,30 @@ function wireAuthScreen(){
     const provider = new firebase.auth.GoogleAuthProvider();
     const googleBtn = document.getElementById('auth-google-btn');
     const originalLabel = googleBtn.innerHTML;
+    /* Une fois Lumen ajoutée à l'écran d'accueil (mode « standalone », sans
+       barre d'adresse Chrome), la fenêtre pop-up Google ne communique très
+       souvent pas correctement son résultat à la fenêtre qui l'a ouverte —
+       c'est une limitation connue des PWA installées, pas un hasard de
+       cookies : ça bloque alors systématiquement, à chaque tentative. On
+       saute donc directement la pop-up dans ce cas et on utilise
+       signInWithRedirect, qui navigue dans la MÊME fenêtre (celle de la
+       PWA) vers Google puis revient sur Lumen — aucune communication
+       inter-fenêtres n'est nécessaire. */
+    const isStandalonePWA = window.matchMedia('(display-mode: standalone)').matches
+      || window.matchMedia('(display-mode: fullscreen)').matches
+      || window.navigator.standalone === true;
+    if(isStandalonePWA){
+      googleBtn.disabled = true;
+      try{
+        await fbAuth.signInWithRedirect(provider);
+        return; // la page va se recharger vers Google — rien d'autre à faire ici
+      }catch(e){
+        googleBtn.disabled = false;
+        authError(friendlyAuthError(e));
+        showAuthResetOption();
+        return;
+      }
+    }
     googleBtn.disabled = true;
     /* Garde-fou : sur certains navigateurs (cookies tiers bloqués, COOP...),
        la communication entre la fenêtre pop-up Google et l'appli peut être
