@@ -6,7 +6,7 @@
    contenu dynamique ou qui ne nous appartient pas.
    Changez CACHE_VERSION pour forcer les navigateurs à rafraîchir le cache
    après une mise à jour du shell. */
-const CACHE_VERSION = 'lumen-shell-v6';
+const CACHE_VERSION = 'lumen-shell-v7';
 
 const SHELL_ASSETS = [
   './',
@@ -98,11 +98,15 @@ const SHELL_ASSETS = [
 
 self.addEventListener('install', (event)=>{
   event.waitUntil(
-    caches.open(CACHE_VERSION).then((cache)=> cache.addAll(SHELL_ASSETS).catch(()=>{
-      // Si une ressource manque (ex. nom de fichier modifié), on met en cache
-      // une par une plutôt que de faire échouer toute l'installation.
-      return Promise.all(SHELL_ASSETS.map((url)=> cache.add(url).catch(()=>{})));
-    }))
+    caches.open(CACHE_VERSION).then((cache)=>
+      // On force cache:'reload' pour ignorer le cache HTTP du navigateur :
+      // sans ça, un bump de CACHE_VERSION peut quand même recopier une
+      // ancienne version d'un fichier (CSS/JS) déjà servie plus tôt dans
+      // la session depuis le cache HTTP normal.
+      Promise.all(SHELL_ASSETS.map((url)=>
+        fetch(url, {cache:'reload'}).then((resp)=> cache.put(url, resp)).catch(()=>{})
+      ))
+    )
   );
   self.skipWaiting();
 });
