@@ -346,9 +346,30 @@ function wireAuthScreen(){
     clearAuthError();
     if(!FIREBASE_READY){ authError("La connexion à Firebase n'est pas disponible dans cet environnement."); return; }
     const provider = new firebase.auth.GoogleAuthProvider();
+    const googleBtn = document.getElementById('auth-google-btn');
+    const originalLabel = googleBtn.innerHTML;
+    googleBtn.disabled = true;
+    /* Garde-fou : sur certains navigateurs (cookies tiers bloqués, COOP...),
+       la communication entre la fenêtre pop-up Google et l'appli peut être
+       silencieusement coupée — signInWithPopup() ne se résout alors JAMAIS
+       ni en succès ni en échec, et la personne reste bloquée sur l'écran de
+       connexion sans aucun signal, même après avoir choisi son compte.
+       Passé 20 secondes, on prévient et on propose une alternative, sans
+       empêcher la connexion d'aboutir ensuite en arrière-plan si jamais
+       elle finit par passer. */
+    let settled = false;
+    const popupTimeout = setTimeout(()=>{
+      if(settled) return;
+      googleBtn.disabled = false; googleBtn.innerHTML = originalLabel;
+      authError("La connexion Google met plus de temps que prévu — c'est souvent dû à un blocage des cookies tiers par le navigateur. Si une fenêtre Google est encore ouverte, terminez-y la connexion ; sinon réessayez, ou utilisez la connexion par email ci-dessous.");
+      showAuthResetOption();
+    }, 20000);
     try{
       await fbAuth.signInWithPopup(provider);
+      settled = true; clearTimeout(popupTimeout);
     }catch(e){
+      settled = true; clearTimeout(popupTimeout);
+      googleBtn.disabled = false; googleBtn.innerHTML = originalLabel;
       if(fbAuth.currentUser){
         // La connexion Google a en réalité réussi ; seule l'écriture locale a échoué.
         CURRENT_USER = fbAuth.currentUser;
@@ -371,7 +392,20 @@ function wireAuthScreen(){
           authError(friendlyAuthError(e2));
           showAuthResetOption();
         }
-      } else if(e.code !== 'auth/popup-closed-by-user'){
+      } else if(e.code === 'auth/popup-closed-by-user'){
+        /* Cette erreur ne veut pas forcément dire que la personne a fermé
+           la fenêtre volontairement : sur de plus en plus de navigateurs
+           (cookies tiers bloqués par défaut, notamment), la fenêtre Google
+           se ferme toute seule juste après avoir choisi un compte, sans
+           que la connexion n'ait pu aboutir. Jusqu'ici, ce cas précis ne
+           montrait absolument rien à l'écran — on restait silencieusement
+           bloqué sur l'écran de connexion. On explique maintenant ce qui
+           s'est passé et on propose une alternative plus fiable (sans
+           pop-up), sans forcer la redirection pour ne pas gêner les
+           personnes qui ont vraiment fermé la fenêtre exprès. */
+        authError("La fenêtre de connexion Google s'est fermée avant la fin. Si vous ne l'avez pas fermée vous-même, c'est probablement votre navigateur qui bloque les cookies tiers — touchez à nouveau « Continuer avec Google », ou utilisez la connexion par email ci-dessous.");
+        showAuthResetOption();
+      } else {
         authError(friendlyAuthError(e));
         showAuthResetOption();
       }
