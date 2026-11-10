@@ -288,6 +288,15 @@ function friendlyAuthError(err){
   if(/database|indexeddb/i.test(raw)){
     return "Le navigateur a eu un souci pour mémoriser votre connexion (souvent temporaire). Réessayez, ou utilisez le bouton de réinitialisation ci-dessous.";
   }
+  if(/missing initial state|storage-partitioned/i.test(raw)){
+    // Erreur connue de Firebase sur Safari/iOS (protection ITP) quand la
+    // connexion passe par signInWithRedirect : voir le commentaire détaillé
+    // sur le bouton Google plus haut. On ne devrait normalement plus
+    // déclencher signInWithRedirect sur iOS, mais on explique quand même
+    // cette erreur si elle survient malgré tout (ancienne version en cache,
+    // navigateur tiers...).
+    return "La connexion a été interrompue par la protection anti-pistage de votre navigateur. Revenez à Lumen et réessayez avec « Continuer avec Google » — la connexion sans pop-up ni redirection sera utilisée automatiquement.";
+  }
   return AUTH_ERROR_MESSAGES[err.code] || raw || "Une erreur est survenue.";
 }
 
@@ -372,10 +381,25 @@ function wireAuthScreen(){
        saute donc directement la pop-up dans ce cas et on utilise
        signInWithRedirect, qui navigue dans la MÊME fenêtre (celle de la
        PWA) vers Google puis revient sur Lumen — aucune communication
-       inter-fenêtres n'est nécessaire. */
-    const isStandalonePWA = window.matchMedia('(display-mode: standalone)').matches
+       inter-fenêtres n'est nécessaire.
+       EXCEPTION iOS/iPadOS : tous les navigateurs y tournent sur le même
+       moteur WebKit (même « Chrome » sur iPhone/iPad), qui applique une
+       protection stricte contre le pistage (ITP) séparant le stockage de
+       chaque site. Or signInWithRedirect fait transiter la connexion par
+       le domaine de Firebase (xxx.firebaseapp.com), différent de
+       lumenapp.website : avec cette protection activée, le retour perd
+       l'état mémorisé et affiche une page d'erreur Firebase brute
+       (« missing initial state »), bloquant complètement la connexion.
+       C'est exactement l'erreur remontée en conditions réelles. Sur iOS,
+       on garde donc la pop-up (avec son filet de sécurité de 20s), qui ne
+       dépend pas de ce passage par un autre domaine. */
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isStandalonePWA = !isIOS && (
+      window.matchMedia('(display-mode: standalone)').matches
       || window.matchMedia('(display-mode: fullscreen)').matches
-      || window.navigator.standalone === true;
+      || window.navigator.standalone === true
+    );
     if(isStandalonePWA){
       googleBtn.disabled = true;
       try{
