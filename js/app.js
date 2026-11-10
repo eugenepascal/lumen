@@ -4386,6 +4386,38 @@ function frenchDate(){
   return d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
 }
 
+/* ---------- flèche de retour globale, fixe en haut de l'écran ---------- */
+/* Plutôt que de devoir ajouter un bouton "retour" à la main sur chaque
+   nouvelle page (et risquer d'en oublier), on détecte automatiquement s'il
+   en existe déjà un dans le contenu affiché (#screen) — toutes les pages de
+   détail en ont un, sous forme de lien "← Titre" ou d'icône ←/✕ — et on le
+   délègue à une flèche unique, toujours au même endroit, en haut de
+   l'écran. Un MutationObserver sur #screen la met à jour à chaque
+   changement de contenu, quelle que soit la fonction qui a fait ce
+   changement (pas besoin de l'appeler explicitement partout).
+   Les boutons de fermeture des fenêtres flottantes (lecteur d'ambiance...)
+   vivent hors de #screen, donc restent à l'écart de cette flèche. */
+const GLOBAL_BACK_SELECTOR = '.back-link, [id^="back-"], [id$="-back-btn"], [id$="-back"], [id^="rosary-back"]';
+function syncGlobalBackButton(){
+  const btn = document.getElementById('global-back-btn');
+  const screen = document.getElementById('screen');
+  if(!btn || !screen) return;
+  const target = screen.querySelector(GLOBAL_BACK_SELECTOR);
+  if(target && target !== btn){
+    btn.classList.remove('hidden');
+    btn.onclick = ()=> target.click();
+  } else {
+    btn.classList.add('hidden');
+    btn.onclick = null;
+  }
+}
+function initGlobalBackButton(){
+  const screen = document.getElementById('screen');
+  if(!screen) return;
+  const observer = new MutationObserver(()=> syncGlobalBackButton());
+  observer.observe(screen, {childList:true, subtree:true});
+  syncGlobalBackButton();
+}
 /* ---------- render ---------- */
 function getOrderedTabs(){
   if(!TAB_ORDER || !TAB_ORDER.length) return PRIMARY_TABS;
@@ -14812,6 +14844,7 @@ async function startApp(){
   document.getElementById('refuge-overlay').onclick = (e)=>{ if(e.target.id==='refuge-overlay') closeRefuge(); };
   setInterval(checkReminders, 30000);
 
+  initGlobalBackButton();
   document.getElementById('search-btn').onclick = openSearch;
   document.getElementById('search-invite-bar').onclick = openSearch;
   document.getElementById('fab-prier').onclick = ()=>{
