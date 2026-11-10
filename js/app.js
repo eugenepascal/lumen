@@ -5471,6 +5471,15 @@ let NOVENA_OPEN_DAY = null;
 let NOVENA_STEP_INDEX = null; // étape courante (0..5) dans le déroulement du jour — façon maquette, un écran par étape
 let NOVENA_DAY_DONE_SCREEN = null; // {novenaId, dayIndex} — écran de validation après un jour prié
 let NOVENA_DAY_AUDIO_PLAYING = null;
+// Quand on lance « Écouter ce texte » sur une étape d'un jour de neuvaine,
+// ce drapeau active un enchaînement vocal : dès que la lecture d'une étape
+// se termine naturellement (pas une pause/arrêt manuel), on passe tout
+// seul à l'étape suivante et on relance aussitôt sa lecture — pour prier
+// les mains libres, sans avoir à toucher l'écran entre chaque étape.
+// S'arrête automatiquement sur l'étape du chapelet à compter (pas de texte
+// à lire) et sur la dernière étape (la validation du jour reste un geste
+// volontaire), ou dès qu'on arrête la lecture soi-même.
+let NOVENA_VOICE_FLOW = false;
 const ORDINAL_DAYS = ['Premier','Deuxième','Troisième','Quatrième','Cinquième','Sixième','Septième','Huitième','Neuvième'];
 const HUB_HERO_IMAGES = {
   prier: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Brooklyn%20Museum%20-%20The%20Good%20Shepherd%20%28Le%20bon%20pasteur%29%20-%20James%20Tissot%20-%20overall.jpg?width=900',
@@ -5916,7 +5925,7 @@ function renderNovenaDayPage(n, info, dayIndex){
           <span class="hoz-podcast-play-icon">${playing ? '⏸' : '▶'}</span>
           <span>${playing ? 'Pause' : 'Écouter ce texte'}</span>
         </button>
-        <p class="novena-audio-note">Lecture vocale générée par votre navigateur — pas un enregistrement audio préexistant.</p>
+        <p class="novena-audio-note">Lecture vocale générée par votre navigateur — pas un enregistrement audio préexistant.${playing && NOVENA_VOICE_FLOW ? ' Les étapes suivantes s’enchaînent automatiquement à la fin de la lecture.' : ''}</p>
       </div>
       <div class="card" style="margin-top:10px;">
         <p class="entry-detail-text" style="white-space:pre-line;">${step.text||''}</p>
@@ -5941,13 +5950,17 @@ function renderNovenaDayPage(n, info, dayIndex){
   </div>`;
 
   document.getElementById('screen').innerHTML = html;
-  document.getElementById('back-to-timeline-btn').onclick = ()=>{ NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null; window.speechSynthesis && window.speechSynthesis.cancel(); render(); };
+  document.getElementById('back-to-timeline-btn').onclick = ()=>{ NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null; NOVENA_DAY_AUDIO_PLAYING = null; NOVENA_VOICE_FLOW = false; window.speechSynthesis && window.speechSynthesis.cancel(); render(); };
   if(step.counter) wireSimpleBeadCounters();
 
   const prevBtn = document.getElementById('step-prev-btn');
-  if(prevBtn) prevBtn.onclick = ()=>{ window.speechSynthesis && window.speechSynthesis.cancel(); NOVENA_STEP_INDEX = stepIdx-1; render(); };
+  if(prevBtn) prevBtn.onclick = ()=>{ NOVENA_DAY_AUDIO_PLAYING = null; NOVENA_VOICE_FLOW = false; window.speechSynthesis && window.speechSynthesis.cancel(); NOVENA_STEP_INDEX = stepIdx-1; render(); };
 
   document.getElementById('step-next-btn').onclick = async ()=>{
+    // Un passage manuel à l'étape suivante coupe l'enchaînement vocal
+    // automatique en cours, pour ne pas entrer en concurrence avec lui
+    // (le guard de u.onend ci-dessous se base sur NOVENA_DAY_AUDIO_PLAYING).
+    NOVENA_DAY_AUDIO_PLAYING = null; NOVENA_VOICE_FLOW = false;
     window.speechSynthesis && window.speechSynthesis.cancel();
     if(!isLastStep){ NOVENA_STEP_INDEX = stepIdx+1; render(); return; }
     if(dayDone){ NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null; NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex}; render(); return; }
@@ -5965,6 +5978,8 @@ function renderNovenaDayPage(n, info, dayIndex){
     audioBtn.onclick = ()=>{
       const playId = counterId+'-'+step.key;
       if(NOVENA_DAY_AUDIO_PLAYING === playId){
+        // Arrêt volontaire : on coupe aussi l'enchaînement automatique.
+        NOVENA_VOICE_FLOW = false;
         window.speechSynthesis.cancel();
         NOVENA_DAY_AUDIO_PLAYING = null;
         render();
@@ -5974,8 +5989,31 @@ function renderNovenaDayPage(n, info, dayIndex){
       const u = new SpeechSynthesisUtterance(step.text||'');
       u.lang = 'fr-FR';
       applyNaturalVoice(u);
-      u.onend = ()=>{ if(NOVENA_DAY_AUDIO_PLAYING === playId){ NOVENA_DAY_AUDIO_PLAYING = null; render(); } };
-      u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
+      NOVENA_VOICE_FLOW = true;
+      u.onend = ()=>{
+        if(NOVENA_DAY_AUDIO_PLAYING !== playId) return; // arrêté entretemps
+        NOVENA_DAY_AUDIO_PLAYING = null;
+        if(NOVENA_VOICE_FLOW && !isLastStep){
+          const nextStep = steps[stepIdx+1];
+          NOVENA_STEP_INDEX = stepIdx+1;
+          render();
+          if(!nextStep.counter){
+            // L'étape suivante a aussi un texte à lire : on relance
+            // automatiquement sa lecture pour continuer l'enchaînement.
+            const nextBtn = document.getElementById('novena-step-audio-btn');
+            if(nextBtn) nextBtn.click();
+          } else {
+            // Étape du chapelet à compter : pas de texte à lire, on
+            // s'arrête ici et on laisse la personne compter elle-même
+            // (ou utiliser « Incrémenter par la voix » sur cette étape).
+            NOVENA_VOICE_FLOW = false;
+          }
+        } else {
+          if(isLastStep) NOVENA_VOICE_FLOW = false;
+          render();
+        }
+      };
+      u.onerror = (e)=>{ ttsErrorToast(e); NOVENA_VOICE_FLOW = false; u.onend(); };
       NOVENA_DAY_AUDIO_PLAYING = playId;
       ttsSpeak(u);
       render();
