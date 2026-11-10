@@ -1025,6 +1025,30 @@ const NOVENAS = [
    {title:"Un saint pour tous, au-delà des frontières", medit:"Chrétiens et non-chrétiens se rendent encore aujourd'hui à son ermitage au Liban, touchés par sa simplicité.", prayer:"Saint Charbel, toi qui rassembles au-delà des différences, intercède pour l'unité et la paix, en moi et autour de moi."},
    {title:"L'Eucharistie, cœur de sa vie", medit:"Toute la vie de Charbel tournait autour de la messe quotidienne et de l'adoration silencieuse du Saint-Sacrement.", prayer:"Seigneur, que l'Eucharistie devienne, comme pour saint Charbel, le centre tranquille de mes journées."},
    {title:"Vivre simplement, aujourd'hui", medit:"La neuvaine s'achève avec cette leçon simple : une vie cachée, fidèle et priante peut porter un fruit immense.", prayer:"Saint Charbel, aide-moi à vivre simplement et fidèlement là où je suis. — Prière finale : Saint Charbel, merci de m'avoir accompagné(e) ces neuf jours. Garde-moi dans le silence intérieur et la confiance, quoi qu'il arrive. Amen."}
+  ]},
+ {id:"eugene-de-mazenod", title:"Neuvaine à Saint Eugène de Mazenod", sub:"Un cœur donné aux pauvres et aux plus abandonnés", tag:"Mission", color:"#7C1F2E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"L'enfance perdue dans l'exil", medit:"Né dans une famille noble d'Aix-en-Provence en 1782, Eugène perd presque tout à cause de la Révolution française : fortune, patrie, sécurité. Jeune exilé en Italie, il connaît lui-même la pauvreté avant de passer sa vie à la servir.", prayer:"Saint Eugène, vous qui avez connu très jeune la perte et l'exil, soyez proche de ceux qui ont dû tout quitter aujourd'hui, loin de chez eux."},
+   {title:"La croix qui change tout", medit:"Un Vendredi saint, devant une croix vénérée à Aix-en-Provence, Eugène est bouleversé jusqu'aux larmes : il découvre, d'un coup, à quel point Dieu l'aime, malgré ses années d'éloignement.", prayer:"Seigneur, ouvre mon cœur comme tu as ouvert celui d'Eugène devant ta croix, le jour où il a tout compris de ton amour."},
+   {title:"Parler la langue des pauvres", medit:"Devenu prêtre, Eugène refuse de ne prêcher qu'aux gens instruits de son rang : il choisit de parler en provençal, la langue du peuple, pour que personne ne reste à la porte de l'Évangile.", prayer:"Saint Eugène, apprenez-moi à parler le langage de ceux que je veux rejoindre, sans jamais me placer au-dessus d'eux."},
+   {title:"Une famille pour les plus abandonnés", medit:"Avec quelques compagnons, Eugène fonde en 1816 les Missionnaires de Provence, devenus les Missionnaires Oblats de Marie Immaculée — une famille entièrement vouée à ceux que personne d'autre ne va chercher.", prayer:"Saint Eugène, donnez-moi un cœur attentif à ceux que notre monde laisse facilement de côté."},
+   {title:"Rester quand d'autres fuient", medit:"Pendant la terrible épidémie de choléra qui frappe Marseille en 1835, Eugène reste auprès des malades plutôt que de se mettre à l'abri, par fidélité à ceux qu'il sert.", prayer:"Seigneur, donne-moi le courage de rester présent auprès de quelqu'un, aujourd'hui, même quand j'aurais envie de fuir la difficulté."},
+   {title:"Reconstruire ce qui est blessé", medit:"Devenu évêque de Marseille en 1837, Eugène relève patiemment un diocèse fragile, pierre après pierre, sans se décourager devant l'ampleur de la tâche.", prayer:"Saint Eugène, aidez-moi à reconstruire, sans perdre espoir, ce qui est abîmé dans ma vie ou autour de moi."},
+   {title:"Confié à Marie Immaculée", medit:"Eugène place toute son œuvre sous le regard de Marie Immaculée, lui confiant ce qu'il ne peut accomplir par ses seules forces — jusque dans le nom même de sa congrégation.", prayer:"Marie Immaculée, intercédez pour moi comme vous l'avez fait pour Eugène et pour tous ses missionnaires."},
+   {title:"Jusqu'aux extrémités de la terre", medit:"Depuis Marseille, Eugène envoie ses missionnaires vers les terres les plus lointaines et les missions les plus difficiles — le Canada, l'Afrique australe, l'Asie — sans jamais reculer devant l'inconnu.", prayer:"Saint Eugène, donnez de l'audace à tous ceux qui annoncent l'Évangile loin de chez eux aujourd'hui."},
+   {title:"La charité jusqu'au bout", medit:"Sur son lit de mort, en 1861, Eugène répète à ses missionnaires ce qui a guidé toute sa vie : la charité entre eux avant tout, et le zèle pour le salut des âmes.", prayer:"Saint Eugène de Mazenod, intercédez pour l'intention que je porte aujourd'hui. — Prière finale : Dieu notre Père, toi qui as rempli saint Eugène de Mazenod d'un amour sans mesure pour les pauvres et les plus abandonnés, donne-nous d'imiter sa charité et son courage. Par son intercession, accorde-nous la grâce que nous te demandons en ces neuf jours, si elle est selon ta volonté, et fais de nous, comme lui, des témoins vivants de ton Évangile. Amen."}
+  ]},
+ {id:"carlo-acutis", title:"Neuvaine à Saint Carlo Acutis", sub:"La sainteté d'un adolescent de notre temps", tag:"Jeunesse", color:"#5C6E58", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Un garçon comme les autres", medit:"Carlo jouait, avait des amis, allait à l'école et aux jeux vidéo comme n'importe quel adolescent de son âge — mais il avait ouvert la porte de son cœur à Jésus et l'avait mis à la première place.", prayer:"Seigneur, aide-moi à te donner la première place dans ma vie bien ordinaire, comme Carlo l'a fait sans jamais se mettre à part des autres."},
+   {title:"L'autoroute vers le Ciel", medit:"Dès son plus jeune âge, Carlo demandait lui-même à aller à la messe chaque jour : pour lui, l'Eucharistie était « son autoroute vers le Ciel ».", prayer:"Jésus présent dans l'Eucharistie, apprends-moi à te désirer, jour après jour, comme Carlo te désirait."},
+   {title:"Le chapelet, chaque jour", medit:"Carlo priait le chapelet quotidiennement, confiant à Marie ses amis, sa famille, et tous ceux qu'il croisait sur son chemin.", prayer:"Marie, comme Carlo le faisait chaque jour, je te confie aujourd'hui les personnes qui me sont chères."},
+   {title:"Mettre ses talents au service de Dieu", medit:"Passionné et doué en informatique dès l'enfance, Carlo a mis ce talent au service de sa foi, en créant avant sa mort un site recensant les miracles eucharistiques reconnus à travers le monde.", prayer:"Seigneur, montre-moi comment mettre mes propres talents à ton service, là où je suis, avec ce que je sais faire."},
+   {title:"Les pauvres qu'on n'oublie pas", medit:"Avec son argent de poche, Carlo achetait discrètement des sacs de couchage et de la nourriture pour les personnes sans-abri de Milan, sans jamais s'en vanter — ce sont elles qui, nombreuses, sont venues à ses funérailles.", prayer:"Seigneur, rends-moi attentif aux personnes que je croise chaque jour sans vraiment les voir."},
+   {title:"Défendre les plus faibles", medit:"À l'école, Carlo prenait la défense des camarades moqués ou mis à l'écart, refusant de se taire devant l'injustice, même quand cela ne lui coûtait rien de se taire.", prayer:"Seigneur, donne-moi le courage de défendre ceux qu'on humilie ou qu'on exclut autour de moi."},
+   {title:"La joie qui vient d'ailleurs", medit:"Carlo disait que la tristesse, c'est regarder vers soi-même, et que la vraie joie, c'est regarder vers Dieu — une petite phrase qui a traversé les générations après lui.", prayer:"Seigneur, tourne mon regard vers toi quand je suis tenté(e) de ne regarder que mes propres soucis."},
+   {title:"La maladie offerte", medit:"Atteint à quinze ans d'une leucémie foudroyante, Carlo a offert sa souffrance pour le pape et pour l'Église, sans se plaindre, jusqu'à son dernier souffle.", prayer:"Seigneur, apprends-moi à traverser l'épreuve sans perdre la paix du cœur, à l'exemple de Carlo."},
+   {title:"Un saint pour notre temps", medit:"Mort en 2006 à quinze ans, canonisé en 2025, Carlo est devenu un modèle pour notre époque : la sainteté reste possible au milieu des écrans, de l'école et de la vie la plus ordinaire.", prayer:"Saint Carlo Acutis, intercédez pour l'intention que je porte aujourd'hui. — Prière finale : Seigneur, tu as donné à Carlo Acutis un amour brûlant pour l'Eucharistie et un cœur attentif aux plus pauvres, dès son plus jeune âge. Par son intercession, aide-moi à vivre ma foi avec la même simplicité et la même joie, au cœur même de ma vie de tous les jours. Que je sache, comme lui, regarder vers toi plutôt que vers moi-même. Amen."}
   ]}
 ];
 
@@ -5115,7 +5139,8 @@ const NOVENA_ICONS = {
   'michel': '⚔️', 'esprit-saint': '🕊️', 'sainte-rita': '🌹', 'antoine-padoue': '🔍',
   'marie-confiance-abandon': '🕯️', 'joseph-neuvaine-familiale': '🏡', 'neuvaine-etoile': '🌟',
   'sante': '🌿', 'travail': '🧰', 'gratitude': '🙌', 'defunts': '🕯️',
-  'notre-dame-noeuds': '🎀', 'divine-misericorde': '✝️', 'charbel': '🌿'
+  'notre-dame-noeuds': '🎀', 'divine-misericorde': '✝️', 'charbel': '🌿',
+  'eugene-de-mazenod': '⛪', 'carlo-acutis': '💻'
 };
 /* Intentions suggérées, affichées sur la page de présentation de chaque
    neuvaine (« Pour quelles intentions ? »), à titre indicatif. */
@@ -5137,7 +5162,9 @@ const NOVENA_INTENTIONS_HINTS = {
   'defunts': ['Un proche disparu', 'Le deuil', 'Les défunts oubliés'],
   'notre-dame-noeuds': ['Une situation bloquée', 'Un conflit à dénouer', 'Une décision qui traîne'],
   'divine-misericorde': ['Le pardon', 'Recommencer après une faute', 'La confiance en Dieu'],
-  'charbel': ['Une guérison', 'Le silence intérieur', 'Une vie plus simple']
+  'charbel': ['Une guérison', 'Le silence intérieur', 'Une vie plus simple'],
+  'eugene-de-mazenod': ['Les personnes exilées ou en difficulté', 'Le courage missionnaire', 'Les pauvres et les plus abandonnés'],
+  'carlo-acutis': ['Les jeunes et les étudiants', 'Grandir dans l’amour de l’Eucharistie', 'Bien utiliser internet et la technologie']
 };
 const LUMEN_SACRED_ART = [
   {keys:['pierre','peter'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20St.%20Peter%20-%20Google%20Art%20Project.jpg?width=900', credit:'Saint Pierre · El Greco · domaine public'},
