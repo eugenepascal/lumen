@@ -59,21 +59,30 @@
         <button class="auth-tab-btn" id="auth-tab-signup">Créer un compte</button>
       </div>
       <div class="auth-error" id="auth-error"></div>
-      <div class="auth-field">
-        <label for="auth-email">Adresse email</label>
-        <div class="auth-input-wrap">
-          <span class="auth-input-icon">✉️</span>
-          <input type="email" id="auth-email" placeholder="vous@exemple.com" autocomplete="email">
+      <!-- Un vrai <form> (plutôt que des champs isolés) est nécessaire pour
+           que les navigateurs (Chrome, Safari...) proposent leur générateur
+           de mot de passe fort intégré lors de la création d'un compte. Le
+           bouton de validation reste en dehors pour ne jamais déclencher de
+           soumission/rechargement natif — toute la logique reste gérée en
+           JS, comme avant. -->
+      <form id="auth-form" autocomplete="on">
+        <div class="auth-field">
+          <label for="auth-email">Adresse email</label>
+          <div class="auth-input-wrap">
+            <span class="auth-input-icon">✉️</span>
+            <input type="email" id="auth-email" name="email" placeholder="vous@exemple.com" autocomplete="email">
+          </div>
         </div>
-      </div>
-      <div class="auth-field">
-        <label for="auth-password">Mot de passe</label>
-        <div class="auth-input-wrap auth-password-wrap">
-          <span class="auth-input-icon">🔒</span>
-          <input type="password" id="auth-password" placeholder="6 caractères minimum" autocomplete="current-password">
-          <button type="button" class="auth-password-toggle" id="auth-password-toggle">👁️</button>
+        <div class="auth-field">
+          <label for="auth-password">Mot de passe</label>
+          <div class="auth-input-wrap auth-password-wrap">
+            <span class="auth-input-icon">🔒</span>
+            <input type="password" id="auth-password" name="password" placeholder="6 caractères minimum" autocomplete="current-password">
+            <button type="button" class="auth-password-toggle" id="auth-password-toggle">👁️</button>
+          </div>
+          <p class="auth-password-hint hidden" id="auth-password-hint">💡 Mélangez majuscules, minuscules, chiffres et symboles (ex. <code>!</code> <code>?</code> <code>#</code> <code>@</code>) pour un mot de passe plus difficile à deviner — ou laissez votre navigateur vous en proposer un lors de la création du compte.</p>
         </div>
-      </div>
+      </form>
       <button class="btn btn-primary btn-sm" id="auth-submit-btn" style="width:100%; padding:11px;">Se connecter</button>
       <button class="auth-forgot-link" id="auth-forgot-btn">Mot de passe oublié ?</button>
       <div class="auth-divider"></div>

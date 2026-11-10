@@ -298,18 +298,34 @@ function setAuthSubmitLoading(loading){
   btn.textContent = loading ? 'Un instant…' : (AUTH_MODE_TAB==='login' ? 'Se connecter' : 'Créer mon compte');
 }
 function wireAuthScreen(){
+  /* En mode création de compte, autocomplete="new-password" indique aux
+     navigateurs (Chrome, Safari, Edge...) qu'il s'agit d'un NOUVEAU mot de
+     passe : c'est ce qui déclenche leur générateur de mot de passe fort
+     intégré (menu "Utiliser un mot de passe fort" / "Suggérer un mot de
+     passe"), avec tous les bons caractères déjà prêts. En mode connexion,
+     on revient à "current-password" pour l'auto-remplissage habituel. */
+  function syncPasswordFieldMode(){
+    const input = document.getElementById('auth-password');
+    const hint = document.getElementById('auth-password-hint');
+    const isSignup = AUTH_MODE_TAB === 'signup';
+    input.autocomplete = isSignup ? 'new-password' : 'current-password';
+    hint.classList.toggle('hidden', !isSignup);
+  }
   document.getElementById('auth-tab-login').onclick = ()=>{
     AUTH_MODE_TAB='login'; clearAuthError();
     document.getElementById('auth-tab-login').classList.add('active');
     document.getElementById('auth-tab-signup').classList.remove('active');
     document.getElementById('auth-submit-btn').textContent = 'Se connecter';
+    syncPasswordFieldMode();
   };
   document.getElementById('auth-tab-signup').onclick = ()=>{
     AUTH_MODE_TAB='signup'; clearAuthError();
     document.getElementById('auth-tab-signup').classList.add('active');
     document.getElementById('auth-tab-login').classList.remove('active');
     document.getElementById('auth-submit-btn').textContent = 'Créer mon compte';
+    syncPasswordFieldMode();
   };
+  syncPasswordFieldMode();
   document.getElementById('auth-password-toggle').onclick = ()=>{
     const input = document.getElementById('auth-password');
     const btn = document.getElementById('auth-password-toggle');

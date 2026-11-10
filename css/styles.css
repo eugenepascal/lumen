@@ -2743,6 +2743,9 @@
     background:none; border:none; font-size:15px; cursor:pointer; padding:6px 8px; opacity:0.6;
   }
   .auth-password-toggle:hover{ opacity:1; }
+  .auth-password-hint{ font-family:'Inter',sans-serif; font-size:11.5px; line-height:1.5; color:var(--ink-soft); text-align:left; margin:7px 2px 0; }
+  .auth-password-hint code{ background:rgba(184,134,59,0.14); border-radius:4px; padding:1px 5px; font-family:inherit; }
+  .auth-password-hint.hidden{ display:none; }
   .auth-error{ background:rgba(124,31,46,0.1); color:var(--wine-dark); font-size:12.5px; line-height:1.5; border-radius:10px; padding:10px 13px; margin-bottom:14px; text-align:left; display:none; border-left:3px solid var(--wine); }
   .auth-error.show{ display:block; animation: authFadeIn 0.3s ease; }
   .auth-divider{ display:flex; align-items:center; gap:10px; margin:20px 0; color:var(--ink-soft); font-size:11px; text-transform:uppercase; letter-spacing:0.5px; }
