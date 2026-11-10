@@ -395,11 +395,12 @@ function wireAuthScreen(){
        dépend pas de ce passage par un autre domaine. */
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
       || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isStandalonePWA = !isIOS && (
+    const isHomeScreenMode = (
       window.matchMedia('(display-mode: standalone)').matches
       || window.matchMedia('(display-mode: fullscreen)').matches
       || window.navigator.standalone === true
     );
+    const isStandalonePWA = !isIOS && isHomeScreenMode;
     if(isStandalonePWA){
       googleBtn.disabled = true;
       try{
@@ -411,6 +412,22 @@ function wireAuthScreen(){
         showAuthResetOption();
         return;
       }
+    }
+    /* iOS + icône d'écran d'accueil (« Add to Home Screen ») : ni la pop-up
+       ni la redirection ne sont fiables ici. window.open() — utilisé en
+       interne par signInWithPopup — est bridé par WebKit dans ce contexte
+       précis (pas de barre d'onglets pour accueillir une fenêtre) et
+       échoue silencieusement un nombre de fois variable selon l'état du
+       moteur (d'où les « plusieurs tentatives » nécessaires constatées).
+       Plutôt que de retenter une pop-up qui a de bonnes chances d'échouer
+       à nouveau sans aucun signal, on propose directement et immédiatement
+       le seul chemin fiable connu : ouvrir Lumen dans Safari (où la
+       pop-up fonctionne normalement), s'y connecter, puis revenir à
+       l'icône installée. */
+    if(isIOS && isHomeScreenMode){
+      authError("Sur iPad/iPhone, la connexion Google depuis l'icône installée est limitée par Apple. Touchez le lien ci-dessous pour ouvrir Lumen dans Safari, connectez-vous avec Google, puis revenez à cette icône — vous serez alors connecté·e ici aussi.");
+      showOpenInSafariOption();
+      return;
     }
     googleBtn.disabled = true;
     /* Garde-fou : sur certains navigateurs (cookies tiers bloqués, COOP...),
@@ -622,6 +639,21 @@ function showAuthResetOption(){
     window.location.reload();
   };
   document.getElementById('auth-form-wrap').appendChild(btn);
+}
+function showOpenInSafariOption(){
+  if(document.getElementById('auth-open-safari-link')) return;
+  /* Un vrai lien <a target="_blank"> (plutôt qu'un window.open() en JS)
+     est la façon fiable de faire sortir Safari depuis une PWA installée
+     sur iOS — c'est le geste que WebKit autorise toujours, contrairement
+     aux fenêtres ouvertes par script dans ce contexte. */
+  const link = document.createElement('a');
+  link.id = 'auth-open-safari-link';
+  link.className = 'auth-forgot-link';
+  link.textContent = '🌐 Ouvrir Lumen dans Safari pour se connecter avec Google';
+  link.href = window.location.href;
+  link.target = '_blank';
+  link.rel = 'noopener';
+  document.getElementById('auth-form-wrap').appendChild(link);
 }
 
 function renderCompte(){
