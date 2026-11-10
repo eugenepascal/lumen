@@ -2210,6 +2210,19 @@
   .video-modal-caption-text{ color:rgba(244,239,228,0.65) !important; }
   #video-modal-body video{ display:block; }
   @media (min-width:600px){ .video-modal-panel{ max-width:720px !important; } }
+  /* Pages/phases sous la vidéo de démo : une carte par grande section de
+     l'appli, qu'on parcourt avec les flèches ou les points. */
+  .demo-phase-card{ padding:16px 18px 6px; border-top:1px solid rgba(232,204,126,0.18); }
+  .demo-phase-head{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .demo-phase-icon{ font-size:22px; }
+  .demo-phase-label{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--gold-light); margin:0; }
+  .demo-phase-desc{ font-family:'Lora',serif; font-size:13px; line-height:1.55; color:rgba(244,239,228,0.75); margin:0 0 12px; min-height:58px; }
+  .demo-phase-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .demo-phase-nav{ background:rgba(255,255,255,0.08); color:var(--vellum-light); flex-shrink:0; }
+  .demo-phase-nav:disabled{ opacity:0.3; cursor:default; }
+  .demo-phase-dots{ display:flex; gap:6px; }
+  .demo-phase-dots span{ width:6px; height:6px; border-radius:50%; background:rgba(244,239,228,0.25); transition:background 0.2s; }
+  .demo-phase-dots span.active{ background:var(--gold-light); }
   .search-result-name{ font-family:'Fraunces',serif; font-weight:600; font-size:14px; }
   .search-result-meta{ font-family:'Inter',sans-serif; font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.4px; }
 

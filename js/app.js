@@ -4548,6 +4548,40 @@ let WELCOME_SEEN_THIS_SESSION = false;
 const WELCOME_AVATAR_IMG = 'images/author-welcome.jpg';
 const WELCOME_AUDIO_SRC = 'audio/bienvenue.m4a';
 const WELCOME_VIDEO_SRC = 'videos/demo.mp4';
+/* Phases de la démo : une page par grande section de l'appli, dans l'ordre
+   de la barre de navigation (PRIMARY_TABS), pour accompagner la vidéo d'un
+   repère visuel de ce qui s'y trouve — sans prétendre suivre au mot près
+   ce qui est dit dans la vidéo elle-même. */
+const DEMO_PHASES = [
+  {icon:'🏠', label:'Accueil', desc:"Votre verset du jour, votre série de prière, et un aperçu de votre journée spirituelle en un coup d'œil."},
+  {icon:'🙏', label:'Prier', desc:"Neuvaines, intentions, chapelet et prières selon le moment ou le besoin."},
+  {icon:'📖', label:'Bible', desc:"L'Ancien et le Nouveau Testament, les psaumes, et des méditations sur les Écritures."},
+  {icon:'🧭', label:'Découvrir', desc:"La vie de Jésus et des apôtres, l'Église — saints, calendrier, sacrements — et des enseignements spirituels."},
+  {icon:'👤', label:'Mon espace', desc:"Votre journal, vos favoris, votre série de prière et les réglages de l'application."}
+];
+let DEMO_PHASE_IDX = 0;
+function renderDemoPhases(){
+  const el = document.getElementById('video-modal-extra');
+  if(!el) return;
+  const p = DEMO_PHASES[DEMO_PHASE_IDX];
+  el.innerHTML = `
+    <div class="demo-phase-card">
+      <div class="demo-phase-head">
+        <span class="demo-phase-icon">${p.icon}</span>
+        <p class="demo-phase-label">${p.label}</p>
+      </div>
+      <p class="demo-phase-desc">${p.desc}</p>
+      <div class="demo-phase-row">
+        <button class="icon-btn demo-phase-nav" id="demo-phase-prev" ${DEMO_PHASE_IDX===0?'disabled':''}>←</button>
+        <div class="demo-phase-dots">${DEMO_PHASES.map((_,i)=>`<span class="${i===DEMO_PHASE_IDX?'active':''}"></span>`).join('')}</div>
+        <button class="icon-btn demo-phase-nav" id="demo-phase-next" ${DEMO_PHASE_IDX===DEMO_PHASES.length-1?'disabled':''}>→</button>
+      </div>
+    </div>`;
+  const prevBtn = document.getElementById('demo-phase-prev');
+  const nextBtn = document.getElementById('demo-phase-next');
+  if(prevBtn) prevBtn.onclick = ()=>{ if(DEMO_PHASE_IDX>0){ DEMO_PHASE_IDX--; renderDemoPhases(); } };
+  if(nextBtn) nextBtn.onclick = ()=>{ if(DEMO_PHASE_IDX<DEMO_PHASES.length-1){ DEMO_PHASE_IDX++; renderDemoPhases(); } };
+}
 function renderWelcomeSplash(){
   const hour = new Date().getHours();
   const saluTime = hour<5 ? 'Bonsoir' : hour<12 ? 'Bonjour' : hour<18 ? 'Bon après-midi' : 'Bonsoir';
@@ -4599,6 +4633,8 @@ function openWelcomeVideoModal(){
         <audio src="${WELCOME_AUDIO_SRC}" controls autoplay style="width:100%; max-width:320px;" id="welcome-audio-el"></audio>
       </div>`;
   });
+  DEMO_PHASE_IDX = 0;
+  renderDemoPhases();
   document.getElementById('video-modal-overlay').classList.remove('hidden');
 }
 function renderHome(){
@@ -9650,11 +9686,15 @@ function openVideoModal(videoId, title, caption){
   document.getElementById('video-modal-caption').textContent = caption || '';
   document.getElementById('video-modal-body').innerHTML =
     `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" style="width:100%; height:100%; border:none;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="${(title||'').replace(/"/g,'&quot;')}"></iframe>`;
+  const extra = document.getElementById('video-modal-extra');
+  if(extra) extra.innerHTML = '';
   document.getElementById('video-modal-overlay').classList.remove('hidden');
 }
 function closeVideoModal(){
   document.getElementById('video-modal-overlay').classList.add('hidden');
   document.getElementById('video-modal-body').innerHTML = '';
+  const extra = document.getElementById('video-modal-extra');
+  if(extra) extra.innerHTML = '';
 }
 /* extrait un ID YouTube depuis une URL classique, pour convertir les liens externes existants */
 function extractYoutubeId(url){
