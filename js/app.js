@@ -9299,9 +9299,17 @@ function ttsErrorToast(e){
 // Safari/iOS n'autorise la synthèse vocale qu'après un vrai geste de
 // l'utilisateur (clic/toucher) directement lié à l'appel speak() — sinon
 // speak() est accepté sans erreur mais ne produit aucun son. On « débloque »
-// donc le moteur dès le tout premier clic/toucher sur l'appli, avec une
-// micro-phrase inaudible (volume 0), pour que tous les appels suivants
-// (même déclenchés plus tard, de façon asynchrone) puissent produire du son.
+// donc le moteur au premier clic/toucher sur l'appli, avec une micro-phrase
+// inaudible (volume 0), pour que les appels suivants (même déclenchés plus
+// tard, de façon asynchrone) puissent produire du son.
+// IMPORTANT, spécifique à iOS/iPadOS : ce déblocage ne survit PAS à une mise
+// en arrière-plan de l'appli (changement d'appli, verrouillage de l'écran,
+// appel entrant...) — un bug documenté de WebKit fait que la synthèse
+// vocale reste silencieuse après un retour au premier plan, tant qu'elle
+// n'a pas été « re-débloquée ». Comme une PWA passe très souvent en arrière-
+// plan, on réarme donc systématiquement ce déblocage dès que l'appli
+// redevient visible, et on réinitialise le moteur au passage (cancel), qui
+// peut rester dans un état bloqué après la mise en veille.
 let TTS_UNLOCKED = false;
 function unlockTTSOnce(){
   if(TTS_UNLOCKED || !window.speechSynthesis) return;
@@ -9312,8 +9320,14 @@ function unlockTTSOnce(){
     window.speechSynthesis.speak(warm);
   }catch(e){}
 }
-document.addEventListener('pointerdown', unlockTTSOnce, {once:true, passive:true});
-document.addEventListener('keydown', unlockTTSOnce, {once:true});
+document.addEventListener('pointerdown', unlockTTSOnce, {passive:true});
+document.addEventListener('keydown', unlockTTSOnce);
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'visible'){
+    TTS_UNLOCKED = false;
+    try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+  }
+});
 // Bug connu de Chrome/Chromium (bureau comme mobile) : la synthèse vocale
 // s'interrompt silencieusement au bout d'environ 15 secondes sur un texte
 // long (le minuteur interne du moteur expire). La mise en pause/reprise
@@ -9323,10 +9337,26 @@ let TTS_KEEPALIVE_TIMER = null;
 function ttsSpeak(u){
   if(TTS_KEEPALIVE_TIMER){ clearInterval(TTS_KEEPALIVE_TIMER); TTS_KEEPALIVE_TIMER = null; }
   const stopKeepAlive = ()=>{ if(TTS_KEEPALIVE_TIMER){ clearInterval(TTS_KEEPALIVE_TIMER); TTS_KEEPALIVE_TIMER = null; } };
-  const origEnd = u.onend, origErr = u.onerror;
-  u.onend = (e)=>{ stopKeepAlive(); if(origEnd) origEnd(e); };
-  u.onerror = (e)=>{ stopKeepAlive(); if(origErr) origErr(e); };
+  const origEnd = u.onend, origErr = u.onerror, origStart = u.onstart;
+  let started = false, finished = false;
+  u.onstart = (e)=>{ started = true; if(origStart) origStart(e); };
+  u.onend = (e)=>{ finished = true; stopKeepAlive(); if(origEnd) origEnd(e); };
+  u.onerror = (e)=>{ finished = true; stopKeepAlive(); if(origErr) origErr(e); };
   window.speechSynthesis.speak(u);
+  /* Garde-fou spécifique à iOS/Safari : il arrive que speak() soit accepté
+     sans jamais déclencher ni « start », ni « error », ni aucun son — la
+     synthèse reste silencieusement bloquée (notamment juste après un
+     retour au premier plan sur iPhone/iPad, ou quand l'appareil est en
+     mode silencieux). Passé 1,5 seconde sans qu'aucun son n'ait commencé
+     ET sans que la lecture ne soit déjà terminée normalement (cas des
+     textes très courts), on prévient plutôt que de laisser croire que
+     « ça lit » en silence. */
+  setTimeout(()=>{
+    if(!started && !finished && !window.speechSynthesis.speaking && !window.speechSynthesis.pending){
+      stopKeepAlive();
+      showToast("🔇 Aucun son n'a démarré. Vérifiez que votre appareil n'est pas en mode silencieux (interrupteur sur le côté), puis réessayez.");
+    }
+  }, 1500);
   TTS_KEEPALIVE_TIMER = setInterval(()=>{
     if(!window.speechSynthesis.speaking){ stopKeepAlive(); return; }
     try{ window.speechSynthesis.pause(); window.speechSynthesis.resume(); }catch(e){}
