@@ -985,10 +985,15 @@
     cursor:pointer; animation: fabPulse 3s ease-in-out infinite;
   }
   #fab-prier span{ font-size:12.5px; }
+  #fab-prier.fab-hidden{ display:none; }
   @keyframes fabPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.04); } }
   @media (min-width:760px){ #fab-prier{ bottom:26px; } }
+  /* Regroupée avec le bouton "Prier maintenant" en bas à droite (plutôt
+     qu'à l'opposé, en bas à gauche) : les deux éléments flottants restent
+     ainsi dans un seul coin, au lieu de chevaucher le texte sur toute la
+     largeur de l'écran à cette hauteur. */
   #lumen-signature-mark{
-    position:absolute; left:16px; bottom:calc(82px + env(safe-area-inset-bottom)); z-index:50;
+    position:absolute; right:16px; left:auto; bottom:calc(140px + env(safe-area-inset-bottom)); z-index:50;
     width:34px; height:34px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     background: linear-gradient(160deg, var(--wine) 0%, var(--wine-dark) 100%);
@@ -999,7 +1004,7 @@
     cursor:pointer; opacity:0.82;
     padding:0;
   }
-  @media (min-width:760px){ #lumen-signature-mark{ bottom:26px; } }
+  @media (min-width:760px){ #lumen-signature-mark{ bottom:80px; } }
   #tabbar::before{
     content:""; position:absolute; top:0; left:0; right:0; height:1px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
@@ -2162,7 +2167,12 @@
   .global-back-btn.hidden{ display:none; }
   /* ===== topbar toolbar ===== */
   .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
-  .topbar-tools{ display:flex; gap:4px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
+  /* min-width:0 est indispensable ici : sans ça, un enfant flex garde par
+     défaut la largeur de tout son contenu non replié (les 9 boutons sur
+     une seule ligne) et déborde du cadre plutôt que de passer à la ligne,
+     ce qui le faisait dépasser hors de l'écran sur téléphone (le dernier
+     bouton, « A+ », devenait invisible, caché par #topbar{overflow:hidden}). */
+  .topbar-tools{ display:flex; gap:4px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; min-width:0; }
   .tool-btn{
     background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); color:var(--vellum-light);
     border-radius:8px; min-width:40px; height:40px; padding:3px 4px; cursor:pointer; font-family:'Inter',sans-serif;

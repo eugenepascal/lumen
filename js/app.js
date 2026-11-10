@@ -4435,6 +4435,11 @@ function renderTabbar(){
     tabs.map(tb =>
       `<button class="tab-btn ${activeTabKey===tb.key?'active':''}" data-tab="${tb.key}">${ICONS[tb.key]||''}<span>${TAB_I18N_KEYS[tb.key]?t(TAB_I18N_KEYS[tb.key]):tb.label}</span></button>`
     ).join('');
+  /* Inutile de proposer un raccourci "Prier maintenant" quand on est déjà
+     dans l'onglet Prier — en plus d'être redondant, il flottait par-dessus
+     le contenu de cet onglet précisément. */
+  const fabPrier = document.getElementById('fab-prier');
+  if(fabPrier) fabPrier.classList.toggle('fab-hidden', activeTabKey === 'prier');
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.onclick = ()=>{
       const oldIdx = tabs.findIndex(t=>t.key===activeTabKey);
