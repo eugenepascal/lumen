@@ -447,8 +447,14 @@ function wireAuthScreen(){
          on bascule automatiquement sur signInWithRedirect — qui navigue
          simplement vers la page Google puis revient sur Lumen, sans jamais
          ouvrir de pop-up. Le retour est ensuite géré par startAuthFlow()
-         via onAuthStateChanged, comme une connexion normale. */
-      if(e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment'){
+         via onAuthStateChanged, comme une connexion normale.
+         ATTENTION : sur iOS/iPadOS, signInWithRedirect casse à cause du
+         stockage partitionné de Safari/WebKit (voir plus haut) — il ne
+         faut donc JAMAIS retomber sur ce repli pour iOS, même ici dans
+         la gestion d'erreur de la pop-up. C'est exactement ce second
+         chemin, oublié la première fois, qui reproduisait silencieusement
+         le bug "missing initial state" sur l'iPad de l'utilisatrice/eur. */
+      if(!isIOS && (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment')){
         try{
           await fbAuth.signInWithRedirect(provider);
           return; // la page va se recharger vers Google — rien d'autre à faire ici
@@ -456,6 +462,9 @@ function wireAuthScreen(){
           authError(friendlyAuthError(e2));
           showAuthResetOption();
         }
+      } else if(isIOS && (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment')){
+        authError("La fenêtre de connexion Google n'a pas pu s'ouvrir. Sur iPad/iPhone, vérifiez que les pop-up ne sont pas bloquées pour Lumen (Réglages → Safari → Bloquer les fenêtres pop-up), puis réessayez « Continuer avec Google » — ou utilisez la connexion par email ci-dessous.");
+        showAuthResetOption();
       } else if(e.code === 'auth/popup-closed-by-user'){
         /* Cette erreur ne veut pas forcément dire que la personne a fermé
            la fenêtre volontairement : sur de plus en plus de navigateurs
