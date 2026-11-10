@@ -357,8 +357,20 @@ function wireAuthScreen(){
         migrateGuestDataToAccount(CURRENT_USER.uid).then(startApp);
         return;
       }
-      if(e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request'){
-        authError("La fenêtre Google a été bloquée par le navigateur. Autorisez les popups pour ce site, ou utilisez la connexion par email.");
+      /* La fenêtre pop-up Google est bloquée (ou refusée) par le navigateur :
+         plutôt que de demander à la personne d'aller changer un réglage,
+         on bascule automatiquement sur signInWithRedirect — qui navigue
+         simplement vers la page Google puis revient sur Lumen, sans jamais
+         ouvrir de pop-up. Le retour est ensuite géré par startAuthFlow()
+         via onAuthStateChanged, comme une connexion normale. */
+      if(e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment'){
+        try{
+          await fbAuth.signInWithRedirect(provider);
+          return; // la page va se recharger vers Google — rien d'autre à faire ici
+        }catch(e2){
+          authError(friendlyAuthError(e2));
+          showAuthResetOption();
+        }
       } else if(e.code !== 'auth/popup-closed-by-user'){
         authError(friendlyAuthError(e));
         showAuthResetOption();
@@ -419,6 +431,19 @@ async function startAuthFlow(){
     showToast("Mode de connexion simplifié activé (vous devrez vous reconnecter à chaque nouvelle visite, mais vos données restent bien sauvegardées).");
   } else if(persistenceMode === 'NONE'){
     showToast("Stockage du navigateur indisponible : la connexion ne survivra pas au rechargement de la page.");
+  }
+  /* Si on revient d'un signInWithRedirect (repli utilisé quand la pop-up
+     Google est bloquée par le navigateur), remonte une erreur propre en cas
+     de souci — la connexion réussie, elle, est de toute façon détectée par
+     onAuthStateChanged ci-dessous, pas besoin de dupliquer cette logique ici. */
+  try{
+    await fbAuth.getRedirectResult();
+  }catch(eRedirect){
+    console.warn('getRedirectResult', eRedirect);
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('auth-form-wrap').style.display = 'block';
+    authError(friendlyAuthError(eRedirect));
+    showAuthResetOption();
   }
   let resolved = false;
   const timeoutId = setTimeout(()=>{
