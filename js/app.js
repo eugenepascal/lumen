@@ -345,8 +345,8 @@ function wireAuthScreen(){
   document.getElementById('auth-google-btn').onclick = async ()=>{
     clearAuthError();
     if(!FIREBASE_READY){ authError("La connexion à Firebase n'est pas disponible dans cet environnement."); return; }
+    const provider = new firebase.auth.GoogleAuthProvider();
     try{
-      const provider = new firebase.auth.GoogleAuthProvider();
       await fbAuth.signInWithPopup(provider);
     }catch(e){
       if(fbAuth.currentUser){
