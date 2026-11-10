@@ -48,10 +48,10 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     display:flex;
-    justify-content:center;
-    align-items:flex-start;
+    justify-content:stretch;
+    align-items:stretch;
     min-height:100vh;
-    padding: 18px 0;
+    min-height:100dvh;
     position:relative;
   }
   body::before{
@@ -168,21 +168,25 @@
   }
   body[data-theme="dark"][data-wallpaper]:not([data-wallpaper="aucun"]) #app::before{ opacity:0.3; }
 
+  /* En dessous de 760px (téléphone), l'appli occupe tout l'écran — plus de
+     "carte" flottante avec marges et coins arrondis : c'est le rendu attendu
+     d'une appli, surtout une fois installée en PWA sur l'écran d'accueil. */
   #app{
     width:100%;
-    max-width:430px;
-    height: 86vh;
-    min-height: 640px;
-    max-height: 820px;
+    max-width:none;
+    height: 100vh;
+    height: 100dvh;
+    min-height:0;
+    max-height:none;
     background: linear-gradient(175deg, var(--vellum) 0%, var(--vellum-light) 100%);
-    border-radius: 28px;
-    box-shadow: var(--shadow-warm), 0 0 0 1px rgba(232,204,126,0.15);
+    border-radius: 0;
+    box-shadow:none;
     overflow:hidden;
     display:flex;
     flex-direction:column;
     position:relative;
     z-index:1;
-    border: 1px solid rgba(255,255,255,0.5);
+    border:none;
   }
   #app::before{
     content:"";
@@ -199,7 +203,7 @@
   }
   /* header */
   #topbar{
-    padding: 22px 22px 16px;
+    padding: calc(22px + env(safe-area-inset-top)) 22px 16px;
     background: linear-gradient(155deg, #2E0A10 0%, var(--wine-dark) 40%, var(--wine) 75%, #B2541F 100%);
     color: var(--vellum-light);
     position:relative;
@@ -968,11 +972,11 @@
     flex-shrink:0;
     background: linear-gradient(180deg, var(--vellum-light), #F3EAD3);
     border-top:1px solid var(--hairline);
-    padding: 8px 6px 12px;
+    padding: 8px 6px calc(12px + env(safe-area-inset-bottom));
     position:relative;
   }
   #fab-prier{
-    position:absolute; right:16px; bottom:82px; z-index:50;
+    position:absolute; right:16px; bottom:calc(82px + env(safe-area-inset-bottom)); z-index:50;
     display:flex; align-items:center; gap:7px;
     background: linear-gradient(155deg, var(--gold-pale) 0%, var(--gold) 100%);
     color:var(--wine-dark); border:none; border-radius:999px;
@@ -984,7 +988,7 @@
   @keyframes fabPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.04); } }
   @media (min-width:760px){ #fab-prier{ bottom:26px; } }
   #lumen-signature-mark{
-    position:absolute; left:16px; bottom:82px; z-index:50;
+    position:absolute; left:16px; bottom:calc(82px + env(safe-area-inset-bottom)); z-index:50;
     width:34px; height:34px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     background: linear-gradient(160deg, var(--wine) 0%, var(--wine-dark) 100%);
