@@ -247,13 +247,45 @@
 <div id="guide-overlay" class="hidden"></div>
 <div id="ambiance-player-overlay" class="ambiance-float hidden"></div>
 <div id="rosary-settings-overlay" class="rosary-settings-overlay hidden"></div>
+<div id="sw-update-banner" class="sw-update-banner hidden">
+  <span>✨ Une nouvelle version de Lumen est prête.</span>
+  <button type="button" id="sw-update-btn">Mettre à jour</button>
+</div>
 
 <script src="js/app.js" defer></script>
 <script>
   // Mode hors ligne (PWA) : installe le service worker une fois la page chargée.
+  // Par défaut, les navigateurs ne revérifient un service worker déjà
+  // installé qu'au mieux une fois par 24h, et personne n'est prévenu quand
+  // une nouvelle version est prête : il fallait rouvrir l'appli plusieurs
+  // fois « à l'aveugle » pour finir par la voir apparaître. On vérifie
+  // donc activement à chaque ouverture/retour au premier plan, et on
+  // affiche un bandeau dès qu'une nouvelle version a pris le relais.
   if('serviceWorker' in navigator){
+    // Permet de distinguer la toute première prise de contrôle (installation
+    // initiale, rien à signaler) d'un vrai changement de version pendant que
+    // l'appli est déjà ouverte et contrôlée par une version précédente.
+    let hadController = !!navigator.serviceWorker.controller;
+    let swRefreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+      if(swRefreshing) return;
+      if(hadController){
+        const banner = document.getElementById('sw-update-banner');
+        if(banner) banner.classList.remove('hidden');
+      }
+      hadController = true;
+    });
+    document.getElementById('sw-update-btn') && document.getElementById('sw-update-btn').addEventListener('click', ()=>{
+      swRefreshing = true;
+      window.location.reload();
+    });
     window.addEventListener('load', ()=>{
-      navigator.serviceWorker.register('sw.js').catch(()=>{ /* hors ligne resté indisponible, l'app continue normalement en ligne */ });
+      navigator.serviceWorker.register('sw.js').then((reg)=>{
+        reg.update().catch(()=>{});
+        document.addEventListener('visibilitychange', ()=>{
+          if(document.visibilityState === 'visible') reg.update().catch(()=>{});
+        });
+      }).catch(()=>{ /* hors ligne resté indisponible, l'app continue normalement en ligne */ });
     });
   }
 </script>
