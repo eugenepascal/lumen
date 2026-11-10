@@ -5852,7 +5852,7 @@ function renderNovenaDayPage(n, info, dayIndex){
       u.onend = ()=>{ if(NOVENA_DAY_AUDIO_PLAYING === playId){ NOVENA_DAY_AUDIO_PLAYING = null; render(); } };
       u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
       NOVENA_DAY_AUDIO_PLAYING = playId;
-      window.speechSynthesis.speak(u);
+      ttsSpeak(u);
       render();
     };
   }
@@ -9171,6 +9171,42 @@ function ttsErrorToast(e){
   };
   showToast(messages[code] || ("🔇 Lecture vocale indisponible (" + (code || 'erreur inconnue') + "). Vérifiez le volume et que l'onglet n'est pas en sourdine."));
 }
+// Safari/iOS n'autorise la synthèse vocale qu'après un vrai geste de
+// l'utilisateur (clic/toucher) directement lié à l'appel speak() — sinon
+// speak() est accepté sans erreur mais ne produit aucun son. On « débloque »
+// donc le moteur dès le tout premier clic/toucher sur l'appli, avec une
+// micro-phrase inaudible (volume 0), pour que tous les appels suivants
+// (même déclenchés plus tard, de façon asynchrone) puissent produire du son.
+let TTS_UNLOCKED = false;
+function unlockTTSOnce(){
+  if(TTS_UNLOCKED || !window.speechSynthesis) return;
+  TTS_UNLOCKED = true;
+  try{
+    const warm = new SpeechSynthesisUtterance(' ');
+    warm.volume = 0;
+    window.speechSynthesis.speak(warm);
+  }catch(e){}
+}
+document.addEventListener('pointerdown', unlockTTSOnce, {once:true, passive:true});
+document.addEventListener('keydown', unlockTTSOnce, {once:true});
+// Bug connu de Chrome/Chromium (bureau comme mobile) : la synthèse vocale
+// s'interrompt silencieusement au bout d'environ 15 secondes sur un texte
+// long (le minuteur interne du moteur expire). La mise en pause/reprise
+// périodique empêche ce minuteur de se déclencher, sans coupure audible.
+// On centralise donc tous les appels à speak() par cette fonction.
+let TTS_KEEPALIVE_TIMER = null;
+function ttsSpeak(u){
+  if(TTS_KEEPALIVE_TIMER){ clearInterval(TTS_KEEPALIVE_TIMER); TTS_KEEPALIVE_TIMER = null; }
+  const stopKeepAlive = ()=>{ if(TTS_KEEPALIVE_TIMER){ clearInterval(TTS_KEEPALIVE_TIMER); TTS_KEEPALIVE_TIMER = null; } };
+  const origEnd = u.onend, origErr = u.onerror;
+  u.onend = (e)=>{ stopKeepAlive(); if(origEnd) origEnd(e); };
+  u.onerror = (e)=>{ stopKeepAlive(); if(origErr) origErr(e); };
+  window.speechSynthesis.speak(u);
+  TTS_KEEPALIVE_TIMER = setInterval(()=>{
+    if(!window.speechSynthesis.speaking){ stopKeepAlive(); return; }
+    try{ window.speechSynthesis.pause(); window.speechSynthesis.resume(); }catch(e){}
+  }, 10000);
+}
 function speakText(text){
   try{
     if(!window.speechSynthesis){ showToast("Lecture vocale indisponible sur ce navigateur"); return; }
@@ -9178,7 +9214,7 @@ function speakText(text){
     const u = new SpeechSynthesisUtterance(text);
     applyNaturalVoice(u);
     u.onerror = ttsErrorToast;
-    window.speechSynthesis.speak(u);
+    ttsSpeak(u);
   }catch(e){ showToast("Lecture vocale indisponible"); }
 }
 
@@ -9355,7 +9391,7 @@ function lumenSpeechStart(){
     else lumenPlayerHide();
   };
   u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
-  window.speechSynthesis.speak(u);
+  ttsSpeak(u);
   syncReadPageIcon();
 }
 function syncReadPageIcon(){
@@ -10378,7 +10414,7 @@ function wireRosaryEvents(){
       u.onend = ()=>{ if(ROSARY_AUDIO_PLAYING===key){ ROSARY_AUDIO_PLAYING=null; render(); } };
       u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
       ROSARY_AUDIO_PLAYING = key;
-      window.speechSynthesis.speak(u);
+      ttsSpeak(u);
       render();
     };
   }
@@ -11536,7 +11572,7 @@ function renderMeditationsAudio(){
       applyNaturalVoice(u); u.rate = 0.9;
       u.onend = ()=>{ MEDITATION_AUDIO_PLAYING = null; renderMeditationsAudio(); };
       u.onerror = (e)=>{ ttsErrorToast(e); u.onend(); };
-      window.speechSynthesis.speak(u);
+      ttsSpeak(u);
       MEDITATION_AUDIO_PLAYING = idx;
       renderMeditationsAudio();
     };
@@ -13400,7 +13436,7 @@ function speakWithProgress(text, totalSeconds, onTick, onEnd){
     u.onboundary = (e)=>{ if(typeof e.charIndex === 'number') onTick(Math.min(1, e.charIndex/textLen)); };
     u.onend = ()=>{ onTick(1); onEnd(); };
     u.onerror = (e)=>{ ttsErrorToast(e); onEnd(); };
-    window.speechSynthesis.speak(u);
+    ttsSpeak(u);
     return u;
   }catch(e){ showToast("Lecture vocale indisponible"); onEnd(); return null; }
 }
