@@ -3688,6 +3688,50 @@ async function saveGroupMoment(code, moment){
   if(!ok) showToast('⚠️ Connexion impossible : ce moment ne sera pas visible par vos proches tant que la connexion ne sera pas rétablie.');
   return ok;
 }
+
+/* ================= gabarits de groupe =================
+   Pour qu'un groupe ne démarre pas sur une page blanche, on propose quelques
+   structures déjà connues sur le terrain (chorale, mouvement de jeunes type
+   JEC, scoutisme...) : chacune pré-remplit un moment de prière suggéré et un
+   premier témoignage d'accueil, que le groupe peut ensuite modifier ou
+   supprimer librement. */
+const GROUP_TEMPLATES = [
+  {
+    key:'choeur', icon:'🎶', label:'Chorale paroissiale',
+    moment:{label:'Prière avant le chant', time:'18:30'},
+    welcome:'Bienvenue à la chorale ! Partagez ici vos intentions avant une répétition ou une messe, et les grâces reçues en chantant pour la liturgie.'
+  },
+  {
+    key:'mouvement', icon:'📖', label:'Mouvement de jeunes',
+    moment:{label:'Topo & prière du mouvement', time:'19:00'},
+    welcome:'Bienvenue dans le groupe ! Entre deux rencontres, partagez ici vos intentions, vos relectures de la semaine (voir, juger, agir) et vos témoignages.'
+  },
+  {
+    key:'scouts', icon:'⛺', label:'Scouts & Guides',
+    moment:{label:'Prière du camp ou de la réunion', time:'20:00'},
+    welcome:'Bienvenue dans la troupe ! Partagez ici vos intentions avant une sortie ou un camp, et vos plus beaux souvenirs de prière autour du feu.'
+  },
+  {
+    key:'jeunes', icon:'🙌', label:'Groupe de jeunes',
+    moment:{label:'Temps de prière du groupe', time:'20:00'},
+    welcome:'Bienvenue dans le groupe ! C\'est l\'endroit pour partager vos intentions de la semaine et les belles surprises de Dieu dans vos vies.'
+  },
+  {
+    key:'personnalise', icon:'✨', label:'Personnalisé',
+    moment:null,
+    welcome:''
+  }
+];
+let GROUP_TEMPLATE_KEY = '';
+async function loadGroupTemplate(code){
+  try{ const d = await sharedGet('group-template:'+code); return (d && d.value) ? d.value : ''; }catch(e){ return ''; }
+}
+async function saveGroupTemplate(code, key){
+  return await sharedSet('group-template:'+code, key||'');
+}
+function groupTemplateInfo(key){
+  return GROUP_TEMPLATES.find(t=>t.key===key) || null;
+}
 async function loadPrefsAndData(){
   const defaults = { favorites:[], recent:[], streak:{count:0,lastDate:null}, theme:'light', themeMode:'auto', fontSize:'md', onboardingSeen:false, seenMilestones:[], lastSummarySeen:'', userName:'', dyslexicFont:false };
   try{
@@ -7463,7 +7507,12 @@ function renderPrayerGroup(){
     html += `<p class="section-desc">Créez un petit groupe de prière privé, ou rejoignez celui de vos proches avec leur code, pour partager des intentions et vous encourager mutuellement.</p>
       <div class="card">
         <p class="day-title" style="font-size:15px;">Créer un groupe</p>
-        <button class="btn btn-primary btn-sm" id="create-group-btn">✦ Créer mon groupe</button>
+        <p class="section-desc" style="margin:2px 0 10px;">Choisissez ce qui ressemble le plus à votre groupe : il démarrera déjà prêt, avec un moment de prière suggéré et un message d'accueil.</p>
+        <div class="grid" style="gap:8px;">
+          ${GROUP_TEMPLATES.map(t=>`
+            <button class="btn btn-ghost btn-sm group-template-btn" data-template="${t.key}" style="justify-content:flex-start; text-align:left;">${t.icon} ${escapeHtml(t.label)}</button>
+          `).join('')}
+        </div>
       </div>
       <div class="card add-intention-box" style="margin-top:12px;">
         <p class="day-title" style="font-size:15px;">Rejoindre un groupe</p>
@@ -7471,14 +7520,30 @@ function renderPrayerGroup(){
         <button class="btn btn-gold btn-sm" id="join-group-btn" style="margin-top:8px;">Rejoindre</button>
       </div>`;
     document.getElementById('screen').innerHTML = html;
-    document.getElementById('create-group-btn').onclick = async ()=>{
-      PRAYER_GROUP_CODE = generateGroupCode();
-      await savePrayerGroupCode(PRAYER_GROUP_CODE);
-      GROUP_INTENTIONS = [];
-      GROUP_TESTIMONIES = [];
-      showToast('Groupe créé ✦');
-      renderPrayerGroup();
-    };
+    document.querySelectorAll('.group-template-btn').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const tpl = groupTemplateInfo(btn.getAttribute('data-template'));
+        PRAYER_GROUP_CODE = generateGroupCode();
+        await savePrayerGroupCode(PRAYER_GROUP_CODE);
+        GROUP_INTENTIONS = [];
+        GROUP_TEMPLATE_KEY = tpl ? tpl.key : '';
+        await saveGroupTemplate(PRAYER_GROUP_CODE, GROUP_TEMPLATE_KEY);
+        if(tpl && tpl.moment){
+          GROUP_MOMENT = {label:tpl.moment.label, time:tpl.moment.time, completions:{}};
+          await saveGroupMoment(PRAYER_GROUP_CODE, GROUP_MOMENT);
+        } else {
+          GROUP_MOMENT = null;
+        }
+        if(tpl && tpl.welcome){
+          GROUP_TESTIMONIES = [{id:'t-'+Date.now(), name:'Lumen', text:tpl.welcome, createdAt:Date.now(), comments:[], reactions:{}}];
+          await saveGroupTestimonies(PRAYER_GROUP_CODE, GROUP_TESTIMONIES);
+        } else {
+          GROUP_TESTIMONIES = [];
+        }
+        showToast('Groupe créé ✦');
+        renderPrayerGroup();
+      };
+    });
     document.getElementById('join-group-btn').onclick = async ()=>{
       const code = document.getElementById('join-group-input').value.trim().toUpperCase();
       if(!code){ return; }
@@ -7486,14 +7551,17 @@ function renderPrayerGroup(){
       await savePrayerGroupCode(code);
       GROUP_INTENTIONS = await loadGroupIntentions(code);
       GROUP_TESTIMONIES = await loadGroupTestimonies(code);
+      GROUP_TEMPLATE_KEY = await loadGroupTemplate(code);
       showToast('Groupe rejoint ✦');
       renderPrayerGroup();
     };
     return;
   }
+  const groupTpl = groupTemplateInfo(GROUP_TEMPLATE_KEY);
   html += `<div class="card" style="text-align:center; border-left:4px solid var(--gold);">
       <p class="eyebrow" style="color:var(--gold);">Code de votre groupe</p>
       <p class="day-title" style="font-size:24px; letter-spacing:3px;">${escapeHtml(PRAYER_GROUP_CODE)}</p>
+      ${groupTpl ? `<p class="section-desc" style="margin:2px 0 0;">${groupTpl.icon} ${escapeHtml(groupTpl.label)}</p>` : ''}
       <p class="section-desc" style="margin:4px 0 0;">Partagez ce code (ou le lien ci-dessous) à vos proches pour qu'ils rejoignent le même groupe.</p>
       <div style="display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
         <button class="btn btn-ghost btn-sm" id="copy-group-code-btn">📋 Copier le code</button>
@@ -7575,6 +7643,7 @@ function renderPrayerGroup(){
     GROUP_INTENTIONS = [];
     GROUP_TESTIMONIES = [];
     GROUP_MOMENT = null;
+    GROUP_TEMPLATE_KEY = '';
     await savePrayerGroupCode('');
     renderPrayerGroup();
   };
@@ -14638,7 +14707,7 @@ async function startApp(){
   ACTIVITY_LOG = activityLog || [];
   HOME_LAYOUT = homeLayout;
   PRAYER_GROUP_CODE = groupCode || '';
-  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); }
+  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); GROUP_TEMPLATE_KEY = await loadGroupTemplate(PRAYER_GROUP_CODE); }
   if(savedBeat && savedBeat.pattern){
     SEQ_INSTRUMENTS.forEach(inst=>{
       if(savedBeat.pattern[inst.key]) SEQ_PATTERN[inst.key] = savedBeat.pattern[inst.key];
@@ -14696,6 +14765,7 @@ async function startApp(){
         GROUP_INTENTIONS = await loadGroupIntentions(code);
         GROUP_TESTIMONIES = await loadGroupTestimonies(code);
         GROUP_MOMENT = await loadGroupMoment(code);
+        GROUP_TEMPLATE_KEY = await loadGroupTemplate(code);
         PRIMARY = 'prier'; SUBTAB.prier = 'groupe';
         showToast('Groupe de prière rejoint ✦');
       }
