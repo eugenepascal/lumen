@@ -154,6 +154,15 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cg stroke='%23B8863B' stroke-opacity='0.08' stroke-width='3' fill='none' stroke-linecap='round'%3E%3Ccircle cx='70' cy='35' r='9'/%3E%3Cline x1='70' y1='44' x2='70' y2='95'/%3E%3Cline x1='50' y1='55' x2='90' y2='55'/%3E%3Cpath d='M45 80 Q45 105 70 105 Q95 105 95 80'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 140px 140px;
   }
+  /* Motif en bande zigzag (chevrons) — inspiré des bordures tissées de
+     nombreuses traditions textiles africaines (kente, bogolan, ankara,
+     tissages éthiopiens...) sans copier un motif précis d'une ethnie ou
+     d'un tissage donné : purement décoratif, dans le même filigrane
+     discret que les autres motifs ci-dessus. */
+  body[data-pattern="motifs-africains"] #app::before{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cpolyline points='0,40 20,0 40,40 60,0 80,40 100,0 120,40 140,0 160,40' fill='none' stroke='%23B8863B' stroke-opacity='0.09' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-size: 160px 40px;
+  }
   body[data-pattern="aucun"] #app::before{ background-image:none; }
 
   /* ===== fond d'écran photo (images spirituelles), remplace le motif en filigrane ===== */

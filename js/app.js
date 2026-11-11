@@ -13808,7 +13808,8 @@ const BG_PATTERN_LIST = [
   {key:'poisson', label:'Poisson (Ichthus)', icon:'🐟'},
   {key:'ble-raisin', label:'Épis & Raisin', icon:'🌾'},
   {key:'rayons', label:'Rayons de lumière', icon:'☀️'},
-  {key:'ancre', label:'Ancre (espérance)', icon:'⚓'}
+  {key:'ancre', label:'Ancre (espérance)', icon:'⚓'},
+  {key:'motifs-africains', label:'Motifs africains', icon:'🔶'}
 ];
 let BG_PATTERN = 'croix';
 /* fonds d'écran photo — vraies images d'ambiance (flou artistique, bokeh, lumière douce),
