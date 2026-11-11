@@ -267,12 +267,13 @@
     // l'appli est déjà ouverte et contrôlée par une version précédente.
     let hadController = !!navigator.serviceWorker.controller;
     let swRefreshing = false;
+    function showUpdateBanner(){
+      const banner = document.getElementById('sw-update-banner');
+      if(banner) banner.classList.remove('hidden');
+    }
     navigator.serviceWorker.addEventListener('controllerchange', ()=>{
       if(swRefreshing) return;
-      if(hadController){
-        const banner = document.getElementById('sw-update-banner');
-        if(banner) banner.classList.remove('hidden');
-      }
+      if(hadController) showUpdateBanner();
       hadController = true;
     });
     document.getElementById('sw-update-btn') && document.getElementById('sw-update-btn').addEventListener('click', ()=>{
@@ -281,9 +282,24 @@
     });
     window.addEventListener('load', ()=>{
       navigator.serviceWorker.register('sw.js').then((reg)=>{
+        /* `controllerchange` seul s'est révélé peu fiable sur certaines
+           tablettes (notamment iPad en PWA installée) : on ajoute deux
+           filets de sécurité indépendants pour ne jamais rater une mise
+           à jour déjà prête. */
+        if(reg.waiting && hadController) showUpdateBanner();
+        reg.addEventListener('updatefound', ()=>{
+          const newWorker = reg.installing;
+          if(!newWorker) return;
+          newWorker.addEventListener('statechange', ()=>{
+            if(newWorker.state === 'installed' && hadController) showUpdateBanner();
+          });
+        });
         reg.update().catch(()=>{});
         document.addEventListener('visibilitychange', ()=>{
-          if(document.visibilityState === 'visible') reg.update().catch(()=>{});
+          if(document.visibilityState === 'visible'){
+            reg.update().catch(()=>{});
+            if(reg.waiting && hadController) showUpdateBanner();
+          }
         });
       }).catch(()=>{ /* hors ligne resté indisponible, l'app continue normalement en ligne */ });
     });

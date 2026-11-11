@@ -959,6 +959,30 @@ const NOVENAS = [
    {title:"L'appui dans l'épreuve", medit:"Beaucoup se tournent vers lui dans les moments où tout semble vaciller.", prayer:"Soyez présent auprès de ceux qui traversent une épreuve grave aujourd'hui."},
    {title:"Repousser les puissances du mal", medit:"La prière finale à saint Michel demande qu'il repousse ce qui rôde autour des âmes fragiles.", prayer:"Précipitez en enfer Satan et les autres esprits mauvais qui rôdent dans le monde pour la perte des âmes. — Prière finale : Saint Michel Archange, je vous remercie de m'avoir accompagné(e) ces neuf jours. Restez le gardien de ma vie, aujourd'hui et chaque jour qui vient. Amen."}
   ]},
+ {id:"gabriel", title:"Neuvaine à Saint Gabriel Archange", sub:"Messager de la Bonne Nouvelle", tag:"Annonce", color:"#2E6B8A", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Force de Dieu", medit:"Le nom de Gabriel signifie « Force de Dieu » : il n'apporte jamais une parole humaine, mais celle de Dieu lui-même.", prayer:"Saint Gabriel, aide-moi à reconnaître la voix de Dieu dans ce qui m'est annoncé aujourd'hui."},
+   {title:"L'Annonciation", medit:"C'est Gabriel qui annonce à Marie qu'elle portera le Fils de Dieu — une nouvelle bouleversante, accueillie par un « oui » confiant.", prayer:"Comme Marie, apprends-moi à dire « oui » à Dieu même quand je ne comprends pas tout."},
+   {title:"Accueillir une nouvelle qui dérange", medit:"Marie fut d'abord troublée par les paroles de l'ange, avant de les accueillir avec foi.", prayer:"Saint Gabriel, aide-moi à accueillir sans peur ce qui bouleverse mes plans aujourd'hui."},
+   {title:"Zacharie et la promesse inattendue", medit:"Gabriel annonce aussi à Zacharie la naissance de Jean-Baptiste, une promesse jugée impossible à son âge.", prayer:"Seigneur, augmente ma foi là où je doute que tu puisses encore agir."},
+   {title:"Rien n'est impossible à Dieu", medit:"« Rien n'est impossible à Dieu », dit Gabriel à Marie — une parole qui traverse toute l'Écriture.", prayer:"Saint Gabriel, redis-moi aujourd'hui que Dieu peut ce que je crois impossible."},
+   {title:"La patience de l'attente", medit:"Entre l'annonce et son accomplissement, il a fallu neuf mois d'attente silencieuse, pour Marie comme pour Élisabeth.", prayer:"Apprends-moi la patience dans ce que j'attends de Dieu sans encore le voir."},
+   {title:"Porter une bonne nouvelle aux autres", medit:"Messager par excellence, Gabriel inspire tous ceux qui ont la charge d'annoncer, d'enseigner, de transmettre.", prayer:"Seigneur, fais de moi un porteur de bonnes nouvelles pour ceux que je côtoie."},
+   {title:"La vérité dans ce que je transmets", medit:"Patron des communications, Gabriel rappelle l'importance de dire et transmettre la vérité, surtout aujourd'hui.", prayer:"Saint Gabriel, garde mes paroles et mes messages dans la vérité et la charité."},
+   {title:"Dire oui, comme Marie", medit:"Neuf jours pour apprendre, à l'exemple de Marie, à accueillir la parole de Dieu avec confiance et disponibilité.", prayer:"Saint Gabriel archange, intercédez pour l'intention que je porte aujourd'hui. — Prière finale : Saint Gabriel archange, toi qui as porté à Marie la nouvelle la plus bouleversante jamais annoncée, obtiens-nous d'accueillir la parole de Dieu avec la même disponibilité qu'elle. Merci de m'avoir accompagné(e) ces neuf jours. Amen."}
+  ]},
+ {id:"raphael", title:"Neuvaine à Saint Raphaël Archange", sub:"Dieu guérit, Dieu accompagne", tag:"Guérison", color:"#3F8A6E", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"Dieu guérit", medit:"Le nom de Raphaël signifie « Dieu guérit » : il accompagne Tobie tout au long de son voyage, d'abord sans se faire reconnaître.", prayer:"Saint Raphaël, accompagne-moi aujourd'hui, même quand je ne sens pas ta présence."},
+   {title:"Le compagnon de route", medit:"Raphaël se présente à Tobie comme un simple compagnon de voyage, avant de révéler qui il est réellement à la fin du chemin.", prayer:"Saint Raphaël, veille sur mes déplacements et mes projets, même les plus incertains."},
+   {title:"La guérison du corps", medit:"C'est par le geste de Raphaël que la vue est rendue au vieux Tobit, resté aveugle de longues années.", prayer:"Saint Raphaël, intercède pour la guérison de mon corps ou de celui d'un proche qui souffre."},
+   {title:"La guérison des blessures invisibles", medit:"Raphaël délivre aussi Sara d'un mal caché qui pesait sur elle depuis longtemps, bien au-delà du visible.", prayer:"Saint Raphaël, présente à Dieu mes blessures les plus intérieures, celles qu'on ne voit pas."},
+   {title:"Une rencontre fidèle", medit:"C'est Raphaël qui conduit Tobie à Sara et bénit leur union — il est invoqué pour les rencontres heureuses et les mariages fidèles.", prayer:"Saint Raphaël, veille sur mes relations, et sur ceux qui cherchent à construire une union fidèle."},
+   {title:"La protection sur le chemin", medit:"Tout au long du voyage, Raphaël protège Tobie des dangers qu'il ne voit pas lui-même.", prayer:"Saint Raphaël, protège-moi des dangers que je ne sais pas voir venir."},
+   {title:"La confiance dans l'incertain", medit:"Tobie part sans savoir ce que ce voyage lui coûtera — il avance simplement en confiance.", prayer:"Seigneur, donne-moi de marcher en confiance là où je ne vois pas encore clair."},
+   {title:"La gratitude après l'épreuve", medit:"Au terme du voyage, la famille de Tobie découvre que c'est un envoyé de Dieu qui les a accompagnés sans jamais se faire remarquer.", prayer:"Seigneur, apprends-moi à reconnaître ta présence discrète dans ce que j'ai traversé."},
+   {title:"Un compagnon pour la suite", medit:"Neuf jours pour confier à Raphaël ce qui a besoin d'être guéri, accompagné, ou simplement conduit à bon port.", prayer:"Saint Raphaël archange, intercédez pour l'intention que je porte aujourd'hui. — Prière finale : Saint Raphaël archange, toi qui as guidé et guéri le jeune Tobie sur la route, sois le compagnon discret de mon propre chemin. Merci de m'avoir accompagné(e) ces neuf jours. Amen."}
+  ]},
  {id:"esprit-saint", title:"Neuvaine à l'Esprit Saint", sub:"Les sept dons de l'Esprit", tag:"Sagesse", color:"#B8863B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
    {title:"Le don de Sagesse", medit:"La sagesse n'est pas d'accumuler des connaissances, mais de voir la vie avec les yeux de Dieu.", prayer:"Esprit Saint, donnez-moi la sagesse de discerner l'essentiel aujourd'hui."},
@@ -994,18 +1018,6 @@ const NOVENAS = [
    {title:"L'humilité du franciscain", medit:"Malgré sa renommée, il resta fidèle à la simplicité voulue par saint François.", prayer:"Apprenez-moi à rester simple, même si l'on me reconnaît pour quelque chose."},
    {title:"Une mort jeune, un rayonnement immense", medit:"Mort à 36 ans seulement, son influence spirituelle a continué de grandir bien après sa mort.", prayer:"Seigneur, que ma vie porte du fruit, quelle qu'en soit la durée."},
    {title:"Le saint le plus populaire", medit:"Peu de saints sont autant invoqués au quotidien, preuve qu'une vie simple et fidèle touche plus large qu'on ne l'imagine.", prayer:"Saint Antoine, intercédez pour ce que je cherche à retrouver aujourd'hui. — Prière finale : Saint Antoine, toi qu'on n'invoque jamais en vain, je te remercie pour ces neuf jours passés en ta compagnie. Continue de veiller sur ce que je t'ai confié, et garde-moi fidèle dans ma foi. Amen."}
-  ]},
- {id:"neuvaine-etoile", title:"Neuvaine pour récupérer son étoile", sub:"Retrouver sa lumière intérieure, avec Marie", tag:"Renaissance", color:"#4A3D6B", dailyStructure:"Chaque jour : Signe de croix, méditation et prière du jour ci-dessous, puis 1 Notre Père, 10 « Je vous salue Marie » et le « Souvenez-vous ». Terminez par un Signe de croix.",
-  days:[
-   {title:"Reconnaître la perte de lumière", medit:"Il arrive que l'âme se fatigue, s'éteigne, se disperse. Dieu n'accuse pas : Il restaure.", prayer:"Marie, Étoile du Matin, je reconnais que ma lumière s'est affaiblie. J'ai donné trop, j'ai porté trop, j'ai oublié qui je suis. Présente-moi à Dieu pour qu'il me relève. Amen."},
-   {title:"Se détacher de ce qui a volé la paix", medit:"Certaines blessures, relations ou peurs obscurcissent l'âme.", prayer:"Marie, aide-moi à me détacher de ce qui a épuisé mon cœur. Coupe les liens qui ne viennent pas de Dieu et rends-moi libre intérieurement. Amen."},
-   {title:"Guérison des blessures profondes", medit:"Dieu restaure ce que l'homme n'a pas pu protéger.", prayer:"Marie, Mère compatissante, touche mes blessures visibles et invisibles. Là où mon âme a été atteinte, viens déposer la paix de Dieu. Amen."},
-   {title:"Rassembler ce qui est dispersé", medit:"Quand on a trop survécu, l'âme se fragmente. Dieu rassemble.", prayer:"Marie, rassemble ce qui est dispersé en moi : ma force, ma joie, mon identité. Que je sois unifié(e) dans l'amour de Dieu. Amen."},
-   {title:"Protection de la lumière intérieure", medit:"La lumière doit être protégée pour grandir.", prayer:"Marie, place ton manteau sur mon âme. Protège ma paix, protège mon cœur, protège mon chemin. Que rien n'éteigne ce que Dieu rallume. Amen."},
-   {title:"Sortir de la confusion", medit:"Dieu n'est pas un Dieu de trouble, mais de clarté.", prayer:"Marie, Étoile qui guide dans la nuit, éclaire mes pensées et mes décisions. Dissipe la confusion, fais naître la clarté intérieure. Amen."},
-   {title:"Restaurer la dignité et la valeur", medit:"Ton étoile, c'est ta valeur aux yeux de Dieu.", prayer:"Marie, aide-moi à me voir comme Dieu me voit. Rends-moi la dignité que les épreuves ont essayé de m'enlever. Je suis enfant de Dieu. Amen."},
-   {title:"Rallumer l'espérance", medit:"Quand l'étoile revient, le chemin réapparaît.", prayer:"Marie, Étoile de l'espérance, rallume en moi la foi en l'avenir. Que mon cœur espère à nouveau, sans peur, sans amertume. Amen."},
-   {title:"Offrande totale et renaissance", medit:"L'étoile retrouvée n'est pas possédée : elle est confiée.", prayer:"Marie, je remets mon âme, ma lumière, ma destinée entre les mains de Dieu. Que ce qui vient de Lui demeure, et que tout le reste s'efface. Je marche désormais dans la paix. Amen. — Prière finale : Marie, merci d'avoir veillé sur mon âme. Je choisis la lumière, la paix, et la confiance en Dieu. Amen."}
   ]},
  {id:"sante", title:"Neuvaine pour la santé", sub:"Confier un corps ou un esprit fatigué", tag:"Guérison", color:"#3B7A3B", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
   days:[
@@ -1114,6 +1126,18 @@ const NOVENAS = [
    {title:"La joie qui vient d'ailleurs", medit:"Carlo disait que la tristesse, c'est regarder vers soi-même, et que la vraie joie, c'est regarder vers Dieu — une petite phrase qui a traversé les générations après lui.", prayer:"Seigneur, tourne mon regard vers toi quand je suis tenté(e) de ne regarder que mes propres soucis."},
    {title:"La maladie offerte", medit:"Atteint à quinze ans d'une leucémie foudroyante, Carlo a offert sa souffrance pour le pape et pour l'Église, sans se plaindre, jusqu'à son dernier souffle.", prayer:"Seigneur, apprends-moi à traverser l'épreuve sans perdre la paix du cœur, à l'exemple de Carlo."},
    {title:"Un saint pour notre temps", medit:"Mort en 2006 à quinze ans, canonisé en 2025, Carlo est devenu un modèle pour notre époque : la sainteté reste possible au milieu des écrans, de l'école et de la vie la plus ordinaire.", prayer:"Saint Carlo Acutis, intercédez pour l'intention que je porte aujourd'hui. — Prière finale : Seigneur, tu as donné à Carlo Acutis un amour brûlant pour l'Eucharistie et un cœur attentif aux plus pauvres, dès son plus jeune âge. Par son intercession, aide-moi à vivre ma foi avec la même simplicité et la même joie, au cœur même de ma vie de tous les jours. Que je sache, comme lui, regarder vers toi plutôt que vers moi-même. Amen."}
+  ]},
+ {id:"jean-paul-ii", title:"Neuvaine à Saint Jean-Paul II", sub:"« N'ayez pas peur »", tag:"Espérance", color:"#7A2F52", dailyStructure:"Chaque jour : Signe de croix, puis 1 Notre Père, 10 Je vous salue Marie et 1 Gloire au Père, avant ou après la méditation et la prière du jour ci-dessous. Terminez par un Signe de croix.",
+  days:[
+   {title:"N'ayez pas peur", medit:"Dès le premier jour de son pontificat, Jean-Paul II lance cet appel resté célèbre : « N'ayez pas peur ! Ouvrez, ouvrez toutes grandes les portes au Christ. »", prayer:"Saint Jean-Paul II, aide-moi à ouvrir sans peur une porte de ma vie que je tiens encore fermée à Dieu."},
+   {title:"Totus Tuus", medit:"« Totus Tuus », tout à toi : c'est la devise mariale que Jean-Paul II avait choisie comme évêque, et gardée toute sa vie.", prayer:"Marie, comme Jean-Paul II, je me remets tout entier(ère) entre tes mains aujourd'hui."},
+   {title:"La dignité de toute personne", medit:"Il a passé sa vie à défendre la dignité de tout être humain, du plus fragile au plus oublié, sans jamais s'en lasser.", prayer:"Seigneur, aide-moi à voir la dignité de chaque personne que je croiserai aujourd'hui."},
+   {title:"La confiance faite aux jeunes", medit:"En créant les Journées Mondiales de la Jeunesse, il a fait le pari que les jeunes pouvaient porter une foi vivante et exigeante.", prayer:"Saint Jean-Paul II, intercède pour les jeunes en recherche, pour qu'ils trouvent une foi qui les fasse vivre."},
+   {title:"Le pardon offert", medit:"Grièvement blessé par un attentat en 1981, il est allé ensuite visiter et pardonner personnellement celui qui avait tenté de le tuer.", prayer:"Seigneur, donne-moi la force de pardonner ce que je porte encore comme une blessure."},
+   {title:"La souffrance offerte", medit:"Dans ses dernières années, affaibli par la maladie, il a choisi de rester visible plutôt que de se cacher, offrant sa faiblesse même comme une prière.", prayer:"Seigneur, apprends-moi à traverser mes propres limites sans honte, en les offrant plutôt qu'en les cachant."},
+   {title:"La Miséricorde Divine", medit:"Il a canonisé sainte Faustine et institué le dimanche de la Divine Miséricorde — et il est mort la veille même de cette fête, en 2005.", prayer:"Jésus, miséricorde infinie, j'ai confiance en toi."},
+   {title:"Un artisan de paix et de liberté", medit:"Son soutien discret et constant a contribué à la chute du communisme en Europe de l'Est, en commençant par sa Pologne natale.", prayer:"Saint Jean-Paul II, intercède pour la paix et la liberté là où des peuples en sont aujourd'hui privés."},
+   {title:"Un saint de notre temps", medit:"Canonisé en 2014, Jean-Paul II demeure un témoin proche de nous : un pape que beaucoup ont vu, entendu, parfois même rencontré.", prayer:"Saint Jean-Paul II, intercédez pour l'intention que je porte aujourd'hui. — Prière finale : Saint Jean-Paul II, toi qui as traversé la peur, la souffrance et l'épreuve sans jamais cesser d'espérer, obtiens-moi la grâce de vivre ma foi sans crainte, tout entier(ère) donné(e) à Dieu comme toi par Marie. Merci de m'avoir accompagné(e) ces neuf jours. Amen."}
   ]}
 ];
 
@@ -5202,10 +5226,11 @@ function loadHomeNewsCarousel(){
 const NOVENA_ICONS = {
   'joseph': '🔨', 'sacre-coeur': '❤️', 'marie-confiance': '🌹', 'therese': '🌸',
   'michel': '⚔️', 'esprit-saint': '🕊️', 'sainte-rita': '🌹', 'antoine-padoue': '🔍',
-  'marie-confiance-abandon': '🕯️', 'joseph-neuvaine-familiale': '🏡', 'neuvaine-etoile': '🌟',
+  'marie-confiance-abandon': '🕯️', 'joseph-neuvaine-familiale': '🏡',
   'sante': '🌿', 'travail': '🧰', 'gratitude': '🙌', 'defunts': '🕯️',
   'notre-dame-noeuds': '🎀', 'divine-misericorde': '✝️', 'charbel': '🌿',
-  'eugene-de-mazenod': '⛪', 'carlo-acutis': '💻'
+  'eugene-de-mazenod': '⛪', 'carlo-acutis': '💻', 'gabriel': '📜',
+  'raphael': '🩹', 'jean-paul-ii': '🕊️'
 };
 /* Intentions suggérées, affichées sur la page de présentation de chaque
    neuvaine (« Pour quelles intentions ? »), à titre indicatif. */
@@ -5220,7 +5245,6 @@ const NOVENA_INTENTIONS_HINTS = {
   'esprit-saint': ['Le discernement', 'Une décision importante', 'Grandir dans la foi'],
   'sainte-rita': ['Une cause qui semble désespérée', 'Le pardon', 'La patience dans l’épreuve'],
   'antoine-padoue': ['Retrouver ce qui est perdu', 'Un nouveau départ', 'La justice'],
-  'neuvaine-etoile': ['Retrouver sa lumière intérieure', 'Une blessure profonde', 'La renaissance après l’épreuve'],
   'sante': ['Une maladie ou une fatigue', 'Un proche malade', 'Les soignants'],
   'travail': ['La recherche d’emploi', 'Une décision professionnelle', 'La paix au travail'],
   'gratitude': ['Apprendre à dire merci', 'Une épreuve traversée', 'Une personne qui compte pour vous'],
@@ -5229,7 +5253,10 @@ const NOVENA_INTENTIONS_HINTS = {
   'divine-misericorde': ['Le pardon', 'Recommencer après une faute', 'La confiance en Dieu'],
   'charbel': ['Une guérison', 'Le silence intérieur', 'Une vie plus simple'],
   'eugene-de-mazenod': ['Les personnes exilées ou en difficulté', 'Le courage missionnaire', 'Les pauvres et les plus abandonnés'],
-  'carlo-acutis': ['Les jeunes et les étudiants', 'Grandir dans l’amour de l’Eucharistie', 'Bien utiliser internet et la technologie']
+  'carlo-acutis': ['Les jeunes et les étudiants', 'Grandir dans l’amour de l’Eucharistie', 'Bien utiliser internet et la technologie'],
+  'gabriel': ['Accueillir une nouvelle importante', 'Les messagers de la foi (prédicateurs, enseignants, médias)', 'Dire « oui » à un appel de Dieu'],
+  'raphael': ['Une guérison, visible ou intérieure', 'Un voyage ou un déplacement', 'Trouver un conjoint fidèle'],
+  'jean-paul-ii': ['La peur à surmonter', 'Les jeunes en recherche de foi', 'Le pardon et la paix entre les peuples']
 };
 const LUMEN_SACRED_ART = [
   {keys:['pierre','peter'], url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/El%20Greco%20-%20St.%20Peter%20-%20Google%20Art%20Project.jpg?width=900', credit:'Saint Pierre · El Greco · domaine public'},
@@ -5285,8 +5312,7 @@ const LUMEN_NOVENA_IMAGE_MAP = {
   "michel": {url:'./images/novena-michael.svg', credit:'Illustration Lumen dédiée'},
   "esprit-saint": {url:'./images/novena-holy-spirit.svg', credit:'Illustration Lumen dédiée'},
   "sainte-rita": {url:'./images/novena-rita.svg', credit:'Illustration Lumen dédiée'},
-  "antoine-padoue": {url:'./images/novena-anthony.svg', credit:'Illustration Lumen dédiée'},
-  "neuvaine-etoile": {url:'./images/novena-star.svg', credit:'Illustration Lumen dédiée'}
+  "antoine-padoue": {url:'./images/novena-anthony.svg', credit:'Illustration Lumen dédiée'}
 };
 
 
@@ -5391,8 +5417,7 @@ function lumenNovenaDedicatedArt(entry){
     ['notre-dame','marie-confiance'],['marie — la confiance','marie-confiance-abandon'],
     ['sainte thérèse','therese'],['sainte therese','therese'],
     ['saint michel','michel'],['esprit saint','esprit-saint'],
-    ['sainte rita','sainte-rita'],['saint antoine','antoine-padoue'],
-    ['étoile','neuvaine-etoile'],['etoile','neuvaine-etoile']
+    ['sainte rita','sainte-rita'],['saint antoine','antoine-padoue']
   ];
   const hit=aliases.find(([needle])=>title.includes(needle));
   return hit ? LUMEN_NOVENA_IMAGE_MAP[hit[1]] : null;
