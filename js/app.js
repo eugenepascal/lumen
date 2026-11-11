@@ -6311,9 +6311,15 @@ function openGuidedChaplet(sequence, title, onComplete){
 function renderGuidedChapletStep(){
   const st = GUIDED_CHAPLET_STATE;
   const overlay = document.getElementById('guided-chaplet-overlay');
-  const item = st.sequence[st.idx];
-  const text = item.text || CHAPLET_PRAYER_TEXTS[item.label] || '';
+  /* IMPORTANT : calculer `finished` et lire `st.sequence[st.idx]` seulement
+     si on n'est PAS terminé. Une fois la dernière perle validée, st.idx
+     vaut st.sequence.length (hors limites) : accéder à item.text plantait
+     alors avec une erreur JS silencieuse, qui interrompait la fonction
+     avant même d'afficher l'écran « Terminé » — le chapelet semblait
+     bloqué juste avant la fin, sans jamais y arriver. */
   const finished = st.idx >= st.sequence.length;
+  const item = finished ? null : st.sequence[st.idx];
+  const text = finished ? '' : (item.text || CHAPLET_PRAYER_TEXTS[item.label] || '');
   overlay.innerHTML = `
     <div class="guided-chaplet-panel">
       <button class="guided-chaplet-close" id="guided-chaplet-close">✕</button>
