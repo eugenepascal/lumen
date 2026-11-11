@@ -13809,7 +13809,8 @@ const BG_PATTERN_LIST = [
   {key:'ble-raisin', label:'Épis & Raisin', icon:'🌾'},
   {key:'rayons', label:'Rayons de lumière', icon:'☀️'},
   {key:'ancre', label:'Ancre (espérance)', icon:'⚓'},
-  {key:'motifs-africains', label:'Motifs africains', icon:'🔶'}
+  {key:'motifs-africains', label:'Chevrons', icon:'🔶'},
+  {key:'losanges', label:'Losanges', icon:'🔷'}
 ];
 let BG_PATTERN = 'croix';
 /* fonds d'écran photo — vraies images d'ambiance (flou artistique, bokeh, lumière douce),
@@ -13820,7 +13821,9 @@ const WALLPAPER_LIST = [
   {key:'bible', label:'Bible', img:'https://images.pexels.com/photos/15382610/pexels-photo-15382610.jpeg?auto=compress&cs=tinysrgb&w=900'},
   {key:'vitrail', label:'Vitrail', img:'https://images.pexels.com/photos/374609/pexels-photo-374609.jpeg?auto=compress&cs=tinysrgb&w=900'},
   {key:'adoration', label:'Adoration', img:'https://images.pexels.com/photos/29660338/pexels-photo-29660338.jpeg?auto=compress&cs=tinysrgb&w=900'},
-  {key:'lumiere', label:'Lumière', img:'https://images.pexels.com/photos/16746856/pexels-photo-16746856.jpeg?auto=compress&cs=tinysrgb&w=900'}
+  {key:'lumiere', label:'Lumière', img:'https://images.pexels.com/photos/16746856/pexels-photo-16746856.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'communion', label:'Communion', img:'https://images.pexels.com/photos/13742663/pexels-photo-13742663.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'assemblee', label:'Assemblée', img:'https://images.pexels.com/photos/13742661/pexels-photo-13742661.jpeg?auto=compress&cs=tinysrgb&w=900'}
 ];
 let BG_WALLPAPER = 'aucun';
 let THEME_MODE = 'auto';

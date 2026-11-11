@@ -163,6 +163,12 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cpolyline points='0,40 20,0 40,40 60,0 80,40 100,0 120,40 140,0 160,40' fill='none' stroke='%23B8863B' stroke-opacity='0.09' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-size: 160px 40px;
   }
+  /* Motif en treillis de losanges — même esprit décoratif discret que les
+     autres motifs, un dessin géométrique simple et intemporel. */
+  body[data-pattern="losanges"] #app::before{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpolygon points='40,0 80,40 40,80 0,40' fill='none' stroke='%23B8863B' stroke-opacity='0.08' stroke-width='2'/%3E%3C/svg%3E");
+    background-size: 80px 80px;
+  }
   body[data-pattern="aucun"] #app::before{ background-image:none; }
 
   /* ===== fond d'écran photo (images spirituelles), remplace le motif en filigrane ===== */
