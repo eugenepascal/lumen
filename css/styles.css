@@ -2250,6 +2250,15 @@
   .search-result-name{ font-family:'Fraunces',serif; font-weight:600; font-size:14px; }
   .search-result-meta{ font-family:'Inter',sans-serif; font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.4px; }
 
+  /* ===== avis / feedback (notation + message) ===== */
+  .feedback-panel{ max-width:420px; text-align:left; }
+  .feedback-stars{ display:flex; gap:6px; justify-content:center; margin:4px 0 16px; }
+  .feedback-star{ background:none; border:none; font-size:30px; line-height:1; cursor:pointer; color:rgba(20,16,14,0.18); transition:color 0.15s, transform 0.15s; padding:2px; }
+  .feedback-star.active{ color:var(--gold); transform:scale(1.08); }
+  .feedback-star:hover{ color:var(--gold); }
+  #feedback-text{ width:100%; min-height:90px; }
+  #feedback-submit-btn:disabled{ opacity:0.6; cursor:default; }
+
   /* ===== onboarding ===== */
   .onboard-title{ font-family:'Fraunces',serif; font-weight:600; font-size:20px; color:var(--wine-dark); margin-bottom:8px; }
   .onboard-step-list{ display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }

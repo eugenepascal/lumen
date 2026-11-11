@@ -7809,6 +7809,12 @@ function renderApropos(){
     </div>
 
     <div class="card" style="margin-top:12px; text-align:center;">
+      <p class="eyebrow" style="color:var(--gold);">⭐ Votre avis sur Lumen</p>
+      <p class="entry-detail-text" style="margin-bottom:8px;">Notez votre expérience en quelques secondes.</p>
+      <button class="btn btn-gold btn-sm" id="apropos-feedback-btn">Donner mon avis</button>
+    </div>
+
+    <div class="card" style="margin-top:12px; text-align:center;">
       <p class="eyebrow" style="color:var(--gold);">💬 Une remarque, un bug, une idée ?</p>
       <p class="entry-detail-text" style="margin-bottom:8px;">Vos retours aident à améliorer l'application.</p>
       <button class="btn btn-gold btn-sm" id="apropos-contact-btn">✉️ Envoyer un message</button>
@@ -7843,6 +7849,7 @@ function renderApropos(){
     </div>
   `;
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('apropos-feedback-btn').onclick = openFeedbackModal;
   document.getElementById('apropos-contact-btn').onclick = ()=>{
     window.open('mailto:pasou1000@gmail.com?subject=' + encodeURIComponent('Remarque sur Lumen') + '&body=' + encodeURIComponent('Bonjour,\n\nJ\u2019utilise l\u2019application Lumen et je voulais partager ceci :\n\n'), '_blank');
   };
@@ -9355,6 +9362,77 @@ function closeVideoModal(){
   document.getElementById('video-modal-body').innerHTML = '';
   const extra = document.getElementById('video-modal-extra');
   if(extra) extra.innerHTML = '';
+}
+
+/* ===== Avis / feedback =====
+   Tout avis (note + message) est enregistré dans Firestore, quelle que
+   soit la note, afin qu'aucune information ne soit jamais perdue. Seuls
+   les avis ≥ 4/5 ouvrent en plus un mail pré-rempli vers le créateur, pour
+   que les retours positifs lui parviennent tout de suite ; les notes plus
+   basses restent silencieusement enregistrées (consultables via la
+   console Firebase), sans notification immédiate. */
+let FEEDBACK_RATING = 0;
+function openFeedbackModal(){
+  FEEDBACK_RATING = 0;
+  renderFeedbackModal();
+  document.getElementById('feedback-overlay').classList.remove('hidden');
+}
+function closeFeedbackModal(){
+  document.getElementById('feedback-overlay').classList.add('hidden');
+  document.getElementById('feedback-overlay').innerHTML = '';
+}
+function renderFeedbackModal(){
+  const overlay = document.getElementById('feedback-overlay');
+  overlay.innerHTML = `<div class="search-panel feedback-panel">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">
+      <p class="day-title" style="margin:0;">⭐ Donner mon avis</p>
+      <button class="icon-btn" id="feedback-close-btn" aria-label="Fermer">✕</button>
+    </div>
+    <p class="entry-detail-text" style="margin:4px 0 2px;">Que pensez-vous de Lumen ?</p>
+    <div class="feedback-stars" id="feedback-stars">
+      ${[1,2,3,4,5].map(n=>`<button type="button" class="feedback-star" data-star="${n}" aria-label="${n} étoile${n>1?'s':''}">★</button>`).join('')}
+    </div>
+    <textarea id="feedback-text" placeholder="Un mot sur votre expérience (facultatif)…"></textarea>
+    <button class="btn btn-gold" id="feedback-submit-btn" style="width:100%; margin-top:12px;">Envoyer mon avis</button>
+  </div>`;
+  document.getElementById('feedback-close-btn').onclick = closeFeedbackModal;
+  overlay.onclick = (e)=>{ if(e.target === overlay) closeFeedbackModal(); };
+  const starsEl = document.getElementById('feedback-stars');
+  const paintStars = ()=>{
+    starsEl.querySelectorAll('.feedback-star').forEach(btn=>{
+      btn.classList.toggle('active', parseInt(btn.dataset.star,10) <= FEEDBACK_RATING);
+    });
+  };
+  starsEl.querySelectorAll('.feedback-star').forEach(btn=>{
+    btn.onclick = ()=>{ FEEDBACK_RATING = parseInt(btn.dataset.star,10); paintStars(); };
+  });
+  paintStars();
+  document.getElementById('feedback-submit-btn').onclick = submitFeedback;
+}
+async function submitFeedback(){
+  const rating = FEEDBACK_RATING;
+  if(!rating){ showToast('Choisissez d’abord une note ⭐'); return; }
+  const text = (document.getElementById('feedback-text').value || '').trim();
+  const btn = document.getElementById('feedback-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Envoi…';
+  try{
+    if(fbDb){
+      await fbDb.collection('feedback').doc().set({
+        rating, text,
+        uid: CURRENT_USER ? CURRENT_USER.uid : null,
+        email: CURRENT_USER ? (CURRENT_USER.email || null) : null,
+        createdAt: Date.now()
+      });
+    }
+  }catch(e){ /* l'enregistrement peut échouer (hors ligne, règles...) ; on continue quand même le flux */ }
+  closeFeedbackModal();
+  if(rating >= 4){
+    const subject = `Avis Lumen — ${rating}/5 ⭐`;
+    const body = `Note : ${rating}/5\n\nMessage :\n${text || '(aucun message laissé)'}`;
+    window.open('mailto:pasou1000@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body), '_blank');
+  }
+  showToast('Merci pour votre avis 🙏');
 }
 /* extrait un ID YouTube depuis une URL classique, pour convertir les liens externes existants */
 function extractYoutubeId(url){
