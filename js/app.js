@@ -13402,7 +13402,7 @@ const GUIDE_TREE = {
       {label:'🌙 Propose-moi une prière du soir', action:()=>goTo('prier','compline')},
       {label:'🙏 Prier maintenant', next:'prier'},
       {label:'✝️ Découvrir un saint', action:()=>goTo('eglise','saints')},
-      {label:'🕊️ Me recueillir, un moment calme', action:()=>{ if(!RECUEILLEMENT_MODE) toggleRecueillement(); }},
+      {label:()=> RECUEILLEMENT_MODE ? '🕊️ Quitter le mode Recueillement' : '🕊️ Me recueillir, un moment calme', action:()=> toggleRecueillement()},
       {label:'✍️ Écrire une prière personnelle', action:()=>goTo('prier','mes-prieres')},
       {label:'👥 Créer ou rejoindre un groupe de prière', action:()=>goTo('prier','groupe')},
       {label:'🔗 Prier un chapelet, dizaine par dizaine', action:()=>goTo('devotions','chapelet')},
@@ -13504,7 +13504,7 @@ function renderGuideStep(){
       <button class="guide-ask-send" id="guide-ask-send" aria-label="Envoyer">➤</button>
     </div>
     <p class="guide-ask-hint">Un compagnon sans IA externe : il repère quelques mots-clés et vous mène vers le contenu de Lumen.</p>` : ''}
-    <div class="guide-options">${step.options.map((o,i)=>`<button class="guide-opt" data-guide-idx="${i}">${o.label}</button>`).join('')}</div>
+    <div class="guide-options">${step.options.map((o,i)=>`<button class="guide-opt" data-guide-idx="${i}">${typeof o.label==='function'?o.label():o.label}</button>`).join('')}</div>
   </div>`;
   document.getElementById('guide-close-btn').onclick = closeGuide;
   overlay.onclick = (e)=>{ if(e.target === overlay) closeGuide(); };
@@ -13528,11 +13528,15 @@ function renderGuideStep(){
 let RECUEILLEMENT_MODE = false;
 function applyRecueillement(){
   document.body.classList.toggle('recueillement', RECUEILLEMENT_MODE);
-  const btn = document.getElementById('recueillement-btn');
-  if(btn){
-    btn.style.background = RECUEILLEMENT_MODE ? 'rgba(228,199,126,0.5)' : '';
-    btn.title = RECUEILLEMENT_MODE ? 'Quitter le mode Recueillement' : 'Mode Recueillement — un cadre plus calme';
-  }
+  /* Le mode Recueillement s'active depuis Lumen Guide, mais aucun bouton
+     fixe ne permettait jusqu'ici de le quitter une fois activé — on ne
+     pouvait alors plus désactiver ce mode (hormis en rouvrant le guide,
+     dont l'option ne faisait d'ailleurs qu'activer, jamais désactiver).
+     Ce petit bouton flottant, présent sur tous les écrans, reste donc
+     visible tant que le mode est actif, pour qu'on puisse toujours en
+     sortir en un geste. */
+  const exitBtn = document.getElementById('recueillement-exit-btn');
+  if(exitBtn) exitBtn.classList.toggle('hidden', !RECUEILLEMENT_MODE);
 }
 const RECUEILLEMENT_TRACKS = [
   {videoId:'SA3GvYog_wo', title:'Une heure avec Jésus', artist:'Loïc & Rachel'},
@@ -14814,8 +14818,8 @@ async function startApp(){
   initKeyboardAccessibility();
 
   document.getElementById('refuge-btn').onclick = openRefuge;
-  const recBtn = document.getElementById('recueillement-btn');
-  if(recBtn) recBtn.onclick = toggleRecueillement;
+  const recExitBtn = document.getElementById('recueillement-exit-btn');
+  if(recExitBtn) recExitBtn.onclick = toggleRecueillement;
   const guideBtn = document.getElementById('guide-btn');
   if(guideBtn) guideBtn.onclick = openGuide;
   const narrateBtn = document.getElementById('auto-narrate-btn');
