@@ -4476,7 +4476,7 @@ let ROSARY_AUDIO_PLAYING = null;
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
-  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Compline'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'} ],
+  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'} ],
   devotions: [ {key:'prieres', label:'📿 Prières'}, {key:'chapelet', label:'🔗 Chapelet'}, {key:'misericorde', label:'❤️ Miséricorde'}, {key:'chemin-croix', label:'✝️ Chemin de croix'}, {key:'lectio', label:'📕 Lectio Divina'}, {key:'confession', label:'🕊️ Confession'}, {key:'famille', label:'👨‍👩‍👧 En famille'}, {key:'armure', label:'🛡️ Armure de Dieu'}, {key:'prieres-combat', label:'⚔️ Prières de combat'}, {key:'temoins', label:'🕯️ Témoins qui ont tenu bon'}, {key:'meditations-combat', label:'💭 Méditations de combat'}, {key:'versets-armure', label:'🔥 Versets de force'} ],
   ecritures: [ {key:'psaumes', label:'📜 Psaumes'}, {key:'bible', label:'👑 Bible & Histoire'}, {key:'bible-lecture', label:'📗 Lire la Bible'}, {key:'recits', label:'🌍 Récits fondateurs'}, {key:'reperes', label:'📋 Repères'}, {key:'memoriser', label:'🧠 Mémoriser'} ],
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
@@ -5542,7 +5542,7 @@ const HUB_HERO_POS = {
   ecritures: '35%'
 };
 const PRIER_HUB_CATEGORIES = [
-  {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Compline...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B'},
+  {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Complies...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B'},
   {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545'},
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E'},
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
@@ -12715,8 +12715,8 @@ function renderPrieresParHeure(){
     ${slotBox('soir','🌙','Le soir', 'var(--wine-dark)', [
       {t:"Examen du soir", x:"Repassez votre journée en présence de Dieu : ce qui a été bon, ce qui a manqué, ce dont vous voulez demander pardon — avant de vous en remettre à lui pour la nuit."},
       {t:"Prière de gratitude du soir", x:"Merci, Seigneur, pour cette journée, même imparfaite. Merci pour ce qui a été beau, et même pour ce qui a été difficile, car tu étais présent dans les deux. Garde ceux que j'aime cette nuit."},
-      {t:"Compline (fin de journée)", x:"Que le Seigneur tout-puissant nous accorde une nuit paisible et une fin parfaite. Amen."}
-    ], `<button class="btn btn-ghost btn-sm" data-goto-primary="prier" data-goto-sub="examen">🌙 Faire mon examen</button><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="compline">🌌 Prier la Compline</button>`)}
+      {t:"Complies (fin de journée)", x:"Que le Seigneur tout-puissant nous accorde une nuit paisible et une fin parfaite. Amen."}
+    ], `<button class="btn btn-ghost btn-sm" data-goto-primary="prier" data-goto-sub="examen">🌙 Faire mon examen</button><button class="btn btn-gold btn-sm" data-goto-primary="prier" data-goto-sub="compline">🌌 Prier les Complies</button>`)}
 
     ${slotBox('minuit','🌑','Minuit (00h)', 'var(--wine-dark)', [
       {t:"Prière de la nuit qui commence", x:"Seigneur, la maison est silencieuse, et je te confie ce silence. Veille sur ceux qui dorment, console ceux qui ne trouvent pas le sommeil, et garde du danger ceux qui travaillent cette nuit."},
@@ -12790,7 +12790,7 @@ let COMPLINE_STATE = null;
 function renderCompline(){
   if(COMPLINE_STATE===null) COMPLINE_STATE = 0;
   const step = COMPLINE_STEPS[COMPLINE_STATE];
-  let html = `<h2 class="section-title">🌌 Compline</h2>
+  let html = `<h2 class="section-title">🌌 Complies</h2>
     <p class="section-desc">La prière officielle de la nuit de l'Église, pour clore la journée en paix.</p>
     <div class="step-progress">${COMPLINE_STEPS.map((_,i)=>`<span class="${i<COMPLINE_STATE?'done':i===COMPLINE_STATE?'current':''}"></span>`).join('')}</div>
     <div class="card">
