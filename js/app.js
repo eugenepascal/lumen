@@ -13404,6 +13404,13 @@ const GUIDE_TREE = {
       {label:'✝️ Découvrir un saint', action:()=>goTo('eglise','saints')},
       {label:'🕊️ Me recueillir, un moment calme', action:()=>{ if(!RECUEILLEMENT_MODE) toggleRecueillement(); }},
       {label:'✍️ Écrire une prière personnelle', action:()=>goTo('prier','mes-prieres')},
+      {label:'👥 Créer ou rejoindre un groupe de prière', action:()=>goTo('prier','groupe')},
+      {label:'🔗 Prier un chapelet, dizaine par dizaine', action:()=>goTo('devotions','chapelet')},
+      {label:'🫂 J’ai besoin de réconfort', action:()=>goTo('espace','reconfort')},
+      {label:'🎂 Garder la mémoire d’un baptême, d’un mariage…', action:()=>goTo('espace','anniversaires')},
+      {label:'✝️ Suivre un chemin de Carême, jour après jour', action:()=>goTo('prier','careme40')},
+      {label:'🎶 Prier en musique, avec des louanges', action:()=>goTo('espace','studio')},
+      {label:'✨ Tenir mon carnet de grâces ou mon journal', action:()=>goTo('espace','gratitude')},
       {label:'⚙️ Mon compte', next:'compte'}
     ]
   },
@@ -13444,7 +13451,13 @@ const GUIDE_INTENTS = [
   {kw:['confession','péché','peche','pardon'], action:()=>goTo('devotions','confession')},
   {kw:['intention'], action:()=>goTo('prier','intentions')},
   {kw:['angélus','angelus'], action:()=>goTo('prier','angelus')},
-  {kw:['carême','careme','jeûne','jeune'], action:()=>goTo('prier','careme40')}
+  {kw:['carême','careme','jeûne','jeune'], action:()=>goTo('prier','careme40')},
+  {kw:['groupe de prière','groupe de priere','rejoindre un groupe','créer un groupe','creer un groupe','chorale','scout','jec','mouvement de jeunes'], action:()=>goTo('prier','groupe')},
+  {kw:['réconfort','reconfort','encourage','soutien','me sens seul'], action:()=>goTo('espace','reconfort')},
+  {kw:['anniversaire'], action:()=>goTo('espace','anniversaires')},
+  {kw:['louange','louanges','musique','chant de prière','chant de priere'], action:()=>goTo('espace','studio')},
+  {kw:['carnet de grâce','carnet de grace','gratitude','journal'], action:()=>goTo('espace','gratitude')},
+  {kw:['témoignage','temoignage'], action:()=>goTo('prier','groupe')}
 ];
 function matchGuideIntent(textRaw){
   const text = (textRaw||'').toLowerCase();
