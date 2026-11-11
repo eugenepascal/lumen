@@ -8559,12 +8559,17 @@ function renderApropos(){
     window.open('mailto:pasou1000@gmail.com?subject=' + encodeURIComponent('Remarque sur Lumen') + '&body=' + encodeURIComponent('Bonjour,\n\nJ\u2019utilise l\u2019application Lumen et je voulais partager ceci :\n\n'), '_blank');
   };
   document.getElementById('apropos-share-btn').onclick = async ()=>{
+    /* Lumen n'étant pas (encore) sur un App Store, ce lien est l'unique
+       façon pour quelqu'un de nouveau de trouver et d'installer
+       l'application : il doit donc toujours accompagner le texte de
+       partage, jamais en être absent. */
+    const url = 'https://lumenapp.website';
     const text = "Je découvre Lumen, une application pour prier chaque jour — neuvaines, psaumes, saints, et bien plus. À découvrir !";
     if(navigator.share){
-      try{ await navigator.share({title:'Lumen', text}); }catch(e){}
+      try{ await navigator.share({title:'Lumen', text, url}); }catch(e){}
     } else {
-      await navigator.clipboard.writeText(text);
-      showToast('Texte copié — collez-le où vous voulez le partager 📤');
+      await navigator.clipboard.writeText(text + '\n' + url);
+      showToast('Texte et lien copiés — collez-les où vous voulez les partager 📤');
     }
   };
 }
