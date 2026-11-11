@@ -3656,6 +3656,17 @@ async function saveGroupIntentions(code, list){
   const ok = await sharedSet('group-intentions:'+code, JSON.stringify(list));
   if(!ok) showToast('⚠️ Connexion impossible : vos proches ne verront pas cette intention tant que la connexion ne sera pas rétablie.');
 }
+/* Témoignages du groupe : une expérience vécue, une grâce reçue, une
+   prière exaucée... distincts des intentions (qui sont des demandes),
+   mais stockés et affichés de façon très similaire (réactions +
+   commentaires d'encouragement), sous une clé partagée séparée. */
+async function loadGroupTestimonies(code){
+  try{ const d = await sharedGet('group-testimonies:'+code); return (d && d.value) ? JSON.parse(d.value) : []; }catch(e){ return []; }
+}
+async function saveGroupTestimonies(code, list){
+  const ok = await sharedSet('group-testimonies:'+code, JSON.stringify(list));
+  if(!ok) showToast('⚠️ Connexion impossible : vos proches ne verront pas ce témoignage tant que la connexion ne sera pas rétablie.');
+}
 /* ================= moment de prière commun (groupe de prière) =================
    Plutôt qu'une synchronisation en direct (chacun avance à son rythme, ce
    qui est normal en prière), un moment fixé à l'avance (ex. "Chapelet du
@@ -3731,6 +3742,7 @@ let ACTIVITY_LOG = [];
 let HOME_LAYOUT = null;
 let PRAYER_GROUP_CODE = '';
 let GROUP_INTENTIONS = [];
+let GROUP_TESTIMONIES = [];
 const GROUP_REACTION_EMOJIS = ['🙏','❤️','🕯️'];
 let JOURNAL = [];
 let PRIMARY = 'accueil';
@@ -7463,6 +7475,7 @@ function renderPrayerGroup(){
       PRAYER_GROUP_CODE = generateGroupCode();
       await savePrayerGroupCode(PRAYER_GROUP_CODE);
       GROUP_INTENTIONS = [];
+      GROUP_TESTIMONIES = [];
       showToast('Groupe créé ✦');
       renderPrayerGroup();
     };
@@ -7472,6 +7485,7 @@ function renderPrayerGroup(){
       PRAYER_GROUP_CODE = code;
       await savePrayerGroupCode(code);
       GROUP_INTENTIONS = await loadGroupIntentions(code);
+      GROUP_TESTIMONIES = await loadGroupTestimonies(code);
       showToast('Groupe rejoint ✦');
       renderPrayerGroup();
     };
@@ -7522,6 +7536,34 @@ function renderPrayerGroup(){
         </div>
       </div>`).join('')}</div>`;
   }
+  html += `<div class="card add-intention-box" style="margin-top:20px;">
+      <textarea id="group-testimony-text" rows="3" placeholder="Partager un témoignage avec le groupe (une expérience vécue, une grâce reçue, une prière exaucée…)"></textarea>
+      <button class="btn btn-primary btn-sm" id="add-group-testimony-btn" style="margin-top:10px;">🕊️ Partager mon témoignage</button>
+    </div>
+    <h2 class="section-title" style="font-size:16px;">🕊️ Témoignages</h2>`;
+  if(GROUP_TESTIMONIES.length === 0){
+    html += `<div class="card empty-state">Aucun témoignage partagé pour l'instant. Soyez le premier à encourager le groupe !</div>`;
+  } else {
+    html += `<div class="grid">${GROUP_TESTIMONIES.slice().sort((a,b)=>b.createdAt-a.createdAt).map(t=>`
+      <div class="card intention-card testimony-card" data-tid="${t.id}">
+        <p class="intention-author">${escapeHtml(t.name)||'Anonyme'}</p>
+        <p class="intention-text">${escapeHtml(t.text)}</p>
+        <div class="reaction-row">
+          ${GROUP_REACTION_EMOJIS.map(emo=>{
+            const members = (t.reactions && t.reactions[emo]) || [];
+            const mine = members.includes(getDeviceId());
+            return `<button class="reaction-btn testimony-reaction-btn ${mine?'active':''}" data-tid="${t.id}" data-emo="${emo}">${emo} ${members.length||''}</button>`;
+          }).join('')}
+        </div>
+        <div class="comment-list">
+          ${(t.comments||[]).map(c=>`<p class="comment-row"><span class="comment-author">${escapeHtml(c.name)||'Anonyme'} :</span> ${escapeHtml(c.text)}</p>`).join('')}
+        </div>
+        <div class="comment-form">
+          <input type="text" class="testimony-comment-input" data-tid="${t.id}" placeholder="Encourager…">
+          <button class="btn btn-ghost btn-sm testimony-comment-send-btn" data-tid="${t.id}">Envoyer</button>
+        </div>
+      </div>`).join('')}</div>`;
+  }
   document.getElementById('screen').innerHTML = html;
   wireShareInviteButtons();
   renderGroupMomentCard();
@@ -7531,6 +7573,7 @@ function renderPrayerGroup(){
   document.getElementById('leave-group-btn').onclick = async ()=>{
     PRAYER_GROUP_CODE = '';
     GROUP_INTENTIONS = [];
+    GROUP_TESTIMONIES = [];
     GROUP_MOMENT = null;
     await savePrayerGroupCode('');
     renderPrayerGroup();
@@ -7579,6 +7622,44 @@ function renderPrayerGroup(){
       it.comments = it.comments || [];
       it.comments.push({id:'c-'+Date.now(), name:USER_NAME||'Anonyme', text, createdAt:Date.now()});
       await saveGroupIntentions(PRAYER_GROUP_CODE, GROUP_INTENTIONS);
+      renderPrayerGroup();
+    };
+  });
+  document.getElementById('add-group-testimony-btn').onclick = async ()=>{
+    const textEl = document.getElementById('group-testimony-text');
+    const text = textEl.value.trim();
+    if(!text){ textEl.focus(); return; }
+    const id = 't-'+Date.now();
+    const newTestimony = {id, name:USER_NAME||'Anonyme', text, createdAt:Date.now(), comments:[], reactions:{}};
+    GROUP_TESTIMONIES.unshift(newTestimony);
+    await saveGroupTestimonies(PRAYER_GROUP_CODE, GROUP_TESTIMONIES);
+    renderPrayerGroup();
+  };
+  document.querySelectorAll('.testimony-reaction-btn').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const t = GROUP_TESTIMONIES.find(x=>x.id===btn.dataset.tid);
+      if(!t) return;
+      const emo = btn.dataset.emo;
+      t.reactions = t.reactions || {};
+      const list = t.reactions[emo] || [];
+      const id = getDeviceId();
+      const idx = list.indexOf(id);
+      if(idx>=0) list.splice(idx,1); else list.push(id);
+      t.reactions[emo] = list;
+      await saveGroupTestimonies(PRAYER_GROUP_CODE, GROUP_TESTIMONIES);
+      renderPrayerGroup();
+    };
+  });
+  document.querySelectorAll('.testimony-comment-send-btn').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const t = GROUP_TESTIMONIES.find(x=>x.id===btn.dataset.tid);
+      const input = document.querySelector(`.testimony-comment-input[data-tid="${btn.dataset.tid}"]`);
+      if(!t || !input) return;
+      const text = input.value.trim();
+      if(!text){ input.focus(); return; }
+      t.comments = t.comments || [];
+      t.comments.push({id:'c-'+Date.now(), name:USER_NAME||'Anonyme', text, createdAt:Date.now()});
+      await saveGroupTestimonies(PRAYER_GROUP_CODE, GROUP_TESTIMONIES);
       renderPrayerGroup();
     };
   });
@@ -14547,7 +14628,7 @@ async function startApp(){
   ACTIVITY_LOG = activityLog || [];
   HOME_LAYOUT = homeLayout;
   PRAYER_GROUP_CODE = groupCode || '';
-  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); }
+  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); }
   if(savedBeat && savedBeat.pattern){
     SEQ_INSTRUMENTS.forEach(inst=>{
       if(savedBeat.pattern[inst.key]) SEQ_PATTERN[inst.key] = savedBeat.pattern[inst.key];
@@ -14603,6 +14684,7 @@ async function startApp(){
         PRAYER_GROUP_CODE = code;
         await savePrayerGroupCode(code);
         GROUP_INTENTIONS = await loadGroupIntentions(code);
+        GROUP_TESTIMONIES = await loadGroupTestimonies(code);
         GROUP_MOMENT = await loadGroupMoment(code);
         PRIMARY = 'prier'; SUBTAB.prier = 'groupe';
         showToast('Groupe de prière rejoint ✦');
