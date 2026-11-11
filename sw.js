@@ -6,7 +6,7 @@
    contenu dynamique ou qui ne nous appartient pas.
    Changez CACHE_VERSION pour forcer les navigateurs à rafraîchir le cache
    après une mise à jour du shell. */
-const CACHE_VERSION = 'lumen-shell-v22';
+const CACHE_VERSION = 'lumen-shell-v23';
 
 const SHELL_ASSETS = [
   './',

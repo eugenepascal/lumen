@@ -10079,10 +10079,15 @@ function wireVideoLinks(){
 }
 
 async function shareText(title, text){
+  /* Chaque partage de contenu (prière, saint, invitation à prier
+     ensemble...) est aussi une occasion de faire découvrir Lumen à
+     quelqu'un de nouveau — l'app n'étant pas sur un App Store, ce lien
+     est son unique porte d'entrée, donc on l'inclut systématiquement. */
+  const url = 'https://lumenapp.website';
   try{
-    if(navigator.share){ await navigator.share({title, text}); return; }
+    if(navigator.share){ await navigator.share({title, text, url}); return; }
   }catch(e){}
-  try{ await navigator.clipboard.writeText(title+'\n\n'+text); showToast('Copié dans le presse-papiers 📋'); }
+  try{ await navigator.clipboard.writeText(title+'\n\n'+text+'\n\n'+url); showToast('Copié dans le presse-papiers 📋'); }
   catch(e){ showToast("Impossible de copier"); }
 }
 function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
@@ -10616,9 +10621,14 @@ function wireRosaryEvents(){
   const changeChapletBtn = document.getElementById('rosary-change-chaplet');
   if(changeChapletBtn) changeChapletBtn.onclick = ()=>{ ROSARY_STATE = null; render(); };
   const shareBtn = document.getElementById('rosary-share');
-  if(shareBtn) shareBtn.onclick = ()=>{
+  if(shareBtn) shareBtn.onclick = async ()=>{
     const text = rl(`J'ai prié le chapelet (${loc(rosaryCurrentSet(),'label')}) sur Lumen 📿`, `I prayed the Rosary (${loc(rosaryCurrentSet(),'label')}) on Lumen 📿`);
-    if(navigator.share){ navigator.share({text}).catch(()=>{}); } else { showToast(rl('Partage non disponible sur cet appareil','Sharing is not available on this device')); }
+    const url = 'https://lumenapp.website';
+    if(navigator.share){
+      try{ await navigator.share({text, url}); return; }catch(e){ return; }
+    }
+    try{ await navigator.clipboard.writeText(text+'\n'+url); showToast(rl('Copié dans le presse-papiers 📋','Copied to clipboard 📋')); }
+    catch(e){ showToast(rl('Partage non disponible sur cet appareil','Sharing is not available on this device')); }
   };
   /* icônes du haut */
   const modeBtn = document.getElementById('rosary-mode-btn');
