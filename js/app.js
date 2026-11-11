@@ -13823,7 +13823,13 @@ const WALLPAPER_LIST = [
   {key:'adoration', label:'Adoration', img:'https://images.pexels.com/photos/29660338/pexels-photo-29660338.jpeg?auto=compress&cs=tinysrgb&w=900'},
   {key:'lumiere', label:'Lumière', img:'https://images.pexels.com/photos/16746856/pexels-photo-16746856.jpeg?auto=compress&cs=tinysrgb&w=900'},
   {key:'communion', label:'Communion', img:'https://images.pexels.com/photos/13742663/pexels-photo-13742663.jpeg?auto=compress&cs=tinysrgb&w=900'},
-  {key:'assemblee', label:'Assemblée', img:'https://images.pexels.com/photos/13742661/pexels-photo-13742661.jpeg?auto=compress&cs=tinysrgb&w=900'}
+  {key:'assemblee', label:'Assemblée', img:'https://images.pexels.com/photos/13742661/pexels-photo-13742661.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'calvaire', label:'Calvaire', img:'https://images.pexels.com/photos/10089382/pexels-photo-10089382.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'veillee', label:'Veillée', img:'https://images.pexels.com/photos/8564624/pexels-photo-8564624.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'firmament', label:'Firmament', img:'https://images.pexels.com/photos/5707111/pexels-photo-5707111.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'parole', label:'Parole', img:'https://images.pexels.com/photos/1771217/pexels-photo-1771217.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'basilique', label:'Basilique', img:'https://images.pexels.com/photos/19951405/pexels-photo-19951405.jpeg?auto=compress&cs=tinysrgb&w=900'},
+  {key:'recueillement-groupe', label:'Recueillement', img:'https://images.pexels.com/photos/18859686/pexels-photo-18859686.jpeg?auto=compress&cs=tinysrgb&w=900'}
 ];
 let BG_WALLPAPER = 'aucun';
 let THEME_MODE = 'auto';
