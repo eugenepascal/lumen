@@ -4802,11 +4802,11 @@ const WELCOME_VIDEO_SRC = 'videos/demo.mp4';
    repère visuel de ce qui s'y trouve — sans prétendre suivre au mot près
    ce qui est dit dans la vidéo elle-même. */
 const DEMO_PHASES = [
-  {icon:'🏠', label:'Accueil', desc:"Votre verset du jour, votre série de prière, et un aperçu de votre journée spirituelle en un coup d'œil."},
-  {icon:'🙏', label:'Prier', desc:"Neuvaines, intentions, chapelet et prières selon le moment ou le besoin."},
-  {icon:'📖', label:'Bible', desc:"L'Ancien et le Nouveau Testament, les psaumes, et des méditations sur les Écritures."},
-  {icon:'🧭', label:'Découvrir', desc:"La vie de Jésus et des apôtres, l'Église — saints, calendrier, sacrements — et des enseignements spirituels."},
-  {icon:'👤', label:'Mon espace', desc:"Votre journal, vos favoris, votre série de prière et les réglages de l'application."}
+  {icon:'🏠', label:'Accueil', desc:"Votre verset du jour, votre série de prière 🔥, un résumé de votre journée spirituelle, et les actualités de l'Église — tout en un coup d'œil, sans rien chercher."},
+  {icon:'🙏', label:'Prier', desc:"Les offices (Laudes, Vêpres, Complies...) avec les vrais textes du jour, un chapelet guidé perle par perle avec lecture vocale, plus de 20 neuvaines (saints, archanges, Carlo Acutis...), et des prières selon votre état du moment."},
+  {icon:'📖', label:'Bible', desc:"L'Ancien et le Nouveau Testament, les psaumes, des méditations sur les Écritures, et un plan de lecture pour avancer jour après jour."},
+  {icon:'🧭', label:'Découvrir', desc:"La vie de Jésus et des apôtres, l'histoire de l'Église, les saints et le calendrier liturgique, les sacrements, un lexique, et des quiz pour tester vos connaissances."},
+  {icon:'👤', label:'Mon espace', desc:"Votre journal, vos favoris ☆, votre série de prière, un groupe de prière à créer avec vos proches, et des réglages pour personnaliser l'application (thèmes, avatar, taille du texte)."}
 ];
 let DEMO_PHASE_IDX = 0;
 function renderDemoPhases(){
