@@ -14220,6 +14220,113 @@ function renderScreen(){
   }
 }
 
+/* ================= message d'aide par rubrique =================
+   À la demande de l'utilisateur : un message s'affiche automatiquement
+   à chaque arrivée sur une rubrique pour expliquer, en détail, ce qu'on
+   peut y faire. Plutôt que de dupliquer la description déjà présente en
+   haut de chaque écran (section-desc), on vise ici un texte plus concret
+   et orienté action ("vous pouvez..."). Couvre les rubriques principales
+   et les pages les plus utilisées ; les pages de détail (un saint, une
+   entrée précise...) restent couvertes par leur propre description. */
+const PRIMARY_DEFAULT_SUB = {
+  prier:'accueil-prier', devotions:'accueil-devotions', ecritures:'accueil-ecritures',
+  eglise:'accueil-eglise', sagesse:'accueil-sagesse', espace:'accueil-espace'
+};
+const PAGE_HELP = {
+  'accueil': "Votre page d'accueil : le verset du jour, votre série de prière 🔥, un résumé de votre journée spirituelle et les actualités de l'Église. Touchez un raccourci pour aller directement à une prière, ou faites glisser pour voir la deuxième page.",
+
+  'prier:accueil-prier': "Choisissez comment prier maintenant : les textes et offices du jour, une neuvaine en cours, le chapelet, vos intentions, une prière selon votre état du moment, ou l'examen du soir. Touchez une carte pour commencer.",
+  'prier:textes-du-jour': "Les lectures officielles de la messe du jour, telles que publiées par l'AELF. Faites défiler pour lire chaque texte dans l'ordre liturgique.",
+  'prier:office': "La liste des offices de la Liturgie des Heures. Touchez-en un pour lire son texte officiel du jour.",
+  'prier:laudes': "Le texte officiel des Laudes (prière du matin) pour aujourd'hui, publié par l'AELF. Lisez-le en silence, ou touchez le bouton d'écoute pour une lecture à voix haute.",
+  'prier:vepres': "Le texte officiel des Vêpres (prière du soir) pour aujourd'hui, publié par l'AELF. Lisez-le en silence, ou touchez le bouton d'écoute pour une lecture à voix haute.",
+  'prier:compline': "Le texte officiel des Complies (prière de la nuit) pour aujourd'hui, publié par l'AELF. Lisez-le en silence, ou touchez le bouton d'écoute pour une lecture à voix haute.",
+  'prier:tierce': "Le texte officiel de Tierce pour aujourd'hui, publié par l'AELF.",
+  'prier:sexte': "Le texte officiel de Sexte pour aujourd'hui, publié par l'AELF.",
+  'prier:none': "Le texte officiel de None pour aujourd'hui, publié par l'AELF.",
+  'prier:midi': "Une courte prière pour marquer une pause au milieu de la journée.",
+  'prier:lectures-office': "L'office des lectures du jour, publié par l'AELF, pour une méditation plus approfondie des Écritures et des Pères de l'Église.",
+  'prier:neuvaines': "Plus de 20 neuvaines de 9 jours, classées par saint ou par besoin (travail, guérison, deuil...). Touchez-en une pour voir son déroulé, puis « Commencer » pour suivre le jour 1 — votre avancée est enregistrée automatiquement, jour après jour.",
+  'prier:careme40': "Un parcours de 40 jours pour le Carême, avec un contenu différent chaque jour. Revenez chaque jour pour avancer : votre progression est enregistrée automatiquement.",
+  'prier:mes-prieres': "Vos propres prières personnelles, écrites par vous. Touchez le bouton « + » pour en ajouter une nouvelle.",
+  'prier:intentions': "Déposez une intention de prière, pour vous ou pour quelqu'un d'autre, et consultez celles de la communauté Lumen. Vous pouvez marquer une intention comme exaucée une fois la grâce reçue.",
+  'prier:carnet-familial': "Un carnet d'intentions partagé en famille : chacun peut y ajouter une intention que les autres membres pourront prier.",
+  'prier:groupe': "Créez ou rejoignez un groupe de prière avec un code partagé, et fixez une heure commune pour prier ensemble, chacun à son rythme et à distance.",
+  'prier:selon-etat': "Dites comment vous vous sentez en ce moment (anxieux, triste, reconnaissant...) pour recevoir une prière adaptée à cet état précis.",
+  'prier:angelus': "La prière de l'Angélus, traditionnellement récitée le matin, à midi et le soir, en mémoire de l'Annonciation.",
+  'prier:examen': "L'examen du soir : une relecture guidée de votre journée en présence de Dieu, pour repérer ce qui a été bon et ce qui mérite d'être confié à lui, avant de dormir en paix.",
+  'prier:guides': "Des fiches simples pour apprendre ou réviser les prières de base (Notre Père, Je vous salue Marie...) et les gestes de la foi.",
+
+  'devotions:accueil-devotions': "D'autres façons de prier : le chapelet, la Divine Miséricorde, le chemin de croix, la lectio divina, la confession, l'armure de Dieu... Touchez une carte pour l'explorer.",
+  'devotions:prieres': "Un recueil de prières classées par thème : prières fondamentales, aux saints, de combat, en famille... Touchez une catégorie pour l'ouvrir.",
+  'devotions:chapelet': "Le chapelet guidé : choisissez un mystère du jour, puis suivez chaque dizaine avec une lecture vocale automatique, perle après perle. Touchez « 🎙️ » pour compter les Ave à la voix.",
+  'devotions:misericorde': "Le chapelet de la Divine Miséricorde, traditionnellement prié à 15h, avec les invocations propres à cette dévotion.",
+  'devotions:chemin-croix': "Les quatorze stations du chemin de croix, méditées une à une, pour revivre la Passion du Christ.",
+  'devotions:lectio': "La lectio divina : une façon ancienne de lire un texte biblique en quatre temps — lire, méditer, prier, contempler.",
+  'devotions:confession': "Un guide pas à pas pour se préparer à la confession : examen de conscience, déroulement du sacrement, et une prière de contrition.",
+  'devotions:armure': "L'armure de Dieu (Éphésiens 6) : une méditation pièce par pièce pour se préparer au combat spirituel du jour.",
+
+  'ecritures:accueil-ecritures': "La Bible et les Psaumes : lisez un livre biblique, cherchez un psaume par thème, ou explorez les grands récits et repères de l'Écriture.",
+  'ecritures:bible-lecture': "Lisez la Bible chapitre par chapitre. Votre position est enregistrée pour reprendre exactement où vous en étiez.",
+  'ecritures:aelf-bible-chapter': "Le texte biblique de ce chapitre. Utilisez les flèches pour passer au chapitre précédent ou suivant.",
+  'ecritures:psaumes': "Les psaumes classés par thème (louange, détresse, confiance...) pour en trouver un adapté à votre état d'esprit du moment.",
+  'ecritures:bible': "Un parcours de la Bible et de son histoire, pour situer les grands événements les uns par rapport aux autres.",
+  'ecritures:recits': "Les grands récits fondateurs de la Bible, racontés simplement.",
+  'ecritures:reperes': "Des repères pour mieux comprendre la Bible : contexte, genres littéraires, grandes lignes.",
+  'ecritures:memoriser': "Mémorisez des versets bibliques avec des exercices simples de répétition.",
+
+  'explorer': "Un accès direct à la vie de Jésus, à l'Église, aux enseignements et à la sagesse chrétienne — le point de départ pour tout découvrir dans l'application.",
+  'jesus': "La vie de Jésus racontée étape par étape, des évangiles à la Résurrection. Touchez un épisode pour le lire en détail.",
+
+  'eglise:accueil-eglise': "Tout sur l'Église : les saints, le calendrier liturgique, les sacrements, l'actualité du Vatican, et des pèlerinages virtuels.",
+  'eglise:saints': "Une bibliothèque de saints : cherchez par nom ou par date, lisez leur vie et une prière qui leur est propre.",
+  'eglise:patron': "Trouvez le saint patron d'un métier, d'une cause ou d'un prénom.",
+  'eglise:calendrier': "Le calendrier liturgique du jour : la couleur liturgique, la fête célébrée, et le saint du jour.",
+  'eglise:messe-dimanche': "Préparez-vous à la messe du dimanche : les lectures prévues et leur contexte.",
+  'eglise:vie-eglise': "Des repères sur la vie et l'organisation de l'Église aujourd'hui.",
+  'eglise:actualites': "Les dernières actualités du Vatican et de l'Église, mises à jour régulièrement.",
+  'eglise:pelerinages': "Des pèlerinages, réels ou virtuels, à découvrir.",
+  'eglise:pelerinages-virtuels': "Visitez virtuellement de grands lieux de pèlerinage (Lourdes, Fatima...) à travers leur histoire et leurs lieux clés.",
+  'eglise:avent-careme': "Un accompagnement spécial pour les temps forts de l'Avent et du Carême.",
+
+  'sagesse:accueil-sagesse': "Des enseignements, un lexique des mots de la foi, les sacrements expliqués, et un quiz pour tester vos connaissances.",
+  'sagesse:spiritualite': "Des repères pour nourrir votre vie spirituelle au quotidien.",
+  'sagesse:enseignements': "Les grands enseignements de l'Église, expliqués simplement.",
+  'sagesse:sacrements': "Les sept sacrements expliqués : leur signe, leurs conditions et leur déroulement.",
+  'sagesse:lexique': "Un lexique des termes catholiques (dogme, grâce, eschatologie...) expliqués simplement.",
+  'sagesse:quiz': "Un quiz pour tester et approfondir vos connaissances sur la foi catholique, question après question.",
+  'sagesse:meditations-audio': "Des méditations à écouter, pour prier autrement, les yeux fermés.",
+
+  'espace:accueil-espace': "Votre espace personnel : journal, favoris, série de prière, objectifs spirituels et réglages de l'application.",
+  'espace:compte': "Vos informations de compte et de connexion.",
+  'espace:parcours': "Un parcours spirituel à suivre à votre rythme, étape par étape.",
+  'espace:journal': "Votre journal spirituel personnel — écrivez librement ce que vous vivez, ressentez ou priez.",
+  'espace:histoire': "L'historique de ce que vous avez prié ou lu dans l'application.",
+  'espace:gratitude': "Notez chaque jour une chose pour laquelle vous êtes reconnaissant(e).",
+  'espace:souvenirs': "Vos souvenirs spirituels conservés dans l'application.",
+  'espace:images-priere': "Vos images de prière personnalisées, créées ou enregistrées dans l'application.",
+  'espace:reconfort': "Un espace de réconfort rapide dans un moment difficile.",
+  'espace:anniversaires': "Les dates importantes à ne pas oublier (anniversaires, dates de prière...).",
+  'espace:objectifs': "Fixez-vous un objectif spirituel concret (ex. prier le chapelet 3 fois par semaine) et suivez votre progression.",
+  'espace:favoris': "Tout ce que vous avez marqué d'une étoile ☆ — prières, psaumes, saints — retrouvé ici en un seul endroit.",
+  'espace:reglages': "Personnalisez l'application : thème, taille du texte, avatar, et bien d'autres préférences.",
+  'espace:stats': "Un aperçu chiffré de votre pratique de prière dans l'application.",
+  'espace:activite': "Le détail de votre activité récente dans l'application.",
+  'espace:apropos': "Informations sur l'application, mentions légales, et comment nous contacter ou partager Lumen.",
+  'espace:guide-complet': "Le guide complet de l'application, pour tout savoir sur son fonctionnement.",
+  'espace:faq': "Les réponses aux questions les plus fréquemment posées sur l'utilisation de l'application."
+};
+function pageHelpKey(){
+  const sub = SUBTAB[PRIMARY] || PRIMARY_DEFAULT_SUB[PRIMARY] || '';
+  return sub ? (PRIMARY+':'+sub) : PRIMARY;
+}
+function pageHelpBannerHTML(){
+  if(ENTRY_OPEN) return ''; // une entrée de détail (un saint, une prière précise...) a déjà sa propre description
+  const text = PAGE_HELP[pageHelpKey()];
+  if(!text) return '';
+  return `<div class="page-help-banner"><span class="page-help-icon" aria-hidden="true">💡</span><p>${text}</p><button type="button" class="page-help-close" aria-label="Fermer ce message" onclick="this.closest('.page-help-banner').remove()">✕</button></div>`;
+}
+
 let LAST_SCREEN_KEY = '';
 let AUTO_NARRATE_MODE = false;
 let LAST_NARRATED_KEY = null;
@@ -14274,6 +14381,8 @@ function render(){
   document.getElementById('date-line').textContent = frenchDate();
   renderTabbar();
   renderScreen();
+  const pageHelpHTML = pageHelpBannerHTML();
+  if(pageHelpHTML) document.getElementById('screen').insertAdjacentHTML('afterbegin', pageHelpHTML);
   const subnavHTML = renderSubnavHTML();
   if(subnavHTML){
     document.getElementById('screen').insertAdjacentHTML('afterbegin', subnavHTML);
