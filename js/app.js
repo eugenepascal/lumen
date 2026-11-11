@@ -3717,6 +3717,16 @@ const GROUP_TEMPLATES = [
     welcome:'Bienvenue dans le groupe ! C\'est l\'endroit pour partager vos intentions de la semaine et les belles surprises de Dieu dans vos vies.'
   },
   {
+    key:'famille', icon:'🏡', label:'Prière en famille',
+    moment:{label:'Prière du soir en famille', time:'19:30'},
+    welcome:'Bienvenue dans votre espace familial ! Partagez ici les intentions du jour, les petites joies et les soucis de chacun, pour prier les uns pour les autres.'
+  },
+  {
+    key:'quartier', icon:'🏘️', label:'Groupe de quartier',
+    moment:{label:'Veillée de prière du quartier', time:'20:00'},
+    welcome:'Bienvenue dans le groupe du quartier ! Un espace pour partager vos intentions, les nouvelles du voisinage, et vous soutenir dans la prière les uns les autres.'
+  },
+  {
     key:'personnalise', icon:'✨', label:'Personnalisé',
     moment:null,
     welcome:''
