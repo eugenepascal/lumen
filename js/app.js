@@ -8558,6 +8558,12 @@ function renderApropos(){
     </div>
 
     <div class="card" style="margin-top:12px; text-align:center;">
+      <p class="eyebrow" style="color:var(--gold);">▶️ Vidéo de présentation</p>
+      <p class="entry-detail-text" style="margin-bottom:8px;">La courte démo montrée à l'arrivée sur l'application.</p>
+      <button class="btn btn-gold btn-sm" id="apropos-demo-btn">Revoir la démo</button>
+    </div>
+
+    <div class="card" style="margin-top:12px; text-align:center;">
       <p class="eyebrow" style="color:var(--wine);">📤 Partager Lumen</p>
       <p class="entry-detail-text" style="margin-bottom:8px;">Faites découvrir l'application à un proche.</p>
       <button class="btn btn-primary btn-sm" id="apropos-share-btn">Partager l'application</button>
@@ -8583,6 +8589,11 @@ function renderApropos(){
   document.getElementById('apropos-contact-btn').onclick = ()=>{
     window.open('mailto:pasou1000@gmail.com?subject=' + encodeURIComponent('Remarque sur Lumen') + '&body=' + encodeURIComponent('Bonjour,\n\nJ\u2019utilise l\u2019application Lumen et je voulais partager ceci :\n\n'), '_blank');
   };
+  /* La d\u00e9mo n'\u00e9tait visible que sur l'\u00e9cran de bienvenue initial, qui ne
+     r\u00e9appara\u00eet plus une fois pass\u00e9 (que l'on soit invit\u00e9 ou connect\u00e9 \u00e0 un
+     compte) \u2014 ce bouton la rend accessible \u00e0 tout moment, peu importe
+     l'\u00e9tat de connexion. */
+  document.getElementById('apropos-demo-btn').onclick = openWelcomeVideoModal;
   document.getElementById('apropos-share-btn').onclick = async ()=>{
     /* Lumen n'étant pas (encore) sur un App Store, ce lien est l'unique
        façon pour quelqu'un de nouveau de trouver et d'installer
