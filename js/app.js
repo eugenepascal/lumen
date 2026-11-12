@@ -3689,6 +3689,21 @@ async function saveGroupTestimonies(code, list){
   const ok = await sharedSet('group-testimonies:'+code, JSON.stringify(list));
   if(!ok) showToast('⚠️ Connexion impossible : vos proches ne verront pas ce témoignage tant que la connexion ne sera pas rétablie.');
 }
+/* Programme & ressources du groupe : liste de petites fiches (titre, texte,
+   lien optionnel) — un plan de lecture, un lien vers un chant ou un
+   document externe (Drive, site paroissial...), le déroulé d'une rencontre.
+   Stocké et affiché sur le même principe que les témoignages. */
+async function loadGroupPrograms(code){
+  try{ const d = await sharedGet('group-programs:'+code); return (d && d.value) ? JSON.parse(d.value) : []; }catch(e){ return []; }
+}
+async function saveGroupPrograms(code, list){
+  const ok = await sharedSet('group-programs:'+code, JSON.stringify(list));
+  if(!ok) showToast('⚠️ Connexion impossible : vos proches ne verront pas ce programme tant que la connexion ne sera pas rétablie.');
+}
+function isSafeHttpUrl(url){
+  if(!url) return false;
+  try{ const u = new URL(url.trim()); return u.protocol === 'http:' || u.protocol === 'https:'; }catch(e){ return false; }
+}
 /* ================= moment de prière commun (groupe de prière) =================
    Plutôt qu'une synchronisation en direct (chacun avance à son rythme, ce
    qui est normal en prière), un moment fixé à l'avance (ex. "Chapelet du
@@ -3819,6 +3834,11 @@ let HOME_LAYOUT = null;
 let PRAYER_GROUP_CODE = '';
 let GROUP_INTENTIONS = [];
 let GROUP_TESTIMONIES = [];
+/* Programme du groupe : des ressources textuelles partagées (plan de
+   lecture, lien vers un chant ou un document externe, déroulé d'une
+   rencontre...) — pas d'upload de fichier, juste du texte et des liens,
+   pour rester cohérent avec l'architecture légère de l'app. */
+let GROUP_PROGRAMS = [];
 const GROUP_REACTION_EMOJIS = ['🙏','❤️','🕯️'];
 let JOURNAL = [];
 let PRIMARY = 'accueil';
@@ -7621,6 +7641,7 @@ function renderPrayerGroup(){
         PRAYER_GROUP_CODE = generateGroupCode();
         await savePrayerGroupCode(PRAYER_GROUP_CODE);
         GROUP_INTENTIONS = [];
+        GROUP_PROGRAMS = [];
         GROUP_TEMPLATE_KEY = tpl ? tpl.key : '';
         await saveGroupTemplate(PRAYER_GROUP_CODE, GROUP_TEMPLATE_KEY);
         if(tpl && tpl.moment){
@@ -7647,6 +7668,7 @@ function renderPrayerGroup(){
       GROUP_INTENTIONS = await loadGroupIntentions(code);
       GROUP_TESTIMONIES = await loadGroupTestimonies(code);
       GROUP_TEMPLATE_KEY = await loadGroupTemplate(code);
+      GROUP_PROGRAMS = await loadGroupPrograms(code);
       showToast('Groupe rejoint ✦');
       renderPrayerGroup();
     };
@@ -7667,6 +7689,25 @@ function renderPrayerGroup(){
       </div>
     </div>
     <div class="card" id="group-moment-card" style="text-align:center;"><p class="studio-note">Chargement…</p></div>
+    <h2 class="section-title" style="font-size:16px;">📋 Programme & ressources</h2>
+    <p class="section-desc" style="margin-top:-4px;">Un plan de lecture, le déroulé d'une rencontre, un lien vers un chant ou un document externe (Drive, site paroissial…) — tout le groupe le voit.</p>
+    <div class="card add-intention-box">
+      <input type="text" id="group-program-title" placeholder="Titre (ex. « Semaine 1 : Jean 3 »)">
+      <textarea id="group-program-text" rows="2" placeholder="Détails, intention de la semaine, instructions…" style="margin-top:8px;"></textarea>
+      <input type="text" id="group-program-link" placeholder="Lien (optionnel) — https://…" style="margin-top:8px;">
+      <button class="btn btn-primary btn-sm" id="add-group-program-btn" style="margin-top:10px;">Ajouter au programme</button>
+    </div>
+    ${GROUP_PROGRAMS.length === 0 ? `<div class="card empty-state">Aucune ressource partagée pour l'instant.</div>` : `
+    <div class="grid">${GROUP_PROGRAMS.slice().sort((a,b)=>b.createdAt-a.createdAt).map(p=>`
+      <div class="card intention-card" data-pid="${p.id}">
+        ${p.title ? `<p class="day-title" style="font-size:15px; margin:0 0 4px;">${escapeHtml(p.title)}</p>` : ''}
+        <p class="intention-author">Ajouté par ${escapeHtml(p.name)||'Anonyme'}</p>
+        ${p.text ? `<p class="intention-text">${escapeHtml(p.text)}</p>` : ''}
+        ${p.link && isSafeHttpUrl(p.link) ? `<p style="margin-top:6px;"><a href="${escapeHtml(p.link)}" target="_blank" rel="noopener">🔗 Ouvrir le lien</a></p>` : ''}
+        <div class="intention-footer">
+          <button class="btn btn-ghost btn-sm group-program-delete-btn" data-pid="${p.id}">🗑️ Retirer</button>
+        </div>
+      </div>`).join('')}</div>`}
     <div class="card add-intention-box">
       <textarea id="group-int-text" rows="3" placeholder="Écrire une intention pour le groupe…"></textarea>
       <button class="btn btn-primary btn-sm" id="add-group-int-btn" style="margin-top:10px;">Partager avec le groupe</button>
@@ -7740,9 +7781,32 @@ function renderPrayerGroup(){
     GROUP_TESTIMONIES = [];
     GROUP_MOMENT = null;
     GROUP_TEMPLATE_KEY = '';
+    GROUP_PROGRAMS = [];
     await savePrayerGroupCode('');
     renderPrayerGroup();
   };
+  document.getElementById('add-group-program-btn').onclick = async ()=>{
+    const titleEl = document.getElementById('group-program-title');
+    const textEl2 = document.getElementById('group-program-text');
+    const linkEl = document.getElementById('group-program-link');
+    const title = titleEl.value.trim();
+    const text = textEl2.value.trim();
+    const link = linkEl.value.trim();
+    if(!title && !text && !link){ titleEl.focus(); return; }
+    if(link && !isSafeHttpUrl(link)){ showToast("Le lien doit commencer par http:// ou https://"); linkEl.focus(); return; }
+    const id = 'gp-'+Date.now();
+    GROUP_PROGRAMS.unshift({id, name:USER_NAME||'Anonyme', title, text, link, createdAt:Date.now()});
+    await saveGroupPrograms(PRAYER_GROUP_CODE, GROUP_PROGRAMS);
+    showToast('Ajouté au programme 📋');
+    renderPrayerGroup();
+  };
+  document.querySelectorAll('.group-program-delete-btn').forEach(btn=>{
+    btn.onclick = async ()=>{
+      GROUP_PROGRAMS = GROUP_PROGRAMS.filter(p=>p.id!==btn.dataset.pid);
+      await saveGroupPrograms(PRAYER_GROUP_CODE, GROUP_PROGRAMS);
+      renderPrayerGroup();
+    };
+  });
   document.getElementById('add-group-int-btn').onclick = async ()=>{
     const textEl = document.getElementById('group-int-text');
     const text = textEl.value.trim();
@@ -14933,7 +14997,7 @@ async function startApp(){
   ACTIVITY_LOG = activityLog || [];
   HOME_LAYOUT = homeLayout;
   PRAYER_GROUP_CODE = groupCode || '';
-  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); GROUP_TEMPLATE_KEY = await loadGroupTemplate(PRAYER_GROUP_CODE); }
+  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); GROUP_TEMPLATE_KEY = await loadGroupTemplate(PRAYER_GROUP_CODE); GROUP_PROGRAMS = await loadGroupPrograms(PRAYER_GROUP_CODE); }
   if(savedBeat && savedBeat.pattern){
     SEQ_INSTRUMENTS.forEach(inst=>{
       if(savedBeat.pattern[inst.key]) SEQ_PATTERN[inst.key] = savedBeat.pattern[inst.key];
@@ -14993,6 +15057,7 @@ async function startApp(){
         GROUP_TESTIMONIES = await loadGroupTestimonies(code);
         GROUP_MOMENT = await loadGroupMoment(code);
         GROUP_TEMPLATE_KEY = await loadGroupTemplate(code);
+        GROUP_PROGRAMS = await loadGroupPrograms(code);
         PRIMARY = 'prier'; SUBTAB.prier = 'groupe';
         showToast('Groupe de prière rejoint ✦');
       }
