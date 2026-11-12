@@ -3223,6 +3223,19 @@ const ETATS_PRIERE = [
   {key:"maladie", label:"Malade, ou pour un proche malade", emoji:"🩹", prieres:["Prière à Notre-Dame de Fatima pour une guérison","Prière à saint Raphaël — Guérison profonde"]}
 ];
 
+/* Les prières suggérées dans le Réconfort guidé (ETATS_PRIERE.prieres) ne
+   sont que des noms en texte — elles ne menaient nulle part. Chaque nom
+   correspond en réalité à une prière déjà présente dans PRIERES (Prier ›
+   Dévotions › Prières) : cette fonction retrouve son groupe et son index
+   pour pouvoir y rediriger directement. */
+function findPriereByName(name){
+  for(const group of PRIERES){
+    const idx = group.entries.findIndex(e=>e.name===name);
+    if(idx !== -1) return {groupId:group.id, idx};
+  }
+  return null;
+}
+
 const COMFORT_MESSAGES = {
   peur: "Ce que vous ressentez est réel, et vous n'avez pas à le traverser seul(e). La peur rétrécit le monde ; laissez-vous, quelques minutes, respirer plus large.",
   solitude: "La solitude pèse plus lourd certains jours que d'autres. Vous êtes vu(e), même quand personne ne le dit — et ce moment de prière est déjà une présence.",
@@ -5892,10 +5905,19 @@ function entryCardHTML(entry, idx, halo){
 }
 
 const REPEATABLE_PRAYER_COMPKEYS = ['prier:prieres', 'prier:famille', 'combat:prieres'];
+/* Le suivi « J'ai prié ceci aujourd'hui » n'a de sens que pour du contenu
+   effectivement prié (prières, psaumes, dévotions...). Sur les pages de
+   Découvrir (explorer/jesus/eglise/sagesse) et sur les contenus de
+   Bible qui sont plutôt des repères de culture générale (récits
+   fondateurs, repères), ce suivi n'a pas lieu d'être — on garde
+   seulement l'écoute à voix haute. */
+const NO_PRAYED_TRACKING_COMPKEYS = ['ecritures:recits', 'ecritures:reperes'];
+const NO_PRAYED_TRACKING_PRIMARIES = ['explorer', 'jesus', 'eglise', 'sagesse'];
 function entryDetailHTML(entry, idx, total, halo, favMeta){
   const locName = loc(entry,'name'), locDates = loc(entry,'dates'), locRef = loc(entry,'ref'), locSummary = loc(entry,'summary');
   const fav = favMeta ? {type:'entry', primary:favMeta.primary, sub:favMeta.sub, compKey:favMeta.compKey, groupId:favMeta.groupId, idx, name:locName, avatar:entry.avatar, summary:(locSummary||'').slice(0,90)} : null;
-  const usageKey = favMeta ? `${favMeta.compKey}:${favMeta.groupId}:${idx}` : null;
+  const trackPractice = favMeta && !NO_PRAYED_TRACKING_COMPKEYS.includes(favMeta.compKey) && !NO_PRAYED_TRACKING_PRIMARIES.includes(favMeta.primary);
+  const usageKey = trackPractice ? `${favMeta.compKey}:${favMeta.groupId}:${idx}` : null;
   const usageCount = usageKey ? (PRAYER_USAGE[usageKey]||0) : 0;
   const detailArt = lumenSacredArtFor(entry);
   const detailImgUrl = entry.img || (detailArt ? detailArt.url : null);
@@ -5929,8 +5951,11 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
         <button class="btn btn-primary btn-sm" id="mark-prayed-btn">✓ J'ai prié ceci aujourd'hui</button>
         <button class="btn btn-gold btn-sm" id="recite-mode-btn">🎙️ Prier (mode écouté)</button>
       </div>
-    </div>
-    ${favMeta && REPEATABLE_PRAYER_COMPKEYS.includes(favMeta.compKey) ? `
+    </div>` : `
+    <div class="entry-link-row">
+      <button class="btn btn-ghost btn-sm" id="recite-mode-btn">🔊 Écouter (voix)</button>
+    </div>`}
+    ${usageKey && favMeta && REPEATABLE_PRAYER_COMPKEYS.includes(favMeta.compKey) ? `
     <div class="card" style="margin-top:10px;">
       <p class="eyebrow" style="color:var(--gold);">📿 Chapelet de répétitions</p>
       <p class="entry-detail-text" style="font-style:italic; margin-bottom:8px;">« ${locSummary} »</p>
@@ -5941,7 +5966,7 @@ function entryDetailHTML(entry, idx, total, halo, favMeta){
         <span id="repeat-counter-display" style="font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--wine-dark); min-width:30px; text-align:center;">0</span>
         <button class="btn btn-gold btn-sm" id="counter-add-btn">+ 1</button>
       </div>
-    </div>` : ''}` : ''}
+    </div>` : ''}
     <div class="entry-nav-row">
       <button class="btn btn-ghost btn-sm" id="entry-prev" ${idx<=0?'disabled':''}>← Précédent</button>
       <button class="btn btn-ghost btn-sm" id="entry-next" ${idx>=total-1?'disabled':''}>Suivant →</button>
@@ -12107,7 +12132,11 @@ function renderEtatSelector(){
   document.querySelectorAll('[data-nav-priere]').forEach(c=>{
     c.onclick = ()=>{
       const [groupId, idx] = c.dataset.navPriere.split('|');
-      PRIMARY='prier'; SUBTAB.prier='prieres'; GROUP_SEL['prier:prieres']=groupId;
+      /* Les prières (y compris celles suggérées ici) vivent sous
+         Prier › Dévotions › Prières (compKey 'prier:prieres'), pas sous
+         l'onglet Prier directement — PRIMARY doit donc être 'devotions'
+         pour que le routeur retombe bien sur cet écran. */
+      PRIMARY='devotions'; SUBTAB.devotions='prieres'; GROUP_SEL['prier:prieres']=groupId;
       ENTRY_OPEN = {compKey:'prier:prieres', groupId, idx:parseInt(idx,10)};
       render();
     };
@@ -13674,7 +13703,9 @@ function renderReconfort(){
 
   html += `<div class="card" style="margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">🙏 Prières suggérées</p>
-      <ul style="padding-left:20px; margin:6px 0 0;">${etat.prieres.map(p=>`<li class="entry-detail-text" style="margin-bottom:4px;">${p}</li>`).join('')}</ul>
+      <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+        ${etat.prieres.map(p=>`<button class="btn btn-ghost btn-sm reconfort-prayer-link" data-prayer-name="${p.replace(/"/g,'&quot;')}" style="justify-content:space-between; text-align:left; width:100%;"><span>${p}</span><span aria-hidden="true">→</span></button>`).join('')}
+      </div>
     </div>
     <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
       <button class="btn btn-gold btn-sm" id="reconfort-speak-btn">🔊 Me le lire</button>
@@ -13692,6 +13723,18 @@ function renderReconfort(){
     document.getElementById('reconfort-candle').classList.add('lit');
     showToast('🕯️ Une lumière pour ce moment.');
   };
+  document.querySelectorAll('.reconfort-prayer-link').forEach(btn=>{
+    btn.onclick = ()=>{
+      const loc = findPriereByName(btn.dataset.prayerName);
+      if(loc){
+        PRIMARY='devotions'; SUBTAB.devotions='prieres'; GROUP_SEL['prier:prieres']=loc.groupId;
+        ENTRY_OPEN = {compKey:'prier:prieres', groupId:loc.groupId, idx:loc.idx};
+        render();
+      } else {
+        showToast('Cette prière sera bientôt disponible ici.');
+      }
+    };
+  });
   document.getElementById('reconfort-ambiance-btn').onclick = ()=>{
     playBgLoop('ambient', 'Ambiance apaisante');
     showToast('🎵 Une ambiance douce joue en fond — respirez.');
