@@ -4083,6 +4083,25 @@ function novenaProgressInfo(nov){
   const currentDay = completedCount < 9 ? completedCount+1 : 9;
   return {completed: p.completed, completedCount, currentDay, done: completedCount===9};
 }
+/* Liste unifiée des « parcours » à étapes actuellement en cours (neuvaine,
+   Parcours de 7 jours, Carême 40 jours) — utilisée pour le petit rappel
+   automatique de la page d'accueil qui incite à continuer sans pression. */
+function getInProgressJourneys(){
+  const items = [];
+  NOVENAS.forEach(n=>{
+    const info = novenaProgressInfo(n);
+    if(info.completedCount>0 && !info.done) items.push({label:n.title, icon:(NOVENA_ICONS&&NOVENA_ICONS[n.id])||'🕯️', primary:'prier', sub:'neuvaines'});
+  });
+  const pCompleted = (PARCOURS_PROGRESS.completedDays||[]).length;
+  if(pCompleted>0 && pCompleted<PARCOURS_JOURS.length) items.push({label:'Parcours de 7 jours', icon:'🗺️', primary:'espace', sub:'parcours'});
+  const cCompleted = (CAREME_PROGRESS.completedDays||[]).length;
+  if(cCompleted>0 && cCompleted<CAREME_JOURS.length) items.push({label:'Carême — 40 jours', icon:'✝️', primary:'prier', sub:'careme40'});
+  return items;
+}
+function missedTodayJourneys(){
+  if(STREAK.lastDate === todayISO()) return [];
+  return getInProgressJourneys();
+}
 
 const HOME_TILES = [
   {label:"L'armure de Dieu", primary:'devotions', sub:'armure', icon:'🛡️'},
@@ -4276,6 +4295,7 @@ function homePage1HTML(){
   if(LANG === 'en') saluTime = (hourNow >= 18 || hourNow < 5) ? t('goodEvening') : t('goodMorning');
   const inProgress = NOVENAS.map(n=>({n, info:novenaProgressInfo(n)})).filter(x=>x.info.completedCount>0 && !x.info.done);
   const {saint:dayFeastSaint, isFeast:dayIsFeast} = getSaintOfDay();
+  const missedJourneys = missedTodayJourneys();
 
   return `
     <div class="home-plain-header">
@@ -4286,6 +4306,10 @@ function homePage1HTML(){
       <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
       <p class="home-plain-sub">${t('homeSubtitle')}.</p>
     </div>
+    ${missedJourneys.length ? `<div class="card home-journey-nudge-card" id="home-journey-nudge-card" style="border-left:4px solid var(--gold); margin-bottom:14px; cursor:pointer;" data-goto-primary="${missedJourneys[0].primary}" data-goto-sub="${missedJourneys[0].sub}">
+      <p class="eyebrow" style="color:var(--gold);">🕯️ Petit rappel, sans pression</p>
+      <p class="entry-detail-text" style="margin:4px 0 0;">Vous n'avez pas encore continué aujourd'hui ${missedJourneys.length>1?'vos parcours en cours':'votre parcours en cours'} (${missedJourneys.map(x=>x.icon+' '+x.label).join(', ')}). Un jour manqué ne remet rien en cause — reprenez simplement quand vous êtes prêt(e).</p>
+    </div>` : ''}
     ${USER_NAME ? '' : `
       <div class="home-name-prompt" style="margin:10px 0 2px;">
         <input type="text" id="home-name-input" placeholder="Comment souhaitez-vous qu'on vous appelle ?">
@@ -5099,6 +5123,25 @@ async function saveNovenaReminder(id, time){
   else delete NOVENA_REMINDERS[id];
   try{ await window.storage.set('novena-reminders', JSON.stringify(NOVENA_REMINDERS), false); }catch(e){}
 }
+/* Au tout premier jour accompli d'un parcours à étapes (neuvaine, Parcours
+   de 7 jours, Carême), propose une seule fois un rappel quotidien
+   automatique à 19h — pour « inciter à continuer » sans que la personne
+   ait à aller chercher elle-même le bouton de rappel. Un refus (ou une
+   fermeture) n'est jamais réoffert pour ce même parcours. */
+async function maybeOfferJourneyReminder(id, label){
+  if(NOVENA_REMINDERS[id]) return;
+  try{
+    const already = await window.storage.get('reminder-offered-'+id, false);
+    if(already) return;
+    await window.storage.set('reminder-offered-'+id, '1', false);
+  }catch(e){}
+  if(!window.Notification || Notification.permission === 'denied') return;
+  const ok = confirm(`Souhaitez-vous un petit rappel chaque jour à 19h00 pour vous aider à continuer « ${label} » ? Vous pourrez le modifier ou l'arrêter à tout moment dans 🔔 Rappels.`);
+  if(!ok) return;
+  if(Notification.permission === 'default'){ try{ await Notification.requestPermission(); }catch(e){} }
+  await saveNovenaReminder(id, '19:00');
+  showToast('Rappel quotidien réglé à 19h00 🔔');
+}
 /* Note personnelle libre laissée sur un verset précis de la Bible (clé :
    "code|chapitre|numéro de verset"), affichée sous le verset concerné. */
 let BIBLE_VERSE_NOTES = {};
@@ -5376,9 +5419,12 @@ function renderNovenaDayPage(n, info, dayIndex){
     if(!isLastStep){ NOVENA_STEP_INDEX = stepIdx+1; render(); return; }
     if(dayDone){ NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null; NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex}; render(); return; }
     if(!PROGRESS[n.id]) PROGRESS[n.id] = {completed:[false,false,false,false,false,false,false,false,false]};
+    const wasFirstDay = PROGRESS[n.id].completed.filter(Boolean).length === 0;
     PROGRESS[n.id].completed[dayIndex] = true;
     await saveProgress(PROGRESS);
+    await markPrayedToday('novena', n.title);
     if(PROGRESS[n.id].completed.every(Boolean)) fireCelebration();
+    else if(wasFirstDay) maybeOfferJourneyReminder(n.id, n.title);
     NOVENA_OPEN_DAY = null; NOVENA_STEP_INDEX = null;
     NOVENA_DAY_DONE_SCREEN = {novenaId:n.id, dayIndex};
     render();
@@ -12678,11 +12724,13 @@ function renderParcours(){
   const doneBtn = document.getElementById('parcours-done-btn');
   if(doneBtn){
     doneBtn.onclick = async ()=>{
+      const wasFirstDay = completed.length === 0;
       if(!completed.includes(activeIdx)) completed.push(activeIdx);
       PARCOURS_PROGRESS.completedDays = completed;
       await saveParcoursProgress(PARCOURS_PROGRESS);
       await markPrayedToday('parcours', 'Étape de parcours');
       showToast('Bravo, une étape de plus 🕯️');
+      if(wasFirstDay && completed.length < PARCOURS_JOURS.length) maybeOfferJourneyReminder('parcours', 'votre Parcours de 7 jours');
       renderParcours();
     };
   }
@@ -12756,6 +12804,7 @@ function renderCareme40(){
   const doneBtn = document.getElementById('careme-done-btn');
   if(doneBtn){
     doneBtn.onclick = async ()=>{
+      const wasFirstDay = completed.length === 0;
       if(!completed.includes(activeIdx)) completed.push(activeIdx);
       CAREME_PROGRESS.completedDays = completed;
       await saveCaremeProgress(CAREME_PROGRESS);
@@ -12763,6 +12812,7 @@ function renderCareme40(){
       if(CAREME_COMMUNITY_CODE) await saveCaremeCommunityMember(CAREME_COMMUNITY_CODE, {completedCount: completed.length});
       showToast('Un jour de plus sur le chemin ✝️');
       if(completed.length >= CAREME_JOURS.length) fireCelebration();
+      else if(wasFirstDay) maybeOfferJourneyReminder('careme', 'votre Carême de 40 jours');
       renderCareme40();
     };
   }
@@ -13077,6 +13127,13 @@ function playBell(){
     o.start(t); o.stop(t+2.5);
   });
 }
+function journeyReminderLabel(id){
+  const nov = NOVENAS.find(x=>x.id===id);
+  if(nov) return nov.title;
+  if(id==='parcours') return 'votre Parcours de 7 jours';
+  if(id==='careme') return 'votre Carême de 40 jours';
+  return null;
+}
 function checkReminders(){
   const now = new Date();
   const hm = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
@@ -13089,14 +13146,14 @@ function checkReminders(){
       checkReminders._last = hm+key;
     }
   });
-  Object.keys(NOVENA_REMINDERS).forEach(novenaId=>{
-    const time = NOVENA_REMINDERS[novenaId];
-    if(time && time===hm && checkReminders._last!==hm+'novena-'+novenaId){
-      const nov = NOVENAS.find(x=>x.id===novenaId);
+  Object.keys(NOVENA_REMINDERS).forEach(journeyId=>{
+    const time = NOVENA_REMINDERS[journeyId];
+    if(time && time===hm && checkReminders._last!==hm+'journey-'+journeyId){
+      const label = journeyReminderLabel(journeyId);
       if(window.Notification && Notification.permission === 'granted'){
-        new Notification('Lumen', {body: `🕯️ C'est l'heure de prier votre neuvaine${nov ? ' : '+nov.title : ''}`});
+        new Notification('Lumen', {body: `🕯️ C'est l'heure de reprendre${label ? ' : '+label : ' votre neuvaine'}`});
       }
-      checkReminders._last = hm+'novena-'+novenaId;
+      checkReminders._last = hm+'journey-'+journeyId;
     }
   });
   if(PRAYER_GROUP_CODE && GROUP_MOMENT && GROUP_MOMENT.time && GROUP_MOMENT.time===hm && checkReminders._last!==hm+'group-moment'){
