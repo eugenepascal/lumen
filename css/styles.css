@@ -1165,7 +1165,7 @@
   .guided-chaplet-done{ padding:10px 0 20px; }
   .guided-chaplet-done-icon{ font-size:42px; margin:0 0 8px; animation:beadIgnite 0.6s cubic-bezier(.34,1.56,.64,1); }
   .guided-chaplet-done-text{ font-family:'Fraunces',serif; font-size:18px; color:var(--wine-dark); margin:0; }
-  .reading-card{ max-width:540px; margin:0 auto; padding:4px 2px; }
+  .reading-card{ width:100%; margin:0 auto; padding:4px 2px; }
   @media (max-width:600px){ .reading-card{ padding:18px 16px; border-radius:14px; } }
   /* Liste de rubriques façon maquette : rangées plates (icône rond + titre +
      sous-titre + chevron), séparées par un simple filet, sans encadré de
@@ -1794,10 +1794,11 @@
   }
   .entry-detail-name{ font-family:'Fraunces',serif; font-weight:600; font-size:20px; margin:0 0 4px; color:var(--wine-dark); }
   .entry-detail-dates{ font-family:'Inter',sans-serif; font-size:11.5px; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
-  .entry-detail-text{ font-size:15px; line-height:1.68; margin: 4px 0 16px; white-space:pre-wrap; max-width:65ch; }
-  .saint-bio, .saint-prayer, .verset-text, .entry-summary, .day-title{ max-width:65ch; }
-  .reading-card .entry-detail-text, .reading-card .saint-bio, .reading-card .saint-prayer,
-  .reading-card .verset-text, .reading-card .day-title{ margin-left:auto; margin-right:auto; }
+  /* Les textes des cartes (prières, saints, neuvaines, réconfort guidé...)
+     remplissent désormais toute la largeur disponible de la carte, plutôt
+     que d'être bridés à une largeur de confort de lecture fixe — qui
+     laissait un vide visible sur les écrans larges (tablette, bureau). */
+  .entry-detail-text{ font-size:15px; line-height:1.68; margin: 4px 0 16px; white-space:pre-wrap; }
   .entry-link-row{ display:flex; justify-content:flex-end; margin-bottom:14px; }
   .entry-nav-row{ display:flex; justify-content:space-between; gap:10px; }
 
