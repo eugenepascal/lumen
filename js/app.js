@@ -2456,7 +2456,16 @@ const LOUANGES_VIDEOS = [
   {title:"Congratulations (feat. Buchi)", artist:"Ada Ehi", videoId:"LjpGilXJOuY", tag:"Louange nigériane"},
   {title:"Gold (feat. Ada Ehi)", artist:"Limoblaze", videoId:"IPCid2aQAno", tag:"Louange nigériane"},
   {title:"Congratulations (feat. Buchi)", artist:"Ada Ehi", videoId:"LjpGilXJOuY", tag:"Louange nigériane"},
-  {title:"Gold (feat. Ada Ehi)", artist:"Limoblaze", videoId:"IPCid2aQAno", tag:"Louange nigériane"}
+  {title:"Gold (feat. Ada Ehi)", artist:"Limoblaze", videoId:"IPCid2aQAno", tag:"Louange nigériane"},
+  {title:"Tuta Omba", artist:"Anthony Seya", videoId:"jwVJjiZAmcY", tag:"Louange congolaise"},
+  {title:"Sabaoth", artist:"Moses Mangomba", videoId:"fbZXz3VCIVk", tag:"Louange congolaise"},
+  {title:"Light of the World / He is Coming / He Knows Your Name", artist:"Femi Akintola", videoId:"BaE-dd2mBzU", tag:"Louange nigériane"},
+  {title:"Benga Yesu", artist:"David Elisha", videoId:"lMIPDMLrreA", tag:"Louange congolaise"},
+  {title:"Tu m'as pas laissé tomber", artist:"Serviteur Pierre", videoId:"A6nLC4CXmEc", tag:"Louange française"},
+  {title:"Bolamu", artist:"Divine Yalla", videoId:"YLisjBSUwcI", tag:"Louange congolaise"},
+  {title:"Sans toi et tout comme toi", artist:"NK Divine", videoId:"6l2ogsLXYvE", tag:"Louange congolaise"},
+  {title:"Si", artist:"NK Divine", videoId:"Y2iZDyfwWEU", tag:"Louange congolaise"},
+  {title:"Choix de Dieu", artist:"Jonathan C. Gambela", videoId:"FPtEuBiJtHg", tag:"Louange congolaise"}
 ];
 
 const SECTION_ICONS = {
