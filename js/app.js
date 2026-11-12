@@ -3756,7 +3756,7 @@ function groupTemplateInfo(key){
   return GROUP_TEMPLATES.find(t=>t.key===key) || null;
 }
 async function loadPrefsAndData(){
-  const defaults = { favorites:[], recent:[], streak:{count:0,lastDate:null}, theme:'light', themeMode:'auto', fontSize:'md', onboardingSeen:false, seenMilestones:[], lastSummarySeen:'', userName:'', dyslexicFont:false };
+  const defaults = { favorites:[], recent:[], streak:{count:0,lastDate:null}, theme:'light', themeMode:'auto', fontSize:'md', onboardingSeen:false, seenMilestones:[], lastSummarySeen:'', userName:'', dyslexicFont:false, tutoSeen:{} };
   try{
     const r = await window.storage.get('lumen-prefs', false);
     if(!r) return defaults;
@@ -3766,7 +3766,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, welcomeDemoVersion: WELCOME_DEMO_LAST_SEEN_VERSION, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, welcomeDemoVersion: WELCOME_DEMO_LAST_SEEN_VERSION, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID, tutoSeen: TUTO_SEEN
     }), false);
   }catch(e){}
 }
@@ -7537,7 +7537,11 @@ function renderGroupMomentCard(){
   });
 }
 function renderPrayerGroup(){
-  let html = `<h2 class="section-title">👥 Groupe de prière</h2>`;
+  maybeAutoOpenMiniTuto('groupe');
+  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+    <h2 class="section-title" style="margin:0;">👥 Groupe de prière</h2>
+    <button class="btn btn-ghost btn-sm" id="groupe-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button>
+  </div>`;
   if(!PRAYER_GROUP_CODE){
     html += `<p class="section-desc">Créez un petit groupe de prière privé, ou rejoignez celui de vos proches avec leur code, pour partager des intentions et vous encourager mutuellement.</p>
       <div class="card">
@@ -7555,6 +7559,7 @@ function renderPrayerGroup(){
         <button class="btn btn-gold btn-sm" id="join-group-btn" style="margin-top:8px;">Rejoindre</button>
       </div>`;
     document.getElementById('screen').innerHTML = html;
+    document.getElementById('groupe-tuto-btn').onclick = ()=> openMiniTuto('groupe');
     document.querySelectorAll('.group-template-btn').forEach(btn=>{
       btn.onclick = async ()=>{
         const tpl = groupTemplateInfo(btn.getAttribute('data-template'));
@@ -7668,6 +7673,7 @@ function renderPrayerGroup(){
       </div>`).join('')}</div>`;
   }
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('groupe-tuto-btn').onclick = ()=> openMiniTuto('groupe');
   wireShareInviteButtons();
   renderGroupMomentCard();
   document.getElementById('copy-group-code-btn').onclick = ()=>{
@@ -13518,6 +13524,85 @@ function openGuide(){
   document.getElementById('guide-overlay').classList.remove('hidden');
 }
 function closeGuide(){ document.getElementById('guide-overlay').classList.add('hidden'); }
+
+/* ================= mini-tutoriels pas-à-pas =================
+   Pour les fonctionnalités les moins immédiates (groupe de prière,
+   réconfort guidé...), un court parcours en 2-3 écrans explique à quoi ça
+   sert et comment s'en servir, avec un exemple concret. Proposé
+   automatiquement la première fois qu'on ouvre l'écran, puis consultable
+   à volonté via un bouton « ? » dans l'en-tête. */
+const MINI_TUTOS = {
+  groupe: {
+    title: 'Groupe de prière',
+    icon: '👥',
+    steps: [
+      {title:'Créez ou rejoignez un groupe', text:"En créant un groupe, choisissez un gabarit qui vous ressemble — « Chorale paroissiale », « Mouvement de jeunes », « Prière en famille »… — et tout démarre déjà prêt. Ou rejoignez un groupe existant avec son code à 6 caractères (par exemple AB12CD)."},
+      {title:'Partagez le code', text:"Envoyez le code, ou le lien d'invitation juste en dessous, à vos proches — par SMS, WhatsApp ou e-mail. C'est un groupe privé : seules les personnes qui ont le code peuvent le rejoindre."},
+      {title:'Priez ensemble', text:"Fixez un moment de prière commun (ex. « Chapelet du soir à 20h »), partagez des intentions et des témoignages, et réagissez à ceux des autres avec 🙏 ❤️ 🕯️ pour vous encourager mutuellement."}
+    ]
+  },
+  reconfort: {
+    title: 'Réconfort guidé',
+    icon: '🕊️',
+    steps: [
+      {title:'Dites comment vous vous sentez', text:"Touchez l'état qui vous correspond le mieux maintenant — par exemple « Seul(e), isolé(e) » ou « En recherche de paix intérieure ». Il n'y a pas de bonne ou de mauvaise réponse."},
+      {title:'Recevez un moment pensé pour cet état', text:"Un court message, un psaume et des prières sont choisis spécialement pour ce que vous ressentez — par exemple, pour la solitude : le psaume 23 et le Memorare."},
+      {title:'Laissez-vous accompagner', text:"Touchez une prière suggérée pour l'ouvrir en entier, appuyez sur « Me le lire » pour l'écouter à voix haute, ou ajoutez une ambiance sonore apaisante en fond."}
+    ]
+  }
+};
+let TUTO_SEEN = {};
+let MINI_TUTO_KEY = null;
+let MINI_TUTO_STEP = 0;
+function openMiniTuto(key){
+  if(!MINI_TUTOS[key]) return;
+  MINI_TUTO_KEY = key;
+  MINI_TUTO_STEP = 0;
+  renderMiniTuto();
+  document.getElementById('mini-tuto-overlay').classList.remove('hidden');
+}
+function closeMiniTuto(){
+  document.getElementById('mini-tuto-overlay').classList.add('hidden');
+  if(MINI_TUTO_KEY && !TUTO_SEEN[MINI_TUTO_KEY]){
+    TUTO_SEEN[MINI_TUTO_KEY] = true;
+    savePrefs();
+  }
+  MINI_TUTO_KEY = null;
+}
+function maybeAutoOpenMiniTuto(key){
+  if(TUTO_SEEN[key]) return;
+  const overlay = document.getElementById('mini-tuto-overlay');
+  if(overlay && !overlay.classList.contains('hidden')) return;
+  openMiniTuto(key);
+}
+function renderMiniTuto(){
+  const tuto = MINI_TUTOS[MINI_TUTO_KEY];
+  const step = tuto.steps[MINI_TUTO_STEP];
+  const isLast = MINI_TUTO_STEP === tuto.steps.length - 1;
+  const overlay = document.getElementById('mini-tuto-overlay');
+  overlay.innerHTML = `<div class="mini-tuto-panel">
+    <button class="mini-tuto-close" id="mini-tuto-close">✕</button>
+    <div class="mini-tuto-icon">${tuto.icon}</div>
+    <p class="mini-tuto-eyebrow">${tuto.title} · ${MINI_TUTO_STEP+1}/${tuto.steps.length}</p>
+    <p class="mini-tuto-title">${step.title}</p>
+    <p class="mini-tuto-text">${step.text}</p>
+    <div class="mini-tuto-dots">${tuto.steps.map((s,i)=>`<span class="mini-tuto-dot ${i===MINI_TUTO_STEP?'active':''}"></span>`).join('')}</div>
+    <div class="mini-tuto-actions">
+      ${MINI_TUTO_STEP>0 ? `<button class="btn btn-ghost btn-sm" id="mini-tuto-prev">← Précédent</button>` : `<button class="btn btn-ghost btn-sm" id="mini-tuto-skip">Passer</button>`}
+      <button class="btn btn-gold btn-sm" id="mini-tuto-next">${isLast?'Compris ✓':'Suivant →'}</button>
+    </div>
+  </div>`;
+  document.getElementById('mini-tuto-close').onclick = closeMiniTuto;
+  overlay.onclick = (e)=>{ if(e.target===overlay) closeMiniTuto(); };
+  const skipBtn = document.getElementById('mini-tuto-skip');
+  if(skipBtn) skipBtn.onclick = closeMiniTuto;
+  const prevBtn = document.getElementById('mini-tuto-prev');
+  if(prevBtn) prevBtn.onclick = ()=>{ MINI_TUTO_STEP--; renderMiniTuto(); };
+  document.getElementById('mini-tuto-next').onclick = ()=>{
+    if(isLast) closeMiniTuto();
+    else { MINI_TUTO_STEP++; renderMiniTuto(); }
+  };
+}
 function renderGuideStep(){
   const step = GUIDE_TREE[GUIDE_STACK[GUIDE_STACK.length-1]];
   const isRoot = GUIDE_STACK.length === 1;
@@ -13662,13 +13747,18 @@ function renderAnniversaires(){
   });
 }
 function renderReconfort(){
+  maybeAutoOpenMiniTuto('reconfort');
   if(!RECONFORT_SELECTED){
-    let html = `<h2 class="section-title">🕊️ Réconfort guidé</h2>
+    let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+      <h2 class="section-title" style="margin:0;">🕊️ Réconfort guidé</h2>
+      <button class="btn btn-ghost btn-sm" id="reconfort-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button>
+    </div>
       <p class="section-desc">Dites-moi comment vous vous sentez${USER_NAME?', '+USER_NAME:''}, et je vous propose un verset, une prière et un moment pour souffler — avec une voix qui vous les lit, et une ambiance sonore apaisante si vous le souhaitez.</p>
       <div class="etat-grid">${ETATS_PRIERE.map(e=>
         `<button class="etat-btn" data-etat="${e.key}"><span class="etat-emoji">${e.emoji}</span><span>${e.label}</span></button>`
       ).join('')}</div>`;
     document.getElementById('screen').innerHTML = html;
+    document.getElementById('reconfort-tuto-btn').onclick = ()=> openMiniTuto('reconfort');
     document.querySelectorAll('[data-etat]').forEach(btn=>{
       btn.onclick = ()=>{ RECONFORT_SELECTED = btn.dataset.etat; renderReconfort(); };
     });
@@ -14809,6 +14899,7 @@ async function startApp(){
   TITLE_FONT = prefs.titleFont || 'fraunces';
   TAB_ORDER = prefs.tabOrder || [];
   ONBOARDING_SEEN = !!prefs.onboardingSeen;
+  TUTO_SEEN = prefs.tutoSeen || {};
   WELCOME_DEMO_LAST_SEEN_VERSION = prefs.welcomeDemoVersion || 0;
   SEEN_MILESTONES = prefs.seenMilestones || [];
   LAST_SUMMARY_SEEN = prefs.lastSummarySeen || '';

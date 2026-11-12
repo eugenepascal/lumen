@@ -614,6 +614,30 @@
     background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 75%);
     box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,0.35);
   }
+  #mini-tuto-overlay{
+    position:fixed; inset:0; z-index:9997; background:rgba(15,10,8,0.82);
+    display:flex; align-items:flex-end; justify-content:center; padding:0;
+  }
+  #mini-tuto-overlay.hidden{ display:none; }
+  .mini-tuto-panel{
+    position:relative; width:100%; max-width:460px; background:var(--vellum-light);
+    border-radius:22px 22px 0 0; padding:26px 22px 24px; animation:fadeIn 0.25s ease;
+    text-align:center;
+  }
+  .mini-tuto-close{ position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%; border:none; background:var(--vellum); color:var(--ink-soft); font-size:14px; cursor:pointer; }
+  .mini-tuto-icon{
+    width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:24px; margin:0 auto 10px;
+    background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 75%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,0.35);
+  }
+  .mini-tuto-eyebrow{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; color:var(--gold); margin:0; }
+  .mini-tuto-title{ font-family:'Fraunces',serif; font-size:20px; font-weight:600; color:var(--ink); margin:6px 0 6px; }
+  .mini-tuto-text{ font-family:'Inter',sans-serif; font-size:13.5px; line-height:1.55; color:var(--ink-soft); margin:0 0 16px; }
+  .mini-tuto-dots{ display:flex; gap:6px; justify-content:center; margin-bottom:18px; }
+  .mini-tuto-dot{ width:7px; height:7px; border-radius:50%; background:var(--hairline); }
+  .mini-tuto-dot.active{ background:var(--gold); }
+  .mini-tuto-actions{ display:flex; gap:10px; justify-content:center; }
   .guide-ask-row{ display:flex; gap:8px; margin:14px 0 6px; }
   .guide-ask-input{
     flex:1; padding:12px 14px; border-radius:14px; border:1px solid var(--hairline);
