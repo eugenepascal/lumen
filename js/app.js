@@ -3727,11 +3727,12 @@ async function saveGroupMoment(code, moment){
 }
 
 /* ================= gabarits de groupe =================
-   Pour qu'un groupe ne démarre pas sur une page blanche, on propose quelques
-   structures déjà connues sur le terrain (chorale, mouvement de jeunes type
-   JEC, scoutisme...) : chacune pré-remplit un moment de prière suggéré et un
-   premier témoignage d'accueil, que le groupe peut ensuite modifier ou
-   supprimer librement. */
+   Pour aider à démarrer, on propose quelques structures déjà connues sur le
+   terrain (chorale, mouvement de jeunes type JEC, scoutisme...) : chacune
+   suggère seulement un moment de prière adapté (modifiable ou supprimable
+   librement) — aucun contenu factice (intention, témoignage) n'est créé
+   automatiquement ; le groupe démarre vide, prêt à être rempli par ses
+   propres membres. */
 const GROUP_TEMPLATES = [
   {
     key:'choeur', icon:'🎶', label:'Chorale paroissiale',
@@ -7614,7 +7615,7 @@ function renderPrayerGroup(){
     html += `<p class="section-desc">Créez un petit groupe de prière privé, ou rejoignez celui de vos proches avec leur code, pour partager des intentions et vous encourager mutuellement.</p>
       <div class="card">
         <p class="day-title" style="font-size:15px;">Créer un groupe</p>
-        <p class="section-desc" style="margin:2px 0 10px;">Choisissez ce qui ressemble le plus à votre groupe : il démarrera déjà prêt, avec un moment de prière suggéré et un message d'accueil.</p>
+        <p class="section-desc" style="margin:2px 0 10px;">Choisissez ce qui ressemble le plus à votre groupe : un moment de prière commun vous sera déjà suggéré, à ajuster librement — le reste démarre vide, à vous de le remplir.</p>
         <div class="grid" style="gap:8px;">
           ${GROUP_TEMPLATES.map(t=>`
             <button class="btn btn-ghost btn-sm group-template-btn" data-template="${t.key}" style="justify-content:flex-start; text-align:left;">${t.icon} ${escapeHtml(t.label)}</button>
