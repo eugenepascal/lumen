@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* Données personnelles d'un compte (neuvaines, journal, favoris, etc.) :
+       uniquement lisibles/modifiables par le propriétaire du compte.
+       N'est JAMAIS utilisé par le mode invité (qui reste en local sur
+       l'appareil, sans jamais toucher Firestore) — cette règle ne peut donc
+       pas casser le mode sans compte. */
+    match /users/{uid}/data/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    /* Contenu partagé par code (groupe de prière, carnet familial,
+       communauté de Carême, intentions-board, novena-companions) :
+       accessible à quiconque connaît le code, avec ou sans compte — le mode
+       invité se connecte toujours de façon anonyme avant d'y toucher, donc
+       request.auth n'est jamais nul pour un usage normal de l'app.
+       On limite la taille et la forme du document pour limiter les abus
+       (un document énorme, un champ inattendu). */
+    match /shared/{docId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+                   && request.resource.data.keys().hasOnly(['value', 'updatedAt'])
+                   && request.resource.data.value is string
+                   && request.resource.data.value.size() < 300000
+                   && request.resource.data.updatedAt is number;
+    }
+
+    /* Avis (note + message) : le mode invité ne se connecte jamais, même
+       anonymement, sur cette appli Firebase principale — donc écrire un avis
+       doit rester possible sans authentification. On autorise uniquement la
+       création (jamais la lecture, la modification ou la suppression depuis
+       le client), avec une forme de document strictement limitée à ce que
+       l'app envoie réellement, pour empêcher d'y stocker autre chose. */
+    match /feedback/{docId} {
+      allow create: if request.resource.data.keys().hasOnly(['rating', 'text', 'uid', 'email', 'createdAt'])
+                    && request.resource.data.rating is int
+                    && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() < 5000
+                    && request.resource.data.createdAt is number;
+      allow read, update, delete: if false;
+    }
+
+    /* Tout le reste : fermé par défaut, y compris toute future collection
+       qu'on oublierait d'autoriser explicitement ci-dessus. */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
