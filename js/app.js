@@ -32,6 +32,19 @@ function activateAppCheck(app, label){
     );
   }catch(e){ console.warn('App Check indisponible (' + label + ') :', e); }
 }
+/* Active Google Analytics (via Firebase) sur l'app principale — défensif,
+   comme activateAppCheck : si le script n'a pas pu se charger (bloqué par un
+   bloqueur de pub, hors-ligne au premier chargement...), on continue sans
+   bloquer l'appli. Compte TOUT le monde, y compris les personnes en mode
+   « Continuer sans compte » (contrairement à Firebase Authentication, qui ne
+   voit que les comptes créés) — c'est la seule vue d'ensemble de l'usage
+   réel de Lumen, visible dans la console Firebase sous Analytics. */
+function activateAnalytics(app){
+  try{
+    if(typeof firebase.analytics !== 'function') return;
+    firebase.analytics(app);
+  }catch(e){ console.warn('Analytics indisponible :', e); }
+}
 let fbApp = null, fbAuth = null, fbDb = null, FIREBASE_READY = false;
 /* Connexion Firebase dédiée au contenu partagé (groupe de prière, carnet
    familial, communauté de Carême) : une appli secondaire, avec sa propre
@@ -90,6 +103,7 @@ try{
   fbDb = firebase.firestore();
   FIREBASE_READY = true;
   activateAppCheck(fbApp, 'compte personnel');
+  activateAnalytics(fbApp);
 }catch(e){ console.warn('Firebase indisponible :', e); }
 
 /* Petit message discret en bas de l'écran (confirmation d'une action : "Texte copié",
