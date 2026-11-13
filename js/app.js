@@ -8107,6 +8107,8 @@ function renderApropos(){
       <p class="entry-detail-text">Votre journal, vos prières personnelles, votre progression et vos réglages sont stockés de façon privée, liés uniquement à votre compte. Rien n'est partagé publiquement sans que vous ne le décidiez vous-même (comme dans un groupe de prière, où seules les intentions que vous choisissez d'y ajouter sont visibles par les autres membres).</p>
     </div>
 
+    <div id="apropos-testimonials-wrap"></div>
+
     <div class="card" style="margin-top:12px; text-align:center;">
       <p class="eyebrow" style="color:var(--gold);">⭐ Votre avis sur Lumen</p>
       <p class="entry-detail-text" style="margin-bottom:8px;">Notez votre expérience en quelques secondes.</p>
@@ -8148,6 +8150,7 @@ function renderApropos(){
     </div>
   `;
   document.getElementById('screen').innerHTML = html;
+  loadPublicTestimonials().then(renderAproposTestimonials);
   document.getElementById('apropos-feedback-btn').onclick = openFeedbackModal;
   document.getElementById('apropos-contact-btn').onclick = ()=>{
     window.open('mailto:pasou1000@gmail.com?subject=' + encodeURIComponent('Remarque sur Lumen') + '&body=' + encodeURIComponent('Bonjour,\n\nJ\u2019utilise l\u2019application Lumen et je voulais partager ceci :\n\n'), '_blank');
@@ -9732,6 +9735,39 @@ async function submitFeedback(){
     window.open('mailto:pasou1000@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body), '_blank');
   }
   showToast('Merci pour votre avis 🙏');
+}
+/* ===== Témoignages publics (avis mis en avant) =====
+   Les avis bruts (collection "feedback") contiennent l'email et l'uid de
+   leur auteur et ne sont jamais lisibles depuis l'app — pour en montrer
+   quelques-uns sur la page « À propos », on passe par une collection
+   séparée, "public_testimonials", que seul le créateur peut remplir
+   (directement dans la console Firebase, en copiant le texte et la note
+   d'un avis qui lui plaît, sans l'email ni l'uid). Résultat : rien de privé
+   n'est jamais exposé publiquement, même par erreur de règles. */
+let PUBLIC_TESTIMONIALS = null; // null = pas encore chargé ; [] = chargé, vide
+async function loadPublicTestimonials(){
+  if(PUBLIC_TESTIMONIALS !== null) return PUBLIC_TESTIMONIALS;
+  try{
+    if(!fbDb){ PUBLIC_TESTIMONIALS = []; return PUBLIC_TESTIMONIALS; }
+    const snap = await fbDb.collection('public_testimonials').get();
+    PUBLIC_TESTIMONIALS = snap.docs.map(d=>d.data()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  }catch(e){ console.warn('loadPublicTestimonials', e); PUBLIC_TESTIMONIALS = []; }
+  return PUBLIC_TESTIMONIALS;
+}
+function renderAproposTestimonials(list){
+  const wrap = document.getElementById('apropos-testimonials-wrap');
+  if(!wrap) return;
+  if(!list || !list.length){ wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<h2 class="section-title" style="font-size:16px;">💬 Ils en parlent</h2>
+    <div class="grid">${list.slice(0,6).map(t=>{
+      const rating = Math.max(0, Math.min(5, parseInt(t.rating,10)||0));
+      const stars = '⭐'.repeat(rating) + '☆'.repeat(5-rating);
+      return `<div class="card intention-card testimony-card">
+        ${rating ? `<p style="letter-spacing:1px; margin:0 0 4px;">${stars}</p>` : ''}
+        <p class="intention-text">« ${escapeHtml(t.text||'')} »</p>
+        ${t.name ? `<p class="intention-author" style="margin-top:6px;">— ${escapeHtml(t.name)}</p>` : ''}
+      </div>`;
+    }).join('')}</div>`;
 }
 /* extrait un ID YouTube depuis une URL classique, pour convertir les liens externes existants */
 function extractYoutubeId(url){

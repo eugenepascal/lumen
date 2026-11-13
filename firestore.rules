@@ -26,5 +26,21 @@ service cloud.firestore {
                     && request.resource.data.createdAt is number;
       allow read, update, delete: if false;
     }
+    /* Témoignages/avis mis en avant sur la page "À propos" (section
+       "Ils en parlent"). Collection séparée de "feedback" : elle ne doit
+       JAMAIS contenir d'email ni d'uid — seulement du contenu que vous avez
+       vous-même choisi de rendre public. Remplissage manuel uniquement,
+       depuis la console Firebase (Firestore Database > Données > créer la
+       collection "public_testimonials" > ajouter un document avec les
+       champs : text (string, obligatoire), rating (nombre 1-5, optionnel),
+       name (string, optionnel — laissez vide pour "Anonyme"), createdAt
+       (nombre, optionnel, ex. Date.now() au moment où vous l'ajoutez, sert
+       à l'ordre d'affichage). Lecture publique (même sans connexion),
+       écriture impossible depuis l'app (la console Firebase, elle,
+       n'est pas soumise à ces règles). */
+    match /public_testimonials/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
   }
 }
