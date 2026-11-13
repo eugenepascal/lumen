@@ -3735,38 +3735,31 @@ async function saveGroupMoment(code, moment){
 const GROUP_TEMPLATES = [
   {
     key:'choeur', icon:'🎶', label:'Chorale paroissiale',
-    moment:{label:'Prière avant le chant', time:'18:30'},
-    welcome:'Bienvenue à la chorale ! Partagez ici vos intentions avant une répétition ou une messe, et les grâces reçues en chantant pour la liturgie.'
+    moment:{label:'Prière avant le chant', time:'18:30'}
   },
   {
     key:'mouvement', icon:'📖', label:'Mouvement de jeunes',
-    moment:{label:'Topo & prière du mouvement', time:'19:00'},
-    welcome:'Bienvenue dans le groupe ! Entre deux rencontres, partagez ici vos intentions, vos relectures de la semaine (voir, juger, agir) et vos témoignages.'
+    moment:{label:'Topo & prière du mouvement', time:'19:00'}
   },
   {
     key:'scouts', icon:'⛺', label:'Scouts & Guides',
-    moment:{label:'Prière du camp ou de la réunion', time:'20:00'},
-    welcome:'Bienvenue dans la troupe ! Partagez ici vos intentions avant une sortie ou un camp, et vos plus beaux souvenirs de prière autour du feu.'
+    moment:{label:'Prière du camp ou de la réunion', time:'20:00'}
   },
   {
     key:'jeunes', icon:'🙌', label:'Groupe de jeunes',
-    moment:{label:'Temps de prière du groupe', time:'20:00'},
-    welcome:'Bienvenue dans le groupe ! C\'est l\'endroit pour partager vos intentions de la semaine et les belles surprises de Dieu dans vos vies.'
+    moment:{label:'Temps de prière du groupe', time:'20:00'}
   },
   {
     key:'famille', icon:'🏡', label:'Prière en famille',
-    moment:{label:'Prière du soir en famille', time:'19:30'},
-    welcome:'Bienvenue dans votre espace familial ! Partagez ici les intentions du jour, les petites joies et les soucis de chacun, pour prier les uns pour les autres.'
+    moment:{label:'Prière du soir en famille', time:'19:30'}
   },
   {
     key:'quartier', icon:'🏘️', label:'Groupe de quartier',
-    moment:{label:'Veillée de prière du quartier', time:'20:00'},
-    welcome:'Bienvenue dans le groupe du quartier ! Un espace pour partager vos intentions, les nouvelles du voisinage, et vous soutenir dans la prière les uns les autres.'
+    moment:{label:'Veillée de prière du quartier', time:'20:00'}
   },
   {
     key:'personnalise', icon:'✨', label:'Personnalisé',
-    moment:null,
-    welcome:''
+    moment:null
   }
 ];
 let GROUP_TEMPLATE_KEY = '';
@@ -7650,12 +7643,7 @@ function renderPrayerGroup(){
         } else {
           GROUP_MOMENT = null;
         }
-        if(tpl && tpl.welcome){
-          GROUP_TESTIMONIES = [{id:'t-'+Date.now(), name:'Lumen', text:tpl.welcome, createdAt:Date.now(), comments:[], reactions:{}}];
-          await saveGroupTestimonies(PRAYER_GROUP_CODE, GROUP_TESTIMONIES);
-        } else {
-          GROUP_TESTIMONIES = [];
-        }
+        GROUP_TESTIMONIES = [];
         showToast('Groupe créé ✦');
         renderPrayerGroup();
       };
