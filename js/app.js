@@ -10615,7 +10615,8 @@ function renderMisericorde(){
     html += `<div class="step-progress">${Array.from({length:5}).map((_,i)=>`<span class="${i<di?'done':i===di?'current':''}"></span>`).join('')}</div>`;
     html += `<div class="card">
       <p class="eyebrow" style="color:var(--gold);">${di+1}${di===0?'re':'e'} dizaine sur 5</p>
-      <p class="entry-detail-text">Sur les dix petits grains, répétez dix fois : « ${MISERICORDE_TEXTS.decade} »</p>
+      <p class="entry-detail-text">Sur le gros grain : « ${MISERICORDE_TEXTS.eternel} »</p>
+      <p class="entry-detail-text" style="margin-top:8px;">Sur les dix petits grains, répétez dix fois : « ${MISERICORDE_TEXTS.decade} »</p>
       <div class="bead-counter">
         <button class="btn btn-ghost btn-sm" id="bead-minus">−</button>
         <span class="bead-num">${MISERICORDE_STATE.beadCount}<span style="font-size:16px;color:var(--ink-soft);">/10</span></span>
@@ -11911,7 +11912,18 @@ function renderTextesDuJour(){
   const html = `<h2 class="section-title">📅 Textes du jour</h2>
     <p class="section-desc">Une sélection quotidienne réunissant un verset, un psaume et un chapitre à lire — <b>pensée par cette application</b>, et non le lectionnaire officiel de la messe, que je ne peux pas reproduire fidèlement ici.</p>
 
-    <div class="card" style="border-left:4px solid var(--gold);">
+    <div class="card" style="text-align:center; border-left:4px solid var(--wine);">
+      <p class="eyebrow" style="color:var(--wine);">🔊 Écouter les textes du jour</p>
+      <p class="studio-note" style="margin:2px 0 10px;">Verset, psaume et lectures de la messe, lus à voix haute (si chargés).</p>
+      <div class="vreader-audio-row" style="margin:10px auto; max-width:360px;">
+        <span class="vreader-audio-time" id="textesjour-audio-elapsed">0:00</span>
+        <div class="vreader-audio-track"><div class="vreader-audio-fill" id="textesjour-audio-fill" style="width:0%"></div></div>
+        <span class="vreader-audio-time" id="textesjour-audio-total">…</span>
+      </div>
+      <button class="vreader-play-btn" id="textesjour-audio-play" aria-label="Écouter">▶</button>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--gold); margin-top:12px;">
       <p class="eyebrow" style="color:var(--gold);">✦ Verset du jour</p>
       <p class="verset-text">« ${v.text} »</p>
       <p class="verset-ref">${v.ref}</p>
@@ -11939,6 +11951,37 @@ function renderTextesDuJour(){
 
   `;
   document.getElementById('screen').innerHTML = html;
+  /* Assemble le texte à lire à voix haute à partir de ce qui est déjà
+     disponible au moment de l'appui : le verset et le psaume sont toujours
+     là (générés localement), les lectures de la messe ne le sont que si
+     l'appel à l'AELF a eu le temps d'aboutir — d'où le recalcul à chaque
+     appui plutôt qu'une seule fois au chargement de l'écran. */
+  function textesDuJourAudioText(){
+    const messeBody = document.getElementById('textes-jour-messe-body');
+    const messePlain = messeBody ? messeBody.innerText.trim() : '';
+    let text = `Verset du jour. ${v.text} ${v.ref}. Psaume du jour, ${psEntry.name}. ${psEntry.summary}`;
+    if(messePlain && !/chargement/i.test(messePlain)) text += `. Lectures de la messe. ${messePlain}`;
+    return text;
+  }
+  const totalEl = document.getElementById('textesjour-audio-total');
+  if(totalEl) totalEl.textContent = formatMinSec(estimateReadSeconds(textesDuJourAudioText()));
+  const tdjPlayBtn = document.getElementById('textesjour-audio-play');
+  if(tdjPlayBtn){
+    let playing = false;
+    tdjPlayBtn.onclick = ()=>{
+      if(playing){ try{ window.speechSynthesis.cancel(); }catch(e){} playing=false; tdjPlayBtn.textContent='▶'; return; }
+      const text = textesDuJourAudioText();
+      const total = estimateReadSeconds(text);
+      if(totalEl) totalEl.textContent = formatMinSec(total);
+      playing = true; tdjPlayBtn.textContent = '❚❚';
+      speakWithProgress(text, total, (ratio)=>{
+        const fill = document.getElementById('textesjour-audio-fill');
+        const elapsed = document.getElementById('textesjour-audio-elapsed');
+        if(fill) fill.style.width = Math.round(ratio*100)+'%';
+        if(elapsed) elapsed.textContent = formatMinSec(ratio*total);
+      }, ()=>{ playing=false; if(tdjPlayBtn) tdjPlayBtn.textContent='▶'; });
+    };
+  }
   document.getElementById('textes-jour-reading-btn').onclick = enableReadingMode;
   document.getElementById('psaume-jour-reader-btn').onclick = ()=>{
     openTextCover('scroll', psEntry.name, 'Psaume du jour', ()=>{
@@ -11965,6 +12008,8 @@ function renderTextesDuJour(){
       return;
     }
     body.innerHTML = cardHtml;
+    const totalEl2 = document.getElementById('textesjour-audio-total');
+    if(totalEl2) totalEl2.textContent = formatMinSec(estimateReadSeconds(textesDuJourAudioText()));
   });
 }
 function versetDuJourHTML(){
