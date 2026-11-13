@@ -3075,7 +3075,8 @@ const PRIERES_ENFANTS = [
   {name:"Prière du soir pour un enfant", avatar:"🌙", ref:"Avant de dormir", summary:"Merci, mon Dieu, pour cette journée. Merci pour ma famille, pour mes amis, pour tout ce que j'ai pu faire de bien aujourd'hui. Pardon pour ce que je n'ai pas bien fait. Veille sur moi et sur ceux que j'aime pendant la nuit. Amen."},
   {name:"Prière à l'ange gardien", avatar:"👼", ref:"Prière traditionnelle des enfants", summary:"Ange de Dieu, qui es mon gardien, puisque le ciel m'a confié à toi, aujourd'hui, éclaire-moi, garde-moi, conduis-moi. Amen."},
   {name:"Le Je vous salue Marie expliqué aux enfants", avatar:"🌹", ref:"Pour prier avec les tout-petits", summary:"On dit bonjour à Marie, la maman de Jésus, comme on dirait bonjour à une maman qu'on aime beaucoup. On lui demande de prier pour nous, comme une grande sœur qui nous aide. Texte : « Je vous salue Marie, pleine de grâce... »"},
-  {name:"Prière avant un examen ou une difficulté", avatar:"✏️", ref:"Pour les enfants et les jeunes", summary:"Mon Dieu, aide-moi à faire de mon mieux aujourd'hui. Donne-moi du courage si j'ai peur, et de la patience si c'est difficile. Quoi qu'il arrive, je sais que tu m'aimes. Amen."}
+  {name:"Prière avant un examen ou une difficulté", avatar:"✏️", ref:"Pour les enfants et les jeunes", summary:"Mon Dieu, aide-moi à faire de mon mieux aujourd'hui. Donne-moi du courage si j'ai peur, et de la patience si c'est difficile. Quoi qu'il arrive, je sais que tu m'aimes. Amen."},
+  {name:"Prière pour les jeunes", avatar:"🧑‍🎓", ref:"Pour celles et ceux qui cherchent leur chemin", summary:"Seigneur, tu me connais mieux que je ne me connais moi-même. Aide-moi à grandir sans me perdre, à faire mes propres choix sans oublier qui je suis pour toi. Donne-moi le courage de rester fidèle à mes convictions même quand tout le monde autour de moi fait autrement. Mets sur ma route de vraies amitiés, et garde en moi l'espérance, surtout dans les moments où je doute de ma valeur. Amen."}
 ];
 
 /* ---------- parcours guidé sur 7 jours ---------- */
@@ -3859,7 +3860,7 @@ let ROSARY_AUDIO_PLAYING = null;
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
-  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'} ],
+  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
   devotions: [ {key:'prieres', label:'📿 Prières'}, {key:'chapelet', label:'🔗 Chapelet'}, {key:'misericorde', label:'❤️ Miséricorde'}, {key:'chemin-croix', label:'✝️ Chemin de croix'}, {key:'lectio', label:'📕 Lectio Divina'}, {key:'confession', label:'🕊️ Confession'}, {key:'famille', label:'👨‍👩‍👧 En famille'}, {key:'armure', label:'🛡️ Armure de Dieu'}, {key:'prieres-combat', label:'⚔️ Prières de combat'}, {key:'temoins', label:'🕯️ Témoins qui ont tenu bon'}, {key:'meditations-combat', label:'💭 Méditations de combat'}, {key:'versets-armure', label:'🔥 Versets de force'} ],
   ecritures: [ {key:'psaumes', label:'📜 Psaumes'}, {key:'bible', label:'👑 Bible & Histoire'}, {key:'bible-lecture', label:'📗 Lire la Bible'}, {key:'recits', label:'🌍 Récits fondateurs'}, {key:'reperes', label:'📋 Repères'}, {key:'memoriser', label:'🧠 Mémoriser'} ],
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
@@ -4021,7 +4022,8 @@ const PRIER_SUBNAV_GROUPS = [
   {label:'☀️ Chaque jour', keys:['textes-du-jour','office','laudes','tierce','midi','sexte','none','vepres','compline','angelus','examen']},
   {label:'🕯️ Parcours & neuvaines', keys:['neuvaines','careme40','guides']},
   {label:'✍️ Mes prières', keys:['mes-prieres']},
-  {label:'🤝 Pour moi et les autres', keys:['intentions','groupe','selon-etat']}
+  {label:'🤝 Pour moi et les autres', keys:['intentions','groupe','selon-etat']},
+  {label:'🪔 Prier autrement', keys:['autrement']}
 ];
 const DEVOTIONS_SUBNAV_GROUPS = [
   {label:'📿 Prières & dévotions', keys:['prieres','chapelet','misericorde','chemin-croix','lectio','confession','famille']},
@@ -4956,7 +4958,8 @@ const PRIER_HUB_CATEGORIES = [
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
   {label:'Pour moi et les autres', desc:'Intentions, groupe de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B'},
   {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58'},
-  {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions', sub:'accueil-devotions'}, color:'#4A3D6B'}
+  {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions', sub:'accueil-devotions'}, color:'#4A3D6B'},
+  {label:'Prier autrement', desc:'5 minutes, méditer, pour les jeunes, avant un examen, dans le silence...', icon:'🪔', goto:'autrement', color:'#3F5E50'}
 ];
 function renderPrierHub(){
   const html = `
@@ -4980,6 +4983,93 @@ function renderPrierHub(){
       const cat = PRIER_HUB_CATEGORIES[parseInt(card.dataset.hubIndex,10)];
       if(cat && cat.cross){ goTo(cat.cross.primary, cat.cross.sub); }
       else { SUBTAB.prier = card.dataset.hubGoto; render(); }
+    };
+  });
+}
+
+/* ================= prier autrement : moments courts, bougie + silence ================= */
+/* Chaque entrée s'ouvre par une interface "bougie" (openTextCover, thème candle)
+   affichant une courte phrase à méditer avant d'entrer dans le contenu lui-même —
+   cf. demande : "une interface avec une bougie qui s'allume et les phrases à
+   méditer requises pour les parties concernées". */
+const QUICK_PRAYER_ITEMS = [
+  {
+    key:'cinq-minutes', icon:'🕯️', label:'Prier 5 minutes',
+    desc:"Un parcours court : verset, psaume, examen éclair et intention — pour prier sans avoir à choisir où aller.",
+    phrase:"Seigneur, je m'arrête quelques instants pour te retrouver. Ouvre mon cœur à ce que tu veux me dire aujourd'hui.",
+    open(){ SUBTAB.prier = 'office-eclair'; OFFICE_STATE = null; render(); }
+  },
+  {
+    key:'mediter', icon:'🤍', label:'Méditer quelques minutes',
+    desc:"Un temps de silence, sans parole, pour laisser Dieu agir en vous.",
+    phrase:"Seigneur, je me tais. Que ton silence parle plus fort que tous mes mots.",
+    open(){ SUBTAB.prier = 'autrement'; render(); openPrayerTimer(5); }
+  },
+  {
+    key:'jeunes', icon:'🧑‍🎓', label:'Prière pour les jeunes',
+    desc:"Pour celles et ceux qui cherchent leur chemin et affermissent leur foi.",
+    phrase:"Seigneur, tu me connais mieux que je ne me connais moi-même.",
+    open(){
+      const idx = PRIERES_ENFANTS.findIndex(e=>e.name==="Prière pour les jeunes");
+      PRIMARY = 'devotions'; SUBTAB.devotions = 'famille';
+      ENTRY_OPEN = {compKey:'prier:famille', groupId:'famille', idx: idx>=0?idx:0};
+      render();
+    }
+  },
+  {
+    key:'examen', icon:'📝', label:'Pour un examen',
+    desc:"Pour se présenter à une épreuve avec calme et confiance.",
+    phrase:"Seigneur, tu connais tout le travail que j'ai fourni, et tu connais aussi mes doutes en cet instant.",
+    open(){
+      const group = PRIERES.find(g=>g.id==='prieres-situations');
+      const idx = group ? group.entries.findIndex(e=>e.name==='Avant un examen') : 0;
+      PRIMARY = 'devotions'; SUBTAB.devotions = 'prieres'; GROUP_SEL['prier:prieres'] = 'prieres-situations';
+      ENTRY_OPEN = {compKey:'prier:prieres', groupId:'prieres-situations', idx: idx>=0?idx:0};
+      render();
+    }
+  },
+  {
+    key:'silence', icon:'🌙', label:'Prier dans le silence',
+    desc:"Un temps de silence sans bruit, sans distraction, pour se rendre présent à Dieu — choisissez votre durée.",
+    phrase:"Installez-vous, respirez, et laissez le silence faire sa part.",
+    open(){ SUBTAB.prier = 'autrement'; render(); }
+  }
+];
+function renderPrierAutrement(){
+  let html = `<h2 class="section-title">🪔 Prier autrement</h2>
+    <p class="section-desc">Des moments courts pour prier différemment — chacun s'ouvre par un temps de recueillement, bougie allumée.</p>
+    <div class="rubric-list">${QUICK_PRAYER_ITEMS.filter(it=>it.key!=='silence').map(it=>`
+      <button type="button" class="rubric-row" data-quick-prayer="${it.key}">
+        <span class="rubric-row-icon" style="background:#3F5E50;">${it.icon}</span>
+        <span class="rubric-row-text">
+          <span class="rubric-row-title">${it.label}</span>
+          <span class="rubric-row-desc">${it.desc}</span>
+        </span>
+        <span class="rubric-row-chevron">›</span>
+      </button>`).join('')}</div>
+    <div class="card" style="text-align:center; border-left:4px solid var(--gold); margin-top:14px;">
+      <p class="eyebrow" style="color:var(--gold);">🌙 Prier dans le silence</p>
+      <p class="section-desc" style="margin:2px 0 10px;">Choisissez votre durée pour un temps de silence sans distraction.</p>
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" data-silence-min="3">3 min</button>
+        <button class="btn btn-ghost btn-sm" data-silence-min="5">5 min</button>
+        <button class="btn btn-ghost btn-sm" data-silence-min="10">10 min</button>
+        <button class="btn btn-ghost btn-sm" data-silence-min="15">15 min</button>
+        <button class="btn btn-ghost btn-sm" data-silence-min="20">20 min</button>
+      </div>
+    </div>`;
+  document.getElementById('screen').innerHTML = html;
+  document.querySelectorAll('[data-quick-prayer]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const item = QUICK_PRAYER_ITEMS.find(it=>it.key===btn.dataset.quickPrayer);
+      if(item) openTextCover('candle', item.label, item.phrase, item.open);
+    };
+  });
+  document.querySelectorAll('[data-silence-min]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const mins = parseInt(btn.dataset.silenceMin,10);
+      const silenceItem = QUICK_PRAYER_ITEMS.find(it=>it.key==='silence');
+      openTextCover('candle', silenceItem.label, silenceItem.phrase, ()=> openPrayerTimer(mins));
     };
   });
 }
@@ -14688,6 +14778,8 @@ function renderScreen(){
     if(sub === 'angelus') return renderAngelus();
     if(sub === 'examen') return renderExamen();
     if(sub === 'guides') return renderGuides();
+    if(sub === 'autrement') return renderPrierAutrement();
+    if(sub === 'office-eclair') return renderOfficeDuJour();
   }
   if(PRIMARY === 'devotions'){
     const sub = SUBTAB.devotions || 'accueil-devotions';
