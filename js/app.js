@@ -3489,7 +3489,7 @@ function wireCaremeCommunityBlock(onChange){
       membersWrap.innerHTML = list.slice().sort((a,b)=>(b.completedCount||0)-(a.completedCount||0)).map(m=>`
         <div class="rubric-row" style="cursor:default;">
           <div class="entry-avatar" style="width:32px;height:32px;font-size:14px;">${m.id===CAREME_MEMBER_ID?'🕯️':'🙏'}</div>
-          <div class="rubric-row-text"><span class="rubric-row-title">${m.name}${m.id===CAREME_MEMBER_ID?' (vous)':''}</span><span class="rubric-row-desc">${m.completedCount||0} jour(s) de Carême · ${m.croixCount||0} chemin(s) de croix</span></div>
+          <div class="rubric-row-text"><span class="rubric-row-title">${escapeHtml(m.name)}${m.id===CAREME_MEMBER_ID?' (vous)':''}</span><span class="rubric-row-desc">${m.completedCount||0} jour(s) de Carême · ${m.croixCount||0} chemin(s) de croix</span></div>
         </div>`).join('');
     });
   }
@@ -4227,7 +4227,7 @@ function renderWelcomeSplash(){
       </div>
       <h1 class="welcome-splash-title">Lumen</h1>
       <p class="welcome-splash-tagline">Une lumière pour chaque jour</p>
-      <p class="welcome-splash-text">${saluTime}${USER_NAME ? ', <b>'+USER_NAME+'</b>' : ''} ✦<br>
+      <p class="welcome-splash-text">${saluTime}${USER_NAME ? ', <b>'+escapeHtml(USER_NAME)+'</b>' : ''} ✦<br>
       Lumen est un espace pour prier, lire la Parole, suivre une neuvaine, et vous recueillir — à votre rythme, chaque jour.</p>
       <button class="btn btn-ghost welcome-splash-video-btn" id="welcome-audio-btn" style="width:100%; max-width:280px;">▶️ Revoir la démo</button>
       <button class="btn btn-primary" id="welcome-enter-btn" style="width:100%; max-width:280px;">Entrer →</button>
@@ -4323,7 +4323,7 @@ function homePage1HTML(){
         <button class="btn btn-ghost btn-sm" id="home-quick-logout-btn" title="Se déconnecter">🚪 Déconnexion</button>
       </div>` : ''}
       ${dayIsFeast ? `<p class="home-plain-date">✦ Fête de ${dayFeastSaint.name}</p>` : ''}
-      <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+USER_NAME : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
+      <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+escapeHtml(USER_NAME) : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
       <p class="home-plain-sub">${t('homeSubtitle')}.</p>
     </div>
     ${missedJourneys.length ? `<div class="card home-journey-nudge-card" id="home-journey-nudge-card" style="border-left:4px solid var(--gold); margin-bottom:14px; cursor:pointer;" data-goto-primary="${missedJourneys[0].primary}" data-goto-sub="${missedJourneys[0].sub}">
@@ -12330,7 +12330,7 @@ function renderMemorial(){
   } else {
     html += `<div class="grid">${MEMORIAL.map(m=>`
       <div class="card memorial-card">
-        <span class="memorial-name">🕯️ ${m.name}</span>
+        <span class="memorial-name">🕯️ ${escapeHtml(m.name)}</span>
         <button class="icon-btn" data-del-memorial="${m.id}">🗑</button>
       </div>`).join('')}</div>
       <div class="card" style="margin-top:14px;">
@@ -13883,7 +13883,7 @@ function renderReconfort(){
       <h2 class="section-title" style="margin:0;">🕊️ Réconfort guidé</h2>
       <button class="btn btn-ghost btn-sm" id="reconfort-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button>
     </div>
-      <p class="section-desc">Dites-moi comment vous vous sentez${USER_NAME?', '+USER_NAME:''}, et je vous propose un verset, une prière et un moment pour souffler — avec une voix qui vous les lit, et une ambiance sonore apaisante si vous le souhaitez.</p>
+      <p class="section-desc">Dites-moi comment vous vous sentez${USER_NAME?', '+escapeHtml(USER_NAME):''}, et je vous propose un verset, une prière et un moment pour souffler — avec une voix qui vous les lit, et une ambiance sonore apaisante si vous le souhaitez.</p>
       <div class="etat-grid">${ETATS_PRIERE.map(e=>
         `<button class="etat-btn" data-etat="${e.key}"><span class="etat-emoji">${e.emoji}</span><span>${e.label}</span></button>`
       ).join('')}</div>`;
