@@ -172,7 +172,7 @@ function notifyUsageMomentum(){
       const stats = USAGE_STATS_CACHE;
       if(!stats || !stats.today || stats.today < 2) return;
       localStorage.setItem('lumen_usage_nudge_date', t);
-      showToast(`🙏 ${stats.today.toLocaleString('fr-FR')} personnes ont aussi prié aujourd'hui avec Lumen`);
+      showUsageSpotlight(stats.today);
     }, 2600);
   }catch(e){}
 }
@@ -203,6 +203,35 @@ function showToast(message){
   el.classList.add('show');
   clearTimeout(TOAST_HIDE_TIMER);
   TOAST_HIDE_TIMER = setTimeout(()=> el.classList.remove('show'), 2200);
+}
+
+/* Message mis en valeur (compteur d'usage) : contrairement au toast discret
+   ci-dessus, celui-ci s'affiche dans une fenêtre bien visible, au centre de
+   l'écran, pour faire ressortir le nombre de personnes qui prient avec Lumen.
+   Apparaît avec une légère mise à l'échelle, reste quelques secondes, puis
+   disparaît tout seul ; une touche (n'importe où) la ferme aussi plus tôt. */
+let USAGE_SPOTLIGHT_TIMER = null;
+function showUsageSpotlight(count){
+  document.getElementById('usage-spotlight-backdrop')?.remove();
+  const nf = count.toLocaleString('fr-FR');
+  const backdrop = document.createElement('div');
+  backdrop.id = 'usage-spotlight-backdrop';
+  backdrop.className = 'usage-spotlight-backdrop';
+  backdrop.innerHTML = `
+    <div class="usage-spotlight-card">
+      <span class="usage-spotlight-icon">🙏</span>
+      <span class="usage-spotlight-num">${nf}</span>
+      <p class="usage-spotlight-text">personne${count>1?'s':''} ${count>1?'ont':'a'} aussi prié aujourd'hui avec Lumen</p>
+    </div>`;
+  (document.getElementById('app') || document.body).appendChild(backdrop);
+  const hide = ()=>{
+    backdrop.classList.remove('show');
+    setTimeout(()=> backdrop.remove(), 400);
+  };
+  backdrop.onclick = hide;
+  requestAnimationFrame(()=> backdrop.classList.add('show'));
+  clearTimeout(USAGE_SPOTLIGHT_TIMER);
+  USAGE_SPOTLIGHT_TIMER = setTimeout(hide, 3200);
 }
 
 /* Échappement HTML pour tout texte saisi par une personne (intention, prénom,
@@ -4398,11 +4427,13 @@ function openWelcomeVideoModal(){
   document.getElementById('video-modal-overlay').classList.remove('hidden');
 }
 function renderHome(){
+  const showSwipeHint = HOME_PAGE_IDX === 0 && !localStorage.getItem('lumen_seen_home_page2');
   document.getElementById('screen').innerHTML = `
     <div class="home-carousel" id="home-carousel">
       <div class="home-carousel-page">${homePage1HTML()}</div>
       <div class="home-carousel-page">${homePage2HTML()}</div>
     </div>
+    ${showSwipeHint ? `<div class="home-swipe-hint" id="home-swipe-hint">Glissez pour voir plus <span class="home-swipe-hint-arrow">›</span></div>` : ''}
     <div class="home-carousel-dots" id="home-carousel-dots">
       <span class="hcd ${HOME_PAGE_IDX===0?'active':''}" data-panel="0" aria-label="Page 1"></span>
       <span class="hcd ${HOME_PAGE_IDX===1?'active':''}" data-panel="1" aria-label="Page 2"></span>
@@ -4419,15 +4450,23 @@ function renderHome(){
   if(homeCarousel){
     const dots = document.querySelectorAll('#home-carousel-dots .hcd');
     if(HOME_PAGE_IDX) homeCarousel.scrollLeft = HOME_PAGE_IDX * homeCarousel.clientWidth;
+    const markPage2Seen = ()=>{
+      if(localStorage.getItem('lumen_seen_home_page2')) return;
+      localStorage.setItem('lumen_seen_home_page2', '1');
+      const hint = document.getElementById('home-swipe-hint');
+      if(hint){ hint.classList.add('hide'); setTimeout(()=> hint.remove(), 400); }
+    };
     homeCarousel.onscroll = ()=>{
       const idx = Math.round(homeCarousel.scrollLeft / Math.max(1,homeCarousel.clientWidth));
       HOME_PAGE_IDX = idx;
       dots.forEach((d,i)=> d.classList.toggle('active', i===idx));
+      if(idx===1) markPage2Seen();
     };
     dots.forEach(d=>{
       d.onclick = ()=>{
         const idx = parseInt(d.dataset.panel,10);
         homeCarousel.scrollTo({left: idx*homeCarousel.clientWidth, behavior:'smooth'});
+        if(idx===1) markPage2Seen();
       };
     });
   }
