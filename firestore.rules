@@ -42,5 +42,37 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+    /* Compteur d'usage ("X personnes ont prié avec Lumen cette semaine"),
+       affiché à l'accueil et en message de renforcement après une prière.
+       Un seul document, créé automatiquement par le premier appareil qui
+       écrit, puis mis à jour par transaction à chaque nouvel appareil/jour.
+       Lecture et écriture ouvertes à toute session (même invité) tant
+       qu'elle est passée par la connexion anonyme "contenu partagé" — pas
+       de données personnelles ici, seulement des compteurs. Le total ne
+       peut qu'augmenter d'exactement 1 par écriture, pour éviter qu'une
+       requête bricolée depuis la console du navigateur ne gonfle le
+       chiffre d'un coup. */
+    match /stats/usage {
+      allow get: if request.auth != null;
+      allow list: if false;
+      allow delete: if false;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['total','today','todayDate','week','weekStart'])
+        && request.resource.data.total == 1
+        && request.resource.data.today == 1
+        && request.resource.data.week == 1
+        && request.resource.data.todayDate is string
+        && request.resource.data.weekStart is string;
+      allow update: if request.auth != null
+        && request.resource.data.keys().hasOnly(['total','today','todayDate','week','weekStart'])
+        && request.resource.data.total is int
+        && request.resource.data.today is int
+        && request.resource.data.week is int
+        && request.resource.data.todayDate is string
+        && request.resource.data.weekStart is string
+        && request.resource.data.total == resource.data.total + 1
+        && request.resource.data.today >= 1 && request.resource.data.today <= request.resource.data.total
+        && request.resource.data.week >= 1 && request.resource.data.week <= request.resource.data.total;
+    }
   }
 }

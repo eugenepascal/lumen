@@ -97,6 +97,86 @@ async function sharedSet(key, value){
     return true;
   }catch(e){ console.warn('sharedSet', key, e); return false; }
 }
+
+/* ---------- Compteur d'usage ("preuve sociale") ---------- */
+/* Un compteur honnête, pas une simulation : chaque appareil s'annonce au plus
+   une fois par jour civil (UTC) dans un document Firestore partagé
+   (stats/usage, via l'appli "contenu partagé" déjà connectée en anonyme pour
+   tout le monde, invité ou non), via une transaction qui incrémente un total
+   cumulé ainsi que des compteurs "aujourd'hui" et "cette semaine" qui se
+   réinitialisent tout seuls au changement de jour/semaine. Démarre à 0 au
+   déploiement de cette fonctionnalité : les chiffres grandissent avec l'usage
+   réel à partir de maintenant, ils ne rejouent pas l'historique d'avant. */
+let USAGE_STATS_CACHE = null;
+function isoWeekStartStr(dateStr){
+  const d = new Date(dateStr+'T00:00:00Z');
+  const day = d.getUTCDay(); // 0=dimanche … 6=samedi
+  const diffToMonday = (day===0) ? -6 : (1-day);
+  d.setUTCDate(d.getUTCDate()+diffToMonday);
+  return d.toISOString().slice(0,10);
+}
+async function bumpUsageStats(){
+  try{
+    const ok = await ensureSharedAuth();
+    if(!ok) return null;
+    const ref = sharedFbDb.collection('stats').doc('usage');
+    const todayStr = new Date().toISOString().slice(0,10);
+    if(localStorage.getItem('lumen_usage_counted_date') === todayStr){
+      const snap = await ref.get();
+      USAGE_STATS_CACHE = snap.exists ? snap.data() : null;
+      refreshUsageBanners();
+      return USAGE_STATS_CACHE;
+    }
+    const weekStartStr = isoWeekStartStr(todayStr);
+    const data = await sharedFbDb.runTransaction(async (tx)=>{
+      const snap = await tx.get(ref);
+      const d = snap.exists ? snap.data() : null;
+      const newTotal = (d && typeof d.total === 'number' ? d.total : 0) + 1;
+      const newToday = (d && d.todayDate === todayStr) ? (d.today||0) + 1 : 1;
+      const newWeek = (d && d.weekStart === weekStartStr) ? (d.week||0) + 1 : 1;
+      const next = { total:newTotal, today:newToday, todayDate:todayStr, week:newWeek, weekStart:weekStartStr };
+      if(d) tx.update(ref, next); else tx.set(ref, next);
+      return next;
+    });
+    localStorage.setItem('lumen_usage_counted_date', todayStr);
+    USAGE_STATS_CACHE = data;
+    refreshUsageBanners();
+    return data;
+  }catch(e){ console.warn('Compteur d\'usage indisponible :', e); return null; }
+}
+/* Remet à jour le bandeau d'accueil dès que le compteur répond (aller-retour
+   réseau après le premier rendu) — sans ça il resterait vide jusqu'au
+   prochain changement d'écran. */
+function refreshUsageBanners(){
+  const el = document.getElementById('home-usage-banner');
+  if(el) el.outerHTML = homeUsageBannerHTML();
+}
+function homeUsageBannerHTML(){
+  if(!USAGE_STATS_CACHE || !USAGE_STATS_CACHE.week || USAGE_STATS_CACHE.week < 2) return '<div id="home-usage-banner"></div>';
+  const n = USAGE_STATS_CACHE.week;
+  const nf = n.toLocaleString('fr-FR');
+  return `<div class="card home-usage-banner" id="home-usage-banner" style="margin:0 0 14px; text-align:center; border-left:4px solid var(--wine);">
+    <p class="entry-detail-text" style="margin:0;">🙏 <strong>${nf}</strong> personnes ont prié avec Lumen cette semaine — rejoignez-les.</p>
+  </div>`;
+}
+/* Message de renforcement après une prière terminée (toute prière confondue,
+   via markPrayedToday) : montre que d'autres personnes prient aussi
+   aujourd'hui. Au plus une fois par jour civil par appareil, avec un léger
+   délai pour ne pas se superposer au toast propre à chaque écran
+   ("Office terminé ✦", etc.). */
+function notifyUsageMomentum(){
+  try{
+    const t = todayISO();
+    if(localStorage.getItem('lumen_usage_nudge_date') === t) return;
+    setTimeout(()=>{
+      const stats = USAGE_STATS_CACHE;
+      if(!stats || !stats.today || stats.today < 2) return;
+      localStorage.setItem('lumen_usage_nudge_date', t);
+      showToast(`🙏 ${stats.today.toLocaleString('fr-FR')} personnes ont aussi prié aujourd'hui avec Lumen`);
+    }, 2600);
+  }catch(e){}
+}
+
 try{
   fbApp = firebase.initializeApp(firebaseConfig);
   fbAuth = firebase.auth();
@@ -4351,6 +4431,7 @@ function homePage1HTML(){
       <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+escapeHtml(USER_NAME) : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
       <p class="home-plain-sub">${t('homeSubtitle')}.</p>
     </div>
+    ${homeUsageBannerHTML()}
     ${missedJourneys.length ? `<div class="card home-journey-nudge-card" id="home-journey-nudge-card" style="border-left:4px solid var(--gold); margin-bottom:14px; cursor:pointer;" data-goto-primary="${missedJourneys[0].primary}" data-goto-sub="${missedJourneys[0].sub}">
       <p class="eyebrow" style="color:var(--gold);">🕯️ Petit rappel, sans pression</p>
       <p class="entry-detail-text" style="margin:4px 0 0;">Vous n'avez pas encore continué aujourd'hui ${missedJourneys.length>1?'vos parcours en cours':'votre parcours en cours'} (${missedJourneys.map(x=>x.icon+' '+x.label).join(', ')}). Un jour manqué ne remet rien en cause — reprenez simplement quand vous êtes prêt(e).</p>
@@ -9022,6 +9103,7 @@ async function markPrayedToday(type, label){
   logActivity(type || 'priere', label || 'Prière');
   if(STREAK.lastDate === t){
     if(!PRAYED_DATES.includes(t)){ PRAYED_DATES.push(t); await savePrayedDates(PRAYED_DATES); }
+    notifyUsageMomentum();
     return;
   }
   const yest = new Date(); yest.setDate(yest.getDate()-1);
@@ -9034,6 +9116,7 @@ async function markPrayedToday(type, label){
   await savePrayedDates(PRAYED_DATES);
   checkStreakMilestone();
   checkBadges();
+  notifyUsageMomentum();
 }
 function streakCardHTML(){
   const prayedToday = STREAK.lastDate === todayISO();
@@ -15446,3 +15529,4 @@ window.addEventListener('popstate', ()=>{
 });
 
 startAuthFlow();
+bumpUsageStats();
