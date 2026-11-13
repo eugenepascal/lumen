@@ -295,7 +295,7 @@ function friendlyAuthError(err){
     // déclencher signInWithRedirect sur iOS, mais on explique quand même
     // cette erreur si elle survient malgré tout (ancienne version en cache,
     // navigateur tiers...).
-    return "La connexion a été interrompue par la protection anti-pistage de votre navigateur. Revenez à Lumen et réessayez avec « Continuer avec Google » — la connexion sans pop-up ni redirection sera utilisée automatiquement.";
+    return "La connexion a été interrompue par la protection anti-pistage de votre navigateur. Revenez à Lumen et réessayez — la connexion sans pop-up ni redirection sera utilisée automatiquement.";
   }
   return AUTH_ERROR_MESSAGES[err.code] || raw || "Une erreur est survenue.";
 }
@@ -305,6 +305,148 @@ function setAuthSubmitLoading(loading){
   const btn = document.getElementById('auth-submit-btn');
   btn.disabled = loading;
   btn.textContent = loading ? 'Un instant…' : (AUTH_MODE_TAB==='login' ? 'Se connecter' : 'Créer mon compte');
+}
+/* Connexion via un fournisseur externe (Google, Facebook...) — logique
+   commune factorisée ici pour que chaque nouveau fournisseur hérite
+   automatiquement de toutes les parades déjà mises au point pour Google
+   (PWA installée, iOS/Safari, pop-up bloquée...), sans les dupliquer ni
+   risquer de les faire diverger. */
+async function socialSignIn(provider, btnId, providerLabel){
+  clearAuthError();
+  if(!FIREBASE_READY){ authError("La connexion à Firebase n'est pas disponible dans cet environnement."); return; }
+  const btn = document.getElementById(btnId);
+  const originalLabel = btn.innerHTML;
+  /* Une fois Lumen ajoutée à l'écran d'accueil (mode « standalone », sans
+     barre d'adresse Chrome), la fenêtre pop-up du fournisseur ne communique
+     très souvent pas correctement son résultat à la fenêtre qui l'a
+     ouverte — c'est une limitation connue des PWA installées, pas un hasard
+     de cookies : ça bloque alors systématiquement, à chaque tentative. On
+     saute donc directement la pop-up dans ce cas et on utilise
+     signInWithRedirect, qui navigue dans la MÊME fenêtre (celle de la PWA)
+     vers le fournisseur puis revient sur Lumen — aucune communication
+     inter-fenêtres n'est nécessaire.
+     EXCEPTION iOS/iPadOS : tous les navigateurs y tournent sur le même
+     moteur WebKit (même « Chrome » sur iPhone/iPad), qui applique une
+     protection stricte contre le pistage (ITP) séparant le stockage de
+     chaque site. Or signInWithRedirect fait transiter la connexion par le
+     domaine de Firebase (xxx.firebaseapp.com), différent de
+     lumenapp.website : avec cette protection activée, le retour perd
+     l'état mémorisé et affiche une page d'erreur Firebase brute
+     (« missing initial state »), bloquant complètement la connexion. C'est
+     exactement l'erreur remontée en conditions réelles (avec Google). Sur
+     iOS, on garde donc la pop-up (avec son filet de sécurité de 20s), qui
+     ne dépend pas de ce passage par un autre domaine. */
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isHomeScreenMode = (
+    window.matchMedia('(display-mode: standalone)').matches
+    || window.matchMedia('(display-mode: fullscreen)').matches
+    || window.navigator.standalone === true
+  );
+  const isStandalonePWA = !isIOS && isHomeScreenMode;
+  if(isStandalonePWA){
+    btn.disabled = true;
+    try{
+      await fbAuth.signInWithRedirect(provider);
+      return; // la page va se recharger vers le fournisseur — rien d'autre à faire ici
+    }catch(e){
+      btn.disabled = false;
+      authError(friendlyAuthError(e));
+      showAuthResetOption();
+      return;
+    }
+  }
+  /* iOS + icône d'écran d'accueil (« Add to Home Screen ») : ni la pop-up
+     ni la redirection ne sont fiables ici. window.open() — utilisé en
+     interne par signInWithPopup — est bridé par WebKit dans ce contexte
+     précis (pas de barre d'onglets pour accueillir une fenêtre) et échoue
+     silencieusement un nombre de fois variable selon l'état du moteur
+     (d'où les « plusieurs tentatives » nécessaires constatées). Plutôt que
+     de retenter une pop-up qui a de bonnes chances d'échouer à nouveau
+     sans aucun signal, on propose directement et immédiatement le seul
+     chemin fiable connu : ouvrir Lumen dans Safari (où la pop-up fonctionne
+     normalement), s'y connecter, puis revenir à l'icône installée. */
+  if(isIOS && isHomeScreenMode){
+    authError(`Sur iPad/iPhone, la connexion ${providerLabel} depuis l'icône installée est limitée par Apple. Touchez le lien ci-dessous pour ouvrir Lumen dans Safari, connectez-vous avec ${providerLabel}, puis revenez à cette icône — vous serez alors connecté·e ici aussi.`);
+    showOpenInSafariOption(providerLabel);
+    return;
+  }
+  btn.disabled = true;
+  /* Garde-fou : sur certains navigateurs (cookies tiers bloqués, COOP...),
+     la communication entre la fenêtre pop-up du fournisseur et l'appli peut
+     être silencieusement coupée — signInWithPopup() ne se résout alors
+     JAMAIS ni en succès ni en échec, et la personne reste bloquée sur
+     l'écran de connexion sans aucun signal, même après avoir choisi son
+     compte. Passé 20 secondes, on prévient et on propose une alternative,
+     sans empêcher la connexion d'aboutir ensuite en arrière-plan si jamais
+     elle finit par passer. */
+  let settled = false;
+  const popupTimeout = setTimeout(()=>{
+    if(settled) return;
+    btn.disabled = false; btn.innerHTML = originalLabel;
+    authError(`La connexion ${providerLabel} met plus de temps que prévu — c'est souvent dû à un blocage des cookies tiers par le navigateur. Si une fenêtre ${providerLabel} est encore ouverte, terminez-y la connexion ; sinon réessayez, ou utilisez la connexion par email ci-dessous.`);
+    showAuthResetOption();
+  }, 20000);
+  try{
+    await fbAuth.signInWithPopup(provider);
+    settled = true; clearTimeout(popupTimeout);
+  }catch(e){
+    settled = true; clearTimeout(popupTimeout);
+    btn.disabled = false; btn.innerHTML = originalLabel;
+    if(fbAuth.currentUser){
+      // La connexion a en réalité réussi ; seule l'écriture locale a échoué.
+      CURRENT_USER = fbAuth.currentUser;
+      window.storage = makeFirestoreShim(CURRENT_USER.uid);
+      document.getElementById('auth-screen').classList.add('hidden');
+      migrateGuestDataToAccount(CURRENT_USER.uid).then(startApp);
+      return;
+    }
+    /* La fenêtre pop-up du fournisseur est bloquée (ou refusée) par le
+       navigateur : plutôt que de demander à la personne d'aller changer un
+       réglage, on bascule automatiquement sur signInWithRedirect — qui
+       navigue simplement vers la page du fournisseur puis revient sur
+       Lumen, sans jamais ouvrir de pop-up. Le retour est ensuite géré par
+       startAuthFlow() via onAuthStateChanged, comme une connexion normale.
+       ATTENTION : sur iOS/iPadOS, signInWithRedirect casse à cause du
+       stockage partitionné de Safari/WebKit (voir plus haut) — il ne faut
+       donc JAMAIS retomber sur ce repli pour iOS, même ici dans la gestion
+       d'erreur de la pop-up. C'est exactement ce second chemin, oublié la
+       première fois, qui reproduisait silencieusement le bug "missing
+       initial state" sur l'iPad de l'utilisatrice/eur (avec Google). */
+    if(!isIOS && (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment')){
+      try{
+        await fbAuth.signInWithRedirect(provider);
+        return; // la page va se recharger vers le fournisseur — rien d'autre à faire ici
+      }catch(e2){
+        authError(friendlyAuthError(e2));
+        showAuthResetOption();
+      }
+    } else if(isIOS && (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment')){
+      authError(`La fenêtre de connexion ${providerLabel} n'a pas pu s'ouvrir. Sur iPad/iPhone, vérifiez que les pop-up ne sont pas bloquées pour Lumen (Réglages → Safari → Bloquer les fenêtres pop-up), puis réessayez « Continuer avec ${providerLabel} » — ou utilisez la connexion par email ci-dessous.`);
+      showAuthResetOption();
+    } else if(e.code === 'auth/popup-closed-by-user'){
+      /* Cette erreur ne veut pas forcément dire que la personne a fermé la
+         fenêtre volontairement : sur de plus en plus de navigateurs
+         (cookies tiers bloqués par défaut, notamment), la fenêtre se ferme
+         toute seule juste après avoir choisi un compte, sans que la
+         connexion n'ait pu aboutir. On explique ce qui s'est passé et on
+         propose une alternative plus fiable (sans pop-up), sans forcer la
+         redirection pour ne pas gêner les personnes qui ont vraiment fermé
+         la fenêtre exprès. */
+      authError(`La fenêtre de connexion ${providerLabel} s'est fermée avant la fin. Si vous ne l'avez pas fermée vous-même, c'est probablement votre navigateur qui bloque les cookies tiers — touchez à nouveau « Continuer avec ${providerLabel} », ou utilisez la connexion par email ci-dessous.`);
+      showAuthResetOption();
+    } else if(e.code === 'auth/account-exists-with-different-credential'){
+      /* Spécifique au multi-fournisseurs (Google ET Facebook) : si la
+         personne a déjà un compte avec la même adresse email mais via un
+         autre fournisseur, Firebase refuse la connexion pour éviter de
+         fusionner silencieusement deux comptes distincts. */
+      authError(`Un compte existe déjà avec cette adresse email, mais via un autre mode de connexion (Google, email...). Reconnectez-vous avec ce mode-là — vos données seront alors les mêmes.`);
+      showAuthResetOption();
+    } else {
+      authError(friendlyAuthError(e));
+      showAuthResetOption();
+    }
+  }
 }
 function wireAuthScreen(){
   /* En mode création de compte, autocomplete="new-password" indique aux
@@ -367,140 +509,12 @@ function wireAuthScreen(){
     }
     setAuthSubmitLoading(false);
   };
-  document.getElementById('auth-google-btn').onclick = async ()=>{
-    clearAuthError();
-    if(!FIREBASE_READY){ authError("La connexion à Firebase n'est pas disponible dans cet environnement."); return; }
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const googleBtn = document.getElementById('auth-google-btn');
-    const originalLabel = googleBtn.innerHTML;
-    /* Une fois Lumen ajoutée à l'écran d'accueil (mode « standalone », sans
-       barre d'adresse Chrome), la fenêtre pop-up Google ne communique très
-       souvent pas correctement son résultat à la fenêtre qui l'a ouverte —
-       c'est une limitation connue des PWA installées, pas un hasard de
-       cookies : ça bloque alors systématiquement, à chaque tentative. On
-       saute donc directement la pop-up dans ce cas et on utilise
-       signInWithRedirect, qui navigue dans la MÊME fenêtre (celle de la
-       PWA) vers Google puis revient sur Lumen — aucune communication
-       inter-fenêtres n'est nécessaire.
-       EXCEPTION iOS/iPadOS : tous les navigateurs y tournent sur le même
-       moteur WebKit (même « Chrome » sur iPhone/iPad), qui applique une
-       protection stricte contre le pistage (ITP) séparant le stockage de
-       chaque site. Or signInWithRedirect fait transiter la connexion par
-       le domaine de Firebase (xxx.firebaseapp.com), différent de
-       lumenapp.website : avec cette protection activée, le retour perd
-       l'état mémorisé et affiche une page d'erreur Firebase brute
-       (« missing initial state »), bloquant complètement la connexion.
-       C'est exactement l'erreur remontée en conditions réelles. Sur iOS,
-       on garde donc la pop-up (avec son filet de sécurité de 20s), qui ne
-       dépend pas de ce passage par un autre domaine. */
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isHomeScreenMode = (
-      window.matchMedia('(display-mode: standalone)').matches
-      || window.matchMedia('(display-mode: fullscreen)').matches
-      || window.navigator.standalone === true
-    );
-    const isStandalonePWA = !isIOS && isHomeScreenMode;
-    if(isStandalonePWA){
-      googleBtn.disabled = true;
-      try{
-        await fbAuth.signInWithRedirect(provider);
-        return; // la page va se recharger vers Google — rien d'autre à faire ici
-      }catch(e){
-        googleBtn.disabled = false;
-        authError(friendlyAuthError(e));
-        showAuthResetOption();
-        return;
-      }
-    }
-    /* iOS + icône d'écran d'accueil (« Add to Home Screen ») : ni la pop-up
-       ni la redirection ne sont fiables ici. window.open() — utilisé en
-       interne par signInWithPopup — est bridé par WebKit dans ce contexte
-       précis (pas de barre d'onglets pour accueillir une fenêtre) et
-       échoue silencieusement un nombre de fois variable selon l'état du
-       moteur (d'où les « plusieurs tentatives » nécessaires constatées).
-       Plutôt que de retenter une pop-up qui a de bonnes chances d'échouer
-       à nouveau sans aucun signal, on propose directement et immédiatement
-       le seul chemin fiable connu : ouvrir Lumen dans Safari (où la
-       pop-up fonctionne normalement), s'y connecter, puis revenir à
-       l'icône installée. */
-    if(isIOS && isHomeScreenMode){
-      authError("Sur iPad/iPhone, la connexion Google depuis l'icône installée est limitée par Apple. Touchez le lien ci-dessous pour ouvrir Lumen dans Safari, connectez-vous avec Google, puis revenez à cette icône — vous serez alors connecté·e ici aussi.");
-      showOpenInSafariOption();
-      return;
-    }
-    googleBtn.disabled = true;
-    /* Garde-fou : sur certains navigateurs (cookies tiers bloqués, COOP...),
-       la communication entre la fenêtre pop-up Google et l'appli peut être
-       silencieusement coupée — signInWithPopup() ne se résout alors JAMAIS
-       ni en succès ni en échec, et la personne reste bloquée sur l'écran de
-       connexion sans aucun signal, même après avoir choisi son compte.
-       Passé 20 secondes, on prévient et on propose une alternative, sans
-       empêcher la connexion d'aboutir ensuite en arrière-plan si jamais
-       elle finit par passer. */
-    let settled = false;
-    const popupTimeout = setTimeout(()=>{
-      if(settled) return;
-      googleBtn.disabled = false; googleBtn.innerHTML = originalLabel;
-      authError("La connexion Google met plus de temps que prévu — c'est souvent dû à un blocage des cookies tiers par le navigateur. Si une fenêtre Google est encore ouverte, terminez-y la connexion ; sinon réessayez, ou utilisez la connexion par email ci-dessous.");
-      showAuthResetOption();
-    }, 20000);
-    try{
-      await fbAuth.signInWithPopup(provider);
-      settled = true; clearTimeout(popupTimeout);
-    }catch(e){
-      settled = true; clearTimeout(popupTimeout);
-      googleBtn.disabled = false; googleBtn.innerHTML = originalLabel;
-      if(fbAuth.currentUser){
-        // La connexion Google a en réalité réussi ; seule l'écriture locale a échoué.
-        CURRENT_USER = fbAuth.currentUser;
-        window.storage = makeFirestoreShim(CURRENT_USER.uid);
-        document.getElementById('auth-screen').classList.add('hidden');
-        migrateGuestDataToAccount(CURRENT_USER.uid).then(startApp);
-        return;
-      }
-      /* La fenêtre pop-up Google est bloquée (ou refusée) par le navigateur :
-         plutôt que de demander à la personne d'aller changer un réglage,
-         on bascule automatiquement sur signInWithRedirect — qui navigue
-         simplement vers la page Google puis revient sur Lumen, sans jamais
-         ouvrir de pop-up. Le retour est ensuite géré par startAuthFlow()
-         via onAuthStateChanged, comme une connexion normale.
-         ATTENTION : sur iOS/iPadOS, signInWithRedirect casse à cause du
-         stockage partitionné de Safari/WebKit (voir plus haut) — il ne
-         faut donc JAMAIS retomber sur ce repli pour iOS, même ici dans
-         la gestion d'erreur de la pop-up. C'est exactement ce second
-         chemin, oublié la première fois, qui reproduisait silencieusement
-         le bug "missing initial state" sur l'iPad de l'utilisatrice/eur. */
-      if(!isIOS && (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment')){
-        try{
-          await fbAuth.signInWithRedirect(provider);
-          return; // la page va se recharger vers Google — rien d'autre à faire ici
-        }catch(e2){
-          authError(friendlyAuthError(e2));
-          showAuthResetOption();
-        }
-      } else if(isIOS && (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request' || e.code === 'auth/operation-not-supported-in-this-environment')){
-        authError("La fenêtre de connexion Google n'a pas pu s'ouvrir. Sur iPad/iPhone, vérifiez que les pop-up ne sont pas bloquées pour Lumen (Réglages → Safari → Bloquer les fenêtres pop-up), puis réessayez « Continuer avec Google » — ou utilisez la connexion par email ci-dessous.");
-        showAuthResetOption();
-      } else if(e.code === 'auth/popup-closed-by-user'){
-        /* Cette erreur ne veut pas forcément dire que la personne a fermé
-           la fenêtre volontairement : sur de plus en plus de navigateurs
-           (cookies tiers bloqués par défaut, notamment), la fenêtre Google
-           se ferme toute seule juste après avoir choisi un compte, sans
-           que la connexion n'ait pu aboutir. Jusqu'ici, ce cas précis ne
-           montrait absolument rien à l'écran — on restait silencieusement
-           bloqué sur l'écran de connexion. On explique maintenant ce qui
-           s'est passé et on propose une alternative plus fiable (sans
-           pop-up), sans forcer la redirection pour ne pas gêner les
-           personnes qui ont vraiment fermé la fenêtre exprès. */
-        authError("La fenêtre de connexion Google s'est fermée avant la fin. Si vous ne l'avez pas fermée vous-même, c'est probablement votre navigateur qui bloque les cookies tiers — touchez à nouveau « Continuer avec Google », ou utilisez la connexion par email ci-dessous.");
-        showAuthResetOption();
-      } else {
-        authError(friendlyAuthError(e));
-        showAuthResetOption();
-      }
-    }
-  };
+  document.getElementById('auth-google-btn').onclick = ()=> socialSignIn(
+    new firebase.auth.GoogleAuthProvider(), 'auth-google-btn', 'Google'
+  );
+  document.getElementById('auth-facebook-btn').onclick = ()=> socialSignIn(
+    new firebase.auth.FacebookAuthProvider(), 'auth-facebook-btn', 'Facebook'
+  );
   document.getElementById('auth-forgot-btn').onclick = async ()=>{
     clearAuthError();
     const email = document.getElementById('auth-email').value.trim();
@@ -640,8 +654,9 @@ function showAuthResetOption(){
   };
   document.getElementById('auth-form-wrap').appendChild(btn);
 }
-function showOpenInSafariOption(){
-  if(document.getElementById('auth-open-safari-link')) return;
+function showOpenInSafariOption(providerLabel){
+  const existing = document.getElementById('auth-open-safari-link');
+  if(existing) existing.remove();
   /* Un vrai lien <a target="_blank"> (plutôt qu'un window.open() en JS)
      est la façon fiable de faire sortir Safari depuis une PWA installée
      sur iOS — c'est le geste que WebKit autorise toujours, contrairement
@@ -649,7 +664,7 @@ function showOpenInSafariOption(){
   const link = document.createElement('a');
   link.id = 'auth-open-safari-link';
   link.className = 'auth-forgot-link';
-  link.textContent = '🌐 Ouvrir Lumen dans Safari pour se connecter avec Google';
+  link.textContent = `🌐 Ouvrir Lumen dans Safari pour se connecter avec ${providerLabel||'Google'}`;
   link.href = window.location.href;
   link.target = '_blank';
   link.rel = 'noopener';

@@ -2822,6 +2822,17 @@
   }
   .auth-google-btn:hover{ box-shadow:0 6px 16px rgba(0,0,0,0.14); }
   .auth-google-btn:active{ transform:scale(0.98); }
+  .auth-facebook-btn{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    background:#1877F2; border:1.5px solid #1877F2; border-radius:12px; padding:12px;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14px; color:#fff; cursor:pointer;
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-top:10px;
+  }
+  .auth-facebook-btn:hover{ box-shadow:0 6px 16px rgba(0,0,0,0.14); }
+  .auth-facebook-btn:active{ transform:scale(0.98); }
+  .auth-facebook-btn:disabled, .auth-google-btn:disabled{ opacity:0.6; cursor:default; }
   .auth-tabs{ display:flex; gap:6px; margin-bottom:20px; background:var(--vellum); border-radius:10px; padding:4px; box-shadow:inset 0 1px 3px rgba(0,0,0,0.06); }
   .auth-tab-btn{ flex:1; padding:9px; border:none; background:none; border-radius:8px; font-family:'Inter',sans-serif; font-weight:700; font-size:13px; color:var(--ink-soft); cursor:pointer; transition:background 0.15s ease, color 0.15s ease; }
   .auth-tab-btn.active{ background:linear-gradient(155deg, var(--wine), var(--wine-dark)); color:var(--vellum-light); box-shadow:0 3px 10px rgba(94,20,32,0.35); }
