@@ -11640,8 +11640,7 @@ const APP_GUIDE_SECTIONS = [
   {icon:'👤', title:'Mon espace', text:"Votre compte et votre parcours, un journal intérieur (carnet de grâces, souvenirs), un espace de réconfort guidé et de mémorial pour vos défunts, vos favoris, une playlist de louanges, vos statistiques, et tous les réglages de l'application."},
   {icon:'🧭', title:'Le Guide', text:"Le bouton boussole en haut de l'écran : posez-vous la question « que voulez-vous faire ? » et laissez-vous guider."},
   {icon:'🕊️', title:'Mode Recueillement', text:"Un cadre plus calme et épuré, pour un moment de prière plus profond, sans distraction visuelle."},
-  {icon:'💥', title:'Mode Bande Dessinée', text:"Un habillage plus coloré et ludique, pensé pour les plus jeunes."},
-  {icon:'📣', title:'Lecture automatique', text:"Chaque page vous est lue à voix haute dès que vous y arrivez, comme une liseuse."}
+  {icon:'💥', title:'Mode Bande Dessinée', text:"Un habillage plus coloré et ludique, pensé pour les plus jeunes."}
 ];
 let APP_GUIDE_READING = false;
 function renderAppGuide(){
@@ -14536,7 +14535,6 @@ const I18N = {
   fr: {
     refuge:'Refuge', refugeTitle:'Un lieu sûr',
     guide:'Guide', guideTitle:"Qu'aimeriez-vous faire ?",
-    autoVoice:'Voix auto', autoNarrateTitle:'Lecture automatique à chaque page',
     music:'Musique', ambianceTitle:'Ambiance sonore de fond',
     listen:'Écouter', readPageTitle:'Écouter cette page',
     search:'Chercher', searchTitle:'Rechercher',
@@ -14553,7 +14551,6 @@ const I18N = {
   en: {
     refuge:'Refuge', refugeTitle:'A safe place',
     guide:'Guide', guideTitle:'What would you like to do?',
-    autoVoice:'Auto voice', autoNarrateTitle:'Automatic reading on every page',
     music:'Music', ambianceTitle:'Background ambiance',
     listen:'Listen', readPageTitle:'Listen to this page',
     search:'Search', searchTitle:'Search',
@@ -15201,19 +15198,6 @@ function pageHelpBannerHTML(){
 }
 
 let LAST_SCREEN_KEY = '';
-let AUTO_NARRATE_MODE = false;
-let LAST_NARRATED_KEY = null;
-function maybeAutoNarrate(){
-  if(!AUTO_NARRATE_MODE) return;
-  const key = PRIMARY + '|' + (SUBTAB[PRIMARY]||'');
-  if(key === LAST_NARRATED_KEY) return;
-  LAST_NARRATED_KEY = key;
-  const titleEl = document.querySelector('#screen h2.section-title, #screen h1');
-  const descEl = document.querySelector('#screen p.section-desc');
-  const title = titleEl ? titleEl.textContent.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').trim() : '';
-  const desc = descEl ? descEl.textContent.trim() : '';
-  if(title || desc) speakText(`${title}. ${desc}`);
-}
 /* ================= accessibilité clavier ================= */
 /* Beaucoup de rubriques (lignes de liste, cartes de neuvaines, de saints, de
    favoris...) sont des <div> cliquables plutôt que des <button>, pour des
@@ -15283,7 +15267,6 @@ function render(){
     // La lecture de page (mini-lecteur global, kind:'speech') continue
     // volontairement pendant la navigation : on ne l'annule plus ici.
     LAST_SCREEN_KEY = screenKey;
-    maybeAutoNarrate();
   }
   syncReadPageIcon();
 
@@ -15422,16 +15405,6 @@ async function startApp(){
   if(recExitBtn) recExitBtn.onclick = toggleRecueillement;
   const guideBtn = document.getElementById('guide-btn');
   if(guideBtn) guideBtn.onclick = openGuide;
-  const narrateBtn = document.getElementById('auto-narrate-btn');
-  if(narrateBtn){
-    narrateBtn.onclick = ()=>{
-      AUTO_NARRATE_MODE = !AUTO_NARRATE_MODE;
-      narrateBtn.style.background = AUTO_NARRATE_MODE ? 'rgba(228,199,126,0.5)' : '';
-      showToast(AUTO_NARRATE_MODE ? '📣 Lecture automatique activée — chaque page sera présentée à voix haute' : 'Lecture automatique désactivée');
-      if(AUTO_NARRATE_MODE){ LAST_NARRATED_KEY = null; maybeAutoNarrate(); }
-      else window.speechSynthesis.cancel();
-    };
-  }
   const comicBtn = document.getElementById('comic-mode-btn');
   if(comicBtn){
     comicBtn.onclick = ()=>{
