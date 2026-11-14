@@ -546,11 +546,19 @@ async function socialSignIn(provider, btnId, providerLabel){
      silencieusement un nombre de fois variable selon l'état du moteur
      (d'où les « plusieurs tentatives » nécessaires constatées). Plutôt que
      de retenter une pop-up qui a de bonnes chances d'échouer à nouveau
-     sans aucun signal, on propose directement et immédiatement le seul
-     chemin fiable connu : ouvrir Lumen dans Safari (où la pop-up fonctionne
-     normalement), s'y connecter, puis revenir à l'icône installée. */
+     sans aucun signal, on propose d'ouvrir Lumen dans Safari (où la
+     pop-up fonctionne normalement) pour s'y connecter.
+     ATTENTION — ne pas supposer que revenir ensuite à l'icône installée
+     connecte aussi cette dernière : c'est FAUX sur iOS. Une app ajoutée à
+     l'écran d'accueil tourne dans un stockage totalement séparé de Safari
+     (cookies, localStorage, IndexedDB, Service Worker) — seule une copie
+     ponctuelle des cookies a lieu au moment de l'AJOUT de l'icône, jamais
+     après. Se connecter dans Safari ne connectera donc jamais l'icône déjà
+     installée. La seule voie fiable pour se connecter directement dans
+     l'icône est email + mot de passe (aucune pop-up ni redirection
+     requise) — d'où le renvoi vers "Mon compte" pour en définir un. */
   if(isIOS && isHomeScreenMode){
-    authError(`Sur iPad/iPhone, la connexion ${providerLabel} depuis l'icône installée est limitée par Apple. Touchez le lien ci-dessous pour ouvrir Lumen dans Safari, connectez-vous avec ${providerLabel}, puis revenez à cette icône — vous serez alors connecté·e ici aussi.`);
+    authError(`Sur iPad/iPhone, la connexion ${providerLabel} depuis l'icône installée est limitée par Apple, et se connecter dans Safari ne connecte pas l'icône (ce sont deux stockages séparés). Le plus fiable : touchez le lien ci-dessous pour ouvrir Lumen dans Safari, connectez-vous avec ${providerLabel}, puis allez dans Mon compte → Définir un mot de passe. Revenez ensuite à cette icône et connectez-vous avec votre email + ce mot de passe — ça fonctionnera directement ici.`);
     showOpenInSafariOption(providerLabel);
     return;
   }
@@ -843,12 +851,24 @@ function showOpenInSafariOption(providerLabel){
   /* Un vrai lien <a target="_blank"> (plutôt qu'un window.open() en JS)
      est la façon fiable de faire sortir Safari depuis une PWA installée
      sur iOS — c'est le geste que WebKit autorise toujours, contrairement
-     aux fenêtres ouvertes par script dans ce contexte. */
+     aux fenêtres ouvertes par script dans ce contexte.
+     IMPORTANT : si la personne a réglé un autre navigateur (Chrome…) comme
+     application par défaut sur son iPhone, un lien https:// normal ouvre
+     CE navigateur par défaut — pas Safari. Or seul Safari partage son
+     stockage (et donc la session de connexion) avec l'icône installée sur
+     l'écran d'accueil : Chrome, même sur iOS, utilise un stockage séparé.
+     Se connecter via Chrome ne connecterait alors jamais l'icône installée,
+     reproduisant exactement le symptôme « je me connecte, mais l'icône
+     reste déconnectée ». Le préfixe x-safari-https:// (non documenté
+     officiellement par Apple, mais stable et largement utilisé par les
+     éditeurs de PWA depuis l'introduction des navigateurs par défaut sur
+     iOS) force l'ouverture dans Safari lui-même, quel que soit le
+     navigateur par défaut réglé par la personne. */
   const link = document.createElement('a');
   link.id = 'auth-open-safari-link';
   link.className = 'auth-forgot-link';
   link.textContent = `🌐 Ouvrir Lumen dans Safari pour se connecter avec ${providerLabel||'Google'}`;
-  link.href = window.location.href;
+  link.href = window.location.href.replace(/^https:\/\//, 'x-safari-https://');
   link.target = '_blank';
   link.rel = 'noopener';
   document.getElementById('auth-form-wrap').appendChild(link);
@@ -869,6 +889,34 @@ function renderCompte(){
       <p class="section-desc">Vos prières, votre journal et votre progression sont sauvegardés sur ce compte et retrouvables sur n'importe quel appareil où vous vous reconnectez.</p>
       <button class="btn btn-ghost btn-sm" id="logout-btn">Se déconnecter</button>
     </div>`;
+    /* Connexion Google/Facebook sur iPhone/iPad : une fois l'icône ajoutée
+       à l'écran d'accueil, sa connexion ne peut JAMAIS être partagée avec
+       Safari — c'est une limitation de stockage de WebKit, pas un bug de
+       l'app (session, cookies et stockage local restent strictement
+       séparés entre Safari et le mode "standalone", sauf une copie unique
+       des cookies faite par iOS au moment de l'ajout à l'écran d'accueil,
+       qui ne couvre pas les connexions faites après coup). La connexion
+       email + mot de passe, elle, ne passe ni par une pop-up ni par une
+       redirection : elle fonctionne donc de façon fiable depuis l'icône
+       installée. On propose ici de lier un mot de passe au compte
+       Google/Facebook existant, pour pouvoir ensuite se reconnecter
+       directement dans l'icône, sans jamais repasser par Safari. */
+    const hasPasswordProvider = CURRENT_USER.providerData.some(p=>p.providerId==='password');
+    if(!hasPasswordProvider){
+      if(CURRENT_USER.email){
+        html += `<div class="card" id="link-password-card">
+          <p class="day-title" style="font-size:15px;">🔑 Définir un mot de passe</p>
+          <p class="section-desc" style="margin:2px 0 10px;">Vous êtes connecté·e via Google ou Facebook. Définir un mot de passe vous permettra aussi de vous connecter avec votre email directement — y compris depuis l'icône ajoutée à l'écran d'accueil sur iPhone/iPad, où la connexion Google/Facebook est limitée par Apple.</p>
+          <input type="password" id="link-password-input" placeholder="Nouveau mot de passe (6 caractères minimum)">
+          <input type="password" id="link-password-confirm" placeholder="Confirmer le mot de passe" style="margin-top:8px;">
+          <button class="btn btn-primary btn-sm" id="link-password-btn" style="margin-top:10px;">Définir ce mot de passe</button>
+        </div>`;
+      } else {
+        html += `<div class="card empty-state">Votre compte Facebook n'a pas partagé d'adresse email avec Lumen, donc un mot de passe ne peut pas être associé automatiquement. Contactez-nous si vous avez besoin de vous connecter depuis l'icône installée sur iPhone/iPad.</div>`;
+      }
+    } else {
+      html += `<div class="card empty-state">🔑 Un mot de passe est déjà défini sur ce compte — vous pouvez vous connecter avec votre email et ce mot de passe depuis n'importe où, y compris l'icône installée sur iPhone/iPad.</div>`;
+    }
   } else {
     html += `<div class="card">
       <p class="entry-detail-text">Vous utilisez Lumen sans compte : vos données restent uniquement sur cet appareil, dans ce navigateur.</p>
@@ -887,6 +935,36 @@ function renderCompte(){
   if(logoutBtn) logoutBtn.onclick = async ()=>{ await fbAuth.signOut(); window.location.reload(); };
   const loginNowBtn = document.getElementById('login-now-btn');
   if(loginNowBtn) loginNowBtn.onclick = ()=> window.location.reload();
+  const linkPasswordBtn = document.getElementById('link-password-btn');
+  if(linkPasswordBtn){
+    linkPasswordBtn.onclick = async ()=>{
+      const pwdEl = document.getElementById('link-password-input');
+      const confirmEl = document.getElementById('link-password-confirm');
+      const pwd = pwdEl.value;
+      const confirm = confirmEl.value;
+      if(pwd.length < 6){ showToast('Le mot de passe doit faire au moins 6 caractères.'); pwdEl.focus(); return; }
+      if(pwd !== confirm){ showToast('Les deux mots de passe ne correspondent pas.'); confirmEl.focus(); return; }
+      linkPasswordBtn.disabled = true;
+      linkPasswordBtn.textContent = 'Un instant…';
+      try{
+        const cred = firebase.auth.EmailAuthProvider.credential(CURRENT_USER.email, pwd);
+        await CURRENT_USER.linkWithCredential(cred);
+        showToast('Mot de passe défini ✦ — vous pouvez maintenant vous connecter avec email + mot de passe, y compris depuis l\'icône installée');
+        renderCompte();
+      }catch(e){
+        linkPasswordBtn.disabled = false;
+        linkPasswordBtn.textContent = 'Définir ce mot de passe';
+        if(e.code === 'auth/provider-already-linked' || e.code === 'auth/credential-already-in-use'){
+          showToast('Un mot de passe est déjà défini sur ce compte.');
+          renderCompte();
+        } else if(e.code === 'auth/requires-recent-login'){
+          showToast('Pour des raisons de sécurité, reconnectez-vous (Google/Facebook) puis réessayez tout de suite après.');
+        } else {
+          showToast(friendlyAuthError(e));
+        }
+      }
+    };
+  }
 }
 
 /* ---------- data ---------- */
