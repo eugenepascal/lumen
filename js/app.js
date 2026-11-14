@@ -98,6 +98,66 @@ async function sharedSet(key, value){
   }catch(e){ console.warn('sharedSet', key, e); return false; }
 }
 
+/* ---------- Groupe de prière : mise à jour en direct ----------
+   Jusqu'ici, les intentions/témoignages/programme/moment commun du groupe
+   n'étaient chargés qu'une fois (au démarrage de l'app, ou en rejoignant un
+   groupe) : si quelqu'un d'autre ajoutait quelque chose pendant qu'on avait
+   déjà l'app ouverte, ça n'apparaissait qu'après avoir fermé et rouvert
+   l'app. On écoute maintenant ces documents en direct (onSnapshot) dès
+   qu'un code de groupe est actif, pendant toute la session : dès qu'un
+   membre écrit, tous les autres reçoivent la mise à jour, et l'écran se
+   rafraîchit automatiquement s'il est déjà ouvert sur le groupe. */
+let GROUP_LISTENER_UNSUBS = [];
+function stopGroupListeners(){
+  GROUP_LISTENER_UNSUBS.forEach(unsub=>{ try{ unsub(); }catch(e){} });
+  GROUP_LISTENER_UNSUBS = [];
+}
+function rerenderIfOnGroupScreen(){
+  if(!PRAYER_GROUP_CODE || PRIMARY!=='prier' || SUBTAB.prier!=='groupe') return;
+  // Si la personne est en train de taper quelque chose (intention,
+  // témoignage, réponse, ressource…) au moment où une mise à jour arrive
+  // d'un autre membre, on évite de reconstruire tout l'écran — ça
+  // effacerait ce qu'elle est en train d'écrire. La mise à jour est déjà
+  // en mémoire (GROUP_INTENTIONS, etc.) : elle apparaîtra au prochain
+  // rendu naturel de l'écran (après son propre envoi, par exemple).
+  const active = document.activeElement;
+  const isTyping = active && (active.tagName === 'TEXTAREA' || active.tagName === 'INPUT') && active.value && active.value.trim();
+  if(isTyping) return;
+  renderPrayerGroup();
+}
+async function startGroupListeners(code){
+  stopGroupListeners();
+  if(!code) return;
+  const ok = await ensureSharedAuth();
+  if(!ok) return;
+  // Un code de groupe a pu changer (ou être quitté) pendant l'attente de
+  // l'authentification anonyme : on n'installe les écouteurs que si ce
+  // code est toujours celui actif, pour ne pas écouter un groupe quitté.
+  if(PRAYER_GROUP_CODE !== code) return;
+  const watch = (key, onData)=>{
+    const unsub = sharedFbDb.collection('shared').doc(key).onSnapshot(snap=>{
+      onData(snap.exists ? snap.data() : null);
+    }, err=>{ console.warn('groupListener', key, err); });
+    GROUP_LISTENER_UNSUBS.push(unsub);
+  };
+  watch('group-intentions:'+code, data=>{
+    GROUP_INTENTIONS = (data && data.value) ? JSON.parse(data.value) : [];
+    rerenderIfOnGroupScreen();
+  });
+  watch('group-testimonies:'+code, data=>{
+    GROUP_TESTIMONIES = (data && data.value) ? JSON.parse(data.value) : [];
+    rerenderIfOnGroupScreen();
+  });
+  watch('group-programs:'+code, data=>{
+    GROUP_PROGRAMS = (data && data.value) ? JSON.parse(data.value) : [];
+    rerenderIfOnGroupScreen();
+  });
+  watch('group-moment:'+code, data=>{
+    GROUP_MOMENT = (data && data.value) ? JSON.parse(data.value) : null;
+    rerenderIfOnGroupScreen();
+  });
+}
+
 /* ---------- Compteur d'usage ("preuve sociale") ---------- */
 /* Un compteur honnête, pas une simulation : chaque appareil s'annonce au plus
    une fois par jour civil (UTC) dans un document Firestore partagé
@@ -7907,6 +7967,7 @@ function renderPrayerGroup(){
         }
         GROUP_TESTIMONIES = [];
         showToast('Groupe créé ✦');
+        startGroupListeners(PRAYER_GROUP_CODE);
         renderPrayerGroup();
       };
     });
@@ -7919,6 +7980,7 @@ function renderPrayerGroup(){
       GROUP_TESTIMONIES = await loadGroupTestimonies(code);
       GROUP_TEMPLATE_KEY = await loadGroupTemplate(code);
       GROUP_PROGRAMS = await loadGroupPrograms(code);
+      startGroupListeners(code);
       showToast('Groupe rejoint ✦');
       renderPrayerGroup();
     };
@@ -8026,6 +8088,7 @@ function renderPrayerGroup(){
     navigator.clipboard.writeText(PRAYER_GROUP_CODE).then(()=> showToast('Code copié 📋'));
   };
   document.getElementById('leave-group-btn').onclick = async ()=>{
+    stopGroupListeners();
     PRAYER_GROUP_CODE = '';
     GROUP_INTENTIONS = [];
     GROUP_TESTIMONIES = [];
@@ -15287,7 +15350,7 @@ async function startApp(){
   ACTIVITY_LOG = activityLog || [];
   HOME_LAYOUT = homeLayout;
   PRAYER_GROUP_CODE = groupCode || '';
-  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); GROUP_TEMPLATE_KEY = await loadGroupTemplate(PRAYER_GROUP_CODE); GROUP_PROGRAMS = await loadGroupPrograms(PRAYER_GROUP_CODE); }
+  if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); GROUP_TEMPLATE_KEY = await loadGroupTemplate(PRAYER_GROUP_CODE); GROUP_PROGRAMS = await loadGroupPrograms(PRAYER_GROUP_CODE); startGroupListeners(PRAYER_GROUP_CODE); }
   if(savedBeat && savedBeat.pattern){
     SEQ_INSTRUMENTS.forEach(inst=>{
       if(savedBeat.pattern[inst.key]) SEQ_PATTERN[inst.key] = savedBeat.pattern[inst.key];
@@ -15348,6 +15411,7 @@ async function startApp(){
         GROUP_MOMENT = await loadGroupMoment(code);
         GROUP_TEMPLATE_KEY = await loadGroupTemplate(code);
         GROUP_PROGRAMS = await loadGroupPrograms(code);
+        startGroupListeners(code);
         PRIMARY = 'prier'; SUBTAB.prier = 'groupe';
         showToast('Groupe de prière rejoint ✦');
       }
