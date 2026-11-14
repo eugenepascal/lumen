@@ -9328,32 +9328,6 @@ function speakText(text){
   }catch(e){ showToast("Lecture vocale indisponible"); }
 }
 
-/* ================= lecture vocale de la page entière ================= */
-function extractScreenText(){
-  const screen = document.getElementById('screen');
-  if(!screen) return '';
-  const clone = screen.cloneNode(true);
-  clone.querySelectorAll('button, input, select, textarea, .chip-row, .subnav-row, iframe, audio, .loop-grid, .seq-transport, .preset-row').forEach(el=> el.remove());
-  return clone.innerText.replace(/\s+/g,' ').trim();
-}
-function toggleReadPage(){
-  if(!window.speechSynthesis){ showToast("Lecture vocale indisponible sur ce navigateur"); return; }
-  const active = LUMEN_PLAYER_STATE.active && LUMEN_PLAYER_STATE.kind==='speech' && LUMEN_SPEECH_CTX && LUMEN_SPEECH_CTX.source==='page';
-  if(active){
-    try{ window.speechSynthesis.cancel(); }catch(e){}
-    lumenPlayerHide();
-    return;
-  }
-  const text = extractScreenText();
-  if(!text){ showToast("Rien à lire sur cet écran"); return; }
-  const titleEl = document.querySelector('#screen h2.section-title, #screen h1');
-  const label = (titleEl ? titleEl.textContent : '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').trim() || 'Lecture de la page';
-  // La lecture persiste désormais pendant la navigation : le mini-lecteur
-  // global (barre en bas) reste affiché et pilotable même si on change d'écran.
-  lumenSpeak({ text: text.slice(0, 6000), label: '🔊 ' + label, source: 'page' });
-  showToast('🔊 Lecture de la page — elle continue même si vous changez d\'écran');
-}
-
 /* ================= ambiance sonore de fond =================
    Retour à la toute première version : un vrai lecteur YouTube (API
    IFrame Player) intégré DANS l'appli, toujours visible dans le cadre
@@ -14536,7 +14510,6 @@ const I18N = {
     refuge:'Refuge', refugeTitle:'Un lieu sûr',
     guide:'Guide', guideTitle:"Qu'aimeriez-vous faire ?",
     music:'Musique', ambianceTitle:'Ambiance sonore de fond',
-    listen:'Écouter', readPageTitle:'Écouter cette page',
     search:'Chercher', searchTitle:'Rechercher',
     theme:'Thème', themeTitle:'Changer de thème',
     smaller:'Petit', fontMinusTitle:'Réduire le texte',
@@ -14552,7 +14525,6 @@ const I18N = {
     refuge:'Refuge', refugeTitle:'A safe place',
     guide:'Guide', guideTitle:'What would you like to do?',
     music:'Music', ambianceTitle:'Background ambiance',
-    listen:'Listen', readPageTitle:'Listen to this page',
     search:'Search', searchTitle:'Search',
     theme:'Theme', themeTitle:'Change theme',
     smaller:'Smaller', fontMinusTitle:'Shrink text',
@@ -15434,7 +15406,6 @@ async function startApp(){
   document.getElementById('video-modal-close').onclick = closeVideoModal;
   document.getElementById('video-modal-overlay').onclick = (e)=>{ if(e.target.id==='video-modal-overlay') closeVideoModal(); };
   document.getElementById('ambiance-picker-overlay').onclick = (e)=>{ if(e.target.id==='ambiance-picker-overlay') closeAmbiancePicker(); };
-  document.getElementById('read-page-btn').onclick = toggleReadPage;
   document.getElementById('font-minus-btn').onclick = ()=> changeFontSize(-1);
   document.getElementById('font-plus-btn').onclick = ()=> changeFontSize(1);
   document.getElementById('share-image-close').onclick = ()=> document.getElementById('share-image-overlay').classList.add('hidden');
