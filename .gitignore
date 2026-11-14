@@ -1,0 +1,27 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Éditeurs / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dépendances / outils (au cas où un jour)
+node_modules/
+npm-debug.log*
+
+# Fichiers temporaires ou de travail
+*.tmp
+*.bak
+*.log
+*~
+
+# Secrets et configuration locale (ne jamais publier)
+.env
+.env.*
+*.pem
+*.key
+secrets.json
