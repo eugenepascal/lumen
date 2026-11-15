@@ -11888,13 +11888,13 @@ async function saveFamilyIntentions(list){
 }
 const APP_GUIDE_SECTIONS = [
   {icon:'🏠', title:'Accueil', text:"Votre point de départ chaque jour : un verset, votre série de prière, le saint du jour, et un accès rapide à tout le reste."},
-  {icon:'🙏', title:'Prier', text:"Les textes et offices du jour (laudes, tierce, vêpres, complies, angélus, examen...), les neuvaines, un parcours de Carême en 40 jours, vos propres prières, un groupe de prière privé entre proches, le carnet familial partagé, et des prières selon votre état d'esprit."},
+  {icon:'🙏', title:'Prier', text:"Les textes et offices du jour (laudes, tierce, vêpres, complies, angélus, examen...), les neuvaines, un parcours de Carême en 40 jours, vos propres prières, un groupe de prière privé entre proches (les intentions, témoignages et programmes se mettent à jour en direct entre tous les membres), le carnet familial partagé, et des prières selon votre état d'esprit."},
   {icon:'📿', title:'Dévotions', text:"Chapelet, chemin de croix, Miséricorde divine, Lectio Divina, préparation à la confession, prière en famille, et des ressources pour le combat spirituel."},
   {icon:'📖', title:'Écritures', title2:'(Bible)', text:"La Bible complète, les psaumes classés par thème, le texte officiel AELF, et un plan de lecture sur un an."},
   {icon:'✝️', title:'Jésus', text:"La vie de Jésus, de Marie, de Joseph, et des méditations sur la Sainte Famille et le pardon."},
   {icon:'⛪', title:'Église', text:"Le calendrier des saints et un outil pour trouver votre saint patron, la vie liturgique (Avent, Carême, messe du dimanche), les actualités de l'Église, et des pèlerinages virtuels à Lourdes et Fatima."},
   {icon:'🌿', title:'Sagesse', text:"Vie spirituelle, enseignements, sacrements expliqués, un lexique catholique, un quiz, et des méditations audio."},
-  {icon:'👤', title:'Mon espace', text:"Votre compte et votre parcours, un journal intérieur (carnet de grâces, souvenirs), un espace de réconfort guidé et de mémorial pour vos défunts, vos favoris, une playlist de louanges, vos statistiques, et tous les réglages de l'application."},
+  {icon:'👤', title:'Mon espace', text:"Votre compte et votre parcours, un journal intérieur (carnet de grâces, souvenirs), un espace de réconfort guidé et de mémorial pour vos défunts, vos favoris, une playlist de louanges, vos statistiques, et tous les réglages de l'application. Si vous vous êtes connecté·e avec Google ou Facebook, Mon compte vous permet aussi de définir un mot de passe, pratique pour vous reconnecter directement depuis l'icône installée sur iPhone/iPad/Mac."},
   {icon:'📲', title:'Installer l\'application', text:"Ajoutez Lumen à votre écran d'accueil (ou votre Dock) pour l'utiliser comme une vraie application, en un geste, sans passer par le navigateur.", action:'install'},
   {icon:'🧭', title:'Le Guide', text:"Le bouton boussole en haut de l'écran : posez-vous la question « que voulez-vous faire ? » et laissez-vous guider."},
   {icon:'🕊️', title:'Mode Recueillement', text:"Un cadre plus calme et épuré, pour un moment de prière plus profond, sans distraction visuelle."},
