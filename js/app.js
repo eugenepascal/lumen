@@ -45,6 +45,31 @@ function activateAnalytics(app){
     firebase.analytics(app);
   }catch(e){ console.warn('Analytics indisponible :', e); }
 }
+/* Consentement RGPD pour la mesure d'audience (Google Analytics / Firebase) :
+   on ne l'active que si la personne a explicitement accepté, via le bandeau
+   affiché au premier lancement (ou changé plus tard dans Réglages). Tant
+   qu'aucun choix n'a été fait, Analytics reste inactif. */
+function getCookieConsent(){ return localStorage.getItem('lumen_cookie_consent'); } // 'accepted' | 'refused' | null
+function setCookieConsent(value){
+  localStorage.setItem('lumen_cookie_consent', value);
+  if(value === 'accepted' && fbApp) activateAnalytics(fbApp);
+  try{
+    if(fbApp && typeof firebase.analytics === 'function'){
+      firebase.analytics(fbApp).setAnalyticsCollectionEnabled(value === 'accepted');
+    }
+  }catch(e){}
+}
+function wireCookieBanner(){
+  const banner = document.getElementById('cookie-consent-banner');
+  if(!banner) return;
+  const consent = getCookieConsent();
+  if(consent === null) banner.classList.remove('hidden');
+  const hide = ()=> banner.classList.add('hidden');
+  const acceptBtn = document.getElementById('cookie-accept-btn');
+  const refuseBtn = document.getElementById('cookie-refuse-btn');
+  if(acceptBtn) acceptBtn.onclick = ()=>{ setCookieConsent('accepted'); hide(); };
+  if(refuseBtn) refuseBtn.onclick = ()=>{ setCookieConsent('refused'); hide(); };
+}
 let fbApp = null, fbAuth = null, fbDb = null, FIREBASE_READY = false;
 /* Connexion Firebase dédiée au contenu partagé (groupe de prière, carnet
    familial, communauté de Carême) : une appli secondaire, avec sa propre
@@ -253,7 +278,7 @@ try{
   fbDb = firebase.firestore();
   FIREBASE_READY = true;
   activateAppCheck(fbApp, 'compte personnel');
-  activateAnalytics(fbApp);
+  if(getCookieConsent() === 'accepted') activateAnalytics(fbApp);
 }catch(e){ console.warn('Firebase indisponible :', e); }
 
 /* Petit message discret en bas de l'écran (confirmation d'une action : "Texte copié",
@@ -13718,10 +13743,31 @@ function renderReglages(){
           <input type="checkbox" class="home-section-toggle" data-key="${s.key}" style="width:auto;" ${isHomeSectionEnabled(s.key)?'checked':''}>
           ${s.label}
         </label>`).join('')}
+    </div>
+    <h2 class="section-title" style="font-size:16px;">🍪 Confidentialité</h2>
+    <div class="card">
+      <p class="section-desc" style="margin-top:0;">Lumen peut mesurer son audience de façon anonyme (Google Analytics), jamais à des fins publicitaires. Statut actuel : ${getCookieConsent()==='accepted' ? '✅ Mesure d\'audience activée' : getCookieConsent()==='refused' ? '❌ Mesure d\'audience refusée' : '⏳ Pas encore de choix'}.</p>
+      <div style="display:flex; gap:8px;">
+        <button class="btn ${getCookieConsent()==='accepted'?'btn-gold':'btn-ghost'} btn-sm" id="cookie-consent-accept-btn" style="flex:1;">Activer</button>
+        <button class="btn ${getCookieConsent()==='refused'?'btn-gold':'btn-ghost'} btn-sm" id="cookie-consent-refuse-btn" style="flex:1;">Désactiver</button>
+      </div>
+      <p class="section-desc" style="margin-top:10px;"><a href="privacy.html" target="_blank" rel="noopener">🔒 Politique de confidentialité</a></p>
     </div>`;
   document.getElementById('screen').innerHTML = html;
   const installGuideBtn = document.getElementById('open-install-guide-btn');
   if(installGuideBtn) installGuideBtn.onclick = openInstallGuide;
+  document.getElementById('cookie-consent-accept-btn').onclick = ()=>{
+    setCookieConsent('accepted');
+    document.getElementById('cookie-consent-banner')?.classList.add('hidden');
+    showToast('Mesure d\'audience activée 🍪');
+    renderReglages();
+  };
+  document.getElementById('cookie-consent-refuse-btn').onclick = ()=>{
+    setCookieConsent('refused');
+    document.getElementById('cookie-consent-banner')?.classList.add('hidden');
+    showToast('Mesure d\'audience désactivée');
+    renderReglages();
+  };
   document.getElementById('save-reminders-btn').onclick = async ()=>{
     if(window.Notification && Notification.permission !== 'granted'){
       await Notification.requestPermission();
@@ -15830,3 +15876,4 @@ window.addEventListener('popstate', ()=>{
 
 startAuthFlow();
 bumpUsageStats();
+wireCookieBanner();
