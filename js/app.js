@@ -209,15 +209,25 @@ async function bumpUsageStats(){
    prochain changement d'écran. */
 function refreshUsageBanners(){
   const el = document.getElementById('home-usage-banner');
-  if(el) el.outerHTML = homeUsageBannerHTML();
+  if(el){ el.outerHTML = homeUsageBannerHTML(); wireHomeUsageBanner(); }
 }
 function homeUsageBannerHTML(){
   if(!USAGE_STATS_CACHE || !USAGE_STATS_CACHE.week || USAGE_STATS_CACHE.week < 2) return '<div id="home-usage-banner"></div>';
   const n = USAGE_STATS_CACHE.week;
   const nf = n.toLocaleString('fr-FR');
-  return `<div class="card home-usage-banner" id="home-usage-banner" style="margin:0 0 14px; text-align:center; border-left:4px solid var(--wine);">
-    <p class="entry-detail-text" style="margin:0;">🙏 <strong>${nf}</strong> personnes ont prié avec Lumen cette semaine — rejoignez-les.</p>
+  return `<div class="card home-usage-banner" id="home-usage-banner" style="margin:0 0 14px; border-left:4px solid var(--wine);">
+    <button type="button" class="home-usage-banner-toggle" id="home-usage-banner-toggle">
+      <span class="entry-detail-text" style="margin:0;">🙏 Le saviez-vous ?</span>
+      <span class="home-usage-banner-chevron" id="home-usage-banner-chevron">⌄</span>
+    </button>
+    <p class="entry-detail-text home-usage-banner-detail" id="home-usage-banner-detail"><strong>${nf}</strong> personnes ont prié avec Lumen cette semaine — rejoignez-les.</p>
   </div>`;
+}
+function wireHomeUsageBanner(){
+  const toggle = document.getElementById('home-usage-banner-toggle');
+  const banner = document.getElementById('home-usage-banner');
+  if(!toggle || !banner) return;
+  toggle.onclick = ()=> banner.classList.toggle('open');
 }
 /* Message de renforcement après une prière terminée (toute prière confondue,
    via markPrayedToday) : montre que d'autres personnes prient aussi
@@ -4696,11 +4706,17 @@ function renderHome(){
     <div class="home-carousel-dots" id="home-carousel-dots">
       <span class="hcd ${HOME_PAGE_IDX===0?'active':''}" data-panel="0" aria-label="Page 1"></span>
       <span class="hcd ${HOME_PAGE_IDX===1?'active':''}" data-panel="1" aria-label="Page 2"></span>
-    </div>`;
+    </div>
+    ${detectInstallInfo().platform!=='standalone' ? `<div class="home-install-dot-row" id="home-install-dot-row">
+      <button type="button" class="home-install-dot-btn" id="home-install-dot-btn" aria-label="Installer l'application">📲 Installer l'app</button>
+    </div>` : ''}`;
 
   document.querySelectorAll('.home-shortcut').forEach(btn=>{
     btn.onclick = ()=> goTo(btn.dataset.shortcutPrimary, btn.dataset.shortcutSub || null);
   });
+
+  const homeInstallDotBtn = document.getElementById('home-install-dot-btn');
+  if(homeInstallDotBtn) homeInstallDotBtn.onclick = openInstallGuide;
 
   wireHomePage1();
   wireHomePage2();
@@ -4864,6 +4880,7 @@ function wireHomePage1(){
   if(cta0) cta0.onclick = ()=> goTo('prier','textes-du-jour');
   loadHomeEvangileCard();
   wireHomeInstallBanner();
+  wireHomeUsageBanner();
 
   const quickLogoutBtn = document.getElementById('home-quick-logout-btn');
   if(quickLogoutBtn) quickLogoutBtn.onclick = async ()=>{ await fbAuth.signOut(); window.location.reload(); };
@@ -5526,7 +5543,8 @@ function renderCategoryHubGeneric(title, desc, categories, onGoto, heroEmoji, he
   document.querySelectorAll('[data-hub-goto]').forEach(card=>{
     card.onclick = ()=>{
       const cat = categories[parseInt(card.dataset.hubIndex,10)];
-      if(cat && cat.cross){
+      if(cat && cat.action === 'install'){ openInstallGuide(); }
+      else if(cat && cat.cross){
         if(cat.cross.resetJesusHub) GROUP_SEL['jesus:main'] = null;
         goTo(cat.cross.primary, cat.cross.sub);
       }
@@ -5564,7 +5582,8 @@ const ESPACE_HUB_CATEGORIES = [
   {label:'Soutien', desc:'Réconfort guidé, mémorial, anniversaires spirituels', icon:'🕊️', goto:'reconfort', color:'#4A3D6B'},
   {label:'Outils', desc:'Favoris, studio, rappels', icon:'⚙️', goto:'favoris', color:'#5C6E58'},
   {label:'À propos & Aide', desc:'À propos de Lumen, questions fréquentes', icon:'ℹ️', goto:'apropos', color:'#3B7A3B'},
-  {label:'Guide complet', desc:'Toutes les fonctionnalités, en texte ou en audio', icon:'🧭', goto:'guide-complet', color:'#4A7A94'}
+  {label:'Guide complet', desc:'Toutes les fonctionnalités, en texte ou en audio', icon:'🧭', goto:'guide-complet', color:'#4A7A94'},
+  {label:"Installer l'application", desc:"Ajoutez Lumen à votre écran d'accueil ou votre Dock", icon:'📲', color:'#8A4A1F', action:'install'}
 ];
 function renderEspaceHub(){
   renderCategoryHubGeneric('👤 Mon espace', 'Votre parcours personnel, votre journal, et vos réglages.', ESPACE_HUB_CATEGORIES, (goto)=>{ SUBTAB.espace = goto; render(); }, '👤');
@@ -11876,6 +11895,7 @@ const APP_GUIDE_SECTIONS = [
   {icon:'⛪', title:'Église', text:"Le calendrier des saints et un outil pour trouver votre saint patron, la vie liturgique (Avent, Carême, messe du dimanche), les actualités de l'Église, et des pèlerinages virtuels à Lourdes et Fatima."},
   {icon:'🌿', title:'Sagesse', text:"Vie spirituelle, enseignements, sacrements expliqués, un lexique catholique, un quiz, et des méditations audio."},
   {icon:'👤', title:'Mon espace', text:"Votre compte et votre parcours, un journal intérieur (carnet de grâces, souvenirs), un espace de réconfort guidé et de mémorial pour vos défunts, vos favoris, une playlist de louanges, vos statistiques, et tous les réglages de l'application."},
+  {icon:'📲', title:'Installer l\'application', text:"Ajoutez Lumen à votre écran d'accueil (ou votre Dock) pour l'utiliser comme une vraie application, en un geste, sans passer par le navigateur.", action:'install'},
   {icon:'🧭', title:'Le Guide', text:"Le bouton boussole en haut de l'écran : posez-vous la question « que voulez-vous faire ? » et laissez-vous guider."},
   {icon:'🕊️', title:'Mode Recueillement', text:"Un cadre plus calme et épuré, pour un moment de prière plus profond, sans distraction visuelle."},
   {icon:'💥', title:'Mode Bande Dessinée', text:"Un habillage plus coloré et ludique, pensé pour les plus jeunes."}
@@ -11888,9 +11908,11 @@ function renderAppGuide(){
     <div class="app-guide-list">${APP_GUIDE_SECTIONS.map(s=>`
       <div class="card app-guide-row">
         <span class="app-guide-icon">${s.icon}</span>
-        <div><p class="day-title" style="font-size:14.5px;">${s.title}${s.title2?' '+s.title2:''}</p><p class="entry-detail-text">${s.text}</p></div>
+        <div><p class="day-title" style="font-size:14.5px;">${s.title}${s.title2?' '+s.title2:''}</p><p class="entry-detail-text">${s.text}</p>${s.action==='install'?`<button type="button" class="btn btn-gold btn-sm" id="guide-install-btn" style="margin-top:8px;">Voir comment faire</button>`:''}</div>
       </div>`).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
+  const guideInstallBtn = document.getElementById('guide-install-btn');
+  if(guideInstallBtn) guideInstallBtn.onclick = openInstallGuide;
   document.getElementById('guide-read-all-btn').onclick = ()=>{
     if(APP_GUIDE_READING){ window.speechSynthesis.cancel(); APP_GUIDE_READING = false; renderAppGuide(); return; }
     const fullText = APP_GUIDE_SECTIONS.map(s=>`${s.title}. ${s.text}`).join(' ... ');

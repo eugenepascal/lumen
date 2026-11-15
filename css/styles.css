@@ -1405,6 +1405,9 @@
   .home-carousel-dots{ flex:none; display:flex; justify-content:center; gap:7px; padding:8px 0 4px; }
   .hcd{ width:7px; height:7px; border-radius:50%; background:var(--hairline); cursor:pointer; transition:background 0.2s ease, transform 0.2s ease; padding:0; border:none; }
   .hcd.active{ background:var(--wine); transform:scale(1.3); }
+  .home-install-dot-row{ flex:none; display:flex; justify-content:flex-start; padding:0 19px 6px; }
+  .home-install-dot-btn{ font-family:'Inter',sans-serif; font-size:11.5px; font-weight:600; color:var(--ink-soft); background:none; border:none; padding:4px 2px; cursor:pointer; opacity:0.65; transition:opacity 0.2s ease; }
+  .home-install-dot-btn:hover, .home-install-dot-btn:active{ opacity:1; }
 
   .home-swipe-hint{
     display:flex; align-items:center; justify-content:center; gap:6px; flex:none;
@@ -2419,6 +2422,20 @@
   .usage-spotlight-icon{ font-size:40px; display:block; margin-bottom:6px; }
   .usage-spotlight-num{ font-family:'Fraunces',serif; font-weight:700; font-size:46px; line-height:1.1; display:block; color:var(--gold-light); }
   .usage-spotlight-text{ font-size:15px; line-height:1.5; margin-top:6px; opacity:0.95; }
+
+  /* ===== bannière "Le saviez-vous ?" (statistiques d'usage), repliable ===== */
+  .home-usage-banner{ padding:12px 14px; }
+  .home-usage-banner-toggle{
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:none; border:none; padding:0; margin:0; text-align:left; font:inherit; color:inherit; cursor:pointer;
+  }
+  .home-usage-banner-chevron{ font-size:13px; color:var(--ink-soft); transition:transform 0.25s ease; flex-shrink:0; }
+  .home-usage-banner.open .home-usage-banner-chevron{ transform:rotate(180deg); }
+  .home-usage-banner-detail{
+    margin:0; max-height:0; overflow:hidden; opacity:0;
+    transition:max-height 0.25s ease, opacity 0.2s ease, margin 0.2s ease;
+  }
+  .home-usage-banner.open .home-usage-banner-detail{ max-height:120px; opacity:1; margin-top:8px; }
 
   /* ===== bannière "Installez Lumen" sur l'accueil ===== */
   .home-install-banner{
