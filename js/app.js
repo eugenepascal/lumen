@@ -294,6 +294,127 @@ function showUsageSpotlight(count){
   USAGE_SPOTLIGHT_TIMER = setTimeout(hide, 3200);
 }
 
+/* ================= guide d'installation (icône sur l'écran d'accueil / Dock) =================
+   Les étapes pour "installer" Lumen (en faire une vraie icône, hors du
+   navigateur) sont complètement différentes selon la plateforme — et sur
+   iPhone/iPad, uniquement possible depuis Safari (voir plus haut, la
+   question du stockage séparé entre Safari et les web apps installées :
+   installer autrement poserait la même limitation). Plutôt que d'écrire
+   une explication générique qui ne correspond jamais exactement à ce que
+   la personne a sous les yeux, on détecte la situation réelle et on
+   affiche uniquement les étapes qui s'appliquent, avec une courte
+   illustration visuelle (icône + texte) à chaque étape. */
+function detectInstallInfo(){
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/.test(ua);
+  const isMac = /Macintosh/.test(ua) && !isIOS;
+  // Sur iOS, Chrome/Firefox/Edge intègrent aussi le mot "Safari" dans leur
+  // UA (ils tournent tous sur WebKit) : il faut explicitement exclure leurs
+  // propres signatures pour détecter le vrai Safari.
+  const isRealSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|OPT\//.test(ua);
+  const isChrome = /Chrome\//.test(ua) && !/Edg\/|OPR\//.test(ua);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    || window.matchMedia('(display-mode: fullscreen)').matches
+    || window.navigator.standalone === true;
+  if(isStandalone){
+    return {platform:'standalone', title:'✅ Déjà installée', steps:[], note:"Lumen est déjà installée sur cet appareil — vous l'utilisez en ce moment même depuis son icône."};
+  }
+  if(isIOS && isRealSafari){
+    return {platform:'ios-safari', title:'📲 Installer sur iPhone / iPad', steps:[
+      {icon:'📤', text:'Appuyez sur le bouton Partager, en bas de l\'écran dans Safari.'},
+      {icon:'📜', text:'Faites défiler la liste et choisissez « Sur l\'écran d\'accueil ».'},
+      {icon:'✅', text:'Appuyez sur « Ajouter » — Lumen apparaît comme une vraie app, avec son icône.'}
+    ]};
+  }
+  if(isIOS && !isRealSafari){
+    return {platform:'ios-other', title:'📲 Installer sur iPhone / iPad', steps:[
+      {icon:'⚠️', text:'Sur iPhone/iPad, l\'installation n\'est possible que depuis Safari — pas depuis ce navigateur.'},
+      {icon:'🧭', text:'Touchez le bouton ci-dessous pour ouvrir Lumen dans Safari.'},
+      {icon:'📤', text:'Puis : bouton Partager → « Sur l\'écran d\'accueil » → Ajouter.'}
+    ], cta:{label:'🌐 Ouvrir Lumen dans Safari', href: window.location.href.replace(/^https:\/\//, 'x-safari-https://')}};
+  }
+  if(isAndroid && isChrome){
+    return {platform:'android-chrome', title:'📲 Installer sur Android', steps:[
+      {icon:'⋮', text:'Appuyez sur les trois points en haut à droite de Chrome.'},
+      {icon:'📲', text:'Choisissez « Installer l\'application » (ou « Ajouter à l\'écran d\'accueil »).'},
+      {icon:'✅', text:'Confirmez — Lumen apparaît sur votre écran d\'accueil, en plein écran.'}
+    ]};
+  }
+  if(isAndroid && !isChrome){
+    return {platform:'android-other', title:'📲 Installer sur Android', steps:[
+      {icon:'🧭', text:'L\'installation est la plus fiable depuis Chrome sur Android.'},
+      {icon:'📤', text:'Ouvrez Lumen dans Chrome, puis : menu ⋮ → « Installer l\'application ».'}
+    ]};
+  }
+  if(isMac && isRealSafari){
+    return {platform:'mac-safari', title:'📲 Installer sur Mac', steps:[
+      {icon:'📤', text:'Cliquez sur le bouton Partager dans la barre d\'outils de Safari.'},
+      {icon:'🖥️', text:'Choisissez « Ajouter au Dock ».'},
+      {icon:'✅', text:'Lumen apparaît dans votre Dock, comme une vraie application.'}
+    ]};
+  }
+  if(isChrome){
+    return {platform:'desktop-chrome', title:'📲 Installer sur ordinateur', steps:[
+      {icon:'⊕', text:'Cliquez sur l\'icône d\'installation dans la barre d\'adresse (ou menu ⋮ → « Installer Lumen »).'},
+      {icon:'✅', text:'Confirmez — Lumen s\'ouvre dans sa propre fenêtre, sans barre d\'adresse.'}
+    ]};
+  }
+  return {platform:'desktop-other', title:'📲 Installer Lumen', steps:[
+    {icon:'🧭', text:'Ce navigateur ne propose pas d\'installation d\'application dédiée.'},
+    {icon:'💡', text:'Essayez Chrome ou Edge pour installer une vraie icône, ou utilisez Lumen directement dans cet onglet.'}
+  ]};
+}
+function openInstallGuide(){
+  document.getElementById('install-guide-backdrop')?.remove();
+  const info = detectInstallInfo();
+  const backdrop = document.createElement('div');
+  backdrop.id = 'install-guide-backdrop';
+  backdrop.className = 'install-guide-backdrop';
+  const stepsHTML = info.steps.map((s,i)=>`
+    <div class="install-guide-step">
+      <span class="install-guide-step-icon">${s.icon}</span>
+      <span class="install-guide-step-text"><b>${i+1}.</b> ${escapeHtml(s.text)}</span>
+    </div>`).join('');
+  backdrop.innerHTML = `
+    <div class="install-guide-card" role="dialog" aria-label="${escapeHtml(info.title)}">
+      <button type="button" class="install-guide-close" aria-label="Fermer">✕</button>
+      <p class="install-guide-title">${info.title}</p>
+      ${info.note ? `<p class="install-guide-note">${escapeHtml(info.note)}</p>` : `
+        <div class="install-guide-steps">${stepsHTML}</div>
+        ${info.cta ? `<a class="btn btn-primary btn-sm" style="display:block; text-align:center; margin-top:12px;" href="${info.cta.href}" target="_blank" rel="noopener">${info.cta.label}</a>` : ''}
+      `}
+    </div>`;
+  (document.getElementById('app') || document.body).appendChild(backdrop);
+  const close = ()=>{ backdrop.classList.remove('show'); setTimeout(()=> backdrop.remove(), 250); };
+  backdrop.onclick = (e)=>{ if(e.target === backdrop) close(); };
+  backdrop.querySelector('.install-guide-close').onclick = close;
+  requestAnimationFrame(()=> backdrop.classList.add('show'));
+}
+function homeInstallBannerHTML(){
+  if(localStorage.getItem('lumen_install_banner_dismissed')) return '<div id="home-install-banner"></div>';
+  const info = detectInstallInfo();
+  if(info.platform === 'standalone') return '<div id="home-install-banner"></div>';
+  return `<div class="card home-install-banner" id="home-install-banner">
+    <span class="home-install-banner-icon">📲</span>
+    <span class="home-install-banner-body">
+      <span class="home-install-banner-title">Installez Lumen</span>
+      <span class="home-install-banner-sub">Gardez-la à portée de main, comme une vraie app.</span>
+    </span>
+    <button type="button" class="btn btn-gold btn-sm" id="home-install-banner-btn">Voir comment</button>
+    <button type="button" class="home-install-banner-close" id="home-install-banner-close" aria-label="Ne plus afficher">✕</button>
+  </div>`;
+}
+function wireHomeInstallBanner(){
+  const btn = document.getElementById('home-install-banner-btn');
+  if(btn) btn.onclick = openInstallGuide;
+  const closeBtn = document.getElementById('home-install-banner-close');
+  if(closeBtn) closeBtn.onclick = ()=>{
+    localStorage.setItem('lumen_install_banner_dismissed', '1');
+    document.getElementById('home-install-banner').outerHTML = '<div id="home-install-banner"></div>';
+  };
+}
+
 /* Échappement HTML pour tout texte saisi par une personne (intention, prénom,
    commentaire, code de famille/groupe...) avant de l'insérer dans du HTML.
    Indispensable dès qu'un contenu est partagé (tableau d'intentions public,
@@ -4631,6 +4752,7 @@ function homePage1HTML(){
       <p class="home-plain-sub">${t('homeSubtitle')}.</p>
     </div>
     ${homeUsageBannerHTML()}
+    ${homeInstallBannerHTML()}
     ${missedJourneys.length ? `<div class="card home-journey-nudge-card" id="home-journey-nudge-card" style="border-left:4px solid var(--gold); margin-bottom:14px; cursor:pointer;" data-goto-primary="${missedJourneys[0].primary}" data-goto-sub="${missedJourneys[0].sub}">
       <p class="eyebrow" style="color:var(--gold);">🕯️ Petit rappel, sans pression</p>
       <p class="entry-detail-text" style="margin:4px 0 0;">Vous n'avez pas encore continué aujourd'hui ${missedJourneys.length>1?'vos parcours en cours':'votre parcours en cours'} (${missedJourneys.map(x=>x.icon+' '+x.label).join(', ')}). Un jour manqué ne remet rien en cause — reprenez simplement quand vous êtes prêt(e).</p>
@@ -4741,6 +4863,7 @@ function wireHomePage1(){
   const cta0 = document.getElementById('home-evangile-cta');
   if(cta0) cta0.onclick = ()=> goTo('prier','textes-du-jour');
   loadHomeEvangileCard();
+  wireHomeInstallBanner();
 
   const quickLogoutBtn = document.getElementById('home-quick-logout-btn');
   if(quickLogoutBtn) quickLogoutBtn.onclick = async ()=>{ await fbAuth.signOut(); window.location.reload(); };
@@ -13508,7 +13631,13 @@ function renderAventCareme(){
 /* ================= rappels (réglages) ================= */
 function renderReglages(){
   const permission = window.Notification ? Notification.permission : 'unsupported';
-  let html = `<h2 class="section-title">🔔 Rappels de prière</h2>
+  const installInfo = detectInstallInfo();
+  let html = `<h2 class="section-title">📲 Installer l'application</h2>
+    <div class="card">
+      <p class="section-desc" style="margin-top:0;">${installInfo.platform==='standalone' ? "Lumen est déjà installée sur cet appareil ✅" : "Ajoutez Lumen à votre écran d'accueil (ou votre Dock) pour l'utiliser comme une vraie application, en un geste."}</p>
+      ${installInfo.platform!=='standalone' ? `<button class="btn btn-gold btn-sm" id="open-install-guide-btn">Voir comment faire</button>` : ''}
+    </div>
+    <h2 class="section-title">🔔 Rappels de prière</h2>
     <p class="section-desc">Choisissez une heure le matin, midi et le soir. Les rappels fonctionnent tant que cette page reste ouverte dans votre navigateur — ils ne remplacent pas une vraie notification d'application mobile.</p>
     <div class="card">
       <label style="font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); display:block; margin-bottom:4px;">Rappel du matin</label>
@@ -13569,6 +13698,8 @@ function renderReglages(){
         </label>`).join('')}
     </div>`;
   document.getElementById('screen').innerHTML = html;
+  const installGuideBtn = document.getElementById('open-install-guide-btn');
+  if(installGuideBtn) installGuideBtn.onclick = openInstallGuide;
   document.getElementById('save-reminders-btn').onclick = async ()=>{
     if(window.Notification && Notification.permission !== 'granted'){
       await Notification.requestPermission();
