@@ -3441,6 +3441,17 @@ const VERSETS_ARMURE = [
   {ref:"Romains 8, 38-39", text:"Ni la mort ni la vie, ni les anges ni les dominations, rien ne pourra nous séparer de l'amour de Dieu."}
 ];
 
+/* ---------- versets à réciter chaque matin (Louis Segond 1910) ---------- */
+const VERSETS_MATIN = [
+  {ref:"Ésaïe 54, 17", text:"Toute arme forgée contre toi sera sans effet ; et toute langue qui s'élèvera en justice contre toi, tu la condamneras. Tel est l'héritage des serviteurs de l'Éternel, tel est le salut qui leur viendra de moi, dit l'Éternel."},
+  {ref:"Psaume 91", text:"Celui qui demeure sous l'abri du Très-Haut repose à l'ombre du Tout-Puissant. Je dis à l'Éternel : Mon refuge et ma forteresse, mon Dieu en qui je me confie ! Car c'est lui qui te délivre du filet de l'oiseleur, de la peste et de ses ravages. Il te couvrira de ses plumes, et tu trouveras un refuge sous ses ailes ; sa fidélité est un bouclier et une cuirasse. Tu ne craindras ni les terreurs de la nuit, ni la flèche qui vole de jour, ni la peste qui marche dans les ténèbres, ni la contagion qui frappe en plein midi. Que mille tombent à ton côté, et dix mille à ta droite, tu ne seras pas atteint ; de tes yeux seulement tu regarderas, et tu verras la rétribution des méchants. Car tu es mon refuge, ô Éternel ! Tu fais du Très-Haut ta retraite. Aucun malheur ne t'arrivera, aucun fléau n'approchera de ta tente. Car il ordonnera à ses anges de te garder dans toutes tes voies ; ils te porteront sur les mains, de peur que ton pied ne heurte contre une pierre. Tu marcheras sur le lion et sur l'aspic, tu fouleras le lionceau et le dragon. Puisqu'il m'aime, je le délivrerai ; je le protégerai, puisqu'il connaît mon nom. Il m'invoquera, et je lui répondrai ; je serai avec lui dans la détresse, je le délivrerai et je le glorifierai. Je le rassasierai de longs jours, et je lui ferai voir mon salut."},
+  {ref:"Deutéronome 28, 8", text:"L'Éternel ordonnera à la bénédiction d'être avec toi dans tes greniers et dans toutes tes entreprises. Il te bénira dans le pays que l'Éternel, ton Dieu, te donne."},
+  {ref:"Psaume 23, 1", text:"Cantique de David. L'Éternel est mon berger : je ne manquerai de rien."},
+  {ref:"Luc 10, 19", text:"Voici, je vous ai donné le pouvoir de marcher sur les serpents et les scorpions, et sur toute la puissance de l'ennemi ; et rien ne pourra vous nuire."},
+  {ref:"Jérémie 29, 11", text:"Car je connais les projets que j'ai formés sur vous, dit l'Éternel, projets de paix et non de malheur, afin de vous donner un avenir et de l'espérance."},
+  {ref:"Psaume 118, 17", text:"Je ne mourrai pas, je vivrai, et je raconterai les œuvres de l'Éternel."}
+];
+
 /* ---------- chemin de croix ---------- */
 const CHEMIN_DE_CROIX = [
   {title:"Jésus est condamné à mort", text:"Pilate, malgré ses doutes, cède à la pression de la foule et livre Jésus au supplice. Combien de fois cédons-nous, nous aussi, par peur du regard des autres ?", prayer:"Seigneur, donne-moi le courage de rester juste, même sous la pression."},
@@ -4314,7 +4325,7 @@ let ROSARY_AUDIO_PLAYING = null;
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
-  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
+  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
   devotions: [ {key:'prieres', label:'📿 Prières'}, {key:'chapelet', label:'🔗 Chapelet'}, {key:'misericorde', label:'❤️ Miséricorde'}, {key:'chemin-croix', label:'✝️ Chemin de croix'}, {key:'lectio', label:'📕 Lectio Divina'}, {key:'confession', label:'🕊️ Confession'}, {key:'famille', label:'👨‍👩‍👧 En famille'}, {key:'armure', label:'🛡️ Armure de Dieu'}, {key:'prieres-combat', label:'⚔️ Prières de combat'}, {key:'temoins', label:'🕯️ Témoins qui ont tenu bon'}, {key:'meditations-combat', label:'💭 Méditations de combat'}, {key:'versets-armure', label:'🔥 Versets de force'} ],
   ecritures: [ {key:'psaumes', label:'📜 Psaumes'}, {key:'bible', label:'👑 Bible & Histoire'}, {key:'bible-lecture', label:'📗 Lire la Bible'}, {key:'recits', label:'🌍 Récits fondateurs'}, {key:'reperes', label:'📋 Repères'}, {key:'memoriser', label:'🧠 Mémoriser'} ],
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
@@ -5427,6 +5438,7 @@ const HUB_HERO_POS = {
 };
 const PRIER_HUB_CATEGORIES = [
   {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Complies...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B'},
+  {label:'Versets du matin', desc:'Sept versets à réciter chaque matin pour commencer la journée', icon:'🌅', goto:'versets-matin', color:'#C9A227'},
   {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545'},
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E'},
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
@@ -11190,6 +11202,17 @@ function renderVersetsArmure(){
   document.getElementById('screen').innerHTML = html;
 }
 
+function renderVersetsMatin(){
+  let html = `<h2 class="section-title">🌅 Versets à réciter chaque matin</h2>
+    <p class="section-desc">Sept versets, dans la traduction Louis Segond, pour commencer la journée en se les redisant.</p>
+    <div class="grid">${VERSETS_MATIN.map(v=>`
+      <div class="card verset-card">
+        <p class="verset-text" style="font-size:15px;">« ${v.text} »</p>
+        <p class="verset-ref">${v.ref}</p>
+      </div>`).join('')}</div>`;
+  document.getElementById('screen').innerHTML = html;
+}
+
 /* ================= stats dashboard ================= */
 function renderStats(){
   const totalNovenaDays = Object.values(PROGRESS).reduce((sum,p)=> sum + (p.completed? p.completed.filter(Boolean).length : 0), 0);
@@ -15307,6 +15330,7 @@ function renderScreen(){
     if(sub === 'guides') return renderGuides();
     if(sub === 'autrement') return renderPrierAutrement();
     if(sub === 'office-eclair') return renderOfficeDuJour();
+    if(sub === 'versets-matin') return renderVersetsMatin();
   }
   if(PRIMARY === 'devotions'){
     const sub = SUBTAB.devotions || 'accueil-devotions';
@@ -15409,6 +15433,7 @@ const PAGE_HELP = {
 
   'prier:accueil-prier': "Choisissez comment prier maintenant : les textes et offices du jour, une neuvaine en cours, le chapelet, vos intentions, une prière selon votre état du moment, ou l'examen du soir. Touchez une carte pour commencer.",
   'prier:textes-du-jour': "Les lectures officielles de la messe du jour, telles que publiées par l'AELF. Faites défiler pour lire chaque texte dans l'ordre liturgique.",
+  'prier:versets-matin': "Sept versets bibliques, dans la traduction Louis Segond, à se redire chaque matin pour commencer la journée.",
   'prier:office': "La liste des offices de la Liturgie des Heures. Touchez-en un pour lire son texte officiel du jour.",
   'prier:aelf-office': "Le texte officiel de cet office, publié par l'AELF pour aujourd'hui. Lisez-le en silence, ou touchez le bouton d'écoute pour une lecture à voix haute.",
   'prier:laudes': "Le texte officiel des Laudes (prière du matin) pour aujourd'hui, publié par l'AELF. Lisez-le en silence, ou touchez le bouton d'écoute pour une lecture à voix haute.",
