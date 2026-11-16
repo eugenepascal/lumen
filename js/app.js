@@ -3452,6 +3452,17 @@ const VERSETS_MATIN = [
   {ref:"Psaume 118, 17", text:"Je ne mourrai pas, je vivrai, et je raconterai les œuvres de l'Éternel."}
 ];
 
+/* ---------- versets à réciter chaque soir (Louis Segond 1910) ---------- */
+const VERSETS_SOIR = [
+  {ref:"Psaume 4, 8", text:"Je me couche et je m'endors en paix, car toi seul, ô Éternel ! tu me donnes la sécurité dans ma demeure."},
+  {ref:"Psaume 121, 3-4", text:"Il ne permettra point que ton pied chancelle ; celui qui te garde ne sommeillera point. Voici, il ne sommeille ni ne dort, celui qui garde Israël."},
+  {ref:"Proverbes 3, 24", text:"Si tu te couches, tu seras sans crainte ; et quand tu seras couché, ton sommeil sera doux."},
+  {ref:"Psaume 127, 2", text:"En vain vous levez-vous matin, vous couchez-vous tard, et mangez-vous le pain de douleur ; il en donne autant à ses bien-aimés pendant leur sommeil."},
+  {ref:"Philippiens 4, 6-7", text:"Ne vous inquiétez de rien ; mais en toute chose faites connaître vos besoins à Dieu par des prières et des supplications, avec des actions de grâces. Et la paix de Dieu, qui surpasse toute intelligence, gardera vos cœurs et vos pensées en Jésus-Christ."},
+  {ref:"Psaume 3, 5", text:"Je me couche, et je m'endors ; je me réveille, car l'Éternel est mon soutien."},
+  {ref:"Jean 14, 27", text:"Je vous laisse la paix, je vous donne ma paix. Je ne vous donne pas comme le monde donne. Que votre cœur ne se trouble point, et ne s'alarme point."}
+];
+
 /* ---------- chemin de croix ---------- */
 const CHEMIN_DE_CROIX = [
   {title:"Jésus est condamné à mort", text:"Pilate, malgré ses doutes, cède à la pression de la foule et livre Jésus au supplice. Combien de fois cédons-nous, nous aussi, par peur du regard des autres ?", prayer:"Seigneur, donne-moi le courage de rester juste, même sous la pression."},
@@ -4325,7 +4336,7 @@ let ROSARY_AUDIO_PLAYING = null;
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
-  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
+  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'versets-soir', label:'🌙 Versets du soir'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
   devotions: [ {key:'prieres', label:'📿 Prières'}, {key:'chapelet', label:'🔗 Chapelet'}, {key:'misericorde', label:'❤️ Miséricorde'}, {key:'chemin-croix', label:'✝️ Chemin de croix'}, {key:'lectio', label:'📕 Lectio Divina'}, {key:'confession', label:'🕊️ Confession'}, {key:'famille', label:'👨‍👩‍👧 En famille'}, {key:'armure', label:'🛡️ Armure de Dieu'}, {key:'prieres-combat', label:'⚔️ Prières de combat'}, {key:'temoins', label:'🕯️ Témoins qui ont tenu bon'}, {key:'meditations-combat', label:'💭 Méditations de combat'}, {key:'versets-armure', label:'🔥 Versets de force'} ],
   ecritures: [ {key:'psaumes', label:'📜 Psaumes'}, {key:'bible', label:'👑 Bible & Histoire'}, {key:'bible-lecture', label:'📗 Lire la Bible'}, {key:'recits', label:'🌍 Récits fondateurs'}, {key:'reperes', label:'📋 Repères'}, {key:'memoriser', label:'🧠 Mémoriser'} ],
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
@@ -5439,6 +5450,7 @@ const HUB_HERO_POS = {
 const PRIER_HUB_CATEGORIES = [
   {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Complies...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B'},
   {label:'Versets du matin', desc:'Sept versets à réciter chaque matin pour commencer la journée', icon:'🌅', goto:'versets-matin', color:'#C9A227'},
+  {label:'Versets du soir', desc:'Sept versets à réciter chaque soir pour se recoucher en paix', icon:'🌙', goto:'versets-soir', color:'#4A3D6B'},
   {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545'},
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E'},
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
@@ -11213,6 +11225,17 @@ function renderVersetsMatin(){
   document.getElementById('screen').innerHTML = html;
 }
 
+function renderVersetsSoir(){
+  let html = `<h2 class="section-title">🌙 Versets à réciter chaque soir</h2>
+    <p class="section-desc">Sept versets, dans la traduction Louis Segond, pour se recoucher en paix et remettre la journée à Dieu.</p>
+    <div class="grid">${VERSETS_SOIR.map(v=>`
+      <div class="card verset-card">
+        <p class="verset-text" style="font-size:15px;">« ${v.text} »</p>
+        <p class="verset-ref">${v.ref}</p>
+      </div>`).join('')}</div>`;
+  document.getElementById('screen').innerHTML = html;
+}
+
 /* ================= stats dashboard ================= */
 function renderStats(){
   const totalNovenaDays = Object.values(PROGRESS).reduce((sum,p)=> sum + (p.completed? p.completed.filter(Boolean).length : 0), 0);
@@ -15331,6 +15354,7 @@ function renderScreen(){
     if(sub === 'autrement') return renderPrierAutrement();
     if(sub === 'office-eclair') return renderOfficeDuJour();
     if(sub === 'versets-matin') return renderVersetsMatin();
+    if(sub === 'versets-soir') return renderVersetsSoir();
   }
   if(PRIMARY === 'devotions'){
     const sub = SUBTAB.devotions || 'accueil-devotions';
@@ -15434,6 +15458,7 @@ const PAGE_HELP = {
   'prier:accueil-prier': "Choisissez comment prier maintenant : les textes et offices du jour, une neuvaine en cours, le chapelet, vos intentions, une prière selon votre état du moment, ou l'examen du soir. Touchez une carte pour commencer.",
   'prier:textes-du-jour': "Les lectures officielles de la messe du jour, telles que publiées par l'AELF. Faites défiler pour lire chaque texte dans l'ordre liturgique.",
   'prier:versets-matin': "Sept versets bibliques, dans la traduction Louis Segond, à se redire chaque matin pour commencer la journée.",
+  'prier:versets-soir': "Sept versets bibliques, dans la traduction Louis Segond, à se redire chaque soir pour se recoucher en paix.",
   'prier:office': "La liste des offices de la Liturgie des Heures. Touchez-en un pour lire son texte officiel du jour.",
   'prier:aelf-office': "Le texte officiel de cet office, publié par l'AELF pour aujourd'hui. Lisez-le en silence, ou touchez le bouton d'écoute pour une lecture à voix haute.",
   'prier:laudes': "Le texte officiel des Laudes (prière du matin) pour aujourd'hui, publié par l'AELF. Lisez-le en silence, ou touchez le bouton d'écoute pour une lecture à voix haute.",
