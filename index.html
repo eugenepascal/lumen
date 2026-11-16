@@ -90,8 +90,14 @@
       </form>
       <button class="btn btn-primary btn-sm" id="auth-submit-btn" style="width:100%; padding:11px;">Se connecter</button>
       <button class="auth-forgot-link" id="auth-forgot-btn">Mot de passe oublié ?</button>
-      <div class="auth-divider"></div>
-      <button class="btn btn-ghost btn-sm" id="auth-guest-btn" style="width:100%; padding:11px;">Continuer sans compte</button>
+      <!-- Masqué par défaut : un compte (Google, Facebook ou email) est
+           maintenant demandé pour utiliser Lumen. Ce bouton ne redevient
+           visible que si la connexion échoue vraiment (Firebase
+           inaccessible, délai dépassé...) — voir startAuthFlow() — pour ne
+           jamais bloquer complètement quelqu'un dont la connexion a un
+           problème technique. -->
+      <div class="auth-divider hidden" id="auth-guest-divider"></div>
+      <button class="btn btn-ghost btn-sm hidden" id="auth-guest-btn" style="width:100%; padding:11px;">Continuer sans compte</button>
     </div>
   </div>
   <div class="auth-sparkle" style="top:12%; left:15%; width:5px; height:5px; animation-delay:0s;"></div>

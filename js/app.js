@@ -909,6 +909,7 @@ async function startAuthFlow(){
     document.getElementById('auth-loading').style.display = 'none';
     document.getElementById('auth-form-wrap').style.display = 'block';
     authError("Firebase n'a pas pu s'initialiser ici — vous pouvez continuer sans compte.");
+    revealGuestFallback();
     return;
   }
   const persistenceMode = await initAuthPersistence();
@@ -938,6 +939,7 @@ async function startAuthFlow(){
     document.getElementById('auth-form-wrap').style.display = 'block';
     authError("La connexion met trop de temps à répondre (souvent un souci de stockage du navigateur). Vous pouvez réessayer, réinitialiser la connexion ci-dessous, ou continuer sans compte.");
     showAuthResetOption();
+    revealGuestFallback();
   }, 7000);
   try{
     fbAuth.onAuthStateChanged(
@@ -964,6 +966,7 @@ async function startAuthFlow(){
         document.getElementById('auth-form-wrap').style.display = 'block';
         authError("Problème de connexion au service d'authentification (" + (err.message||err) + "). Réessayez, réinitialisez la connexion, ou continuez sans compte.");
         showAuthResetOption();
+        revealGuestFallback();
       }
     );
   }catch(err){
@@ -974,7 +977,20 @@ async function startAuthFlow(){
     document.getElementById('auth-form-wrap').style.display = 'block';
     authError("Erreur d'initialisation de la connexion. Réinitialisez la connexion ci-dessous ou continuez sans compte.");
     showAuthResetOption();
+    revealGuestFallback();
   }
+}
+/* Le bouton "Continuer sans compte" reste caché par défaut (voir
+   index.html) : un compte est maintenant demandé pour utiliser Lumen,
+   pour inciter les gens à créer le leur plutôt que de rester en invité.
+   Il ne redevient visible que si la connexion échoue vraiment, pour ne
+   jamais bloquer complètement quelqu'un dont la connexion a un souci
+   technique (Firebase inaccessible, délai dépassé...). */
+function revealGuestFallback(){
+  const btn = document.getElementById('auth-guest-btn');
+  const divider = document.getElementById('auth-guest-divider');
+  if(btn) btn.classList.remove('hidden');
+  if(divider) divider.classList.remove('hidden');
 }
 function showAuthResetOption(){
   if(document.getElementById('auth-reset-btn')) return;
@@ -8772,7 +8788,7 @@ function renderApropos(){
 const FAQ_ITEMS = [
   {q:"Comment installer Lumen sur mon téléphone ou mon ordinateur ?", a:"Lumen s'installe directement depuis le navigateur, sans App Store : sur Mac ou PC (Chrome/Edge), cliquez sur l'icône d'installation dans la barre d'adresse ; sur Android, un bandeau « Ajouter à l'écran d'accueil » apparaît dans Chrome ; sur iPhone/iPad, utilisez le bouton Partager de Safari puis « Sur l'écran d'accueil ». Le détail par appareil est dans « À propos »."},
   {q:"Est-ce que mes données sont privées ?", a:"Oui. Votre journal, vos prières personnelles et votre progression restent liés uniquement à votre compte. Rien n'est visible publiquement, sauf ce que vous choisissez vous-même de partager (par exemple dans un groupe de prière)."},
-  {q:"Dois-je créer un compte pour utiliser l'application ?", a:"Non, l'application fonctionne sans compte — vos données restent alors uniquement sur cet appareil. Créer un compte permet de retrouver vos données sur un autre appareil en vous reconnectant."},
+  {q:"Dois-je créer un compte pour utiliser l'application ?", a:"Oui : un compte (avec Google, Facebook, ou une adresse email) est demandé pour utiliser Lumen. C'est rapide à créer, et ça permet surtout de retrouver vos données sur un autre appareil en vous reconnectant, au lieu de les garder uniquement sur celui-ci."},
   {q:"Les textes de la messe du dimanche sont-ils exacts ?", a:"Le guide « Messe du dimanche » explique le déroulement général de la célébration, mais ne contient pas les lectures précises de chaque dimanche, qui suivent un calendrier liturgique officiel — consultez un missel ou un site liturgique pour ces lectures exactes."},
   {q:"Comment fonctionne le mode « prière écoutée » ?", a:"Il utilise la reconnaissance vocale de votre navigateur (disponible sur Chrome et Edge) pour repérer que vous récitez la prière affichée. Ce n'est pas une intelligence artificielle qui comprend le sens de vos mots — seulement une écoute de mots-clés."},
   {q:"Puis-je utiliser l'application hors ligne ?", a:"Une partie du contenu (textes déjà écrits) reste accessible, mais les fonctionnalités demandant une connexion (vidéos, ambiance sonore, fonds d'écran photo, lien vers Bible Gateway) ne fonctionnent pas sans connexion internet."},
