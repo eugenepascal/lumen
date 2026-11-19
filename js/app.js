@@ -19,6 +19,13 @@ const firebaseConfig = {
    Firebase App Check pour vérifier que les requêtes vers Firestore viennent
    bien de ce site et non d'un script tiers muni de la seule clé API. */
 const RECAPTCHA_V3_SITE_KEY = "6LcN0BguAAAAAO9K0F3OVuIbTksPuZz313rdH0gr";
+/* Clé VAPID publique pour les notifications push Web (Firebase Cloud
+   Messaging) — à récupérer dans la console Firebase : Paramètres du
+   projet → Cloud Messaging → onglet "Configuration Web" → "Générer une
+   paire de clés" sous "Certificats Web Push". Tant que cette clé est
+   vide, le bouton "Activer les notifications" (Réglages) le signale
+   clairement plutôt que d'échouer silencieusement. */
+const FCM_VAPID_KEY = "";
 /* Active App Check sur une instance Firebase donnée (défensif : si le script
    App Check n'a pas pu se charger, ou si la clé est absente, on continue sans
    bloquer l'appli — tant que l'application Firestore n'est pas en mode
@@ -44,6 +51,55 @@ function activateAnalytics(app){
     if(typeof firebase.analytics !== 'function') return;
     firebase.analytics(app);
   }catch(e){ console.warn('Analytics indisponible :', e); }
+}
+/* Notifications push (Firebase Cloud Messaging) : activées à la demande
+   depuis Réglages, pour recevoir un rappel même quand Lumen est fermée.
+   Envoyées manuellement depuis la console Firebase (Cloud Messaging >
+   Nouvelle campagne) — il n'y a pas d'envoi automatique programmé côté
+   serveur ici. Le drapeau local ci-dessous ne sert qu'à afficher l'état
+   du bouton dans Réglages ; la vraie source de vérité est le jeton côté
+   Firebase une fois obtenu. */
+function getPushEnabledLocal(){ return localStorage.getItem('lumen_push_enabled') === '1'; }
+async function activatePushNotifications(){
+  if(!FCM_VAPID_KEY){
+    showToast("Les notifications push ne sont pas encore configurées pour cette application.");
+    return false;
+  }
+  if(!window.Notification){
+    showToast("Les notifications ne sont pas prises en charge par ce navigateur.");
+    return false;
+  }
+  if(!FIREBASE_READY || typeof firebase.messaging !== 'function'){
+    showToast("Firebase Messaging n'est pas disponible ici.");
+    return false;
+  }
+  try{
+    const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+    if(perm !== 'granted'){
+      showToast("Notifications refusées — vous pouvez les réactiver dans les réglages de votre navigateur.");
+      return false;
+    }
+    const reg = await navigator.serviceWorker.ready;
+    const messagingInstance = firebase.messaging(fbApp);
+    const token = await messagingInstance.getToken({ vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: reg });
+    if(!token){
+      showToast("Impossible d'obtenir un jeton de notification.");
+      return false;
+    }
+    // Reçoit les messages quand Lumen est déjà ouverte au premier plan
+    // (quand elle est fermée/en arrière-plan, c'est sw.js qui s'en charge).
+    messagingInstance.onMessage((payload)=>{
+      const n = payload.notification || {};
+      showToast((n.title ? n.title+' — ' : '') + (n.body || 'Nouvelle notification'));
+    });
+    localStorage.setItem('lumen_push_enabled', '1');
+    showToast("Notifications activées ✅");
+    return true;
+  }catch(e){
+    console.warn('activatePushNotifications', e);
+    showToast("Erreur lors de l'activation des notifications.");
+    return false;
+  }
 }
 /* Consentement RGPD pour la mesure d'audience (Google Analytics / Firebase) :
    on ne l'active que si la personne a explicitement accepté, via le bandeau
@@ -13758,6 +13814,12 @@ function renderReglages(){
       <button class="btn btn-primary btn-sm" id="save-reminders-btn" style="margin-top:12px;">Activer les rappels</button>
       <p class="section-desc" style="margin-top:10px;">Statut des notifications : ${permission==='granted'?'✅ autorisées':permission==='denied'?'❌ refusées (à réactiver dans les réglages du navigateur)':'à autoriser'}</p>
     </div>
+    <h2 class="section-title" style="font-size:16px;">📣 Notifications push</h2>
+    <div class="card">
+      <p class="section-desc" style="margin-top:0;">Contrairement aux rappels ci-dessus, ces notifications peuvent arriver même quand Lumen est fermée. Elles ne sont pas automatiques : elles ne servent qu'à relayer, de temps en temps, un message d'encouragement à prier.</p>
+      <button class="btn btn-gold btn-sm" id="activate-push-btn">🔔 Activer les notifications</button>
+      <p class="section-desc" style="margin-top:10px;">Statut : ${getPushEnabledLocal() ? '✅ activées sur cet appareil' : 'pas encore activées'}</p>
+    </div>
     <h2 class="section-title" style="font-size:16px;">📆 Exporter vers mon calendrier</h2>
     <div class="card">
       <p class="section-desc" style="margin-top:0;">Téléchargez un fichier .ics avec les prochaines neuvaines à commencer et les grandes fêtes fixes, à importer dans votre agenda.</p>
@@ -13839,6 +13901,10 @@ function renderReglages(){
     REMINDERS.evening = document.getElementById('reminder-evening').value;
     await saveReminders(REMINDERS);
     showToast('Rappels enregistrés 🔔');
+    render();
+  };
+  document.getElementById('activate-push-btn').onclick = async ()=>{
+    await activatePushNotifications();
     render();
   };
   document.getElementById('export-ics-btn').onclick = exportICS;

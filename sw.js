@@ -6,7 +6,50 @@
    contenu dynamique ou qui ne nous appartient pas.
    Changez CACHE_VERSION pour forcer les navigateurs à rafraîchir le cache
    après une mise à jour du shell. */
-const CACHE_VERSION = 'lumen-shell-v69';
+const CACHE_VERSION = 'lumen-shell-v70';
+
+/* ---------- Notifications push (Firebase Cloud Messaging) ----------
+   Envoyées manuellement depuis la console Firebase (Cloud Messaging >
+   Nouvelle campagne), pas par un serveur automatique ici — ce service
+   worker gère seulement la réception quand Lumen est fermée ou en
+   arrière-plan. Quand Lumen est ouverte au premier plan, le SDK appelle
+   directement onMessage côté app (js/app.js), pas ce fichier. */
+try{
+  importScripts('https://cdnjs.cloudflare.com/ajax/libs/firebase/12.17.1/firebase-app-compat.min.js');
+  importScripts('https://cdnjs.cloudflare.com/ajax/libs/firebase/12.17.1/firebase-messaging-compat.min.js');
+  firebase.initializeApp({
+    apiKey: "AIzaSyBwwmZEFW7q4NU__yjDWwvVFYESP-9clAU",
+    authDomain: "lumen-78ad7.firebaseapp.com",
+    projectId: "lumen-78ad7",
+    storageBucket: "lumen-78ad7.firebasestorage.app",
+    messagingSenderId: "672206073820",
+    appId: "1:672206073820:web:3b0477c97b98e6c73c6919",
+  });
+  const messaging = firebase.messaging();
+  // Affiche la notification avec l'icône de Lumen même si la campagne
+  // Firebase n'en a pas précisé une. onBackgroundMessage gère uniquement
+  // le cas où Lumen est fermée/en arrière-plan ; au premier plan, le SDK
+  // appelle onMessage côté page (js/app.js) à la place.
+  messaging.onBackgroundMessage((payload)=>{
+    const n = payload.notification || {};
+    self.registration.showNotification(n.title || 'Lumen', {
+      body: n.body || '',
+      icon: n.icon || './images/icons/icon-192.png',
+      badge: './images/icons/icon-192.png',
+      data: payload.data || {}
+    });
+  });
+}catch(e){ console.warn('Firebase Messaging indisponible dans le service worker :', e); }
+
+self.addEventListener('notificationclick', (event)=>{
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({type:'window', includeUncontrolled:true}).then((clients)=>{
+      for(const client of clients){ if('focus' in client) return client.focus(); }
+      if(self.clients.openWindow) return self.clients.openWindow('./');
+    })
+  );
+});
 
 const SHELL_ASSETS = [
   './',
