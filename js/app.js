@@ -25,7 +25,7 @@ const RECAPTCHA_V3_SITE_KEY = "6LcN0BguAAAAAO9K0F3OVuIbTksPuZz313rdH0gr";
    paire de clés" sous "Certificats Web Push". Tant que cette clé est
    vide, le bouton "Activer les notifications" (Réglages) le signale
    clairement plutôt que d'échouer silencieusement. */
-const FCM_VAPID_KEY = "";
+const FCM_VAPID_KEY = "BGCx6tQgoJEEXHo-i8yTkEyge8zMgI5aQNc8wDlYnXSUKPBXd7DXfPlCydem1xI5W4AD1175v0C8kUZSPs3zjn8";
 /* Active App Check sur une instance Firebase donnée (défensif : si le script
    App Check n'a pas pu se charger, ou si la clé est absente, on continue sans
    bloquer l'appli — tant que l'application Firestore n'est pas en mode
