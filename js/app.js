@@ -5625,35 +5625,58 @@ const HUB_HERO_POS = {
   ecritures: '35%'
 };
 const PRIER_HUB_CATEGORIES = [
-  {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Complies...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B'},
-  {label:'Toutes les prières', desc:'Prières fondamentales, à Jésus, Marie et Joseph, aux saints, aux Archanges, de délivrance… cherchez par mot-clé', icon:'📿', goto:'prieres', cross:{primary:'devotions', sub:'prieres'}, color:'#6B2545'},
-  {label:'Versets du matin', desc:'Sept versets à réciter chaque matin pour commencer la journée', icon:'🌅', goto:'versets-matin', color:'#C9A227'},
-  {label:'Versets du soir', desc:'Sept versets à réciter chaque soir pour se recoucher en paix', icon:'🌙', goto:'versets-soir', color:'#4A3D6B'},
-  {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545'},
-  {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E'},
-  {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58'},
-  {label:'Pour moi et les autres', desc:'Intentions, groupe de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B'},
-  {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58'},
-  {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions', sub:'accueil-devotions'}, color:'#4A3D6B'},
-  {label:'Prier autrement', desc:'5 minutes, méditer, pour les jeunes, avant un examen, dans le silence...', icon:'🪔', goto:'autrement', color:'#3F5E50'}
+  {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Complies...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B', group:'jour'},
+  {label:'Versets du matin', desc:'Sept versets à réciter chaque matin pour commencer la journée', icon:'🌅', goto:'versets-matin', color:'#C9A227', group:'jour'},
+  {label:'Versets du soir', desc:'Sept versets à réciter chaque soir pour se recoucher en paix', icon:'🌙', goto:'versets-soir', color:'#4A3D6B', group:'jour'},
+  {label:'Toutes les prières', desc:'Prières fondamentales, à Jésus, Marie et Joseph, aux saints, aux Archanges, de délivrance… cherchez par mot-clé', icon:'📿', goto:'prieres', cross:{primary:'devotions', sub:'prieres'}, color:'#6B2545', group:'classiques'},
+  {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545', group:'classiques'},
+  {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E', group:'classiques'},
+  {label:'Pour moi et les autres', desc:'Intentions, groupe de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B', group:'autres'},
+  {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58', group:'autres'},
+  {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58', group:'varier'},
+  {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions', sub:'accueil-devotions'}, color:'#4A3D6B', group:'varier'},
+  {label:'Prier autrement', desc:'5 minutes, méditer, pour les jeunes, avant un examen, dans le silence...', icon:'🪔', goto:'autrement', color:'#3F5E50', group:'varier'}
+];
+/* Regroupement visuel du hub Prier : onze entrées à plat étaient
+   difficiles à "scanner" d'un coup d'œil, surtout pour quelqu'un de
+   nouveau. On les range maintenant sous quatre petits intitulés, dans
+   un ordre pensé comme un parcours : d'abord le quotidien, puis les
+   grandes prières classiques, puis la dimension communautaire, enfin
+   ce qui permet de varier ou de personnaliser. */
+const PRIER_HUB_GROUPS = [
+  {key:'jour', label:'Chaque jour'},
+  {key:'classiques', label:'Les grandes prières'},
+  {key:'autres', label:'Avec les autres'},
+  {key:'varier', label:'Pour varier et personnaliser'}
 ];
 function renderPrierHub(){
+  maybeAutoOpenMiniTuto('prier-hub');
   const html = `
     <div class="hub-hero-banner" style="background:${PRIER_HUB_CATEGORIES[0].color};">
       ${HUB_HERO_IMAGES.prier ? `<img class="hub-hero-banner-img" style="object-position:center ${HUB_HERO_POS.prier};" src="${HUB_HERO_IMAGES.prier}" alt="" onerror="this.remove(); this.closest('.hub-hero-banner').insertAdjacentHTML('beforeend','<span class=\\'hub-hero-emoji\\'>🙏</span>');"><div class="hub-hero-scrim"></div>` : `<span class="hub-hero-emoji">🙏</span>`}
     </div>
-    <h2 class="section-title">🙏 Prier</h2>
-    <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui.</p>
-    <div class="rubric-list">${PRIER_HUB_CATEGORIES.map((c,i)=>`
-      <button type="button" class="rubric-row" data-hub-goto="${c.goto}" data-hub-index="${i}">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+      <h2 class="section-title" style="margin:0;">🙏 Prier</h2>
+      <button class="btn btn-ghost btn-sm" id="prier-hub-tuto-btn" title="À quoi correspond chaque rubrique ?" style="padding:6px 11px; border-radius:50%;">❓</button>
+    </div>
+    <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui — ou touchez le ❓ pour un petit guide des rubriques.</p>
+    ${PRIER_HUB_GROUPS.map(g=>{
+      const cats = PRIER_HUB_CATEGORIES.filter(c=>c.group===g.key);
+      if(!cats.length) return '';
+      return `<p class="eyebrow" style="margin:16px 2px 6px;">${g.label}</p>
+      <div class="rubric-list">${cats.map(c=>{
+        const i = PRIER_HUB_CATEGORIES.indexOf(c);
+        return `<button type="button" class="rubric-row" data-hub-goto="${c.goto}" data-hub-index="${i}">
         <span class="rubric-row-icon" style="background:${c.color};">${c.icon}</span>
         <span class="rubric-row-text">
           <span class="rubric-row-title">${c.label}</span>
           <span class="rubric-row-desc">${c.desc}</span>
         </span>
         <span class="rubric-row-chevron">›</span>
-      </button>`).join('')}</div>`;
+      </button>`;}).join('')}</div>`;
+    }).join('')}`;
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('prier-hub-tuto-btn').onclick = ()=> openMiniTuto('prier-hub');
   document.querySelectorAll('[data-hub-goto]').forEach(card=>{
     card.onclick = ()=>{
       const cat = PRIER_HUB_CATEGORIES[parseInt(card.dataset.hubIndex,10)];
@@ -14705,6 +14728,16 @@ function closeGuide(){ document.getElementById('guide-overlay').classList.add('h
    automatiquement la première fois qu'on ouvre l'écran, puis consultable
    à volonté via un bouton « ? » dans l'en-tête. */
 const MINI_TUTOS = {
+  'prier-hub': {
+    title: 'La rubrique Prier',
+    icon: '🙏',
+    steps: [
+      {title:'☀️ Chaque jour', text:"Les textes du jour, les offices (Laudes, Vêpres, Complies…) et les versets du matin et du soir — pour un rythme de prière quotidien, court et régulier."},
+      {title:'📿 Les grandes prières', text:"« Toutes les prières » est le grand recueil : prières fondamentales (Notre Père, Je vous salue Marie…), à Jésus, Marie et Joseph, aux saints, aux Archanges, de délivrance — cherchables par mot-clé. À côté : le Chapelet & Rosaire, et les neuvaines & parcours (Carême 40 jours…)."},
+      {title:'🤝 Avec les autres', text:"« Pour moi et les autres » réunit vos intentions, le groupe de prière (à créer ou rejoindre avec des proches) et les suggestions selon votre état du moment. Le Carnet familial est un carnet d'intentions partagé avec les vôtres."},
+      {title:'🪔 Pour varier et personnaliser', text:"« Mes prières » garde vos propres textes. « Dévotions & combat spirituel » rassemble la Miséricorde, la Lectio Divina, la confession, l'Armure de Dieu... Et « Prier autrement » propose des formats courts : 5 minutes, méditer, dans le silence."}
+    ]
+  },
   groupe: {
     title: 'Groupe de prière',
     icon: '👥',
