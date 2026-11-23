@@ -992,6 +992,72 @@
   .comment-author{ font-family:'Inter',sans-serif; font-weight:700; color:var(--wine-dark); }
   .comment-form{ display:flex; gap:6px; margin-top:8px; }
   .comment-form .comment-input{ flex:1; }
+
+  /* groupe de prière : cadre dynamique */
+  .group-header-banner{
+    position:relative; overflow:hidden; border-radius:18px; padding:18px 16px;
+    text-align:center; color:var(--vellum-light); box-shadow:var(--shadow-warm);
+    background: linear-gradient(165deg, var(--wine) 0%, var(--wine-dark) 70%, #2E0A10 100%);
+  }
+  .group-header-banner .eyebrow{ color:var(--gold-light) !important; }
+  .group-header-banner .day-title{ color:var(--vellum-light); }
+  .group-header-banner .section-desc{ color:rgba(255,255,255,0.82); }
+  .group-avatar-row{ display:flex; align-items:center; justify-content:center; gap:0; margin:10px 0 2px; }
+  .group-member-avatar{
+    width:34px; height:34px; border-radius:50%; background:var(--gold-pale);
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+    border:2px solid var(--wine-dark); margin-left:-10px; box-shadow:0 2px 6px rgba(0,0,0,0.25);
+  }
+  .group-avatar-row .group-member-avatar:first-child{ margin-left:0; }
+  .group-member-more{
+    width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.18);
+    display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700;
+    color:var(--vellum-light); border:2px solid var(--wine-dark); margin-left:-10px;
+    font-family:'Inter',sans-serif;
+  }
+  .group-member-count{ font-family:'Inter',sans-serif; font-size:12.5px; color:rgba(255,255,255,0.85); margin-top:6px; }
+  .group-progress-wrap{ margin:10px 0 2px; }
+  .group-progress-track{
+    width:100%; height:8px; border-radius:999px; background:rgba(255,255,255,0.18); overflow:hidden;
+  }
+  .group-progress-track.on-light{ background:var(--hairline); }
+  .group-progress-fill{
+    height:100%; border-radius:999px; background:linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition:width 0.4s ease;
+  }
+  .group-progress-caption{ font-family:'Inter',sans-serif; font-size:12px; margin-top:4px; }
+  .group-tabs-row{ display:flex; gap:7px; overflow-x:auto; padding:2px 0 10px; -ms-overflow-style:none; scrollbar-width:none; }
+  .group-tabs-row::-webkit-scrollbar{ display:none; }
+  .group-tab-chip{
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:600; white-space:nowrap;
+    padding:7px 13px; border-radius:999px; border:1.5px solid var(--hairline); background:var(--vellum-light);
+    color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:5px;
+  }
+  .group-tab-chip.active{ background:var(--wine); border-color:var(--wine); color:var(--vellum-light); }
+  .group-tab-chip .group-tab-count{
+    font-size:10.5px; font-weight:700; background:rgba(0,0,0,0.12); border-radius:999px; padding:1px 6px;
+  }
+  .group-tab-chip.active .group-tab-count{ background:rgba(255,255,255,0.25); }
+  .group-kind-badge{
+    display:inline-flex; align-items:center; gap:4px; font-family:'Inter',sans-serif; font-size:10.5px;
+    font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 8px; border-radius:999px;
+    background:var(--gold-pale); color:var(--wine-dark); margin-bottom:6px;
+  }
+  .group-kind-select{
+    width:100%; font-family:'Inter',sans-serif; font-size:13.5px; padding:9px 11px; margin-bottom:8px;
+    border:1.5px solid var(--hairline); border-radius:10px; background:var(--vellum-light); color:var(--ink);
+  }
+  .message-bubble{ margin-bottom:10px; }
+  .message-bubble-head{ display:flex; align-items:center; gap:7px; margin-bottom:4px; }
+  .message-bubble-avatar{ font-size:17px; }
+  .message-bubble-text{ font-size:14px; line-height:1.5; }
+  .message-bubble-time{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); margin-left:auto; }
+  .group-activity-row{ display:flex; gap:8px; align-items:flex-start; font-size:13px; margin-bottom:8px; line-height:1.4; }
+  .group-activity-avatar{ font-size:15px; flex-shrink:0; }
+  .group-activity-time{ font-family:'Inter',sans-serif; font-size:11px; color:var(--ink-soft); display:block; }
+  .group-invite-highlight{
+    border:1.5px solid var(--gold); animation: ctaGlow 2.6s ease-in-out infinite;
+  }
   textarea, input[type=text]{
     width:100%; font-family:'Lora',serif; font-size:14px; padding:10px 12px;
     border:1.5px solid var(--hairline); border-radius:10px; background:var(--vellum-light); color:var(--ink);
