@@ -6662,8 +6662,9 @@ function wireIntentionButtons(){
 }
 
 function renderIntentions(){
+  maybeAutoOpenMiniTuto('intentions');
   const answeredCount = [...INTENTIONS, ...PRIVATE_INTENTIONS].filter(x=>x.answered).length;
-  let html = `<h2 class="section-title">🙏 Déposez votre intention</h2>`;
+  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;"><h2 class="section-title" style="margin:0;">🙏 Déposez votre intention</h2><button class="btn btn-ghost btn-sm" id="intentions-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button></div>`;
   if(answeredCount > 0){
     html += `<div class="card" style="text-align:center; border-left:4px solid var(--gold); margin-bottom:14px;">
       <p class="eyebrow" style="color:var(--gold);">✨ Gratitude</p>
@@ -6685,6 +6686,7 @@ function renderIntentions(){
   html += `</div>`;
   document.getElementById('screen').innerHTML = html;
   wireIntentionButtons();
+  document.getElementById('intentions-tuto-btn').onclick = ()=> openMiniTuto('intentions');
   document.getElementById('add-int-btn').onclick = async ()=>{
     const nameEl = document.getElementById('int-name');
     const textEl = document.getElementById('int-text');
@@ -8953,7 +8955,8 @@ function journalCardHTML(entry){
   </div>`;
 }
 function renderJournal(){
-  let html = `<h2 class="section-title">✍️ Mon journal</h2>
+  maybeAutoOpenMiniTuto('journal');
+  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;"><h2 class="section-title" style="margin:0;">✍️ Mon journal</h2><button class="btn btn-ghost btn-sm" id="journal-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button></div>
     <p class="section-desc">Un espace privé pour écrire vos réflexions, prières ou intentions personnelles. Vous seul(e) pouvez le voir.</p>
     <div class="card add-intention-box">
       <textarea id="journal-text" rows="4" placeholder="Qu'avez-vous sur le cœur aujourd'hui ?"></textarea>
@@ -8965,6 +8968,7 @@ function renderJournal(){
     html += `<div class="grid">${JOURNAL.slice().sort((a,b)=>b.createdAt-a.createdAt).map(journalCardHTML).join('')}</div>`;
   }
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('journal-tuto-btn').onclick = ()=> openMiniTuto('journal');
   document.getElementById('add-journal-btn').onclick = async ()=>{
     const textEl = document.getElementById('journal-text');
     const text = textEl.value.trim();
@@ -9161,7 +9165,8 @@ function renderMesPrieres(){
   return renderMesPrieresFolders();
 }
 function renderMesPrieresFolders(){
-  const html = `<h2 class="section-title">✍️ Mes prières</h2>
+  maybeAutoOpenMiniTuto('mes-prieres');
+  const html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;"><h2 class="section-title" style="margin:0;">✍️ Mes prières</h2><button class="btn btn-ghost btn-sm" id="mp-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button></div>
     <p class="section-desc">Vos prières personnelles, rangées par thème — comme des dossiers de notes. Ouvrez un thème, ou créez une nouvelle prière en texte ou en image.</p>
     <div class="mp-folders-grid">${MES_PRIERES_CATEGORIES.map(c=>{
       const count = MES_PRIERES.filter(p=>p.category===c.key).length;
@@ -9174,6 +9179,7 @@ function renderMesPrieresFolders(){
     <button class="btn btn-primary" id="mp-new-btn" style="width:100%; margin-top:16px;">✦ Nouvelle prière</button>
   `;
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('mp-tuto-btn').onclick = ()=> openMiniTuto('mes-prieres');
   document.querySelectorAll('[data-open-folder]').forEach(btn=>{
     btn.onclick = ()=>{ MP_VIEW.folder = btn.dataset.openFolder; renderMesPrieres(); };
   });
@@ -14754,6 +14760,33 @@ const MINI_TUTOS = {
       {title:'Dites comment vous vous sentez', text:"Touchez l'état qui vous correspond le mieux maintenant — par exemple « Seul(e), isolé(e) » ou « En recherche de paix intérieure ». Il n'y a pas de bonne ou de mauvaise réponse."},
       {title:'Recevez un moment pensé pour cet état', text:"Un court message, un psaume et des prières sont choisis spécialement pour ce que vous ressentez — par exemple, pour la solitude : le psaume 23 et le Memorare."},
       {title:'Laissez-vous accompagner', text:"Touchez une prière suggérée pour l'ouvrir en entier, appuyez sur « Me le lire » pour l'écouter à voix haute, ou ajoutez une ambiance sonore apaisante en fond."}
+    ]
+  },
+  intentions: {
+    title: 'Prier pour les autres',
+    icon: '🕯️',
+    steps: [
+      {title:'Déposez une intention', text:"Écrivez votre intention dans le formulaire en haut — votre prénom est optionnel. Elle apparaît ensuite dans la liste commune, pour que d'autres puissent prier pour vous."},
+      {title:'Gardez-la pour vous si besoin', text:"Cochez « 🔒 Garder cette intention pour moi seul(e) » si vous préférez la confier sans la partager publiquement — elle reste alors visible uniquement sur votre appareil."},
+      {title:'Priez pour les autres', text:"Parcourez les intentions déposées par les autres et touchez-en une pour l'accompagner de votre prière. Quand une intention est exaucée, elle peut rejoindre la carte de gratitude en haut de la page."}
+    ]
+  },
+  'mes-prieres': {
+    title: 'Mes prières',
+    icon: '✍️',
+    steps: [
+      {title:'Rangées par thème', text:"Vos prières personnelles sont classées par thème (famille, travail, épreuves…). Touchez un thème pour voir les prières qu'il contient."},
+      {title:'Créez-en une nouvelle', text:"Avec « ✦ Nouvelle prière », écrivez votre texte avec vos propres mots, ou basculez sur « 🖼️ Image » pour prendre en photo une prière manuscrite ou une image qui vous inspire."},
+      {title:'Retrouvez-les facilement', text:"Donnez-leur un titre pour les reconnaître d'un coup d'œil. Depuis une carte, « 🔊 Écouter » la lit à voix haute, et « 🗑 Supprimer » l'efface si vous n'en avez plus besoin."}
+    ]
+  },
+  journal: {
+    title: 'Mon journal',
+    icon: '📔',
+    steps: [
+      {title:"Un espace rien qu'à vous", text:"Écrivez ce que vous avez sur le cœur — une réflexion, une prière, une intention — dans le champ en haut. Personne d'autre que vous ne peut le lire."},
+      {title:'Au fil des jours', text:"Chaque entrée est datée et s'ajoute aux précédentes, formant au fil du temps un petit carnet de votre cheminement spirituel."},
+      {title:'Sans contrainte', text:"Pas besoin de titre ni de structure : écrivez librement, aussi souvent que vous le souhaitez, même quelques lignes suffisent."}
     ]
   }
 };
