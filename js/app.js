@@ -6630,7 +6630,7 @@ function wireNovenaBeadSequences(){
 
 function intentionCardHTML(it){
   return `<div class="card intention-card ${it.answered?'intention-answered':''}" data-id="${it.id}">
-    ${it.answered ? `<p class="intention-answered-badge">✨ Prière exaucée</p>` : ''}
+    ${it.answered ? `<p class="intention-answered-badge">✨ Prière exaucée</p>` : `<span class="intention-tag ${it.private?'intention-tag-private':'intention-tag-public'}">${it.private?'🔒 Privée':'🌍 Partagée'}</span>`}
     <p class="intention-author">${it.private ? '🔒 Intention privée' : escapeHtml(it.name)}</p>
     <p class="intention-text">${escapeHtml(it.text)}</p>
     <div class="intention-footer">
@@ -6678,8 +6678,23 @@ function wireIntentionButtons(){
 
 function renderIntentions(){
   maybeAutoOpenMiniTuto('intentions');
-  const answeredCount = [...INTENTIONS, ...PRIVATE_INTENTIONS].filter(x=>x.answered).length;
-  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;"><h2 class="section-title" style="margin:0;">🙏 Déposez votre intention</h2><button class="btn btn-ghost btn-sm" id="intentions-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button></div>`;
+  const all = [...INTENTIONS, ...PRIVATE_INTENTIONS].sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
+  const answeredCount = all.filter(x=>x.answered).length;
+  const totalPrayers = all.reduce((sum,x)=> sum + (x.prayers||0), 0);
+  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;"><h2 class="section-title" style="margin:0;">🙏 Prier les uns pour les autres</h2><button class="btn btn-ghost btn-sm" id="intentions-tuto-btn" title="Comment ça marche ?" style="padding:6px 11px; border-radius:50%;">❓</button></div>
+    <div class="intentions-hero">
+      <span class="intentions-sparkle" style="top:14%; left:10%; animation-duration:3.2s;">✨</span>
+      <span class="intentions-sparkle" style="top:20%; right:12%; animation-duration:4.1s; animation-delay:-1.2s; font-size:12px;">✨</span>
+      <span class="intentions-sparkle" style="bottom:14%; left:22%; animation-duration:3.7s; animation-delay:-2.1s; font-size:13px;">✨</span>
+      <div class="intentions-hero-icon">🙏</div>
+      <p class="intentions-hero-title">Confiez votre intention</p>
+      <p class="intentions-hero-sub">Chaque prière déposée ici est portée par toute la communauté Lumen — vous n'êtes jamais seul(e) à prier.</p>
+      <div class="intentions-hero-stats">
+        <div class="intentions-stat"><span class="intentions-stat-num">${all.length}</span><span class="intentions-stat-label">Intentions</span></div>
+        <div class="intentions-stat"><span class="intentions-stat-num">${totalPrayers}</span><span class="intentions-stat-label">Prières offertes</span></div>
+        <div class="intentions-stat"><span class="intentions-stat-num">${answeredCount}</span><span class="intentions-stat-label">Exaucées</span></div>
+      </div>
+    </div>`;
   if(answeredCount > 0){
     html += `<div class="card" style="text-align:center; border-left:4px solid var(--gold); margin-bottom:14px;">
       <p class="eyebrow" style="color:var(--gold);">✨ Gratitude</p>
@@ -6688,17 +6703,26 @@ function renderIntentions(){
     </div>`;
   }
   html += `<div class="card add-intention-box">
+      <div class="compose-head">
+        <span class="compose-icon">🕊️</span>
+        <div>
+          <p class="compose-title">Déposer une intention</p>
+          <p class="compose-sub">Le cœur ouvert, sans jugement — une phrase suffit.</p>
+        </div>
+      </div>
       <input type="text" id="int-name" placeholder="Votre prénom (optionnel)">
       <textarea id="int-text" rows="3" placeholder="Écrivez votre intention de prière…"></textarea>
       <label style="display:flex; align-items:center; gap:8px; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); margin-bottom:10px;">
         <input type="checkbox" id="int-private" style="width:auto;"> 🔒 Garder cette intention pour moi seul(e)
       </label>
-      <button class="btn btn-primary btn-sm" id="add-int-btn">Déposer mon intention</button>
+      <button class="btn btn-gold btn-sm" id="add-int-btn" style="width:100%;">🕯️ Déposer mon intention</button>
     </div>
-    <h2 class="section-title">🕯️ Priez pour les autres</h2><div class="grid">`;
-  const all = [...INTENTIONS, ...PRIVATE_INTENTIONS].sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
-  all.forEach(it=>{ html += intentionCardHTML(it); });
-  html += `</div>`;
+    <h2 class="section-title">🕯️ Priez pour les autres</h2>`;
+  if(all.length === 0){
+    html += `<div class="card empty-state">Aucune intention pour l'instant — soyez le premier à en déposer une.</div>`;
+  } else {
+    html += `<div class="grid">${all.map(intentionCardHTML).join('')}</div>`;
+  }
   document.getElementById('screen').innerHTML = html;
   wireIntentionButtons();
   document.getElementById('intentions-tuto-btn').onclick = ()=> openMiniTuto('intentions');
@@ -8522,6 +8546,7 @@ function renderPrayerGroup(){
   `).join('')}</div>`;
 
   if(GROUP_TAB === 'accueil'){
+    html += `<img class="group-tab-banner" src="./images/group-accueil.svg" alt="">`;
     html += `<div class="card" id="group-moment-card" style="text-align:center;"><p class="studio-note">Chargement…</p></div>`;
     if(GROUP_MOMENT && memberTotal){
       html += `<div class="group-progress-wrap">
@@ -8549,8 +8574,15 @@ function renderPrayerGroup(){
   }
 
   if(GROUP_TAB === 'intentions'){
-    html += `<p class="section-desc" style="margin-top:-4px;">Une demande, une épreuve, une personne à confier à Dieu — le groupe prie avec vous.</p>
-    <div class="card add-intention-box">
+    html += `<img class="group-tab-banner" src="./images/group-intentions.svg" alt="">`;
+    html += `<div class="card add-intention-box">
+      <div class="compose-head">
+        <span class="compose-icon" style="background:rgba(61,34,48,0.14);">🕯️</span>
+        <div>
+          <p class="compose-title">Partager une intention</p>
+          <p class="compose-sub">Une demande, une épreuve, une personne à confier — le groupe prie avec vous.</p>
+        </div>
+      </div>
       <textarea id="group-int-text" rows="3" placeholder="Écrire une intention pour le groupe…"></textarea>
       <button class="btn btn-primary btn-sm" id="add-group-int-btn" style="margin-top:10px;">Partager avec le groupe</button>
     </div>`;
@@ -8584,8 +8616,15 @@ function renderPrayerGroup(){
   }
 
   if(GROUP_TAB === 'temoignages'){
-    html += `<p class="section-desc" style="margin-top:-4px;">Une grâce reçue, une prière exaucée, un encouragement à transmettre.</p>
-    <div class="card add-intention-box">
+    html += `<img class="group-tab-banner" src="./images/group-temoignages.svg" alt="">`;
+    html += `<div class="card add-intention-box">
+      <div class="compose-head">
+        <span class="compose-icon" style="background:rgba(109,96,58,0.16);">🕊️</span>
+        <div>
+          <p class="compose-title">Partager un témoignage</p>
+          <p class="compose-sub">Une grâce reçue, une prière exaucée, un encouragement à transmettre.</p>
+        </div>
+      </div>
       <textarea id="group-testimony-text" rows="3" placeholder="Partager un témoignage avec le groupe (une expérience vécue, une grâce reçue, une prière exaucée…)"></textarea>
       <button class="btn btn-primary btn-sm" id="add-group-testimony-btn" style="margin-top:10px;">🕊️ Partager mon témoignage</button>
     </div>`;
@@ -8615,8 +8654,15 @@ function renderPrayerGroup(){
   }
 
   if(GROUP_TAB === 'messages'){
-    html += `<p class="section-desc" style="margin-top:-4px;">Un petit mot d'encouragement, ou une prière que vous récitez et partagez avec le groupe.</p>
-    <div class="card add-intention-box">
+    html += `<img class="group-tab-banner" src="./images/group-messages.svg" alt="">`;
+    html += `<div class="card add-intention-box">
+      <div class="compose-head">
+        <span class="compose-icon" style="background:rgba(94,76,67,0.16);">💬</span>
+        <div>
+          <p class="compose-title">Écrire au groupe</p>
+          <p class="compose-sub">Un petit mot d'encouragement, ou une prière que vous récitez et partagez.</p>
+        </div>
+      </div>
       <div class="chip-row" id="group-message-kind-row" style="margin-bottom:8px;">
         <button type="button" class="chip ${GROUP_MSG_KIND_DRAFT==='message'?'active':''}" data-msg-kind="message">💬 Message</button>
         <button type="button" class="chip ${GROUP_MSG_KIND_DRAFT==='priere'?'active':''}" data-msg-kind="priere">📿 Prière</button>
@@ -8648,8 +8694,15 @@ function renderPrayerGroup(){
   }
 
   if(GROUP_TAB === 'documents'){
-    html += `<p class="section-desc" style="margin-top:-4px;">Un plan de lecture, le déroulé d'une rencontre, un lien vers un chant, une vidéo ou un document externe (Drive, site paroissial…) — tout le groupe le voit.</p>
-    <div class="card add-intention-box">
+    html += `<img class="group-tab-banner" src="./images/group-documents.svg" alt="">`;
+    html += `<div class="card add-intention-box">
+      <div class="compose-head">
+        <span class="compose-icon" style="background:rgba(201,162,39,0.18);">📁</span>
+        <div>
+          <p class="compose-title">Ajouter une ressource</p>
+          <p class="compose-sub">Plan de lecture, déroulé d'une rencontre, chant, vidéo ou lien externe — tout le groupe le voit.</p>
+        </div>
+      </div>
       <select class="group-kind-select" id="group-program-kind">
         ${GROUP_DOC_KINDS.map(k=>`<option value="${k.key}">${k.icon} ${k.label}</option>`).join('')}
       </select>
