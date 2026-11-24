@@ -3024,7 +3024,22 @@ const LOUANGES_VIDEOS = [
   {title:"Bolamu", artist:"Divine Yalla", videoId:"YLisjBSUwcI", tag:"Louange congolaise"},
   {title:"Sans toi et tout comme toi", artist:"NK Divine", videoId:"6l2ogsLXYvE", tag:"Louange congolaise"},
   {title:"Si", artist:"NK Divine", videoId:"Y2iZDyfwWEU", tag:"Louange congolaise"},
-  {title:"Choix de Dieu", artist:"Jonathan C. Gambela", videoId:"FPtEuBiJtHg", tag:"Louange congolaise"}
+  {title:"Choix de Dieu", artist:"Jonathan C. Gambela", videoId:"FPtEuBiJtHg", tag:"Louange congolaise"},
+  {title:"Pardonne-moi", artist:"Moïse Ngofo", videoId:"YTyKaruS_rw", tag:"Louange congolaise"},
+  {title:"Défauts", artist:"Moïse Ngofo", videoId:"qlTpDZzWF9A", tag:"Louange congolaise"},
+  {title:"Seul", artist:"Moïse Ngofo", videoId:"mMzm-fLe42k", tag:"Louange congolaise"},
+  {title:"Demander", artist:"Jethroo", videoId:"kXADmFyFSEk", tag:"Louange congolaise"},
+  {title:"J'ai des flashbacks", artist:"David Okit", videoId:"nRRLp6FJ5XA", tag:"Louange congolaise"},
+  {title:"Les premières fois", artist:"David Okit", videoId:"J9OLma93v8c", tag:"Louange congolaise"},
+  {title:"Libère-moi", artist:"Brother Dave", videoId:"tT5g0xKSJ0k", tag:"Louange congolaise"},
+  {title:"Chant chorale sérère 2023", artist:"Chorale sérère", videoId:"5Ea11MPAMv0", tag:"Chorale sérère"},
+  {title:"Jokti Mbaap Naa", artist:"Chorale sérère", videoId:"omgSqwWtvmw", tag:"Chorale sérère"},
+  {title:"Te Yundox & Ma Gneuw Ba Fekala (feat. Doko Style)", artist:"Doko Style", videoId:"MZGaQkmHglw", tag:"Chorale sérère"},
+  {title:"Réfata o labbé bo faw (Tu es devenu Prêtre à jamais)", artist:"Chorale catholique sérère (Sénégal)", videoId:"Nu_ONHUMi9s", tag:"Chorale sérère"},
+  {title:"Je rends grâce", artist:"Chant chrétien", videoId:"01MiWZXentY", tag:"Louange française"},
+  {title:"Chants chorale — JMJ Nianing 2026", artist:"Chorale JMJ Nianing", videoId:"PYIlclRvcHY", tag:"Chorale sérère"},
+  {title:"Chorale sérère 1", artist:"Chorale sérère", videoId:"pCg2HY_BR84", tag:"Chorale sérère"},
+  {title:"Alléluia na Christa", artist:"Chorale sénégalaise de Popenguine de France (Fulgence Gackou, Rémy Dioh)", videoId:"StTt34TJ9Mo", tag:"Chorale sérère"}
 ];
 
 const SECTION_ICONS = {
