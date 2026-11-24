@@ -336,6 +336,64 @@ function notifyUsageMomentum(){
   }catch(e){}
 }
 
+/* ---------- Présence en direct ("X personnes prient avec vous en ce moment") ----------
+   Contrairement au compteur hebdomadaire ci-dessus (cumulé, rafraîchi une
+   fois par jour), celui-ci reflète qui est actuellement ouvert sur l'appli,
+   à la minute près. Chaque appareil "pointe" (écrit son horodatage) dans un
+   document partagé (shared/global-presence, via la connexion anonyme déjà
+   utilisée pour les groupes) toutes les 50 secondes ; on ne compte que les
+   pointages de moins de 3 minutes, et on les purge au passage pour que le
+   document ne grossisse pas indéfiniment. Fonctionne pour tout le monde,
+   connecté ou invité. */
+const LIVE_PRESENCE_WINDOW_MS = 3*60*1000;
+let LIVE_PRESENCE_COUNT = 1;
+let LIVE_PRESENCE_UNSUB = null;
+function prunePresenceMap(map){
+  const now = Date.now();
+  const kept = {};
+  Object.keys(map||{}).forEach(id=>{ if(now - map[id] < LIVE_PRESENCE_WINDOW_MS) kept[id] = map[id]; });
+  return kept;
+}
+async function heartbeatLivePresence(){
+  try{
+    const ok = await ensureSharedAuth();
+    if(!ok) return;
+    const ref = sharedFbDb.collection('shared').doc('global-presence');
+    const snap = await ref.get();
+    const current = (snap.exists && snap.data().value) ? JSON.parse(snap.data().value) : {};
+    const kept = prunePresenceMap(current);
+    kept[getDeviceId()] = Date.now();
+    await ref.set({ value: JSON.stringify(kept), updatedAt: Date.now() });
+  }catch(e){ console.warn('heartbeatLivePresence', e); }
+}
+function refreshLivePresenceBanner(){
+  const el = document.getElementById('home-live-presence');
+  if(el){ el.outerHTML = homeLivePresenceHTML(); }
+}
+function homeLivePresenceHTML(){
+  const n = Math.max(1, LIVE_PRESENCE_COUNT);
+  const label = n <= 1 ? 'Vous priez en ce moment' : `${n.toLocaleString('fr-FR')} personnes prient avec vous en ce moment`;
+  return `<div class="home-live-presence" id="home-live-presence">
+    <span class="home-live-presence-dot"></span>
+    <span>🙏 ${label}</span>
+  </div>`;
+}
+async function startLivePresence(){
+  try{
+    const ok = await ensureSharedAuth();
+    if(!ok) return;
+    heartbeatLivePresence();
+    setInterval(heartbeatLivePresence, 50000);
+    if(LIVE_PRESENCE_UNSUB) return;
+    LIVE_PRESENCE_UNSUB = sharedFbDb.collection('shared').doc('global-presence').onSnapshot(snap=>{
+      const map = (snap.exists && snap.data().value) ? JSON.parse(snap.data().value) : {};
+      const now = Date.now();
+      LIVE_PRESENCE_COUNT = Object.values(map).filter(ts=> now - ts < LIVE_PRESENCE_WINDOW_MS).length || 1;
+      refreshLivePresenceBanner();
+    }, err=>{ console.warn('startLivePresence listener', err); });
+  }catch(e){ console.warn('startLivePresence', e); }
+}
+
 try{
   fbApp = firebase.initializeApp(firebaseConfig);
   fbAuth = firebase.auth();
@@ -4268,6 +4326,37 @@ async function loadPrayerGroup(){
 async function savePrayerGroupCode(code){
   try{ await window.storage.set('prayer-group-code', code, false); }catch(e){}
 }
+async function loadPrayerBuddyCode(){
+  try{ const r = await window.storage.get('prayer-buddy-code', false); return r ? r.value : ''; }catch(e){ return ''; }
+}
+async function savePrayerBuddyCode(code){
+  try{ await window.storage.set('prayer-buddy-code', code, false); }catch(e){}
+}
+async function loadBuddyData(code){
+  try{ const d = await sharedGet('buddy:'+code); return (d && d.value) ? JSON.parse(d.value) : null; }catch(e){ return null; }
+}
+async function saveBuddyData(code, data){
+  const ok = await sharedSet('buddy:'+code, JSON.stringify(data));
+  if(!ok) showToast('⚠️ Connexion impossible : votre binôme ne verra pas cette mise à jour tant que la connexion ne sera pas rétablie.');
+  return ok;
+}
+function stopBuddyListener(){
+  if(BUDDY_LISTENER_UNSUB){ try{ BUDDY_LISTENER_UNSUB(); }catch(e){} BUDDY_LISTENER_UNSUB = null; }
+}
+async function startBuddyListener(code){
+  stopBuddyListener();
+  if(!code) return;
+  const ok = await ensureSharedAuth();
+  if(!ok || PRAYER_BUDDY_CODE !== code) return;
+  BUDDY_LISTENER_UNSUB = sharedFbDb.collection('shared').doc('buddy:'+code).onSnapshot(snap=>{
+    BUDDY_DATA = (snap.exists && snap.data().value) ? JSON.parse(snap.data().value) : null;
+    if(PRIMARY==='prier' && SUBTAB.prier==='binome'){
+      const active = document.activeElement;
+      const isTyping = active && (active.tagName==='INPUT') && active.value && active.value.trim();
+      if(!isTyping) renderPrayerBuddy();
+    }
+  }, err=>{ console.warn('startBuddyListener', err); });
+}
 async function loadGroupIntentions(code){
   try{ const d = await sharedGet('group-intentions:'+code); return (d && d.value) ? JSON.parse(d.value) : []; }catch(e){ return []; }
 }
@@ -4461,6 +4550,14 @@ let LAST_CONFESSION = '';
 let PRAYED_DATES = [];
 let ACTIVITY_LOG = [];
 let HOME_LAYOUT = null;
+/* Binôme de prière : un accompagnement à deux, plus intime qu'un groupe
+   entier — un code à 6 caractères partagé entre deux personnes qui
+   s'engagent à prier l'une pour l'autre pendant une semaine, avec un
+   bouton mutuel "J'ai prié pour toi aujourd'hui" (même mécanique de
+   stockage partagé que les groupes de prière, mais un document dédié). */
+let PRAYER_BUDDY_CODE = '';
+let BUDDY_DATA = null;
+let BUDDY_LISTENER_UNSUB = null;
 let PRAYER_GROUP_CODE = '';
 let GROUP_INTENTIONS = [];
 let GROUP_TESTIMONIES = [];
@@ -4528,13 +4625,13 @@ let ROSARY_AUDIO_PLAYING = null;
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
-  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'versets-soir', label:'🌙 Versets du soir'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
+  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'versets-soir', label:'🌙 Versets du soir'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'binome', label:'🤝 Binôme de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
   devotions: [ {key:'prieres', label:'📿 Prières'}, {key:'chapelet', label:'🔗 Chapelet'}, {key:'misericorde', label:'❤️ Miséricorde'}, {key:'chemin-croix', label:'✝️ Chemin de croix'}, {key:'lectio', label:'📕 Lectio Divina'}, {key:'confession', label:'🕊️ Confession'}, {key:'famille', label:'👨‍👩‍👧 En famille'}, {key:'armure', label:'🛡️ Armure de Dieu'}, {key:'prieres-combat', label:'⚔️ Prières de combat'}, {key:'temoins', label:'🕯️ Témoins qui ont tenu bon'}, {key:'meditations-combat', label:'💭 Méditations de combat'}, {key:'versets-armure', label:'🔥 Versets de force'} ],
   ecritures: [ {key:'psaumes', label:'📜 Psaumes'}, {key:'bible', label:'👑 Bible & Histoire'}, {key:'bible-lecture', label:'📗 Lire la Bible'}, {key:'recits', label:'🌍 Récits fondateurs'}, {key:'reperes', label:'📋 Repères'}, {key:'memoriser', label:'🧠 Mémoriser'} ],
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
   sagesse: [ {key:'spiritualite', label:'💡 Vie spirituelle'}, {key:'enseignements', label:'🎓 Enseignements'}, {key:'sacrements', label:'✨ Sacrements'}, {key:'lexique', label:'🔤 Lexique'}, {key:'quiz', label:'❓ Quiz'} ],
   combat: [],
-  espace: [ {key:'compte', label:'👤 Mon compte'}, {key:'parcours', label:'🗺️ Parcours 7 jours'}, {key:'journal', label:'✍️ Journal'}, {key:'histoire', label:'📖 Mon histoire'}, {key:'gratitude', label:'✨ Carnet de grâces'}, {key:'souvenirs', label:'📸 Mes souvenirs'}, {key:'images-priere', label:'🖼️ Images de prière'}, {key:'reconfort', label:'🕊️ Réconfort guidé'}, {key:'anniversaires', label:'🎂 Anniversaires spirituels'}, {key:'objectifs', label:'🎯 Objectifs'}, {key:'memorial', label:'🕯️ Mémorial'}, {key:'favoris', label:'⭐ Favoris'}, {key:'studio', label:'🎶 Louanges'}, {key:'reglages', label:'🔔 Rappels'}, {key:'stats', label:'📊 Statistiques'}, {key:'activite', label:'🗓️ Mon activité'}, {key:'apropos', label:'ℹ️ À propos'}, {key:'faq', label:'❓ FAQ'} ]
+  espace: [ {key:'compte', label:'👤 Mon compte'}, {key:'parcours', label:'🗺️ Parcours 7 jours'}, {key:'journal', label:'✍️ Journal'}, {key:'histoire', label:'📖 Mon histoire'}, {key:'gratitude', label:'✨ Carnet de grâces'}, {key:'souvenirs', label:'📸 Mes souvenirs'}, {key:'images-priere', label:'🖼️ Images de prière'}, {key:'reconfort', label:'🕊️ Réconfort guidé'}, {key:'anniversaires', label:'🎂 Anniversaires spirituels'}, {key:'objectifs', label:'🎯 Objectifs'}, {key:'memorial', label:'🕯️ Mémorial'}, {key:'vitraux', label:'🪟 Vitraux de saints'}, {key:'favoris', label:'⭐ Favoris'}, {key:'studio', label:'🎶 Louanges'}, {key:'reglages', label:'🔔 Rappels'}, {key:'stats', label:'📊 Statistiques'}, {key:'activite', label:'🗓️ Mon activité'}, {key:'apropos', label:'ℹ️ À propos'}, {key:'faq', label:'❓ FAQ'} ]
 };
 
 /* 5 onglets visibles : les anciennes rubriques (Dévotions, Jésus, Église,
@@ -4690,7 +4787,7 @@ const PRIER_SUBNAV_GROUPS = [
   {label:'☀️ Chaque jour', keys:['textes-du-jour','office','laudes','tierce','midi','sexte','none','vepres','compline','angelus','examen']},
   {label:'🕯️ Parcours & neuvaines', keys:['neuvaines','careme40','guides']},
   {label:'✍️ Mes prières', keys:['mes-prieres']},
-  {label:'🤝 Pour moi et les autres', keys:['intentions','groupe','selon-etat']},
+  {label:'🤝 Pour moi et les autres', keys:['intentions','groupe','binome','selon-etat']},
   {label:'🪔 Prier autrement', keys:['autrement']}
 ];
 const DEVOTIONS_SUBNAV_GROUPS = [
@@ -5006,6 +5103,7 @@ function homePage1HTML(){
       <h1 class="home-plain-greet">${saluTime}${USER_NAME ? ', '+escapeHtml(USER_NAME) : ''},<br>${LANG==='en' ? 'peace be with you.' : 'que la paix soit avec vous.'}</h1>
       <p class="home-plain-sub">${t('homeSubtitle')}.</p>
     </div>
+    ${homeLivePresenceHTML()}
     ${homeUsageBannerHTML()}
     ${homeInstallBannerHTML()}
     ${missedJourneys.length ? `<div class="card home-journey-nudge-card" id="home-journey-nudge-card" style="border-left:4px solid var(--gold); margin-bottom:14px; cursor:pointer;" data-goto-primary="${missedJourneys[0].primary}" data-goto-sub="${missedJourneys[0].sub}">
@@ -5157,6 +5255,91 @@ function wireHomePage1(){
 }
 
 /* ---------- Accueil, page 2 : saint, méditation, lecture rapide, guide, découvertes ---------- */
+/* ---------- Carte du jour à partager (story) ----------
+   Génère une image 1080×1920 (format story WhatsApp/Instagram) à partir
+   d'un verset ou d'une prière, et propose de la partager directement
+   (navigator.share avec fichier, quand le navigateur le permet) ou de la
+   télécharger sinon. Tout se fait en local dans le navigateur — rien n'est
+   envoyé à un serveur. */
+function wrapCanvasText(ctx, text, maxWidth){
+  const words = text.split(/\s+/);
+  const lines = [];
+  let current = '';
+  words.forEach(w=>{
+    const test = current ? current+' '+w : w;
+    if(ctx.measureText(test).width > maxWidth && current){
+      lines.push(current);
+      current = w;
+    } else {
+      current = test;
+    }
+  });
+  if(current) lines.push(current);
+  return lines;
+}
+async function generateStoryImageBlob(title, text, reference){
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0, '#3A2817');
+  grad.addColorStop(0.55, '#7C1F2E');
+  grad.addColorStop(1, '#C9A227');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+  const glow = ctx.createRadialGradient(W*0.5,H*0.32,20,W*0.5,H*0.32,420);
+  glow.addColorStop(0,'rgba(255,246,216,0.35)');
+  glow.addColorStop(1,'rgba(255,246,216,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0,0,W,H);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#FFF7DF';
+  ctx.font = '160px serif';
+  ctx.fillText('🕯️', W/2, H*0.28);
+  ctx.font = "600 44px 'Inter', Arial, sans-serif";
+  ctx.fillStyle = '#F1D493';
+  ctx.fillText(title.toUpperCase(), W/2, H*0.38);
+  ctx.font = "56px Georgia, 'Times New Roman', serif";
+  ctx.fillStyle = '#FFFAF0';
+  const lines = wrapCanvasText(ctx, '« '+text+' »', W*0.78);
+  let y = H*0.48;
+  lines.forEach(line=>{ ctx.fillText(line, W/2, y); y += 72; });
+  if(reference){
+    ctx.font = "40px 'Inter', Arial, sans-serif";
+    ctx.fillStyle = '#E8D6A0';
+    ctx.fillText(reference, W/2, y+30);
+  }
+  ctx.font = "600 38px 'Inter', Arial, sans-serif";
+  ctx.fillStyle = 'rgba(255,250,240,0.85)';
+  ctx.fillText('✦ LUMEN ✦', W/2, H*0.93);
+  ctx.font = "28px 'Inter', Arial, sans-serif";
+  ctx.fillStyle = 'rgba(255,250,240,0.7)';
+  ctx.fillText('Votre appli de prière catholique', W/2, H*0.955);
+  return new Promise(resolve=> canvas.toBlob(resolve, 'image/png'));
+}
+async function shareStoryImage(title, text, reference){
+  try{
+    const blob = await generateStoryImageBlob(title, text, reference);
+    if(!blob){ showToast("Impossible de générer l'image."); return; }
+    const file = new File([blob], 'lumen-'+todayISO()+'.png', {type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:'Lumen', text: title});
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'lumen-'+todayISO()+'.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 4000);
+    showToast('📥 Image téléchargée — partagez-la sur WhatsApp ou Instagram !');
+  }catch(e){
+    if(e && e.name === 'AbortError') return;
+    console.warn('shareStoryImage', e);
+    showToast("Le partage n'a pas pu aboutir.");
+  }
+}
+
 function homePage2HTML(){
   const {saint, isFeast} = getSaintOfDay();
   const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/St.%20Ignatius%20of%20Loyola%20by%20Peter%20Paul%20Rubens.jpg?width=700'};
@@ -5225,10 +5408,18 @@ function homePage2HTML(){
       <div class="lumen-flame lumen-flame-steady lit" style="margin:0 auto 8px;"><div class="lumen-flame-glow"></div><div class="lumen-flame-body"></div><div class="lumen-flame-core"></div></div>
       <p class="home-verse-banner-text">« ${v.text} »</p>
       <p class="home-verse-banner-ref">${v.ref}</p>
+      <button class="home-verse-banner-share" id="p2-verse-share-btn" type="button">📤 Partager en story</button>
     </div>
   `;
 }
 function wireHomePage2(){
+  const shareVerseBtn = document.getElementById('p2-verse-share-btn');
+  if(shareVerseBtn){
+    shareVerseBtn.onclick = ()=>{
+      const v2 = VERSETS_DU_JOUR[weekNumber() % VERSETS_DU_JOUR.length];
+      shareStoryImage('Verset du jour', v2.text, v2.ref);
+    };
+  }
   const {saint, isFeast} = getSaintOfDay();
   const saintArt = lumenSacredArtFor({name:saint.name, summary:saint.bio}) || {url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/St.%20Ignatius%20of%20Loyola%20by%20Peter%20Paul%20Rubens.jpg?width=700'};
   const saintBtn = document.getElementById('p2-saint-cta');
@@ -5646,7 +5837,7 @@ const PRIER_HUB_CATEGORIES = [
   {label:'Toutes les prières', desc:'Prières fondamentales, à Jésus, Marie et Joseph, aux saints, aux Archanges, de délivrance… cherchez par mot-clé', icon:'📿', goto:'prieres', cross:{primary:'devotions', sub:'prieres'}, color:'#6B2545', group:'classiques'},
   {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545', group:'classiques'},
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E', group:'classiques'},
-  {label:'Pour moi et les autres', desc:'Intentions, groupe de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B', group:'autres'},
+  {label:'Pour moi et les autres', desc:'Intentions, groupe ou binôme de prière, selon votre état', icon:'🤝', goto:'intentions', color:'#4A3D6B', group:'autres'},
   {label:'Carnet familial', desc:'Un carnet d’intentions partagé avec les vôtres', icon:'👨‍👩‍👧‍👦', goto:'carnet-familial', color:'#5C6E58', group:'autres'},
   {label:'Mes prières', desc:'Vos prières personnelles, écrites par vous', icon:'✍️', goto:'mes-prieres', color:'#5C6E58', group:'varier'},
   {label:'Dévotions & combat spirituel', desc:'Miséricorde, Lectio Divina, confession, Armure de Dieu...', icon:'📿', goto:'devotions', cross:{primary:'devotions', sub:'accueil-devotions'}, color:'#4A3D6B', group:'varier'},
@@ -6631,7 +6822,7 @@ function wireNovenaBeadSequences(){
 function intentionCardHTML(it){
   return `<div class="card intention-card ${it.answered?'intention-answered':''}" data-id="${it.id}">
     ${it.answered ? `<p class="intention-answered-badge">✨ Prière exaucée</p>` : `<span class="intention-tag ${it.private?'intention-tag-private':'intention-tag-public'}">${it.private?'🔒 Privée':'🌍 Partagée'}</span>`}
-    <p class="intention-author">${it.private ? '🔒 Intention privée' : escapeHtml(it.name)}</p>
+    <p class="intention-author">${it.private ? '🔒 Intention privée' : escapeHtml(it.name)}${(!it.private && it.city) ? ` <span class="intention-city">📍 ${escapeHtml(it.city)}</span>` : ''}</p>
     <p class="intention-text">${escapeHtml(it.text)}</p>
     <div class="intention-footer">
       <div class="candle-wrap">${candleHTML(it.prayers>0, 'candle-'+it.id)}<span class="prayer-count">${it.prayers} personnes ont prié</span></div>
@@ -6676,6 +6867,78 @@ function wireIntentionButtons(){
   });
 }
 
+/* ---------- Carte du monde des intentions ----------
+   Une mappemonde stylisée (pas une carte géographique exacte — on évite de
+   prétendre à une précision cartographique) qui place une pastille pour
+   chaque ville reconnue parmi les intentions publiques récentes, par
+   projection équirectangulaire simple (x = longitude, y = latitude). Les
+   villes non reconnues, et toutes les intentions privées, ne sont jamais
+   affichées sur la carte — seulement dans la liste. Rien n'identifie une
+   personne : juste une ville et un nombre d'intentions. */
+const WORLD_CITIES = {
+  "paris":[48.8566,2.3522,"Paris"], "marseille":[43.2965,5.3698,"Marseille"], "lyon":[45.7640,4.8357,"Lyon"],
+  "lille":[50.6292,3.0573,"Lille"], "toulouse":[43.6047,1.4442,"Toulouse"], "bordeaux":[44.8378,-0.5792,"Bordeaux"],
+  "nantes":[47.2184,-1.5536,"Nantes"], "strasbourg":[48.5734,7.7521,"Strasbourg"], "nice":[43.7102,7.2620,"Nice"],
+  "rennes":[48.1173,-1.6778,"Rennes"], "montpellier":[43.6108,3.8767,"Montpellier"],
+  "montreal":[45.5019,-73.5674,"Montréal"], "quebec":[46.8139,-71.2080,"Québec"],
+  "bruxelles":[50.8503,4.3517,"Bruxelles"], "liege":[50.6326,5.5797,"Liège"],
+  "geneve":[46.2044,6.1432,"Genève"], "lausanne":[46.5197,6.6323,"Lausanne"], "zurich":[47.3769,8.5417,"Zurich"],
+  "dakar":[14.7167,-17.4677,"Dakar"], "thies":[14.7910,-16.9359,"Thiès"], "saint-louis":[16.0179,-16.4896,"Saint-Louis"],
+  "abidjan":[5.3600,-4.0083,"Abidjan"], "yamoussoukro":[6.8276,-5.2893,"Yamoussoukro"], "bouake":[7.6900,-5.0300,"Bouaké"],
+  "kinshasa":[-4.4419,15.2663,"Kinshasa"], "lubumbashi":[-11.6609,27.4794,"Lubumbashi"], "goma":[-1.6792,29.2228,"Goma"],
+  "brazzaville":[-4.2634,15.2429,"Brazzaville"], "pointe-noire":[-4.7889,11.8653,"Pointe-Noire"],
+  "yaounde":[3.8480,11.5021,"Yaoundé"], "douala":[4.0511,9.7679,"Douala"],
+  "cotonou":[6.3703,2.3912,"Cotonou"], "porto-novo":[6.4969,2.6283,"Porto-Novo"],
+  "lome":[6.1319,1.2228,"Lomé"], "bamako":[12.6392,-8.0029,"Bamako"], "ouagadougou":[12.3714,-1.5197,"Ouagadougou"],
+  "niamey":[13.5127,2.1128,"Niamey"], "ndjamena":[12.1348,15.0557,"N'Djamena"], "bangui":[4.3947,18.5582,"Bangui"],
+  "conakry":[9.6412,-13.5784,"Conakry"], "nouakchott":[18.0735,-15.9582,"Nouakchott"],
+  "antananarivo":[-18.8792,47.5079,"Antananarivo"], "libreville":[0.4162,9.4673,"Libreville"],
+  "kigali":[-1.9441,30.0619,"Kigali"], "lusaka":[-15.3875,28.3228,"Lusaka"], "kampala":[0.3476,32.5825,"Kampala"],
+  "nairobi":[-1.2921,36.8219,"Nairobi"], "rabat":[34.0209,-6.8416,"Rabat"], "casablanca":[33.5731,-7.5898,"Casablanca"],
+  "tunis":[36.8065,10.1815,"Tunis"], "alger":[36.7538,3.0588,"Alger"], "le caire":[30.0444,31.2357,"Le Caire"],
+  "rome":[41.9028,12.4964,"Rome"], "madrid":[40.4168,-3.7038,"Madrid"], "lisbonne":[38.7223,-9.1393,"Lisbonne"],
+  "londres":[51.5074,-0.1278,"Londres"], "berlin":[52.5200,13.4050,"Berlin"],
+  "new york":[40.7128,-74.0060,"New York"], "port-au-prince":[18.5944,-72.3074,"Port-au-Prince"],
+  "fort-de-france":[14.6161,-61.0588,"Fort-de-France"], "pointe-a-pitre":[16.2415,-61.5328,"Pointe-à-Pitre"],
+  "saint-denis":[-20.8789,55.4481,"Saint-Denis (Réunion)"], "jerusalem":[31.7683,35.2137,"Jérusalem"],
+  "beyrouth":[33.8938,35.5018,"Beyrouth"]
+};
+function normalizeCity(str){
+  return (str||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim().replace(/['’`]/g,'');
+}
+let INTENTIONS_SHOW_MAP = false;
+function intentionsWorldMapHTML(all){
+  const counts = {}; // clé normalisée -> {count, info}
+  let unmatched = 0, withCity = 0;
+  all.forEach(it=>{
+    if(it.private || !it.city) return;
+    const key = normalizeCity(it.city);
+    withCity++;
+    if(WORLD_CITIES[key]){
+      counts[key] = counts[key] || {count:0, info:WORLD_CITIES[key]};
+      counts[key].count++;
+    } else {
+      unmatched++;
+    }
+  });
+  const entries = Object.values(counts).sort((a,b)=>b.count-a.count);
+  const pins = entries.map(e=>{
+    const [lat, lon, name] = e.info;
+    const x = ((lon+180)/360*100).toFixed(2);
+    const y = ((90-lat)/180*100).toFixed(2);
+    return `<span class="world-pin" style="left:${x}%; top:${y}%;" title="${escapeHtml(name)} — ${e.count} intention${e.count>1?'s':''}">
+      <span class="world-pin-dot"></span>
+      <span class="world-pin-label">${escapeHtml(name)}</span>
+    </span>`;
+  }).join('');
+  return `<div class="world-map-wrap">
+      <div class="world-map-grid">${pins}</div>
+    </div>
+    ${entries.length ? `<div class="world-map-legend">${entries.map(e=>`<span class="world-map-legend-chip">📍 ${escapeHtml(e.info[2])} · ${e.count}</span>`).join('')}${unmatched?`<span class="world-map-legend-chip">🌍 Autres lieux · ${unmatched}</span>`:''}</div>`
+      : `<div class="card empty-state">${withCity ? "Aucune des villes indiquées n'a encore été reconnue sur la carte." : "Aucune ville renseignée pour l'instant — proposez la vôtre en déposant une intention publique."}</div>`}
+    <p class="section-desc" style="margin-top:10px; text-align:center;">Carte stylisée, à titre indicatif — seules les intentions publiques avec une ville reconnue y apparaissent, jamais les intentions privées ni les noms.</p>`;
+}
+
 function renderIntentions(){
   maybeAutoOpenMiniTuto('intentions');
   const all = [...INTENTIONS, ...PRIVATE_INTENTIONS].sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
@@ -6711,33 +6974,42 @@ function renderIntentions(){
         </div>
       </div>
       <input type="text" id="int-name" placeholder="Votre prénom (optionnel)">
-      <textarea id="int-text" rows="3" placeholder="Écrivez votre intention de prière…"></textarea>
+      <input type="text" id="int-city" placeholder="Votre ville (optionnel — pour la carte du monde 🌍)" style="margin-top:8px;">
+      <textarea id="int-text" rows="3" placeholder="Écrivez votre intention de prière…" style="margin-top:8px;"></textarea>
       <label style="display:flex; align-items:center; gap:8px; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); margin-bottom:10px;">
         <input type="checkbox" id="int-private" style="width:auto;"> 🔒 Garder cette intention pour moi seul(e)
       </label>
       <button class="btn btn-gold btn-sm" id="add-int-btn" style="width:100%;">🕯️ Déposer mon intention</button>
     </div>
-    <h2 class="section-title">🕯️ Priez pour les autres</h2>`;
-  if(all.length === 0){
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+      <h2 class="section-title" style="margin:0;">🕯️ Priez pour les autres</h2>
+      <button class="btn btn-ghost btn-sm" id="intentions-map-toggle-btn">${INTENTIONS_SHOW_MAP ? '📋 Liste' : '🌍 Carte du monde'}</button>
+    </div>`;
+  if(INTENTIONS_SHOW_MAP){
+    html += intentionsWorldMapHTML(all);
+  } else if(all.length === 0){
     html += `<div class="card empty-state">Aucune intention pour l'instant — soyez le premier à en déposer une.</div>`;
   } else {
     html += `<div class="grid">${all.map(intentionCardHTML).join('')}</div>`;
   }
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('intentions-map-toggle-btn').onclick = ()=>{ INTENTIONS_SHOW_MAP = !INTENTIONS_SHOW_MAP; renderIntentions(); };
   wireIntentionButtons();
   document.getElementById('intentions-tuto-btn').onclick = ()=> openMiniTuto('intentions');
   document.getElementById('add-int-btn').onclick = async ()=>{
     const nameEl = document.getElementById('int-name');
+    const cityEl = document.getElementById('int-city');
     const textEl = document.getElementById('int-text');
     const privateEl = document.getElementById('int-private');
     const text = textEl.value.trim();
     if(!text) { textEl.focus(); return; }
     const name = nameEl.value.trim() || 'Anonyme';
+    const city = cityEl.value.trim();
     if(privateEl.checked){
-      PRIVATE_INTENTIONS.unshift({id:'pi-'+Date.now(), name, text, prayers:0, createdAt:Date.now(), private:true});
+      PRIVATE_INTENTIONS.unshift({id:'pi-'+Date.now(), name, text, city, prayers:0, createdAt:Date.now(), private:true});
       await savePrivateIntentions(PRIVATE_INTENTIONS);
     } else {
-      INTENTIONS.unshift({id:'i-'+Date.now(), name, text, prayers:0, createdAt:Date.now()});
+      INTENTIONS.unshift({id:'i-'+Date.now(), name, text, city, prayers:0, createdAt:Date.now()});
       await saveIntentions(INTENTIONS);
     }
     render();
@@ -13494,6 +13766,179 @@ function closeMemorialIgnite(){
   document.getElementById('memorial-ignite-overlay').classList.add('hidden');
 }
 
+/* ================= binôme de prière ================= */
+function renderPrayerBuddy(){
+  let html = `<h2 class="section-title">🤝 Binôme de prière</h2>`;
+  if(!PRAYER_BUDDY_CODE){
+    html += `<p class="section-desc">Formez un binôme avec un proche : pendant une semaine, chacun s'engage à prier pour l'autre, avec un petit rappel mutuel — un accompagnement plus intime qu'un groupe entier.</p>
+      <div class="card">
+        <p class="day-title" style="font-size:15px;">Former un binôme</p>
+        <p class="section-desc" style="margin:2px 0 10px;">Créez un code, puis partagez-le à la personne avec qui vous voulez vous engager.</p>
+        <button class="btn btn-gold btn-sm" id="create-buddy-btn" style="width:100%;">✦ Créer mon binôme</button>
+      </div>
+      <div class="card add-intention-box" style="margin-top:12px;">
+        <p class="day-title" style="font-size:15px;">Rejoindre un binôme</p>
+        <input type="text" id="join-buddy-input" placeholder="Code reçu (ex. AB12CD)" style="text-transform:uppercase;">
+        <button class="btn btn-ghost btn-sm" id="join-buddy-btn" style="margin-top:8px;">Rejoindre</button>
+      </div>`;
+    document.getElementById('screen').innerHTML = html;
+    document.getElementById('create-buddy-btn').onclick = async ()=>{
+      const code = generateGroupCode();
+      PRAYER_BUDDY_CODE = code;
+      await savePrayerBuddyCode(code);
+      BUDDY_DATA = { createdAt: Date.now(), startedAt: null, members:[{id:getDeviceId(), name:USER_NAME||'Vous'}], prayed:{} };
+      await saveBuddyData(code, BUDDY_DATA);
+      startBuddyListener(code);
+      showToast('Binôme créé ✦ — partagez le code avec votre proche');
+      renderPrayerBuddy();
+    };
+    document.getElementById('join-buddy-btn').onclick = async ()=>{
+      const code = document.getElementById('join-buddy-input').value.trim().toUpperCase();
+      if(!code) return;
+      const data = await loadBuddyData(code);
+      if(!data){ showToast('Code introuvable'); return; }
+      const already = data.members.some(m=>m.id===getDeviceId());
+      if(!already){
+        if(data.members.length >= 2){ showToast('Ce binôme est déjà complet'); return; }
+        data.members.push({id:getDeviceId(), name:USER_NAME||'Vous'});
+        data.startedAt = Date.now();
+      }
+      PRAYER_BUDDY_CODE = code;
+      await savePrayerBuddyCode(code);
+      BUDDY_DATA = data;
+      await saveBuddyData(code, data);
+      startBuddyListener(code);
+      showToast('Binôme rejoint ✦');
+      renderPrayerBuddy();
+    };
+    return;
+  }
+
+  const data = BUDDY_DATA || { members:[], prayed:{} };
+  const me = getDeviceId();
+  const partner = (data.members||[]).find(m=>m.id!==me);
+  const myPrayed = (data.prayed && data.prayed[me]) || [];
+  const partnerPrayed = partner ? ((data.prayed && data.prayed[partner.id]) || []) : [];
+  const todayStr = todayISO();
+  const iPrayedToday = myPrayed.includes(todayStr);
+  const partnerPrayedToday = partnerPrayed.includes(todayStr);
+  let daysLeft = null;
+  if(data.startedAt){
+    const elapsed = Math.floor((Date.now()-data.startedAt)/86400000);
+    daysLeft = Math.max(0, 7-elapsed);
+  }
+
+  html += `<div class="buddy-hero">
+      <div class="buddy-hero-avatars">
+        <span class="buddy-hero-avatar">${USER_AVATAR||'🕯️'}</span>
+        <span class="buddy-hero-link">🤝</span>
+        <span class="buddy-hero-avatar">${partner ? (partner.avatar||'🕯️') : '❔'}</span>
+      </div>
+      <p class="buddy-hero-title">${partner ? `Vous &amp; ${escapeHtml(partner.name||'votre binôme')}` : 'En attente de votre binôme…'}</p>
+      ${partner ? `<p class="buddy-hero-sub">${daysLeft===null ? '' : daysLeft>0 ? `${daysLeft} jour${daysLeft>1?'s':''} restant${daysLeft>1?'s':''} sur votre semaine d'engagement` : "Votre semaine d'engagement est terminée"}</p>` : `<p class="buddy-hero-sub">Partagez le code ci-dessous pour que votre proche vous rejoigne.</p>`}
+    </div>
+    <div class="card" style="text-align:center;">
+      <p class="eyebrow" style="color:var(--gold);">Code du binôme</p>
+      <p class="day-title" style="font-size:20px; letter-spacing:3px; margin:4px 0 10px;">${escapeHtml(PRAYER_BUDDY_CODE)}</p>
+      ${shareInviteRowHTML('binome', PRAYER_BUDDY_CODE, 'Formons un binôme de prière sur Lumen 🤝')}
+    </div>`;
+
+  if(partner){
+    html += `<div class="buddy-status-row">
+      <div class="buddy-status-card ${iPrayedToday?'buddy-status-done':''}">
+        <span class="buddy-status-icon">${iPrayedToday?'🕯️':'🤍'}</span>
+        <p class="buddy-status-label">Vous</p>
+        <p class="buddy-status-sub">${iPrayedToday?'Avez prié aujourd\'hui':'Pas encore aujourd\'hui'}</p>
+      </div>
+      <div class="buddy-status-card ${partnerPrayedToday?'buddy-status-done':''}">
+        <span class="buddy-status-icon">${partnerPrayedToday?'🕯️':'🤍'}</span>
+        <p class="buddy-status-label">${escapeHtml(partner.name||'Votre binôme')}</p>
+        <p class="buddy-status-sub">${partnerPrayedToday?'A prié aujourd\'hui':'Pas encore aujourd\'hui'}</p>
+      </div>
+    </div>`;
+    if(!iPrayedToday){
+      html += `<button class="btn btn-gold btn-sm" id="buddy-pray-btn" style="width:100%; margin-top:4px;">🕯️ J'ai prié pour ${escapeHtml(partner.name||'mon binôme')} aujourd'hui</button>`;
+    } else {
+      html += `<div class="card empty-state" style="margin-top:4px;">✨ Merci d'avoir prié pour ${escapeHtml(partner.name||'votre binôme')} aujourd'hui.</div>`;
+    }
+    if(daysLeft===0){
+      html += `<button class="btn btn-ghost btn-sm" id="buddy-renew-btn" style="width:100%; margin-top:10px;">🔄 Renouveler pour une semaine</button>`;
+    }
+  }
+  html += `<button class="btn btn-ghost btn-sm" id="leave-buddy-btn" style="width:100%; margin-top:14px;">Quitter le binôme</button>`;
+
+  document.getElementById('screen').innerHTML = html;
+  wireShareInviteButtons();
+  const prayBtn = document.getElementById('buddy-pray-btn');
+  if(prayBtn) prayBtn.onclick = async ()=>{
+    BUDDY_DATA.prayed = BUDDY_DATA.prayed || {};
+    BUDDY_DATA.prayed[me] = BUDDY_DATA.prayed[me] || [];
+    if(!BUDDY_DATA.prayed[me].includes(todayStr)) BUDDY_DATA.prayed[me].push(todayStr);
+    await saveBuddyData(PRAYER_BUDDY_CODE, BUDDY_DATA);
+    await markPrayedToday('binome', 'Prière pour mon binôme');
+    showToast('🕯️ Prière envoyée ✦');
+    renderPrayerBuddy();
+  };
+  const renewBtn = document.getElementById('buddy-renew-btn');
+  if(renewBtn) renewBtn.onclick = async ()=>{
+    BUDDY_DATA.startedAt = Date.now();
+    await saveBuddyData(PRAYER_BUDDY_CODE, BUDDY_DATA);
+    showToast('Nouvelle semaine d\'engagement ✦');
+    renderPrayerBuddy();
+  };
+  document.getElementById('leave-buddy-btn').onclick = async ()=>{
+    stopBuddyListener();
+    PRAYER_BUDDY_CODE = '';
+    BUDDY_DATA = null;
+    await savePrayerBuddyCode('');
+    renderPrayerBuddy();
+  };
+}
+
+/* ================= collection de vitraux de saints ================= */
+/* Plus contemplatif qu'un badge classique : chaque jour cumulé de prière
+   (lifetime, via PRAYED_DATES — pas la série en cours, qui peut se
+   réinitialiser) fait resplendir un nouveau vitrail dans un petit
+   sanctuaire personnel. Une sélection de 24 saints répartis sur l'année
+   liturgique, tirée du tableau SAINTS déjà utilisé pour le "saint du jour". */
+const VITRAUX_SAINTS = (function(){
+  const step = Math.max(1, Math.floor(SAINTS.length/24));
+  const out = [];
+  for(let i=0;i<SAINTS.length && out.length<24; i+=step) out.push(SAINTS[i]);
+  return out;
+})();
+const VITRAUX_PALETTE = [
+  ['#7C1F2E','#C9A227'], ['#4A3D6B','#8A6FB0'], ['#1F5C4A','#5C6E58'],
+  ['#6B2545','#C9647A'], ['#1F3A5C','#6E9BC9'], ['#5C3D1F','#C98A3A']
+];
+function renderVitraux(){
+  const totalDays = new Set(PRAYED_DATES).size;
+  const unlocked = Math.min(VITRAUX_SAINTS.length, totalDays);
+  let html = `<h2 class="section-title">🪟 Vitraux de saints</h2>
+    <p class="section-desc">Chaque jour cumulé de prière fait resplendir un nouveau vitrail dans votre sanctuaire — une collection qui grandit avec vous, sans jamais repartir à zéro. ${unlocked}/${VITRAUX_SAINTS.length} vitraux allumés${unlocked<VITRAUX_SAINTS.length ? '.' : ' — collection complète, merci pour votre fidélité !'}</p>
+    <div class="vitraux-grid">${VITRAUX_SAINTS.map((s,i)=>{
+      const isUnlocked = i < unlocked;
+      const [c1,c2] = VITRAUX_PALETTE[i % VITRAUX_PALETTE.length];
+      if(isUnlocked){
+        return `<button type="button" class="vitrail-card" data-vidx="${i}" style="background:linear-gradient(165deg, ${c1}, ${c2});">
+          <span class="vitrail-cross">✝️</span>
+          <p class="vitrail-name">${escapeHtml(s.name)}</p>
+        </button>`;
+      }
+      return `<div class="vitrail-card vitrail-locked">
+        <span class="vitrail-cross">🔒</span>
+        <p class="vitrail-name">Jour ${i+1}</p>
+      </div>`;
+    }).join('')}</div>`;
+  document.getElementById('screen').innerHTML = html;
+  document.querySelectorAll('[data-vidx]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const s = VITRAUX_SAINTS[parseInt(btn.dataset.vidx,10)];
+      openVerseReader({ title: s.name, subtitle:'Vitrail de votre collection', text: s.bio + '\n\n' + s.prayer });
+    };
+  });
+}
+
 /* ================= office du jour (parcours unique) ================= */
 let OFFICE_STATE = null;
 /* ================= prières par heure de la journée ================= */
@@ -14212,7 +14657,9 @@ function renderReglages(){
       <input type="time" id="reminder-morning" value="${REMINDERS.morning||''}">
       <label style="font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); display:block; margin:10px 0 4px;">Rappel de midi (Angélus) — avec une vraie cloche 🔔</label>
       <input type="time" id="reminder-midi" value="${REMINDERS.midi||'12:00'}">
-      <label style="font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); display:block; margin:10px 0 4px;">Rappel du soir</label>
+      <label style="font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); display:block; margin:10px 0 4px;">Rappel du soir (Angélus, 18h) — avec une vraie cloche 🔔</label>
+      <input type="time" id="reminder-angelus-soir" value="${REMINDERS.angelusSoir||'18:00'}">
+      <label style="font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft); display:block; margin:10px 0 4px;">Rappel du soir (prière libre)</label>
       <input type="time" id="reminder-evening" value="${REMINDERS.evening||''}">
       <button class="btn btn-primary btn-sm" id="save-reminders-btn" style="margin-top:12px;">Activer les rappels</button>
       <p class="section-desc" style="margin-top:10px;">Statut des notifications : ${permission==='granted'?'✅ autorisées':permission==='denied'?'❌ refusées (à réactiver dans les réglages du navigateur)':'à autoriser'}</p>
@@ -14301,6 +14748,7 @@ function renderReglages(){
     }
     REMINDERS.morning = document.getElementById('reminder-morning').value;
     REMINDERS.midi = document.getElementById('reminder-midi').value;
+    REMINDERS.angelusSoir = document.getElementById('reminder-angelus-soir').value;
     REMINDERS.evening = document.getElementById('reminder-evening').value;
     await saveReminders(REMINDERS);
     showToast('Rappels enregistrés 🔔');
@@ -14378,9 +14826,9 @@ function journeyReminderLabel(id){
 function checkReminders(){
   const now = new Date();
   const hm = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  [['morning',"☀️ C'est l'heure de votre prière du matin"], ['midi',"🔔 C'est l'heure de l'Angélus"], ['evening',"🌙 C'est l'heure de votre prière du soir"]].forEach(([key,msg])=>{
+  [['morning',"☀️ C'est l'heure de votre prière du matin"], ['midi',"🔔 C'est l'heure de l'Angélus"], ['angelusSoir',"🔔 C'est l'heure de l'Angélus du soir"], ['evening',"🌙 C'est l'heure de votre prière du soir"]].forEach(([key,msg])=>{
     if(REMINDERS[key] && REMINDERS[key]===hm && checkReminders._last!==hm+key){
-      if(key === 'midi') playBell();
+      if(key === 'midi' || key === 'angelusSoir') playBell();
       if(window.Notification && Notification.permission === 'granted'){
         new Notification('Lumen', {body: msg});
       }
@@ -14795,6 +15243,7 @@ const GUIDE_INTENTS = [
   {kw:['angélus','angelus'], action:()=>goTo('prier','angelus')},
   {kw:['carême','careme','jeûne','jeune'], action:()=>goTo('prier','careme40')},
   {kw:['groupe de prière','groupe de priere','rejoindre un groupe','créer un groupe','creer un groupe','chorale','scout','jec','mouvement de jeunes'], action:()=>goTo('prier','groupe')},
+  {kw:['binôme de prière','binome de priere','binôme','binome','partenaire de prière','prier à deux','prier a deux'], action:()=>goTo('prier','binome')},
   {kw:['réconfort','reconfort','encourage','soutien','me sens seul'], action:()=>goTo('espace','reconfort')},
   {kw:['anniversaire'], action:()=>goTo('espace','anniversaires')},
   {kw:['louange','louanges','musique','chant de prière','chant de priere'], action:()=>goTo('espace','studio')},
@@ -15868,6 +16317,7 @@ function renderScreen(){
     if(sub === 'intentions') return renderIntentions();
     if(sub === 'carnet-familial') return renderFamilyIntentions();
     if(sub === 'groupe') return renderPrayerGroup();
+    if(sub === 'binome') return renderPrayerBuddy();
     if(sub === 'selon-etat') return renderEtatSelector();
     if(sub === 'compline'){ AELF_OFFICE_VIEW = 'complies'; return renderAelfOfficeViewer(); }
     if(sub === 'angelus') return renderAngelus();
@@ -15951,6 +16401,7 @@ function renderScreen(){
     if(sub === 'anniversaires') return renderAnniversaires();
     if(sub === 'objectifs') return renderObjectifs();
     if(sub === 'memorial') return renderMemorial();
+    if(sub === 'vitraux') return renderVitraux();
     if(sub === 'favoris') return renderFavoris();
     if(sub === 'studio') return renderStudio();
     if(sub === 'reglages') return renderReglages();
@@ -16200,6 +16651,8 @@ async function startApp(){
   HOME_LAYOUT = homeLayout;
   PRAYER_GROUP_CODE = groupCode || '';
   if(PRAYER_GROUP_CODE){ GROUP_INTENTIONS = await loadGroupIntentions(PRAYER_GROUP_CODE); GROUP_TESTIMONIES = await loadGroupTestimonies(PRAYER_GROUP_CODE); GROUP_MOMENT = await loadGroupMoment(PRAYER_GROUP_CODE); GROUP_TEMPLATE_KEY = await loadGroupTemplate(PRAYER_GROUP_CODE); GROUP_PROGRAMS = await loadGroupPrograms(PRAYER_GROUP_CODE); GROUP_MESSAGES = await loadGroupMessages(PRAYER_GROUP_CODE); GROUP_MEMBERS = await loadGroupMembers(PRAYER_GROUP_CODE); startGroupListeners(PRAYER_GROUP_CODE); ensureGroupPresence(PRAYER_GROUP_CODE); }
+  PRAYER_BUDDY_CODE = await loadPrayerBuddyCode();
+  if(PRAYER_BUDDY_CODE){ BUDDY_DATA = await loadBuddyData(PRAYER_BUDDY_CODE); startBuddyListener(PRAYER_BUDDY_CODE); }
   if(savedBeat && savedBeat.pattern){
     SEQ_INSTRUMENTS.forEach(inst=>{
       if(savedBeat.pattern[inst.key]) SEQ_PATTERN[inst.key] = savedBeat.pattern[inst.key];
@@ -16250,6 +16703,33 @@ async function startApp(){
     const inviteParams = new URLSearchParams(window.location.search);
     const inviteGroupe = inviteParams.get('groupe');
     const inviteCareme = inviteParams.get('careme');
+    const inviteBinome = inviteParams.get('binome');
+    if(inviteBinome){
+      const code = inviteBinome.trim().toUpperCase();
+      if(code){
+        const data = await loadBuddyData(code);
+        if(data){
+          const already = data.members.some(m=>m.id===getDeviceId());
+          if(!already){
+            if(data.members.length >= 2){
+              showToast('Ce binôme est déjà complet');
+            } else {
+              data.members.push({id:getDeviceId(), name:USER_NAME||'Vous'});
+              data.startedAt = Date.now();
+              await saveBuddyData(code, data);
+            }
+          }
+          PRAYER_BUDDY_CODE = code;
+          await savePrayerBuddyCode(code);
+          BUDDY_DATA = data;
+          startBuddyListener(code);
+          PRIMARY = 'prier'; SUBTAB.prier = 'binome';
+          showToast('Binôme de prière rejoint ✦');
+        } else {
+          showToast('Code de binôme introuvable');
+        }
+      }
+    }
     if(inviteGroupe){
       const code = inviteGroupe.trim().toUpperCase();
       if(code){
@@ -16277,9 +16757,9 @@ async function startApp(){
         showToast('Communauté de Carême rejointe ✦');
       }
     }
-    if(inviteGroupe || inviteCareme){
+    if(inviteGroupe || inviteCareme || inviteBinome){
       const cleanUrl = new URL(window.location.href);
-      cleanUrl.searchParams.delete('groupe'); cleanUrl.searchParams.delete('careme');
+      cleanUrl.searchParams.delete('groupe'); cleanUrl.searchParams.delete('careme'); cleanUrl.searchParams.delete('binome');
       history.replaceState(null, '', cleanUrl.toString());
     }
   }catch(e){ console.warn('Lien d\'invitation illisible :', e); }
@@ -16451,4 +16931,5 @@ window.addEventListener('popstate', ()=>{
 
 startAuthFlow();
 bumpUsageStats();
+startLivePresence();
 wireCookieBanner();
