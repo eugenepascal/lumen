@@ -13367,33 +13367,48 @@ function renderConfessionGuide(){
 
 /* ================= mémorial des défunts ================= */
 function renderMemorial(){
-  let html = `<h2 class="section-title">🕯️ Mémorial des défunts</h2>
-    <p class="section-desc">Gardez ici les prénoms de proches défunts, pour les porter dans votre prière.</p>
-    <div class="card add-intention-box">
+  const count = MEMORIAL.length;
+  let html = `<div class="memorial-hero">
+      <span class="memorial-dove" style="top:14%; left:9%; font-size:21px; animation-duration:16s;">🕊️</span>
+      <span class="memorial-dove" style="top:18%; right:10%; font-size:16px; animation-duration:19s; animation-delay:-4s;">🕊️</span>
+      <span class="memorial-dove" style="bottom:10%; left:22%; font-size:14px; animation-duration:22s; animation-delay:-9s; opacity:0.22;">🕊️</span>
+      <div class="memorial-hero-candle-wrap">${candleHTML(count>0, 'memorial-hero-candle')}</div>
+      <p class="memorial-hero-title">🕯️ Mémorial des défunts</p>
+      <p class="memorial-hero-sub">Un sanctuaire de lumière pour vos proches partis — chaque bougie allumée est une prière qui continue de brûler pour eux.</p>
+      <span class="memorial-hero-count">${count===0 ? 'Aucune bougie allumée pour l\'instant' : count+' bougie'+(count>1?'s':'')+' allumée'+(count>1?'s':'')}</span>
+    </div>
+    <div class="card memorial-add-box">
       <input type="text" id="memorial-name" placeholder="Prénom du défunt">
-      <button class="btn btn-primary btn-sm" id="add-memorial-btn" style="margin-top:8px;">Ajouter</button>
+      <input type="text" id="memorial-date" placeholder="Date ou année (optionnel)">
+      <button class="btn btn-gold btn-sm" id="add-memorial-btn" style="width:100%;">🕯️ Allumer une bougie</button>
     </div>`;
-  if(MEMORIAL.length===0){
-    html += `<div class="card empty-state">Aucun nom pour l'instant.</div>`;
+  if(count===0){
+    html += `<div class="card empty-state">Allumez une première bougie pour garder le souvenir d'un proche dans votre prière.</div>`;
   } else {
-    html += `<div class="grid">${MEMORIAL.map(m=>`
-      <div class="card memorial-card">
-        <span class="memorial-name">🕯️ ${escapeHtml(m.name)}</span>
-        <button class="icon-btn" data-del-memorial="${m.id}">🗑</button>
+    html += `<div class="memorial-grid">${MEMORIAL.map(m=>`
+      <div class="memorial-candle-card">
+        <button class="memorial-candle-del" data-del-memorial="${m.id}" aria-label="Supprimer">🗑</button>
+        <span class="memorial-candle-dove">🕊️</span>
+        ${candleHTML(true, 'candle-mem-'+m.id)}
+        <span class="memorial-candle-name">${escapeHtml(m.name)}</span>
+        ${m.date ? `<span class="memorial-candle-date">${escapeHtml(m.date)}</span>` : ''}
       </div>`).join('')}</div>
-      <div class="card" style="margin-top:14px;">
-        <p class="eyebrow" style="color:var(--gold);">Prière pour eux</p>
+      <div class="card memorial-prayer-card">
+        <p class="eyebrow" style="color:var(--gold);">🕊️ Prière pour eux</p>
         <p class="entry-detail-text">Donnez-leur, Seigneur, le repos éternel, et que la lumière sans déclin luise pour eux. Qu'ils reposent en paix. Amen.</p>
       </div>`;
   }
   document.getElementById('screen').innerHTML = html;
   document.getElementById('add-memorial-btn').onclick = async ()=>{
-    const input = document.getElementById('memorial-name');
-    const name = input.value.trim();
-    if(!name) { input.focus(); return; }
-    MEMORIAL.unshift({id:'m-'+Date.now(), name});
+    const nameInput = document.getElementById('memorial-name');
+    const dateInput = document.getElementById('memorial-date');
+    const name = nameInput.value.trim();
+    const date = dateInput.value.trim();
+    if(!name) { nameInput.focus(); return; }
+    MEMORIAL.unshift({id:'m-'+Date.now(), name, date});
     await saveMemorial(MEMORIAL);
     render();
+    openMemorialIgnite(name);
   };
   document.querySelectorAll('[data-del-memorial]').forEach(btn=>{
     btn.onclick = async ()=>{
@@ -13402,6 +13417,28 @@ function renderMemorial(){
       render();
     };
   });
+}
+function openMemorialIgnite(name){
+  const overlay = document.getElementById('memorial-ignite-overlay');
+  overlay.innerHTML = `<div class="memorial-ignite-panel">
+    <button class="memorial-ignite-close" id="memorial-ignite-close">✕</button>
+    <p class="memorial-ignite-doves">🕊️ 🕊️ 🕊️</p>
+    <div class="memorial-ignite-candle-wrap">${candleHTML(false, 'memorial-ignite-candle')}</div>
+    <p class="memorial-ignite-name">${escapeHtml(name)}</p>
+    <p class="memorial-ignite-text">Une bougie vient d'être allumée pour ${escapeHtml(name)}. Que la lumière sans déclin luise pour lui/elle, et qu'il/elle repose en paix.</p>
+    <button class="btn btn-gold btn-sm" id="memorial-ignite-ok">Amen 🙏</button>
+  </div>`;
+  overlay.classList.remove('hidden');
+  document.getElementById('memorial-ignite-close').onclick = closeMemorialIgnite;
+  document.getElementById('memorial-ignite-ok').onclick = closeMemorialIgnite;
+  overlay.onclick = (e)=>{ if(e.target===overlay) closeMemorialIgnite(); };
+  setTimeout(()=>{
+    const candle = document.getElementById('memorial-ignite-candle');
+    if(candle) candle.classList.add('lit','burst');
+  }, 450);
+}
+function closeMemorialIgnite(){
+  document.getElementById('memorial-ignite-overlay').classList.add('hidden');
 }
 
 /* ================= office du jour (parcours unique) ================= */
