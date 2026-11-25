@@ -16089,6 +16089,14 @@ function updateThemeColorMeta(themeKey){
   const color = THEME_BASE_COLORS[themeKey] || THEME_BASE_COLORS.light;
   const meta = document.querySelector('meta[name="theme-color"]');
   if(meta) meta.setAttribute('content', color);
+  /* <html> est l'ancêtre de <body> : une variable CSS redéfinie sur
+     "body[data-theme=...]" ne peut pas "remonter" jusqu'à <html> (le sens
+     de la cascade va de l'ancêtre vers le descendant, jamais l'inverse).
+     On fixe donc sa couleur ici, en JS, pour que le liseré qui apparaît
+     parfois tout en bas sur mobile (rebond élastique, repli de la barre
+     d'adresse Safari) suive lui aussi le thème actif au lieu de rester
+     sur une seule couleur fixe. */
+  document.documentElement.style.background = color;
 }
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
