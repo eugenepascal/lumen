@@ -5299,7 +5299,14 @@ function wireHomePage1(){
    (navigator.share avec fichier, quand le navigateur le permet) ou de la
    télécharger sinon. Tout se fait en local dans le navigateur — rien n'est
    envoyé à un serveur. */
-function wrapCanvasText(ctx, text, maxWidth){
+/* Nommée "wrapStoryCanvasText" (et non "wrapCanvasText") : une autre fonction
+   plus bas dans ce fichier, utilisée par une fonctionnalité de partage plus
+   ancienne, portait déjà ce nom avec une signature différente. Comme les deux
+   étaient des déclarations "function" dans la même portée globale, la seconde
+   écrasait la première — la carte du jour appelait alors la mauvaise fonction,
+   ce qui provoquait une erreur silencieuse et le message "Le partage n'a pas
+   pu aboutir". */
+function wrapStoryCanvasText(ctx, text, maxWidth){
   const words = text.split(/\s+/);
   const lines = [];
   let current = '';
@@ -5315,7 +5322,7 @@ function wrapCanvasText(ctx, text, maxWidth){
   if(current) lines.push(current);
   return lines;
 }
-async function generateStoryImageBlob(title, text, reference){
+function drawStoryCanvas(title, text, reference){
   const W = 1080, H = 1920;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
@@ -5340,7 +5347,7 @@ async function generateStoryImageBlob(title, text, reference){
   ctx.fillText(title.toUpperCase(), W/2, H*0.38);
   ctx.font = "56px Georgia, 'Times New Roman', serif";
   ctx.fillStyle = '#FFFAF0';
-  const lines = wrapCanvasText(ctx, '« '+text+' »', W*0.78);
+  const lines = wrapStoryCanvasText(ctx, '« '+text+' »', W*0.78);
   let y = H*0.48;
   lines.forEach(line=>{ ctx.fillText(line, W/2, y); y += 72; });
   if(reference){
@@ -5354,15 +5361,36 @@ async function generateStoryImageBlob(title, text, reference){
   ctx.font = "28px 'Inter', Arial, sans-serif";
   ctx.fillStyle = 'rgba(255,250,240,0.7)';
   ctx.fillText('Votre appli de prière catholique', W/2, H*0.955);
-  return new Promise(resolve=> canvas.toBlob(resolve, 'image/png'));
+  return canvas;
 }
-async function shareStoryImage(title, text, reference){
+/* Convertit un data URL (base64) en Blob de façon totalement synchrone —
+   contrairement à canvas.toBlob() qui est asynchrone. C'est important : sur
+   certains navigateurs stricts (Safari/iOS notamment), appeler
+   navigator.share() après un "await" peut faire perdre le contexte
+   d'activation utilisateur (le clic d'origine), et l'appel échoue alors
+   silencieusement. En restant 100% synchrone jusqu'à navigator.share(), on
+   évite ce problème. */
+function dataURLToBlob(dataURL){
+  const parts = dataURL.split(',');
+  const mimeMatch = parts[0].match(/:(.*?);/);
+  const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+  const binary = atob(parts[1]);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for(let i=0;i<len;i++) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], {type: mime});
+}
+function shareStoryImage(title, text, reference){
   try{
-    const blob = await generateStoryImageBlob(title, text, reference);
-    if(!blob){ showToast("Impossible de générer l'image."); return; }
+    const canvas = drawStoryCanvas(title, text, reference);
+    const blob = dataURLToBlob(canvas.toDataURL('image/png'));
     const file = new File([blob], 'lumen-'+todayISO()+'.png', {type:'image/png'});
     if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({files:[file], title:'Lumen', text: title});
+      navigator.share({files:[file], title:'Lumen', text: title}).catch(e=>{
+        if(e && e.name === 'AbortError') return;
+        console.warn('shareStoryImage', e);
+        showToast("Le partage n'a pas pu aboutir.");
+      });
       return;
     }
     const url = URL.createObjectURL(blob);
@@ -5372,7 +5400,6 @@ async function shareStoryImage(title, text, reference){
     setTimeout(()=> URL.revokeObjectURL(url), 4000);
     showToast('📥 Image téléchargée — partagez-la sur WhatsApp ou Instagram !');
   }catch(e){
-    if(e && e.name === 'AbortError') return;
     console.warn('shareStoryImage', e);
     showToast("Le partage n'a pas pu aboutir.");
   }
