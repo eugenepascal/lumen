@@ -4939,8 +4939,11 @@ let HOME_PAGE_IDX = 0;
 let WELCOME_SEEN_THIS_SESSION = false;
 /* chemins des médias de bienvenue (avatar + message vocal de l'auteur) — dégradation élégante si absents */
 const WELCOME_AVATAR_IMG = 'images/author-welcome.jpg';
-const WELCOME_AUDIO_SRC = 'audio/bienvenue.m4a';
-const WELCOME_VIDEO_SRC = 'videos/demo.mp4';
+/* Le "?v=2" force le navigateur (et le CDN) à aller rechercher un fichier
+   neuf plutôt que de resservir une ancienne copie mise en cache sous le
+   même nom — à incrémenter à chaque fois que ces médias sont remplacés. */
+const WELCOME_AUDIO_SRC = 'audio/bienvenue.m4a?v=2';
+const WELCOME_VIDEO_SRC = 'videos/demo.mp4?v=2';
 /* Phases de la démo : une page par grande section de l'appli, dans l'ordre
    de la barre de navigation (PRIMARY_TABS), pour accompagner la vidéo d'un
    repère visuel de ce qui s'y trouve — sans prétendre suivre au mot près
