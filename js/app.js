@@ -304,9 +304,10 @@ function homeUsageBannerHTML(){
   if(!USAGE_STATS_CACHE || !USAGE_STATS_CACHE.week || USAGE_STATS_CACHE.week < 2) return '<div id="home-usage-banner"></div>';
   const n = USAGE_STATS_CACHE.week;
   const nf = n.toLocaleString('fr-FR');
-  return `<div class="card home-usage-banner" id="home-usage-banner" style="margin:0 0 14px; border-left:4px solid var(--wine);">
+  return `<div class="card home-usage-banner" id="home-usage-banner">
     <button type="button" class="home-usage-banner-toggle" id="home-usage-banner-toggle">
-      <span class="entry-detail-text" style="margin:0;">🙏 Le saviez-vous ?</span>
+      <span class="home-usage-banner-icon">🙏</span>
+      <span class="entry-detail-text" style="margin:0;">Le saviez-vous ?</span>
       <span class="home-usage-banner-chevron" id="home-usage-banner-chevron">⌄</span>
     </button>
     <p class="entry-detail-text home-usage-banner-detail" id="home-usage-banner-detail"><strong>${nf}</strong> personnes ont prié avec Lumen cette semaine — rejoignez-les.</p>
@@ -372,10 +373,10 @@ function refreshLivePresenceBanner(){
 }
 function homeLivePresenceHTML(){
   const n = Math.max(1, LIVE_PRESENCE_COUNT);
-  const label = n <= 1 ? 'Vous priez en ce moment' : `${n.toLocaleString('fr-FR')} personnes prient avec vous en ce moment`;
+  const label = n <= 1 ? 'Vous priez en ce moment' : `<strong>${n.toLocaleString('fr-FR')}</strong> personnes prient avec vous en ce moment`;
   return `<div class="home-live-presence" id="home-live-presence">
     <span class="home-live-presence-dot"></span>
-    <span>🙏 ${label}</span>
+    <span class="home-live-presence-text">🙏 ${label}</span>
   </div>`;
 }
 async function startLivePresence(){
