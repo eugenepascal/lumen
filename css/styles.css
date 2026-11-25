@@ -2599,10 +2599,33 @@
     background: linear-gradient(175deg, #241013 0%, #150a0c 100%) !important;
     border:1px solid rgba(232,204,126,0.3);
     box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(232,204,126,0.12);
+    animation: videoModalPopIn 0.42s cubic-bezier(0.34,1.56,0.64,1);
+    position:relative;
+  }
+  @keyframes videoModalPopIn{
+    0% { transform:scale(0.92) translateY(14px); opacity:0; }
+    100% { transform:scale(1) translateY(0); opacity:1; }
+  }
+  /* Volée de particules dorées à l'ouverture de la fenêtre vidéo — un petit
+     effet de surprise, rejoué une seule fois, jamais en boucle. */
+  .video-modal-sparkle-burst{ position:absolute; inset:0; pointer-events:none; overflow:visible; z-index:6; }
+  .video-modal-sparkle-burst span{
+    position:absolute; top:16%; left:50%; font-size:17px; opacity:0;
+    animation: videoModalSparkleFly 0.95s ease-out forwards;
+  }
+  @keyframes videoModalSparkleFly{
+    0% { transform:translate(-50%,-50%) scale(0.3) rotate(0deg); opacity:0; }
+    18% { opacity:1; }
+    100% { transform:translate(calc(-50% + var(--bx)), calc(-50% + var(--by))) scale(1.05) rotate(200deg); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .video-modal-panel{ animation:none; }
+    .video-modal-sparkle-burst{ display:none; }
   }
   .video-modal-head{ border-bottom:1px solid rgba(232,204,126,0.18); margin-bottom:0 !important; }
   .video-modal-panel #video-modal-title{ color:var(--gold-light) !important; }
-  .video-modal-close-btn{ background:rgba(255,255,255,0.08); color:var(--vellum-light); }
+  .video-modal-close-btn{ background:rgba(255,255,255,0.08); color:var(--vellum-light); transition:background 0.15s ease, transform 0.15s ease; }
+  .video-modal-close-btn:hover{ background:rgba(255,255,255,0.18); transform:rotate(90deg); }
   .video-modal-caption-text{ color:rgba(244,239,228,0.65) !important; }
   #video-modal-body video{ display:block; }
   @media (min-width:600px){ .video-modal-panel{ max-width:720px !important; } }

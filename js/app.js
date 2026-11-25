@@ -5013,12 +5013,45 @@ function renderWelcomeSplash(){
    avec la photo de l'auteur en image d'aperçu (poster) et sa voix de bienvenue
    (déjà intégrée dans audio/bienvenue.m4a) comme bande-son — et un message
    gracieux si le fichier n'est pas encore disponible */
+/* Un petit « effet de surprise » doré au moment où la fenêtre de démo
+   s'ouvre — une volée de particules qui jaillit du centre et s'efface en
+   moins d'une seconde. Purement décoratif, rejoué une seule fois à
+   l'ouverture (jamais en boucle), pour marquer agréablement l'arrivée. */
+function fireVideoModalSparkle(){
+  const host = document.getElementById('video-modal-overlay');
+  if(!host) return;
+  const old = host.querySelector('.video-modal-sparkle-burst');
+  if(old) old.remove();
+  const burst = document.createElement('div');
+  burst.className = 'video-modal-sparkle-burst';
+  const glyphs = ['✨','⭐','💫'];
+  const n = 10;
+  for(let i=0;i<n;i++){
+    const angle = (i/n) * Math.PI * 2;
+    const dist = 80 + Math.random()*70;
+    const bx = Math.cos(angle)*dist, by = Math.sin(angle)*dist;
+    const span = document.createElement('span');
+    span.textContent = glyphs[i % glyphs.length];
+    span.style.setProperty('--bx', bx.toFixed(0)+'px');
+    span.style.setProperty('--by', by.toFixed(0)+'px');
+    span.style.animationDelay = (i*0.025)+'s';
+    burst.appendChild(span);
+  }
+  host.appendChild(burst);
+  setTimeout(()=>{ if(burst.parentNode) burst.remove(); }, 1200);
+}
 function openWelcomeVideoModal(){
   document.getElementById('video-modal-title').textContent = 'Un mot de bienvenue';
   document.getElementById('video-modal-caption').textContent = '';
-  document.getElementById('video-modal-body').innerHTML =
+  /* La vidéo est filmée en format portrait (story) : on adapte le cadre à
+     ses proportions réelles plutôt que de la forcer dans une boîte 16:9,
+     ce qui la recadrait trop serré (object-fit:cover coupait large). */
+  const body = document.getElementById('video-modal-body');
+  body.style.aspectRatio = '9 / 16';
+  body.style.maxHeight = '74vh';
+  body.innerHTML =
     `<video src="${WELCOME_VIDEO_SRC}" poster="${WELCOME_AVATAR_IMG}" controls autoplay playsinline
-      style="width:100%; height:100%; display:block; object-fit:cover; background:#000;" id="welcome-video-el"></video>`;
+      style="width:100%; height:100%; display:block; object-fit:contain; background:#000;" id="welcome-video-el"></video>`;
   document.getElementById('welcome-video-el').addEventListener('error', ()=>{
     document.getElementById('video-modal-body').innerHTML =
       `<div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:24px;">
@@ -5029,6 +5062,7 @@ function openWelcomeVideoModal(){
   DEMO_PHASE_IDX = 0;
   renderDemoPhases();
   document.getElementById('video-modal-overlay').classList.remove('hidden');
+  fireVideoModalSparkle();
 }
 function renderHome(){
   const showSwipeHint = HOME_PAGE_IDX === 0 && !localStorage.getItem('lumen_seen_home_page2');
@@ -10971,7 +11005,10 @@ function closeAmbiancePicker(){
 function openVideoModal(videoId, title, caption){
   document.getElementById('video-modal-title').textContent = title || 'Vidéo';
   document.getElementById('video-modal-caption').textContent = caption || '';
-  document.getElementById('video-modal-body').innerHTML =
+  const body = document.getElementById('video-modal-body');
+  body.style.aspectRatio = '16 / 9';
+  body.style.maxHeight = '';
+  body.innerHTML =
     `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" style="width:100%; height:100%; border:none;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="${(title||'').replace(/"/g,'&quot;')}"></iframe>`;
   const extra = document.getElementById('video-modal-extra');
   if(extra) extra.innerHTML = '';
@@ -10979,9 +11016,14 @@ function openVideoModal(videoId, title, caption){
 }
 function closeVideoModal(){
   document.getElementById('video-modal-overlay').classList.add('hidden');
-  document.getElementById('video-modal-body').innerHTML = '';
+  const body = document.getElementById('video-modal-body');
+  body.innerHTML = '';
+  body.style.aspectRatio = '16 / 9';
+  body.style.maxHeight = '';
   const extra = document.getElementById('video-modal-extra');
   if(extra) extra.innerHTML = '';
+  const burst = document.getElementById('video-modal-overlay').querySelector('.video-modal-sparkle-burst');
+  if(burst) burst.remove();
 }
 
 /* ===== Avis / feedback =====
