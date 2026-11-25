@@ -1264,14 +1264,17 @@
   .guide-text b{ color:var(--ink); }
 
   /* bottom nav (mobile) / sidebar (desktop) */
-  /* Même couleur que le bas du fond de l'application (#app se termine sur
-     var(--vellum-light)) : la barre du bas se fond directement dedans, sans
-     ligne ni dégradé visible à la jonction, sur téléphone. */
+  /* --vellum est la toute première couleur déclarée dans chaque thème
+     (voir les blocs "body[data-theme=...]" plus bas, qui redéfinissent tous
+     --vellum en premier) : en l'utilisant ici, la barre du bas reprend
+     automatiquement la couleur de base du thème actif, quel qu'il soit,
+     sans bordure ni ligne visible à la jonction avec le contenu. */
   #tabbar{
     display:flex;
     flex-shrink:0;
-    background: var(--vellum-light);
+    background: var(--vellum);
     border-top:none;
+    box-shadow:none;
     padding: 8px 6px calc(12px + env(safe-area-inset-bottom));
     position:relative;
   }
@@ -2420,7 +2423,7 @@
      carte) en mode sombre : on force donc un texte clair ici pour rester lisible. */
   body[data-theme="dark"] #topbar{ background: linear-gradient(155deg, #000000 0%, #121212 35%, #222222 65%, var(--wine-dark) 100%); border-bottom-color: rgba(212,117,42,0.3); color: #F2E8DA; }
   body[data-theme="dark"] #topbar h1, body[data-theme="dark"] #date-line, body[data-theme="dark"] #search-invite-bar{ color: #F2E8DA; }
-  body[data-theme="dark"] #tabbar{ background: var(--vellum-light); border-color: var(--hairline); }
+  body[data-theme="dark"] #tabbar{ background: var(--vellum); border-color: var(--hairline); }
 
   /* ===== thème "Aube" — ciel clair et bleu pastel du petit matin,
      avec une touche d'or pour la lumière du soleil levant ===== */
