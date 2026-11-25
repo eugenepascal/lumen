@@ -10399,20 +10399,26 @@ function ttsSpeak(u){
   u.onend = (e)=>{ finished = true; stopKeepAlive(); if(origEnd) origEnd(e); };
   u.onerror = (e)=>{ finished = true; stopKeepAlive(); if(origErr) origErr(e); };
   window.speechSynthesis.speak(u);
-  /* Garde-fou spécifique à iOS/Safari : il arrive que speak() soit accepté
-     sans jamais déclencher ni « start », ni « error », ni aucun son — la
-     synthèse reste silencieusement bloquée (notamment juste après un
-     retour au premier plan sur iPhone/iPad, ou quand l'appareil est en
-     mode silencieux). Passé 1,5 seconde sans qu'aucun son n'ait commencé
-     ET sans que la lecture ne soit déjà terminée normalement (cas des
-     textes très courts), on prévient plutôt que de laisser croire que
-     « ça lit » en silence. */
+  /* Garde-fou : il arrive (iOS/Safari juste après un retour au premier
+     plan, ou mode silencieux ; Chrome avec une voix « en ligne » dont le
+     service réseau échoue) que speak() soit accepté sans jamais produire
+     le moindre son — et sur certains navigateurs, speechSynthesis.speaking
+     reste pourtant bloqué à `true` dans ce cas précis, ce qui empêchait ce
+     garde-fou de se déclencher (on croyait "ça lit" alors que rien ne sort).
+     On se fie donc uniquement à l'évènement "start", seul signal fiable que
+     le moteur a réellement commencé à produire du son, et on coupe/avertit
+     si rien n'est arrivé après un délai raisonnable — en déclenchant aussi
+     le onerror d'origine pour que l'interface appelante (icône ▶/⏸...) se
+     remette bien à zéro plutôt que de rester bloquée en "lecture". */
   setTimeout(()=>{
-    if(!started && !finished && !window.speechSynthesis.speaking && !window.speechSynthesis.pending){
+    if(!started && !finished){
+      finished = true;
       stopKeepAlive();
-      showToast("🔇 Aucun son n'a démarré. Vérifiez que votre appareil n'est pas en mode silencieux (interrupteur sur le côté), puis réessayez.");
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+      showToast("🔇 Aucun son n'a démarré. Vérifiez que votre appareil n'est pas en mode silencieux et que le volume est monté, puis réessayez.");
+      if(origErr) origErr({error:'synthesis-failed'});
     }
-  }, 1500);
+  }, 2500);
   TTS_KEEPALIVE_TIMER = setInterval(()=>{
     if(!window.speechSynthesis.speaking){ stopKeepAlive(); return; }
     try{ window.speechSynthesis.pause(); window.speechSynthesis.resume(); }catch(e){}
@@ -12917,11 +12923,12 @@ function renderPelerinageDetail(){
 function renderMeditationsAudio(){
   const html = `<h2 class="section-title">🎧 Méditations audio</h2>
     <p class="section-desc">Une courte méditation à écouter, les yeux fermés, un moment pour soi.</p>
-    <p class="studio-note" style="font-style:italic; margin-bottom:12px;">🎙️ Lues par la voix de synthèse de votre appareil — pas un enregistrement professionnel, mais une vraie lecture, mains libres.</p>
+    <p class="studio-note" style="font-style:italic; margin-bottom:12px;">🎙️ Lues par la voix de synthèse de votre appareil — pas un enregistrement professionnel, mais une vraie lecture, mains libres. Si le son ne sort pas sur votre appareil, touchez 📖 pour lire le texte à la place.</p>
     <div class="med-audio-list">${MEDITATIONS.slice(0,20).map((m,i)=>`
       <div class="med-audio-row ${MEDITATION_AUDIO_PLAYING===i?'playing':''}" data-med-idx="${i}">
         <button class="med-audio-play-btn">${MEDITATION_AUDIO_PLAYING===i?'⏸':'▶'}</button>
         <div class="med-audio-copy"><b>${m.title}</b><small>${Math.max(1,Math.round(m.text.split(' ').length/130))} min environ</small></div>
+        <button class="icon-btn med-audio-text-btn" data-med-text-idx="${i}" aria-label="Lire le texte" title="Lire le texte">📖</button>
       </div>`).join('')}</div>`;
   document.getElementById('screen').innerHTML = html;
   document.querySelectorAll('[data-med-idx]').forEach(row=>{
@@ -12942,6 +12949,13 @@ function renderMeditationsAudio(){
       ttsSpeak(u);
       MEDITATION_AUDIO_PLAYING = idx;
       renderMeditationsAudio();
+    };
+  });
+  document.querySelectorAll('[data-med-text-idx]').forEach(textBtn=>{
+    textBtn.onclick = (e)=>{
+      e.stopPropagation();
+      const idx = parseInt(textBtn.dataset.medTextIdx,10);
+      openVerseReader({ title: MEDITATIONS[idx].title, subtitle:'', text: MEDITATIONS[idx].text, reference:'', images:['./images/wisdom.svg'] });
     };
   });
 }

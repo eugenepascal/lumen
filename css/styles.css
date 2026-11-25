@@ -394,8 +394,11 @@
   .med-audio-row{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; background:var(--vellum-light); border:1px solid var(--hairline); }
   .med-audio-row.playing{ border-color:var(--gold); background:var(--gold-pale); }
   .med-audio-play-btn{ flex-shrink:0; width:36px; height:36px; border-radius:50%; border:none; background:var(--wine); color:#fff; font-size:13px; cursor:pointer; }
+  .med-audio-copy{ flex:1; min-width:0; }
   .med-audio-copy b{ display:block; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); }
   .med-audio-copy small{ color:var(--ink-soft); font-size:11px; }
+  .med-audio-text-btn{ flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--vellum); border:1px solid var(--hairline); font-size:14px; cursor:pointer; }
+  .med-audio-text-btn:hover{ background:var(--gold-pale); }
   .lent-goal-row{ display:flex; flex-direction:column; gap:6px; margin-top:6px; }
   .lent-goal-check{ display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px; background:var(--vellum); border:1px solid var(--hairline); font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink); cursor:pointer; }
   .lent-goal-check input{ width:16px; height:16px; accent-color:var(--wine); }
