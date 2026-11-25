@@ -6,7 +6,7 @@
    contenu dynamique ou qui ne nous appartient pas.
    Changez CACHE_VERSION pour forcer les navigateurs à rafraîchir le cache
    après une mise à jour du shell. */
-const CACHE_VERSION = 'lumen-shell-v89';
+const CACHE_VERSION = 'lumen-shell-v90';
 
 /* ---------- Notifications push (Firebase Cloud Messaging) ----------
    Envoyées manuellement depuis la console Firebase (Cloud Messaging >
@@ -63,8 +63,8 @@ const SHELL_ASSETS = [
   './images/icons/icon-512.png',
   './images/icons/apple-touch-icon.png',
   './images/author-welcome.jpg',
-  './audio/bienvenue.m4a?v=2',
-  './videos/demo.mp4?v=2',
+  './audio/bienvenue-v2.m4a',
+  './videos/demo-v2.mp4',
   './images/annunciation.svg',
   './images/assumption.svg',
   './images/bible.svg',
