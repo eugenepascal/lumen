@@ -4625,7 +4625,7 @@ let ROSARY_AUDIO_PLAYING = null;
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
-  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'versets-soir', label:'🌙 Versets du soir'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'binome', label:'🤝 Binôme de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'autrement', label:'🪔 Prier autrement'} ],
+  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'versets-soir', label:'🌙 Versets du soir'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'binome', label:'🤝 Binôme de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'carnet-familial', label:'👨‍👩‍👧‍👦 Carnet familial'}, {key:'autrement', label:'🪔 Prier autrement'} ],
   devotions: [ {key:'prieres', label:'📿 Prières'}, {key:'chapelet', label:'🔗 Chapelet'}, {key:'misericorde', label:'❤️ Miséricorde'}, {key:'chemin-croix', label:'✝️ Chemin de croix'}, {key:'lectio', label:'📕 Lectio Divina'}, {key:'confession', label:'🕊️ Confession'}, {key:'famille', label:'👨‍👩‍👧 En famille'}, {key:'armure', label:'🛡️ Armure de Dieu'}, {key:'prieres-combat', label:'⚔️ Prières de combat'}, {key:'temoins', label:'🕯️ Témoins qui ont tenu bon'}, {key:'meditations-combat', label:'💭 Méditations de combat'}, {key:'versets-armure', label:'🔥 Versets de force'} ],
   ecritures: [ {key:'psaumes', label:'📜 Psaumes'}, {key:'bible', label:'👑 Bible & Histoire'}, {key:'bible-lecture', label:'📗 Lire la Bible'}, {key:'recits', label:'🌍 Récits fondateurs'}, {key:'reperes', label:'📋 Repères'}, {key:'memoriser', label:'🧠 Mémoriser'} ],
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
@@ -4784,11 +4784,10 @@ function goTo(primary, sub){
 }
 
 const PRIER_SUBNAV_GROUPS = [
-  {label:'☀️ Chaque jour', keys:['textes-du-jour','office','laudes','tierce','midi','sexte','none','vepres','compline','angelus','examen']},
+  {label:'☀️ Chaque jour', keys:['textes-du-jour','versets-matin','versets-soir','office','laudes','tierce','midi','sexte','none','vepres','compline','angelus','examen']},
   {label:'🕯️ Parcours & neuvaines', keys:['neuvaines','careme40','guides']},
-  {label:'✍️ Mes prières', keys:['mes-prieres']},
-  {label:'🤝 Pour moi et les autres', keys:['intentions','groupe','binome','selon-etat']},
-  {label:'🪔 Prier autrement', keys:['autrement']}
+  {label:'🤝 Avec les autres', keys:['intentions','groupe','binome','selon-etat','carnet-familial']},
+  {label:'🪔 Pour varier', keys:['mes-prieres','autrement']}
 ];
 const DEVOTIONS_SUBNAV_GROUPS = [
   {label:'📿 Prières & dévotions', keys:['prieres','chapelet','misericorde','chemin-croix','lectio','confession','famille']},
@@ -5850,10 +5849,10 @@ const PRIER_HUB_CATEGORIES = [
    grandes prières classiques, puis la dimension communautaire, enfin
    ce qui permet de varier ou de personnaliser. */
 const PRIER_HUB_GROUPS = [
-  {key:'jour', label:'Chaque jour'},
-  {key:'classiques', label:'Les grandes prières'},
-  {key:'autres', label:'Avec les autres'},
-  {key:'varier', label:'Pour varier et personnaliser'}
+  {key:'jour', icon:'☀️', label:'Chaque jour'},
+  {key:'classiques', icon:'📿', label:'Les grandes prières'},
+  {key:'autres', icon:'🤝', label:'Avec les autres'},
+  {key:'varier', icon:'🪔', label:'Pour varier et personnaliser'}
 ];
 function renderPrierHub(){
   maybeAutoOpenMiniTuto('prier-hub');
@@ -5869,8 +5868,12 @@ function renderPrierHub(){
     ${PRIER_HUB_GROUPS.map(g=>{
       const cats = PRIER_HUB_CATEGORIES.filter(c=>c.group===g.key);
       if(!cats.length) return '';
-      return `<p class="eyebrow" style="margin:16px 2px 6px;">${g.label}</p>
-      <div class="rubric-list">${cats.map(c=>{
+      return `<div class="hub-section">
+        <div class="hub-section-head">
+          <span class="hub-section-icon">${g.icon}</span>
+          <span class="hub-section-title">${g.label}</span>
+        </div>
+        <div class="rubric-list">${cats.map(c=>{
         const i = PRIER_HUB_CATEGORIES.indexOf(c);
         return `<button type="button" class="rubric-row" data-hub-goto="${c.goto}" data-hub-index="${i}">
         <span class="rubric-row-icon" style="background:${c.color};">${c.icon}</span>
@@ -5879,7 +5882,8 @@ function renderPrierHub(){
           <span class="rubric-row-desc">${c.desc}</span>
         </span>
         <span class="rubric-row-chevron">›</span>
-      </button>`;}).join('')}</div>`;
+      </button>`;}).join('')}</div>
+      </div>`;
     }).join('')}`;
   document.getElementById('screen').innerHTML = html;
   document.getElementById('prier-hub-tuto-btn').onclick = ()=> openMiniTuto('prier-hub');
