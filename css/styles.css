@@ -602,6 +602,14 @@
     border-radius:22px 22px 0 0; padding:26px 22px 30px; animation:fadeIn 0.25s ease;
   }
   .guide-close{ position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%; border:none; background:var(--vellum); color:var(--ink-soft); font-size:14px; cursor:pointer; }
+  /* Le guide lit maintenant son texte à voix haute (voix de l'appli) ; ce
+     bouton permet de couper/réactiver cette lecture, préférence mémorisée
+     d'une visite à l'autre. */
+  .guide-speech-toggle{
+    position:absolute; top:14px; right:54px; width:30px; height:30px; border-radius:50%;
+    border:none; background:var(--vellum); color:var(--ink-soft); font-size:14px; cursor:pointer;
+  }
+  .guide-speech-toggle:hover{ background:var(--gold-pale); }
   .guide-eyebrow{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; color:var(--gold); margin:0; }
   .guide-title{ font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--ink); margin:4px 0 4px; }
   .guide-desc{ font-family:'Inter',sans-serif; font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
@@ -626,6 +634,13 @@
   @keyframes guideAvatarBreathe{
     0%, 100% { transform:scale(1); box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,0.35), 0 0 0 0 rgba(201,162,39,0.35); }
     50% { transform:scale(1.06); box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 0 0 2px rgba(255,255,255,0.4), 0 0 0 8px rgba(201,162,39,0); }
+  }
+  /* Variante un peu plus vive quand le guide lit son texte à voix haute —
+     un rythme plus rapide, comme si l'avatar "parlait". */
+  .guide-avatar.guide-avatar-speaking{ animation: guideAvatarSpeak 1.1s ease-in-out infinite; }
+  @keyframes guideAvatarSpeak{
+    0%, 100% { transform:scale(1); }
+    50% { transform:scale(1.1); }
   }
   #mini-tuto-overlay{
     position:fixed; inset:0; z-index:9997; background:rgba(15,10,8,0.82);

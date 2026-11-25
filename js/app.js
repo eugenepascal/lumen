@@ -10286,19 +10286,34 @@ function wireStreakButton(){
 
 /* ================= text-to-speech & share ================= */
 let BEST_FR_VOICE_CACHE = null;
+/* Noms de voix françaises féminines connues, par plateforme — classées à
+   peu près par naturel perçu (les voix "neurales"/en ligne d'abord, qui
+   sonnent nettement moins monotones que les voix embarquées "compact").
+   On évite volontairement les voix masculines connues (Henri, Thomas,
+   Paul, Nicolas...) tant qu'une alternative féminine existe sur l'appareil. */
+const PREFERRED_FEMALE_VOICE_NAMES = [
+  'Google français',
+  'Microsoft Denise Online','Microsoft Vivienne Online','Microsoft Eloise Online',
+  'Microsoft Denise','Microsoft Vivienne','Microsoft Eloise','Microsoft Julie','Microsoft Hortense',
+  'Audrey','Amélie','Marie','Léa','Chantal','Virginie','Céline','Aurélie'
+];
 function getBestFrenchVoice(){
   if(!window.speechSynthesis) return null;
   const voices = window.speechSynthesis.getVoices();
   if(!voices.length) return null;
   const frVoices = voices.filter(v=> v.lang && v.lang.toLowerCase().startsWith('fr'));
   if(!frVoices.length) return null;
-  // préférence : voix "naturelles"/neurales connues avant les voix robotiques par défaut
-  const preferredNames = ['Google français','Microsoft Denise','Microsoft Henri','Microsoft Vivienne','Audrey','Thomas','Amélie'];
-  for(const name of preferredNames){
+  // 1) une voix féminine connue, de préférence
+  for(const name of PREFERRED_FEMALE_VOICE_NAMES){
     const match = frVoices.find(v=> v.name.includes(name));
     if(match) return match;
   }
-  // sinon, une voix non locale (souvent plus naturelle que les voix embarquées "compact")
+  // 2) le moteur expose parfois le genre de la voix (certains Android/Chrome) —
+  // sans se fier au nom, qu'on ne connaît pas forcément à l'avance.
+  const taggedFemale = frVoices.find(v=> /female|féminin/i.test(v.name||'') || (v.voiceURI||'').toLowerCase().includes('female'));
+  if(taggedFemale) return taggedFemale;
+  // 3) sinon, une voix non locale (voix "en ligne", presque toujours plus
+  // naturelle et moins monotone que les voix embarquées "compact")
   const nonLocal = frVoices.find(v=> !v.localService);
   return nonLocal || frVoices[0];
 }
@@ -10306,8 +10321,11 @@ function applyNaturalVoice(u){
   const voice = getBestFrenchVoice();
   if(voice) u.voice = voice;
   u.lang = 'fr-FR';
-  u.rate = 0.96;
-  u.pitch = 1.03;
+  u.rate = 0.94;
+  // Un pitch légèrement plus haut rapproche le rendu d'une voix féminine
+  // quand l'appareil n'a qu'une voix neutre/robotique faute de mieux ;
+  // sur une vraie voix neurale, ce réglage reste discret et naturel.
+  u.pitch = 1.08;
 }
 if(window.speechSynthesis){
   window.speechSynthesis.onvoiceschanged = ()=>{ BEST_FR_VOICE_CACHE = getBestFrenchVoice(); };
@@ -15442,12 +15460,28 @@ async function submitGuideQuestion(text){
     openSearchWithQuery(text);
   }
 }
+/* Le Guide lit désormais à voix haute le texte qu'il affiche — avec la
+   même synthèse vocale (et la même voix féminine) que le reste de
+   l'appli, sans dépendre d'une IA externe. Préférence mémorisée d'une
+   visite à l'autre, activée par défaut. */
+let GUIDE_SPEECH_ENABLED = (function(){
+  try{ const v = localStorage.getItem('lumen_guide_speech'); return v === null ? true : v === '1'; }
+  catch(e){ return true; }
+})();
+function guideSpeakStep(step){
+  if(!GUIDE_SPEECH_ENABLED || !window.speechSynthesis) return;
+  const text = (step.title || guideGreeting()) + (step.desc ? ('. ' + step.desc) : '');
+  speakText(text);
+}
 function openGuide(){
   GUIDE_STACK = ['root'];
   renderGuideStep();
   document.getElementById('guide-overlay').classList.remove('hidden');
 }
-function closeGuide(){ document.getElementById('guide-overlay').classList.add('hidden'); }
+function closeGuide(){
+  document.getElementById('guide-overlay').classList.add('hidden');
+  try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+}
 
 /* ================= mini-tutoriels pas-à-pas =================
    Pour les fonctionnalités les moins immédiates (groupe de prière,
@@ -15570,7 +15604,8 @@ function renderGuideStep(){
   const overlay = document.getElementById('guide-overlay');
   overlay.innerHTML = `<div class="guide-panel">
     <button class="guide-close" id="guide-close-btn">✕</button>
-    <div class="guide-avatar">✨</div>
+    <button class="guide-speech-toggle" id="guide-speech-toggle" aria-label="${GUIDE_SPEECH_ENABLED?'Couper la voix du guide':'Activer la voix du guide'}" title="${GUIDE_SPEECH_ENABLED?'Couper la voix du guide':'Activer la voix du guide'}">${GUIDE_SPEECH_ENABLED?'🔊':'🔇'}</button>
+    <div class="guide-avatar ${GUIDE_SPEECH_ENABLED?'guide-avatar-speaking':''}">✨</div>
     <p class="guide-eyebrow">${step.eyebrow || '🧭 Votre guide'}</p>
     <p class="guide-title">${step.title || guideGreeting()}</p>
     ${step.desc ? `<p class="guide-desc">${step.desc}</p>` : ''}
@@ -15578,11 +15613,18 @@ function renderGuideStep(){
       <input type="text" id="guide-ask-input" class="guide-ask-input" placeholder="Décrivez ce qui vous amène, ou posez une question…" />
       <button class="guide-ask-send" id="guide-ask-send" aria-label="Envoyer">➤</button>
     </div>
-    <p class="guide-ask-hint">Un compagnon sans IA externe : il repère quelques mots-clés et vous mène vers le contenu de Lumen.</p>` : ''}
+    <p class="guide-ask-hint">Un compagnon sans IA externe : il repère quelques mots-clés, vous le lit à voix haute, et vous mène vers le contenu de Lumen.</p>` : ''}
     <div class="guide-options">${step.options.map((o,i)=>`<button class="guide-opt" data-guide-idx="${i}">${typeof o.label==='function'?o.label():o.label}</button>`).join('')}</div>
   </div>`;
   document.getElementById('guide-close-btn').onclick = closeGuide;
+  document.getElementById('guide-speech-toggle').onclick = ()=>{
+    GUIDE_SPEECH_ENABLED = !GUIDE_SPEECH_ENABLED;
+    try{ localStorage.setItem('lumen_guide_speech', GUIDE_SPEECH_ENABLED ? '1' : '0'); }catch(e){}
+    if(!GUIDE_SPEECH_ENABLED){ try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){} }
+    renderGuideStep();
+  };
   overlay.onclick = (e)=>{ if(e.target === overlay) closeGuide(); };
+  guideSpeakStep(step);
   if(isRoot){
     const askInput = document.getElementById('guide-ask-input');
     const askSend = document.getElementById('guide-ask-send');
