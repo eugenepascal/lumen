@@ -10642,6 +10642,7 @@ function wireLumenPlayerDrag(){
    coupe le son en détruisant le lecteur. */
 let AMBIANCE_YT_PAUSED = false;
 let AMBIANCE_YT_STARTED = false;
+let AMBIANCE_FLOAT_EXPANDED = false;
 function renderAmbianceYtControls(){
   const wrap = document.getElementById('ambiance-player-controls');
   if(!wrap) return;
@@ -10652,9 +10653,15 @@ function renderAmbianceYtControls(){
       <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>`;
   } else {
     wrap.innerHTML = `
-      <button class="btn btn-ghost btn-sm" id="ambiance-player-pause">${AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause'}</button>
-      ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
-      <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>`;
+      <div class="ambiance-seek-row">
+        <button class="btn btn-ghost btn-sm" id="ambiance-player-back10" title="Reculer de 10 secondes">⏪ 10s</button>
+        <button class="btn btn-ghost btn-sm" id="ambiance-player-pause">${AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause'}</button>
+        <button class="btn btn-ghost btn-sm" id="ambiance-player-fwd10" title="Avancer de 10 secondes">10s ⏩</button>
+      </div>
+      <div class="ambiance-seek-row">
+        ${(AMBIANCE_SHUFFLE_MODE || AMBIANCE_CURRENT_POOL) ? `<button class="btn btn-ghost btn-sm" id="ambiance-player-next">⏭ Suivant</button>` : ''}
+        <button class="btn btn-ghost btn-sm" id="ambiance-player-stop">⏹ Arrêter</button>
+      </div>`;
   }
   const startBtn = document.getElementById('ambiance-player-start');
   if(startBtn) startBtn.onclick = ()=>{
@@ -10672,6 +10679,21 @@ function renderAmbianceYtControls(){
       else if(!AMBIANCE_YT_PAUSED && YT_PLAYER.playVideo) YT_PLAYER.playVideo();
     }
     pauseBtn.textContent = AMBIANCE_YT_PAUSED ? '▶ Reprendre' : '⏸ Pause';
+  };
+  /* Avancer/reculer de 10 secondes dans le morceau en cours — la barre de
+     progression native YouTube est minuscule dans ce petit cadre flottant
+     et difficile à viser du doigt ; ces deux boutons offrent un geste sûr. */
+  const back10Btn = document.getElementById('ambiance-player-back10');
+  if(back10Btn) back10Btn.onclick = ()=>{
+    if(YT_PLAYER && YT_PLAYER.getCurrentTime && YT_PLAYER.seekTo){
+      try{ YT_PLAYER.seekTo(Math.max(0, YT_PLAYER.getCurrentTime() - 10), true); }catch(e){}
+    }
+  };
+  const fwd10Btn = document.getElementById('ambiance-player-fwd10');
+  if(fwd10Btn) fwd10Btn.onclick = ()=>{
+    if(YT_PLAYER && YT_PLAYER.getCurrentTime && YT_PLAYER.seekTo){
+      try{ YT_PLAYER.seekTo(YT_PLAYER.getCurrentTime() + 10, true); }catch(e){}
+    }
   };
   const nextBtn = document.getElementById('ambiance-player-next');
   if(nextBtn) nextBtn.onclick = ()=>{
@@ -10692,6 +10714,7 @@ function renderAmbianceVideoWindow(){
   if(!host) return;
   if(!AMBIANCE_VIDEO_OPEN){ destroyYtPlayer(); host.classList.add('hidden'); host.innerHTML = ''; return; }
   host.classList.remove('hidden');
+  host.classList.toggle('ambiance-float-expanded', AMBIANCE_FLOAT_EXPANDED);
   if(BG_YT_VIDEO_ID){
     AMBIANCE_YT_STARTED = false;
     AMBIANCE_YT_PAUSED = false;
@@ -10700,12 +10723,24 @@ function renderAmbianceVideoWindow(){
         <div class="ambiance-player-top" id="ambiance-player-drag">
           <span class="ambiance-player-drag-hint" aria-hidden="true">⠿</span>
           <p class="ambiance-player-title">🎵 Ambiance</p>
+          <button class="icon-btn" id="ambiance-player-expand" aria-label="${AMBIANCE_FLOAT_EXPANDED?'Réduire':'Agrandir'}" title="${AMBIANCE_FLOAT_EXPANDED?'Réduire la fenêtre':'Agrandir la fenêtre'}">${AMBIANCE_FLOAT_EXPANDED?'⤡':'⤢'}</button>
           <button class="icon-btn" id="ambiance-player-back" aria-label="Fermer">✕</button>
         </div>
         <p class="ambiance-player-label">${AMBIANCE_VIDEO_LABEL}</p>
         <div class="ambiance-player-embed" id="ambiance-yt-holder"></div>
         <div class="ambiance-player-controls" id="ambiance-player-controls"></div>
       </div>`;
+    /* L'agrandissement ne fait que changer la taille du cadre (CSS) sans
+       jamais recréer le lecteur YouTube — sinon la vidéo repartirait de
+       zéro à chaque bascule, ce qui serait très désagréable. */
+    const expandBtn = document.getElementById('ambiance-player-expand');
+    if(expandBtn) expandBtn.onclick = ()=>{
+      AMBIANCE_FLOAT_EXPANDED = !AMBIANCE_FLOAT_EXPANDED;
+      host.classList.toggle('ambiance-float-expanded', AMBIANCE_FLOAT_EXPANDED);
+      expandBtn.textContent = AMBIANCE_FLOAT_EXPANDED ? '⤡' : '⤢';
+      expandBtn.title = AMBIANCE_FLOAT_EXPANDED ? 'Réduire la fenêtre' : 'Agrandir la fenêtre';
+      expandBtn.setAttribute('aria-label', AMBIANCE_FLOAT_EXPANDED ? 'Réduire' : 'Agrandir');
+    };
     createYtPlayer(BG_YT_VIDEO_ID, true, function(errCode){
       if(!ytErrorIsUnplayable(errCode)) return;
       const pool = AMBIANCE_CURRENT_POOL;
@@ -15199,12 +15234,17 @@ const GUIDE_TREE = {
       {label:()=> RECUEILLEMENT_MODE ? '🕊️ Quitter le mode Recueillement' : '🕊️ Me recueillir, un moment calme', action:()=> toggleRecueillement()},
       {label:'✍️ Écrire une prière personnelle', action:()=>goTo('prier','mes-prieres')},
       {label:'👥 Créer ou rejoindre un groupe de prière', action:()=>goTo('prier','groupe')},
+      {label:'🤝 Trouver un binôme de prière', action:()=>goTo('prier','binome')},
       {label:'🔗 Prier un chapelet, dizaine par dizaine', action:()=>goTo('devotions','chapelet')},
       {label:'🫂 J’ai besoin de réconfort', action:()=>goTo('espace','reconfort')},
       {label:'🎂 Garder la mémoire d’un baptême, d’un mariage…', action:()=>goTo('espace','anniversaires')},
       {label:'✝️ Suivre un chemin de Carême, jour après jour', action:()=>goTo('prier','careme40')},
       {label:'🎶 Prier en musique, avec des louanges', action:()=>goTo('espace','studio')},
       {label:'✨ Tenir mon carnet de grâces ou mon journal', action:()=>goTo('espace','gratitude')},
+      {label:'📿 Dévotions & combat spirituel', next:'devotions'},
+      {label:'🧭 Découvrir (Jésus, Église, Sagesse)', next:'decouvrir'},
+      {label:'📖 Explorer la Bible et les psaumes', next:'bible'},
+      {label:'👤 Mon espace personnel', next:'espace'},
       {label:'⚙️ Mon compte', next:'compte'}
     ]
   },
@@ -15216,6 +15256,67 @@ const GUIDE_TREE = {
       {label:'☀️ Les textes et offices du jour', action:()=>goTo('prier','textes-du-jour')},
       {label:'🧭 Selon mon état du moment', action:()=>goTo('prier','selon-etat')},
       {label:'🤝 Confier une intention', action:()=>goTo('prier','intentions')},
+      {label:'🗺️ Voir la carte des intentions dans le monde', action:()=>{ INTENTIONS_SHOW_MAP = true; goTo('prier','intentions'); }},
+      {label:'👨‍👩‍👧‍👦 Le carnet familial', action:()=>goTo('prier','carnet-familial')},
+      {label:'🪔 Prier autrement (5 min, silence…)', action:()=>goTo('prier','autrement')},
+      {label:'← Retour', back:true}
+    ]
+  },
+  devotions: {
+    eyebrow: '✨ Lumen Guide',
+    title: 'Dévotions & combat spirituel',
+    desc: 'Des prières et pratiques plus anciennes, à redécouvrir.',
+    options: [
+      {label:'📿 Toutes les prières (recueil complet)', action:()=>goTo('devotions','prieres')},
+      {label:'🔗 Chapelet & Rosaire', action:()=>goTo('devotions','chapelet')},
+      {label:'❤️ Chapelet de la Miséricorde', action:()=>goTo('devotions','misericorde')},
+      {label:'✝️ Chemin de croix', action:()=>goTo('devotions','chemin-croix')},
+      {label:'📕 Lectio Divina', action:()=>goTo('devotions','lectio')},
+      {label:'🕊️ Me préparer à la confession', action:()=>goTo('devotions','confession')},
+      {label:'🛡️ Armure de Dieu & combat spirituel', action:()=>goTo('devotions','armure')},
+      {label:'← Retour', back:true}
+    ]
+  },
+  decouvrir: {
+    eyebrow: '✨ Lumen Guide',
+    title: 'Jésus, l’Église, la sagesse',
+    desc: 'Pour approfondir et mieux connaître votre foi.',
+    options: [
+      {label:'✝️ La vie de Jésus, Marie et Joseph', action:()=>{ PRIMARY='jesus'; GROUP_SEL['jesus:main']='vie-de-jesus'; }},
+      {label:'✝️ Découvrir un saint ou trouver mon patron', action:()=>goTo('eglise','saints')},
+      {label:'🪟 Ma collection de vitraux de saints', action:()=>goTo('espace','vitraux')},
+      {label:'📅 Le calendrier liturgique', action:()=>goTo('eglise','calendrier')},
+      {label:'✨ Les sacrements expliqués simplement', action:()=>goTo('sagesse','sacrements')},
+      {label:'🔤 Le lexique des mots de la foi', action:()=>goTo('sagesse','lexique')},
+      {label:'❓ Tester mes connaissances (quiz)', action:()=>goTo('sagesse','quiz')},
+      {label:'🎧 Méditations audio, les yeux fermés', action:()=>goTo('sagesse','meditations-audio')},
+      {label:'← Retour', back:true}
+    ]
+  },
+  bible: {
+    eyebrow: '✨ Lumen Guide',
+    title: 'La Bible et les psaumes',
+    desc: '',
+    options: [
+      {label:'📜 Un psaume pour ce que je traverse', action:()=>goTo('ecritures','psaumes')},
+      {label:'📗 Lire la Bible, livre par livre', action:()=>goTo('ecritures','bible-lecture')},
+      {label:'👑 Les grands récits bibliques, dans l’ordre', action:()=>goTo('ecritures','bible')},
+      {label:'🌍 Récits fondateurs (Création, Exode…)', action:()=>goTo('ecritures','recits')},
+      {label:'🧠 Mémoriser un verset par cœur', action:()=>goTo('ecritures','memoriser')},
+      {label:'← Retour', back:true}
+    ]
+  },
+  espace: {
+    eyebrow: '✨ Lumen Guide',
+    title: 'Mon espace personnel',
+    desc: '',
+    options: [
+      {label:'✍️ Mon journal intérieur', action:()=>goTo('espace','journal')},
+      {label:'📊 Mon parcours et mes statistiques', action:()=>goTo('espace','stats')},
+      {label:'🕯️ Mémorial — prier pour mes défunts', action:()=>goTo('espace','memorial')},
+      {label:'⭐ Mes favoris', action:()=>goTo('espace','favoris')},
+      {label:'🔔 Régler mes rappels et notifications', action:()=>goTo('espace','reglages')},
+      {label:'🧭 Revoir le guide complet de l’application', action:()=>goTo('espace','guide-complet')},
       {label:'← Retour', back:true}
     ]
   },
@@ -15252,7 +15353,25 @@ const GUIDE_INTENTS = [
   {kw:['anniversaire'], action:()=>goTo('espace','anniversaires')},
   {kw:['louange','louanges','musique','chant de prière','chant de priere'], action:()=>goTo('espace','studio')},
   {kw:['carnet de grâce','carnet de grace','gratitude','journal'], action:()=>goTo('espace','gratitude')},
-  {kw:['témoignage','temoignage'], action:()=>goTo('prier','groupe')}
+  {kw:['témoignage','temoignage'], action:()=>goTo('prier','groupe')},
+  {kw:['carnet familial','en famille'], action:()=>goTo('prier','carnet-familial')},
+  {kw:['vitrail','vitraux'], action:()=>goTo('espace','vitraux')},
+  {kw:['carte du monde','carte des intentions','monde entier'], action:()=>{ INTENTIONS_SHOW_MAP = true; goTo('prier','intentions'); }},
+  {kw:['vie de jésus','vie de jesus','annonciation','assomption'], action:()=>{ PRIMARY='jesus'; GROUP_SEL['jesus:main']='vie-de-jesus'; }},
+  {kw:['calendrier liturgique','avent','temps liturgique'], action:()=>goTo('eglise','calendrier')},
+  {kw:['lexique','vocabulaire','mot de la foi'], action:()=>goTo('sagesse','lexique')},
+  {kw:['quiz','teste mes connaissances','connaissances'], action:()=>goTo('sagesse','quiz')},
+  {kw:['méditation audio','meditation audio'], action:()=>goTo('sagesse','meditations-audio')},
+  {kw:['statistique','mon parcours','objectif'], action:()=>goTo('espace','stats')},
+  {kw:['favori'], action:()=>goTo('espace','favoris')},
+  {kw:['rappel','notification','réglage','reglage'], action:()=>goTo('espace','reglages')},
+  {kw:['défunt','defunt','deuil','mémorial','memorial'], action:()=>goTo('espace','memorial')},
+  {kw:['chemin de croix'], action:()=>goTo('devotions','chemin-croix')},
+  {kw:['lectio'], action:()=>goTo('devotions','lectio')},
+  {kw:['armure de dieu','combat spirituel'], action:()=>goTo('devotions','armure')},
+  {kw:['mémoriser','memoriser','par cœur','par coeur'], action:()=>goTo('ecritures','memoriser')},
+  {kw:['lire la bible'], action:()=>goTo('ecritures','bible-lecture')},
+  {kw:['guide complet','toutes les fonctionnalités'], action:()=>goTo('espace','guide-complet')}
 ];
 function matchGuideIntent(textRaw){
   const text = (textRaw||'').toLowerCase();

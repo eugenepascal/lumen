@@ -605,14 +605,27 @@
   .guide-eyebrow{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.3px; color:var(--gold); margin:0; }
   .guide-title{ font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--ink); margin:4px 0 4px; }
   .guide-desc{ font-family:'Inter',sans-serif; font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
-  .guide-options{ display:flex; flex-direction:column; gap:8px; max-height:38vh; overflow-y:auto; }
-  .guide-opt{ text-align:left; padding:13px 16px; border-radius:14px; border:1px solid var(--hairline); background:var(--vellum); color:var(--ink); font-family:'Inter',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
-  .guide-opt:hover{ background:var(--gold-pale); }
+  .guide-options{ display:flex; flex-direction:column; gap:8px; max-height:44vh; overflow-y:auto; padding-right:2px; }
+  .guide-opt{
+    text-align:left; padding:13px 16px; border-radius:14px; border:1px solid var(--hairline);
+    background:var(--vellum); color:var(--ink); font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
+    cursor:pointer; transition:background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .guide-opt:hover{ background:var(--gold-pale); transform:translateX(2px); }
+  .guide-opt:active{ transform:scale(0.98); }
+  @media (hover:hover){
+    .guide-opt:hover{ box-shadow:0 2px 8px rgba(60,30,50,0.08); }
+  }
   .guide-avatar{
     width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     font-size:24px; margin-bottom:10px;
     background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 75%);
     box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,0.35);
+    animation: guideAvatarBreathe 3.4s ease-in-out infinite;
+  }
+  @keyframes guideAvatarBreathe{
+    0%, 100% { transform:scale(1); box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,0.35), 0 0 0 0 rgba(201,162,39,0.35); }
+    50% { transform:scale(1.06); box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 0 0 2px rgba(255,255,255,0.4), 0 0 0 8px rgba(201,162,39,0); }
   }
   #mini-tuto-overlay{
     position:fixed; inset:0; z-index:9997; background:rgba(15,10,8,0.82);
@@ -1315,29 +1328,39 @@
      pendant que le son ou la vidéo joue, et la déplacer où l'on veut. */
   .ambiance-float{
     position:fixed; right:14px; bottom:96px; z-index:60;
-    width:208px; max-width:calc(100vw - 28px);
-    touch-action:none;
+    width:236px; max-width:calc(100vw - 28px);
+    touch-action:none; transition:width 0.22s ease;
   }
   .ambiance-float.hidden{ display:none; }
+  /* Fenêtre agrandie (bouton ⤢) : même fenêtre flottante et déplaçable,
+     simplement plus grande — pour mieux voir la vidéo et viser la barre
+     de progression YouTube quand on préfère ne pas utiliser ⏪/⏩. */
+  .ambiance-float.ambiance-float-expanded{ width:340px; }
   .ambiance-float .ambiance-player-panel{
     background:var(--vellum-light); border-radius:16px; padding:10px;
     box-shadow:0 14px 36px rgba(0,0,0,0.38); border:1px solid var(--hairline);
   }
   .ambiance-player-top{
-    display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+    display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:8px;
     cursor:grab; user-select:none;
   }
   .ambiance-player-top:active{ cursor:grabbing; }
   .ambiance-player-top .icon-btn{ background:var(--gold-pale); border:none; width:26px; height:26px; border-radius:50%; font-size:12px; cursor:pointer; flex-shrink:0; }
   .ambiance-player-drag-hint{ font-size:13px; color:var(--ink-soft); letter-spacing:1px; pointer-events:none; }
-  .ambiance-player-title{ font-family:'Fraunces',serif; font-weight:600; font-size:12px; color:var(--wine-dark); margin:0; pointer-events:none; }
+  .ambiance-player-title{ font-family:'Fraunces',serif; font-weight:600; font-size:12px; color:var(--wine-dark); margin:0; pointer-events:none; flex:1; }
   .ambiance-player-label{ font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--ink); text-align:center; margin:0 0 8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .ambiance-player-embed{ width:100%; height:117px; border-radius:10px; background:#000; }
+  .ambiance-player-embed{ width:100%; height:140px; border-radius:10px; background:#000; transition:height 0.22s ease; }
+  .ambiance-float-expanded .ambiance-player-embed{ height:220px; }
   .ambiance-player-embed iframe{ width:100%; height:100%; border:none; border-radius:10px; }
   .aelf-iframe-embed{ width:100%; height:62vh; min-height:420px; max-height:640px; border-radius:14px; overflow:hidden; border:1px solid var(--gold-pale); background:#fff; }
   .aelf-iframe-embed iframe{ width:100%; height:100%; border:none; }
-  .ambiance-player-controls{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+  .ambiance-player-controls{ display:flex; flex-direction:column; gap:6px; align-items:center; margin-top:8px; }
+  /* Rangée de boutons ⏪ / Pause / ⏩ : avancer et reculer de 10s dans le
+     titre en cours, un geste bien plus sûr que de viser la minuscule
+     barre de progression YouTube dans ce petit cadre flottant. */
+  .ambiance-seek-row{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; width:100%; }
   .ambiance-float .btn-sm{ font-size:10.5px; padding:6px 9px; }
+  .ambiance-float-expanded .btn-sm{ font-size:11.5px; padding:7px 11px; }
   .ambiance-float .studio-note{ font-size:10px; margin:6px 0 0; }
   .ambiance-float .studio-note a{ display:none; } /* lien "ouvrir sur YouTube" superflu dans la mini-fenêtre */
   .sumry-streak{ text-align:center; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; color:var(--wine-dark); margin:12px 0; padding:8px; background:var(--gold-pale); border-radius:12px; }
@@ -2507,6 +2530,31 @@
   .tool-btn-label{ font-size:7.5px; line-height:1; font-weight:600; white-space:nowrap; opacity:0.9; }
   .tool-btn:hover{ background: rgba(255,255,255,0.22); }
   .tool-btn.tool-active{ background: rgba(232,204,126,0.55); box-shadow: 0 0 10px rgba(232,204,126,0.6); }
+  /* Icône animée du bouton Guide : une aiguille de boussole qui oscille
+     doucement comme si elle cherchait sa direction, plus un halo discret
+     qui respire — pour que ce bouton se remarque comme « vivant » parmi
+     les autres outils de la barre, sans être criard. */
+  #guide-btn{ position:relative; }
+  #guide-btn .tool-btn-icon{ display:inline-block; animation: guideBtnWiggle 4.5s ease-in-out infinite; }
+  #guide-btn::before{
+    content:''; position:absolute; inset:-2px; border-radius:10px; z-index:-1;
+    background:radial-gradient(circle, rgba(232,204,126,0.55), transparent 72%);
+    animation: guideBtnGlow 2.8s ease-in-out infinite;
+  }
+  @keyframes guideBtnWiggle{
+    0%, 82%, 100% { transform:rotate(0deg); }
+    85% { transform:rotate(-14deg); }
+    89% { transform:rotate(10deg); }
+    93% { transform:rotate(-6deg); }
+    97% { transform:rotate(3deg); }
+  }
+  @keyframes guideBtnGlow{
+    0%, 100% { opacity:0.25; transform:scale(0.85); }
+    50% { opacity:0.6; transform:scale(1.12); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    #guide-btn .tool-btn-icon, #guide-btn::before, .guide-avatar{ animation:none !important; }
+  }
   @media (min-width:760px){
     .tool-btn{ min-width:48px; height:44px; }
     .tool-btn-icon{ font-size:15px; }
