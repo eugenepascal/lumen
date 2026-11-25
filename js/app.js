@@ -3246,6 +3246,28 @@ const BIBLE_BOOKS_NT = [
   "Jacques|James","1 Pierre|1 Peter","2 Pierre|2 Peter","1 Jean|1 John","2 Jean|2 John","3 Jean|3 John",
   "Jude|Jude","Apocalypse|Revelation"
 ];
+/* Code AELF (voir AELF_BIBLE_AT / AELF_BIBLE_NT plus bas) pour chaque livre
+   de l'index ci-dessus — permet de proposer, livre par livre, les deux
+   traductions en parallèle : Louis Segond (Bible Gateway, lien externe) et
+   la traduction liturgique officielle de l'AELF (déjà lisible dans
+   l'appli, texte/méditation/audio). */
+const BIBLE_FR_TO_AELF_CODE = {
+  "Genèse":"Gn","Exode":"Ex","Lévitique":"Lv","Nombres":"Nb","Deutéronome":"Dt",
+  "Josué":"Jos","Juges":"Jg","Ruth":"Rt","1 Samuel":"1S","2 Samuel":"2S",
+  "1 Rois":"1R","2 Rois":"2R","1 Chroniques":"1Ch","2 Chroniques":"2Ch",
+  "Esdras":"Esd","Néhémie":"Ne","Esther":"Est","Job":"Jb","Psaumes":"Ps","Proverbes":"Pr",
+  "Ecclésiaste":"Qo","Cantique des cantiques":"Ct","Ésaïe":"Is","Jérémie":"Jr",
+  "Lamentations":"Lm","Ézéchiel":"Ez","Daniel":"Dn","Osée":"Os","Joël":"Jl","Amos":"Am",
+  "Abdias":"Ab","Jonas":"Jon","Michée":"Mi","Nahum":"Na","Habaquq":"Ha","Sophonie":"So",
+  "Aggée":"Ag","Zacharie":"Za","Malachie":"Ml",
+  "Matthieu":"Mt","Marc":"Mc","Luc":"Lc","Jean":"Jn","Actes":"Ac","Romains":"Rm",
+  "1 Corinthiens":"1Co","2 Corinthiens":"2Co","Galates":"Ga","Éphésiens":"Ep",
+  "Philippiens":"Ph","Colossiens":"Col","1 Thessaloniciens":"1Th","2 Thessaloniciens":"2Th",
+  "1 Timothée":"1Tm","2 Timothée":"2Tm","Tite":"Tt","Philémon":"Phm","Hébreux":"He",
+  "Jacques":"Jc","1 Pierre":"1P","2 Pierre":"2P","1 Jean":"1Jn","2 Jean":"2Jn","3 Jean":"3Jn",
+  "Jude":"Jude","Apocalypse":"Ap",
+  "Actes des Apôtres":"Ac" /* nom utilisé dans le plan de lecture sur un an */
+};
 
 /* ---------- new content: glossary, sacraments, rosary, examen, bible index ---------- */
 const GLOSSARY = [
@@ -13631,7 +13653,7 @@ function renderBibleReader(){
       <button class="btn btn-gold btn-sm" id="goto-bible-plan-btn">📅 Suivre le plan sur un an</button>
       <button class="btn btn-gold btn-sm" id="goto-aelf-bible-btn">📖 Texte intégral AELF</button>
     </div>
-    <p class="section-desc">L'index complet des 73 livres de la Bible. Chaque livre ouvre une lecture complète (traduction Louis Segond, domaine public) sur Bible Gateway. Cochez un livre une fois lu pour suivre votre progression.</p>`;
+    <p class="section-desc">Les 66 livres de l'Ancien et du Nouveau Testament. Deux traductions au choix pour chaque livre : <strong>Segond</strong> (1910, domaine public, sur Bible Gateway ↗) ou <strong>AELF</strong> (traduction liturgique officielle, à lire directement dans l'appli — texte, méditation et audio). Cochez un livre une fois lu pour suivre votre progression.</p>`;
   BIBLE_TESTAMENTS.forEach(t=>{
     const readCount = t.id==='ancien' ? readAT : readNT;
     const pct = Math.round(readCount/t.books.length*100);
@@ -13641,16 +13663,20 @@ function renderBibleReader(){
     t.books.forEach((b,i)=>{
       const [fr, en] = b.split('|');
       const url = "https://www.biblegateway.com/passage/?search=" + encodeURIComponent(en+" 1") + "&version=LSG";
+      const aelfCode = BIBLE_FR_TO_AELF_CODE[fr] || '';
       const isRead = BIBLE_PROGRESS.includes(fr);
       html += `<div class="rubric-row book-toc-row">
         <label class="book-toc-check" title="Marquer comme lu">
           <input type="checkbox" class="bible-check" data-book="${fr}" ${isRead?'checked':''}>
         </label>
-        <a href="${url}" target="_blank" rel="noopener" class="rubric-row-text book-toc-link">
+        <span class="rubric-row-text book-toc-link">
           <span class="rubric-row-title">${i+1}. ${fr}</span>
-          <span class="rubric-row-desc">Lire sur Bible Gateway (Louis Segond)</span>
-        </a>
-        <span class="rubric-row-chevron">↗</span>
+          <span class="rubric-row-desc">Choisir une traduction à lire</span>
+        </span>
+        <span class="book-toc-versions">
+          <a href="${url}" target="_blank" rel="noopener" class="book-toc-version-btn" title="Louis Segond, 1910 (Bible Gateway)">Segond ↗</a>
+          ${aelfCode ? `<button type="button" class="book-toc-version-btn" data-aelf-goto-code="${aelfCode}" data-aelf-goto-name="${fr}" title="Traduction liturgique AELF">AELF</button>` : ''}
+        </span>
       </div>`;
     });
     html += `</div>`;
@@ -13663,6 +13689,12 @@ function renderBibleReader(){
       else { BIBLE_PROGRESS = BIBLE_PROGRESS.filter(b=>b!==book); }
       await saveBibleProgress(BIBLE_PROGRESS);
       render();
+    };
+  });
+  document.querySelectorAll('[data-aelf-goto-code]').forEach(btn=>{
+    btn.onclick = ()=>{
+      AELF_BIBLE_CURRENT = {code:btn.dataset.aelfGotoCode, name:btn.dataset.aelfGotoName, chapter:1};
+      goTo('ecritures','aelf-bible-chapter');
     };
   });
   const gotoAelfBtn = document.getElementById('goto-aelf-bible-btn');
@@ -13678,10 +13710,11 @@ function renderBiblePlan(){
   const day = BIBLE_PLAN_365[activeIdx];
   const allDone = completed.length >= BIBLE_PLAN_365.length;
   const url = "https://www.biblegateway.com/passage/?search=" + encodeURIComponent(day.book+" "+day.chapter) + "&version=LSG";
+  const dayAelfCode = BIBLE_FR_TO_AELF_CODE[day.book] || '';
 
   let html = `<button class="back-link" id="back-to-index-btn">← Retour à l'index des livres</button>
     <h2 class="section-title">📅 Plan de lecture sur un an</h2>
-    <p class="section-desc">Un chapitre suggéré chaque jour, à lire sur Bible Gateway (Louis Segond). Ce plan est indicatif — l'important est la régularité, pas l'exactitude du calendrier.</p>
+    <p class="section-desc">Un chapitre suggéré chaque jour, au choix sur Bible Gateway (Segond) ou dans l'appli (AELF). Ce plan est indicatif — l'important est la régularité, pas l'exactitude du calendrier.</p>
     <div class="long-progress-track"><div class="long-progress-fill" style="width:${(completed.length/BIBLE_PLAN_365.length*100)}%;"></div></div>
     <p class="studio-note" style="text-align:center; margin-bottom:14px;">${completed.length} / ${BIBLE_PLAN_365.length} jours (${Math.round(completed.length/BIBLE_PLAN_365.length*100)}%)</p>`;
 
@@ -13695,12 +13728,22 @@ function renderBiblePlan(){
     html += `<div class="card" style="text-align:center;">
       <p class="eyebrow" style="color:var(--gold);">Jour ${activeIdx+1}</p>
       <p class="day-title" style="font-size:20px;">${day.book} ${day.chapter}</p>
-      <a href="${url}" target="_blank" rel="noopener" class="btn btn-gold btn-sm" style="margin-top:8px; display:inline-block;">Lire ce chapitre ↗</a>
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:8px;">
+        <a href="${url}" target="_blank" rel="noopener" class="btn btn-gold btn-sm">Segond ↗</a>
+        ${dayAelfCode ? `<button type="button" class="btn btn-gold btn-sm" id="bible-plan-aelf-btn">AELF</button>` : ''}
+      </div>
       <div style="margin-top:14px;"><button class="btn btn-primary btn-sm" id="bible-plan-done-btn">✓ J'ai lu ce chapitre</button></div>
     </div>`;
   }
   document.getElementById('screen').innerHTML = html;
   document.getElementById('back-to-index-btn').onclick = ()=>{ BIBLE_VIEW_MODE = 'index'; render(); };
+  const planAelfBtn = document.getElementById('bible-plan-aelf-btn');
+  if(planAelfBtn){
+    planAelfBtn.onclick = ()=>{
+      AELF_BIBLE_CURRENT = {code:dayAelfCode, name:day.book, chapter:day.chapter};
+      goTo('ecritures','aelf-bible-chapter');
+    };
+  }
   const doneBtn = document.getElementById('bible-plan-done-btn');
   if(doneBtn){
     doneBtn.onclick = async ()=>{

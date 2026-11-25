@@ -1502,6 +1502,17 @@
   .book-toc-check{ flex-shrink:0; display:flex; align-items:center; justify-content:center; width:24px; cursor:pointer; }
   .book-toc-check input{ width:19px; height:19px; accent-color:var(--wine); cursor:pointer; }
   a.book-toc-link, a.rubric-row-text{ text-decoration:none; }
+  /* Deux traductions au choix par livre (Segond ↗ lien externe, AELF lu
+     directement dans l'appli) : deux petits boutons empilés plutôt qu'un
+     seul lien, à la place du chevron unique d'avant. */
+  .book-toc-versions{ display:flex; flex-direction:column; gap:5px; flex-shrink:0; }
+  .book-toc-version-btn{
+    display:inline-block; text-align:center; text-decoration:none; font:inherit;
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:700; white-space:nowrap;
+    padding:5px 10px; border-radius:999px; border:1px solid var(--hairline);
+    background:var(--vellum); color:var(--wine-dark); cursor:pointer;
+  }
+  @media (hover:hover){ .book-toc-version-btn:hover{ background:var(--gold-pale); border-color:var(--gold); } }
   /* Même rangée "sommaire", mais avec une vraie miniature photo (ou l'emoji de
      secours) à gauche plutôt qu'un pictogramme — utilisée pour les listes
      d'entrées (Psaumes par thème, Récits fondateurs, Repères) afin que les
