@@ -16077,6 +16077,19 @@ const THEMES_LIST = [
   {key:'liturgique', label:'Liturgique', icon:'👑', swatches:['#EFE8F2','#5B3C78','#C9A227']},
   {key:'ambre', label:'Ambre écarlate', icon:'🔥', swatches:['#FBEEE2','#D8432E','#E8832E']}
 ];
+/* Même couleur que la variable CSS --vellum de chaque thème (voir les blocs
+   "body[data-theme=...]" dans styles.css) — utilisée pour teindre la barre
+   système du navigateur (meta "theme-color"), afin qu'elle ne reste jamais
+   sur une couleur sombre fixe quel que soit le thème choisi. */
+const THEME_BASE_COLORS = {
+  light: '#F4EFE4', dark: '#1A1A1A', aube: '#EAF2F8',
+  nature: '#F1F2E6', liturgique: '#EFE8F2', ambre: '#FBEEE2'
+};
+function updateThemeColorMeta(themeKey){
+  const color = THEME_BASE_COLORS[themeKey] || THEME_BASE_COLORS.light;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', color);
+}
 const BG_PATTERN_LIST = [
   {key:'aucun', label:'Aucun', icon:'◻️'},
   {key:'croix', label:'Croix', icon:'✝️'},
@@ -16168,6 +16181,7 @@ function applyThemeAndFont(){
   if(THEME_MODE === 'auto') THEME = computeAutoTheme();
   if(!THEMES_LIST.some(t=>t.key===THEME)) THEME = 'light';
   document.body.setAttribute('data-theme', THEME);
+  updateThemeColorMeta(THEME);
   document.body.setAttribute('data-pattern', BG_PATTERN);
   document.body.setAttribute('data-theme-mode', THEME_MODE);
   document.body.setAttribute('data-wallpaper', BG_WALLPAPER || 'aucun');

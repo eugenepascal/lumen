@@ -25,7 +25,12 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
-<meta name="theme-color" content="#2a0a13">
+<!-- Couleur de base du thème "Classique Lumen" (clair) par défaut, avant que
+     le JS n'applique la couleur du thème réellement choisi (voir
+     applyThemeAndFont) : Safari/Chrome teintent leur propre interface
+     (barre d'adresse, barre du bas en navigation web) avec cette couleur,
+     elle ne doit donc pas rester sur une teinte sombre fixe. -->
+<meta name="theme-color" content="#F4EFE4">
 <!-- Sans ces balises, un iPhone/iPad ouvre l'appli ajoutée à l'écran d'accueil
      dans un habillage "web" qui garde des bandeaux Safari résiduels, au lieu
      du plein écran immersif d'une vraie application. "black-translucent"
