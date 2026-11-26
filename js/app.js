@@ -3545,20 +3545,114 @@ const PELERINAGES = [
   {name:"Guadalupe (Mexique)", dates:"", tag:null, avatar:"🌵", ref:"Apparition à Juan Diego, 1531", summary:"Lieu où la Vierge serait apparue à Juan Diego, un paysan indigène, avec les traits d'une femme du pays. La basilique Notre-Dame-de-Guadalupe est aujourd'hui l'un des sanctuaires marials les plus visités au monde."}
 ];
 
-const QUIZ_QUESTIONS = [
-  {q:"Combien y a-t-il de sacrements dans l'Église catholique ?", options:["5","7","9","12"], correct:1, explain:"Les sept sacrements sont : baptême, confirmation, eucharistie, réconciliation, onction des malades, ordre et mariage."},
-  {q:"Quel apôtre a renié Jésus trois fois avant de devenir le premier pape ?", options:["Jean","André","Pierre","Thomas"], correct:2, explain:"Pierre a renié Jésus trois fois durant la Passion, avant d'être pleinement réconcilié et confirmé dans sa mission après la Résurrection."},
-  {q:"Combien de mystères compte un chapelet complet (les quatre séries réunies) ?", options:["10","15","20","25"], correct:2, explain:"Quatre séries de cinq mystères chacune (joyeux, douloureux, glorieux, lumineux) forment vingt mystères au total."},
-  {q:"Quelle couleur liturgique porte-t-on habituellement pendant le Carême ?", options:["Rouge","Blanc","Vert","Violet"], correct:3, explain:"Le violet symbolise la pénitence et l'attente ; il est porté durant l'Avent et le Carême."},
-  {q:"Qui est considérée comme la \u00abpetite voie\u00bb de la sainteté par les gestes ordinaires ?", options:["Sainte Thérèse de Lisieux","Sainte Jeanne d'Arc","Sainte Claire d'Assise","Sainte Bernadette"], correct:0, explain:"Sainte Thérèse de l'Enfant-Jésus a développé la \u00abpetite voie\u00bb : aimer Dieu dans les plus petites choses du quotidien."},
-  {q:"Dans quelle ville la Vierge Marie serait-elle apparue à Bernadette Soubirous ?", options:["Fatima","Lourdes","Guadalupe","Assise"], correct:1, explain:"C'est à Lourdes, en France, que Bernadette Soubirous aurait reçu dix-huit apparitions de la Vierge Marie en 1858."},
-  {q:"Quel est le nom du livre qui rassemble les prières du prêtre pour la messe ?", options:["Le lectionnaire","Le catéchisme","Le missel","Le bréviaire"], correct:2, explain:"Le missel romain contient les textes et prières que le prêtre utilise pour célébrer la messe tout au long de l'année."},
-  {q:"Combien de jours dure une neuvaine ?", options:["7","9","10","40"], correct:1, explain:"Une neuvaine dure neuf jours, en référence aux neuf jours d'attente des apôtres entre l'Ascension et la Pentecôte."},
-  {q:"Quel saint est le patron des objets perdus ?", options:["Saint Antoine de Padoue","Saint Jude","Saint Christophe","Saint Benoît"], correct:0, explain:"Saint Antoine de Padoue est traditionnellement invoqué pour retrouver ce qui est perdu."},
-  {q:"Que signifie le mot \u00abeucharistie\u00bb ?", options:["Sacrifice","Action de grâce","Purification","Alliance"], correct:1, explain:"Le mot grec eukharistía signifie littéralement \u00abaction de grâce\u00bb, en référence au remerciement rendu à Dieu."},
-  {q:"Quel évangéliste était médecin de profession ?", options:["Matthieu","Marc","Luc","Jean"], correct:2, explain:"Saint Luc, auteur du troisième évangile et des Actes des Apôtres, était médecin, ce qui influence son attention aux détails et aux plus pauvres."},
-  {q:"Quelle fête célèbre la descente de l'Esprit Saint sur les apôtres ?", options:["L'Ascension","La Pentecôte","La Trinité","L'Épiphanie"], correct:1, explain:"La Pentecôte, cinquante jours après Pâques, commémore le don de l'Esprit Saint aux apôtres et marque traditionnellement la naissance de l'Église."}
+/* ================= quiz : banque de questions par thème =================
+   Chaque catégorie est un petit "module" de catéchisme ludique, pensé pour
+   se jouer en quelques minutes. Voir plus bas QUIZ_LEVELS, QUIZ_XP et
+   QUIZ_CATEGORY_BEST pour la couche "jeu" (points, niveaux, badges). */
+const QUIZ_CATEGORIES = [
+  { key:'bible-at', icon:'📜', label:'Ancien Testament', desc:"La Genèse, l'Exode, les grands récits du peuple hébreu.", questions:[
+    {q:"Qui construit une arche pour survivre au déluge ?", options:["Abraham","Noé","Moïse","David"], correct:1, explain:"Dieu demande à Noé de construire une arche pour sauver sa famille et un couple de chaque animal (Genèse 6-9)."},
+    {q:"Qui reçoit les Dix Commandements sur le Mont Sinaï ?", options:["Moïse","Josué","Aaron","Abraham"], correct:0, explain:"Moïse reçoit les Tables de la Loi sur le Mont Sinaï après avoir fait sortir le peuple hébreu d'Égypte (Exode 20)."},
+    {q:"Quel patriarche accepte, sur l'ordre de Dieu, de sacrifier son fils Isaac avant qu'un ange ne l'arrête ?", options:["Jacob","Abraham","Isaac lui-même","Noé"], correct:1, explain:"Ce récit (Genèse 22) montre la confiance totale d'Abraham en Dieu, qui finalement épargne Isaac."},
+    {q:"Quel jeune berger vainc le géant Goliath avec une simple fronde ?", options:["Saül","Salomon","David","Samuel"], correct:2, explain:"David, encore jeune berger, terrasse le géant philistin Goliath avant de devenir roi d'Israël (1 Samuel 17)."},
+    {q:"Combien de plaies Dieu envoie-t-il sur l'Égypte avant que Pharaon ne libère le peuple hébreu ?", options:["3","7","10","12"], correct:2, explain:"Dix plaies frappent l'Égypte, de l'eau changée en sang jusqu'à la mort des premiers-nés, avant la libération du peuple (Exode 7-12)."},
+    {q:"Qui est vendu par ses frères jaloux, puis devient un homme puissant en Égypte ?", options:["Joseph","Benjamin","Ruben","Juda"], correct:0, explain:"Vendu comme esclave par ses frères, Joseph finit par sauver sa famille de la famine grâce à sa position en Égypte (Genèse 37-45)."},
+    {q:"Quel prophète est avalé par un grand poisson avant d'aller prêcher à Ninive ?", options:["Élie","Jonas","Isaïe","Ézéchiel"], correct:1, explain:"Jonas tente de fuir sa mission, mais après trois jours dans le ventre du poisson, il part prêcher la conversion à Ninive."},
+    {q:"Quelle reine risque sa vie en se présentant devant le roi de Perse pour sauver son peuple ?", options:["Esther","Judith","Ruth","Rachel"], correct:0, explain:"Esther, reine juive de Perse, intervient auprès du roi Assuérus pour empêcher l'extermination de son peuple."},
+    {q:"Quel roi d'Israël, réputé pour sa sagesse, fait construire le premier Temple de Jérusalem ?", options:["David","Salomon","Ézéchias","Josias"], correct:1, explain:"Salomon, fils de David, demande à Dieu la sagesse plutôt que la richesse, et construit le premier Temple de Jérusalem."}
+  ]},
+  { key:'bible-nt', icon:'✝️', label:'Nouveau Testament', desc:"La vie de Jésus, ses apôtres et ses paraboles.", questions:[
+    {q:"Dans quelle ville Jésus naît-il ?", options:["Nazareth","Jérusalem","Bethléem","Capharnaüm"], correct:2, explain:"Jésus naît à Bethléem, en Judée, accomplissant une prophétie ancienne (Luc 2 ; Michée 5,1)."},
+    {q:"Combien d'apôtres Jésus choisit-il parmi ses disciples ?", options:["7","10","12","70"], correct:2, explain:"Jésus choisit douze apôtres, en écho symbolique aux douze tribus d'Israël (Luc 6, 12-16)."},
+    {q:"Quel est le premier miracle de Jésus, lors d'un mariage ?", options:["Guérir un aveugle","Changer l'eau en vin","Multiplier les pains","Calmer la tempête"], correct:1, explain:"Aux noces de Cana, Jésus change l'eau en vin à la demande de sa mère Marie (Jean 2, 1-11)."},
+    {q:"Qui trahit Jésus pour trente pièces d'argent ?", options:["Pierre","Thomas","Judas","Barthélemy"], correct:2, explain:"Judas Iscariote livre Jésus aux autorités religieuses pour trente pièces d'argent (Matthieu 26, 14-16)."},
+    {q:"Dans quel jardin Jésus prie-t-il avec angoisse juste avant son arrestation ?", options:["Le jardin d'Éden","Gethsémani","Le Golgotha","Le jardin des Oliviers de Béthanie"], correct:1, explain:"Jésus prie à Gethsémani, au pied du Mont des Oliviers, avant d'être arrêté (Matthieu 26, 36-46)."},
+    {q:"Combien de pains et de poissons Jésus multiplie-t-il pour nourrir une foule de cinq mille personnes ?", options:["2 pains et 5 poissons","5 pains et 2 poissons","7 pains et 3 poissons","3 pains et 7 poissons"], correct:1, explain:"Avec cinq pains et deux poissons offerts par un enfant, Jésus nourrit toute la foule, et il reste douze paniers de restes (Jean 6, 1-13)."},
+    {q:"Quel apôtre refuse de croire à la Résurrection avant de voir et toucher les plaies de Jésus ?", options:["Thomas","Jean","André","Philippe"], correct:0, explain:"D'où l'expression « faire son Thomas » : il lui faut la preuve par le toucher avant de croire (Jean 20, 24-29)."},
+    {q:"Qui baptise Jésus dans les eaux du Jourdain ?", options:["Jean-Baptiste","Pierre","Simon","Nicodème"], correct:0, explain:"Jean-Baptiste baptise Jésus dans le Jourdain, où l'Esprit Saint descend sous forme de colombe (Matthieu 3, 13-17)."},
+    {q:"Quelle parabole raconte un fils qui dilapide son héritage avant de revenir, pardonné, chez son père ?", options:["Le bon Samaritain","La brebis perdue","Le fils prodigue","Le semeur"], correct:2, explain:"Cette parabole (Luc 15, 11-32) illustre la miséricorde infinie du Père envers celui qui revient à lui."}
+  ]},
+  { key:'sacrements', icon:'💧', label:'Sacrements', desc:"Les sept sacrements qui rythment la vie des catholiques.", questions:[
+    {q:"Combien y a-t-il de sacrements dans l'Église catholique ?", options:["5","7","9","12"], correct:1, explain:"Les sept sacrements sont : baptême, confirmation, eucharistie, réconciliation, onction des malades, ordre et mariage."},
+    {q:"Quel sacrement efface le péché originel et fait entrer dans l'Église ?", options:["La confirmation","Le baptême","L'eucharistie","L'ordre"], correct:1, explain:"Le baptême est la porte d'entrée dans la vie chrétienne et dans l'Église."},
+    {q:"Quel sacrement donne la force de l'Esprit Saint pour devenir témoin adulte de sa foi ?", options:["Le mariage","La réconciliation","La confirmation","L'onction des malades"], correct:2, explain:"La confirmation achève la grâce du baptême en donnant une effusion particulière de l'Esprit Saint."},
+    {q:"Comment appelle-t-on le sacrement où l'on reçoit le Corps du Christ ?", options:["L'eucharistie","L'onction","La confirmation","L'ordre"], correct:0, explain:"L'eucharistie, instituée par Jésus lors de la Cène, est au cœur de la vie chrétienne."},
+    {q:"Quel sacrement permet de recevoir le pardon de ses péchés auprès d'un prêtre ?", options:["Le mariage","La réconciliation","L'ordre","Le baptême"], correct:1, explain:"Appelé aussi confession ou pénitence, ce sacrement redonne la paix du cœur après la faute."},
+    {q:"Quel sacrement est donné en particulier aux personnes gravement malades ou en fin de vie ?", options:["L'onction des malades","La confirmation","L'eucharistie","Le baptême"], correct:0, explain:"L'onction des malades apporte réconfort, force et parfois guérison à ceux qui traversent l'épreuve de la maladie."},
+    {q:"Quel sacrement confère à un homme la mission de diacre, prêtre ou évêque ?", options:["Le mariage","L'ordre","La confirmation","Le baptême"], correct:1, explain:"Le sacrement de l'ordre configure celui qui le reçoit au service de l'Église."},
+    {q:"Quel sacrement engage un homme et une femme l'un envers l'autre devant Dieu, pour toute leur vie ?", options:["Le mariage","L'ordre","La confirmation","L'eucharistie"], correct:0, explain:"Le mariage est une alliance d'amour et de fidélité, à l'image de l'alliance du Christ avec son Église."}
+  ]},
+  { key:'saints', icon:'⭐', label:'Saints & figures', desc:"Des vies qui inspirent, d'hier et d'aujourd'hui.", questions:[
+    {q:"Quel saint est traditionnellement invoqué pour retrouver les objets perdus ?", options:["Saint Antoine de Padoue","Saint Jude","Saint Christophe","Saint Benoît"], correct:0, explain:"Saint Antoine de Padoue, grand prédicateur franciscain, est populairement invoqué pour retrouver ce qui est perdu."},
+    {q:"Quelle sainte reçoit, à Lourdes, plusieurs apparitions de la Vierge Marie ?", options:["Sainte Bernadette Soubirous","Sainte Thérèse de Lisieux","Sainte Catherine Labouré","Sainte Jeanne d'Arc"], correct:0, explain:"En 1858, la jeune Bernadette Soubirous reçoit dix-huit apparitions de la Vierge Marie à Lourdes."},
+    {q:"Quelle sainte, morte très jeune, a inspiré la « petite voie » de la sainteté par les gestes du quotidien ?", options:["Sainte Thérèse de Lisieux","Sainte Claire d'Assise","Sainte Rita","Sainte Cécile"], correct:0, explain:"Sainte Thérèse de l'Enfant-Jésus, carmélite morte à 24 ans, enseigne à aimer Dieu dans les plus petites choses."},
+    {q:"Quel saint, marqué par les stigmates du Christ, fonde l'ordre des Franciscains ?", options:["Saint Dominique","Saint François d'Assise","Saint Ignace de Loyola","Saint Benoît"], correct:1, explain:"François d'Assise, né riche, choisit une vie de pauvreté et de fraternité avec toute la création."},
+    {q:"Quelle jeune française, convaincue d'être envoyée par Dieu, conduit les armées avant d'être brûlée à Rouen ?", options:["Sainte Clotilde","Sainte Jeanne d'Arc","Sainte Geneviève","Sainte Bathilde"], correct:1, explain:"Jeanne d'Arc, guidée selon elle par des voix célestes, aide à libérer la France avant d'être condamnée puis réhabilitée et canonisée."},
+    {q:"Quel apôtre, qui avait renié Jésus trois fois, devient le premier pape ?", options:["Jean","André","Pierre","Thomas"], correct:2, explain:"Pierre, pleinement pardonné et confirmé par Jésus après la Résurrection, devient le chef des apôtres."},
+    {q:"Quel ancien persécuteur des chrétiens devient, après sa conversion sur le chemin de Damas, l'un des plus grands apôtres ?", options:["Paul","Barnabé","Étienne","Timothée"], correct:0, explain:"Saul de Tarse, renversé par une lumière sur le chemin de Damas, devient Paul, l'apôtre des nations (Actes 9)."},
+    {q:"Quelle religieuse de Calcutta a consacré sa vie entière aux plus pauvres parmi les pauvres ?", options:["Mère Teresa","Sainte Thérèse d'Avila","Sainte Hélène","Sainte Monique"], correct:0, explain:"Mère Teresa fonde les Missionnaires de la Charité et reçoit le prix Nobel de la paix pour son service des plus démunis."}
+  ]},
+  { key:'liturgie', icon:'⛪', label:'Messe & liturgie', desc:"Le déroulement de la messe et les temps de l'année liturgique.", questions:[
+    {q:"Quelle couleur liturgique porte-t-on habituellement pendant le Carême et l'Avent ?", options:["Rouge","Blanc","Vert","Violet"], correct:3, explain:"Le violet symbolise la pénitence et l'attente intérieure durant ces deux temps forts."},
+    {q:"Quel est le nom du livre qui rassemble les prières du prêtre pour célébrer la messe ?", options:["Le lectionnaire","Le catéchisme","Le missel","Le bréviaire"], correct:2, explain:"Le missel romain contient les textes et prières utilisés par le prêtre tout au long de l'année liturgique."},
+    {q:"Combien de jours dure le Carême (sans compter les dimanches) ?", options:["30 jours","33 jours","40 jours","50 jours"], correct:2, explain:"Le Carême dure quarante jours, en écho aux quarante jours de jeûne de Jésus au désert."},
+    {q:"Quelle fête célèbre la descente de l'Esprit Saint sur les apôtres ?", options:["L'Ascension","La Pentecôte","La Trinité","L'Épiphanie"], correct:1, explain:"La Pentecôte, cinquante jours après Pâques, marque traditionnellement la naissance de l'Église."},
+    {q:"Quel temps liturgique, fait d'attente, précède directement Noël ?", options:["L'Avent","Le Carême","Le Temps ordinaire","L'Octave de Pâques"], correct:0, explain:"L'Avent couvre les quatre semaines qui préparent à la venue du Christ à Noël."},
+    {q:"Quelle couleur liturgique porte-t-on à Pâques et à Noël, pour exprimer la joie ?", options:["Rouge","Blanc","Vert","Noir"], correct:1, explain:"Le blanc (ou l'or) symbolise la lumière, la pureté et la joie des grandes fêtes du Christ."},
+    {q:"Comment appelle-t-on le livre contenant les lectures bibliques proclamées à la messe ?", options:["Le missel","L'évangéliaire ou le lectionnaire","Le bréviaire","Le rituel"], correct:1, explain:"Le lectionnaire (et l'évangéliaire pour les évangiles) rassemble les textes bibliques lus au fil de l'année liturgique."},
+    {q:"Comment appelle-t-on le moment central de la messe où le pain et le vin deviennent le Corps et le Sang du Christ ?", options:["L'offertoire","La consécration","La doxologie","L'absoute"], correct:1, explain:"La consécration, prononcée par le prêtre, est le cœur de la prière eucharistique."}
+  ]},
+  { key:'prieres', icon:'📿', label:'Prières & dévotions', desc:"Chapelet, neuvaines et grandes prières catholiques.", questions:[
+    {q:"Combien de mystères compte un chapelet complet (les quatre séries réunies) ?", options:["10","15","20","25"], correct:2, explain:"Quatre séries de cinq mystères chacune (joyeux, douloureux, glorieux, lumineux) forment vingt mystères au total."},
+    {q:"Combien de jours dure une neuvaine ?", options:["7","9","10","40"], correct:1, explain:"Une neuvaine dure neuf jours, en référence aux neuf jours d'attente des apôtres entre l'Ascension et la Pentecôte."},
+    {q:"Quelle prière Jésus lui-même enseigne-t-il à ses disciples ?", options:["Le Je vous salue Marie","Le Notre Père","Le Je crois en Dieu","Le Gloire au Père"], correct:1, explain:"À la demande de ses disciples, Jésus leur apprend cette prière (Matthieu 6, 9-13)."},
+    {q:"Quelle prière mariale commence par les mots « Je vous salue Marie » ?", options:["Le Magnificat","L'Angélus","L'Ave Maria","Le Salve Regina"], correct:2, explain:"L'Ave Maria (Je vous salue Marie) reprend les paroles de l'ange Gabriel et de sainte Élisabeth à Marie."},
+    {q:"Quel chemin de prière retrace les étapes de la Passion du Christ, de sa condamnation à sa mise au tombeau ?", options:["La neuvaine","Le chemin de croix","L'examen de conscience","L'adoration"], correct:1, explain:"Le chemin de croix comporte traditionnellement quatorze stations méditées, souvent le Vendredi saint."},
+    {q:"Quelle dévotion consiste à prier en silence devant le Saint Sacrement exposé ?", options:["L'adoration eucharistique","La lectio divina","Les vêpres","La bénédiction"], correct:0, explain:"L'adoration eucharistique est un temps de prière silencieuse en présence du Christ dans l'hostie consacrée."},
+    {q:"Comment appelle-t-on la relecture priante de sa journée à la lumière de Dieu, souvent faite le soir ?", options:["La lectio divina","L'examen de conscience","Les laudes","Les complies"], correct:1, explain:"L'examen de conscience aide à repérer, chaque jour, où Dieu était présent et où l'on peut grandir."},
+    {q:"Comment appelle-t-on une série de prières égrenant les titres donnés à la Vierge Marie ?", options:["Les litanies","Le Magnificat","Le Rosaire","L'Angélus"], correct:0, explain:"Les litanies de la Vierge (ou de Lorette) énumèrent des titres comme « Étoile du matin » ou « Mère de miséricorde »."}
+  ]},
+  { key:'morale', icon:'🕊️', label:'Morale & commandements', desc:"Le Décalogue, les Béatitudes et les vertus.", questions:[
+    {q:"Combien de commandements compte le Décalogue reçu par Moïse ?", options:["5","7","10","12"], correct:2, explain:"Les Dix Commandements, donnés à Moïse sur le Sinaï, fondent la morale biblique (Exode 20)."},
+    {q:"Sur quelle montagne Moïse reçoit-il les Dix Commandements ?", options:["Le Thabor","Le Sinaï","Le Golgotha","Le Mont des Oliviers"], correct:1, explain:"C'est sur le Mont Sinaï, dans le désert, que Dieu confie à Moïse les Tables de la Loi."},
+    {q:"Combien de Béatitudes Jésus proclame-t-il dans son grand discours sur la montagne ?", options:["5","7","8","10"], correct:2, explain:"Jésus énonce huit Béatitudes (Matthieu 5, 3-12), chemins de bonheur à contre-courant du monde."},
+    {q:"Quel commandement rappelle de respecter son père et sa mère ?", options:["Le 2e","Le 4e","Le 6e","Le 9e"], correct:1, explain:"Le quatrième commandement invite à honorer ses parents, quel que soit son âge."},
+    {q:"Quelles sont, selon Jésus, les deux commandements les plus importants de tous ?", options:["Jeûner et prier","Aimer Dieu et aimer son prochain","Aller à la messe et se confesser","Donner l'aumône et pardonner"], correct:1, explain:"Jésus résume toute la Loi en deux commandements d'amour, inséparables l'un de l'autre (Matthieu 22, 36-40)."},
+    {q:"Combien de péchés sont traditionnellement appelés « capitaux », car ils sont source d'autres péchés ?", options:["3","5","7","9"], correct:2, explain:"Orgueil, avarice, envie, colère, luxure, gourmandise et paresse forment les sept péchés capitaux."},
+    {q:"Combien y a-t-il de vertus dites « théologales », qui unissent directement à Dieu ?", options:["2","3","4","7"], correct:1, explain:"La foi, l'espérance et la charité sont les trois vertus théologales, don de Dieu lui-même."},
+    {q:"Quelle vertu cardinale désigne le courage face à la difficulté et à l'épreuve ?", options:["La prudence","La justice","La force","La tempérance"], correct:2, explain:"La force, l'une des quatre vertus cardinales, permet de tenir bon dans le bien malgré les obstacles."}
+  ]},
+  { key:'vocabulaire', icon:'🔤', label:'Vocabulaire catho', desc:"Les mots de la foi, expliqués simplement.", questions:[
+    {q:"Que signifie littéralement le mot « eucharistie » ?", options:["Sacrifice","Action de grâce","Purification","Alliance"], correct:1, explain:"Le mot grec eukharistía signifie « action de grâce », en référence au remerciement rendu à Dieu."},
+    {q:"Que signifie le mot « évangile » ?", options:["Bonne nouvelle","Témoignage","Révélation","Enseignement"], correct:0, explain:"Évangile vient du grec euangelion, « bonne nouvelle » : celle du salut apporté par Jésus."},
+    {q:"Que veut dire « amen », que l'on prononce à la fin d'une prière ?", options:["Au revoir","Qu'il en soit ainsi","Merci Seigneur","Dans la paix"], correct:1, explain:"« Amen », mot hébreu, exprime une adhésion ferme : « qu'il en soit ainsi », « je le crois fermement »."},
+    {q:"Que signifie à l'origine le mot « catéchisme » ?", options:["Instruction orale, enseignement","Livre sacré","Cérémonie religieuse","Lieu de prière"], correct:0, explain:"Catéchisme vient du grec katēkhein, « instruire de vive voix » : transmettre la foi en la faisant résonner."},
+    {q:"Que veut dire « Alléluia », chanté avant l'évangile ?", options:["Paix à vous","Louez Dieu","Gloire au ciel","Saint est le Seigneur"], correct:1, explain:"Alléluia, de l'hébreu, signifie « louez Dieu » (Yah, pour Yahvé)."},
+    {q:"Comment appelle-t-on l'ensemble des quatre récits de la vie de Jésus écrits par Matthieu, Marc, Luc et Jean ?", options:["Les épîtres","Les évangiles","Les actes","Les psaumes"], correct:1, explain:"Les quatre évangiles racontent, chacun à sa manière, la vie, la mort et la Résurrection de Jésus."},
+    {q:"Que signifie « Emmanuel », l'un des noms donnés à Jésus ?", options:["Sauveur du monde","Dieu avec nous","Prince de la paix","Fils de David"], correct:1, explain:"Emmanuel, nom prophétique annoncé par Isaïe, signifie littéralement « Dieu avec nous » (Isaïe 7,14 ; Matthieu 1,23)."},
+    {q:"Que signifiait, à l'origine, le mot hébreu « Pessah », à la racine de « Pâque » ?", options:["Libération","Passage","Alliance","Lumière"], correct:1, explain:"Pessah évoque le « passage » de l'ange exterminateur en Égypte, puis le passage du peuple hébreu de l'esclavage à la liberté."}
+  ]}
 ];
+
+/* ----- couche "jeu" : points de sagesse, niveaux, meilleur score par catégorie ----- */
+const QUIZ_LEVELS = [
+  {min:0,    title:'Débutant',               icon:'🌱'},
+  {min:50,   title:'Catéchumène',            icon:'📘'},
+  {min:150,  title:'Disciple',               icon:'🕊️'},
+  {min:300,  title:'Connaisseur',            icon:'📖'},
+  {min:500,  title:'Sage',                   icon:'💡'},
+  {min:800,  title:'Docteur de la foi',      icon:'🎓'},
+  {min:1200, title:'Maître du catéchisme',   icon:'👑'}
+];
+function quizLevelFor(xp){
+  let level = QUIZ_LEVELS[0];
+  for(const l of QUIZ_LEVELS){ if(xp >= l.min) level = l; }
+  return level;
+}
+function quizNextLevel(xp){
+  return QUIZ_LEVELS.find(l => l.min > xp) || null;
+}
+
 
 const ONBOARDING_SLIDES = [
   {icon:"🕯️", title:"Bienvenue sur Lumen", text:"Une application pour prier chaque jour : neuvaines, intentions, psaumes, saints, calendrier et bien plus."},
@@ -3915,7 +4009,10 @@ const BADGES = [
   {id:'gratitude-7', icon:'✨', title:'Cœur reconnaissant', desc:'Remplir le carnet de grâces 7 fois.', test: ()=> GRATITUDE_ENTRIES.length >= 7},
   {id:'parcours-7', icon:'🗺️', title:'Parcours accompli', desc:'Terminer les 7 jours du parcours guidé.', test: ()=> (PARCOURS_PROGRESS.completedDays||[]).length >= 7},
   {id:'answered', icon:'🙏', title:'Prière exaucée', desc:'Marquer une intention comme exaucée.', test: ()=> [...INTENTIONS, ...PRIVATE_INTENTIONS].some(x=>x.answered)},
-  {id:'objectifs-5', icon:'🎯', title:'Objectifs tenus', desc:'Cocher 5 objectifs comme atteints.', test: ()=> OBJECTIFS.filter(o=>o.done).length >= 5}
+  {id:'objectifs-5', icon:'🎯', title:'Objectifs tenus', desc:'Cocher 5 objectifs comme atteints.', test: ()=> OBJECTIFS.filter(o=>o.done).length >= 5},
+  {id:'quiz-premier', icon:'❓', title:'Premier quiz', desc:'Terminer un quiz de connaissances pour la première fois.', test: ()=> Object.keys(QUIZ_CATEGORY_BEST||{}).length >= 1},
+  {id:'quiz-toutes-categories', icon:'🎓', title:'Petit catéchiste', desc:'Obtenir un score parfait dans chaque thème de quiz.', test: ()=> QUIZ_CATEGORIES.every(c => (QUIZ_CATEGORY_BEST[c.key]||0) >= c.questions.length)},
+  {id:'quiz-savant', icon:'👑', title:'Maître du catéchisme', desc:'Atteindre 500 points de sagesse dans les quiz.', test: ()=> QUIZ_XP >= 500}
 ];
 let NEW_BADGES_SEEN = [];
 function checkBadges(){
@@ -4612,7 +4709,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, welcomeDemoVersion: WELCOME_DEMO_LAST_SEEN_VERSION, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, lastWeeklyRecapSeen: LAST_WEEKLY_RECAP_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID, tutoSeen: TUTO_SEEN
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, welcomeDemoVersion: WELCOME_DEMO_LAST_SEEN_VERSION, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, lastWeeklyRecapSeen: LAST_WEEKLY_RECAP_SEEN, quizXp: QUIZ_XP, quizCategoryBest: QUIZ_CATEGORY_BEST, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID, tutoSeen: TUTO_SEEN
     }), false);
   }catch(e){}
 }
@@ -4654,6 +4751,8 @@ let PRAYED_DATES = [];
 let ACTIVITY_LOG = [];
 let LAST_WEEKLY_RECAP_SEEN = '';
 let PREV_OPEN_DATE_FOR_RECAP = '';
+let QUIZ_XP = 0;
+let QUIZ_CATEGORY_BEST = {};
 let HOME_LAYOUT = null;
 /* Binôme de prière : un accompagnement à deux, plus intime qu'un groupe
    entier — un code à 6 caractères partagé entre deux personnes qui
@@ -12068,23 +12167,108 @@ function renderPelerinages(){
   renderGenericSection([{id:"pelerinages", title:"Grands lieux de pèlerinage", desc:"Quelques destinations majeures de la piété catholique à travers le monde.", entries:PELERINAGES}], 'eglise:pelerinages', '🗺️ Lieux de pèlerinage');
 }
 
-/* ================= quiz ================= */
+/* ================= quiz =================
+   Un petit "catéchisme ludique" : des thèmes à choisir comme des niveaux de
+   jeu, des points de sagesse (QUIZ_XP) qui font monter un niveau fun
+   (QUIZ_LEVELS), un meilleur score gardé par thème (QUIZ_CATEGORY_BEST), et
+   un mode "Quiz surprise" qui pioche au hasard dans toutes les catégories
+   pour varier les parties. S'appuie sur les mêmes briques que le reste de
+   l'appli (BADGES, fireCelebration, showToast) pour ne rien alourdir. */
 let QUIZ_STATE = null;
+function quizCategoryByKey(key){
+  if(key === 'melange') return { key:'melange', icon:'🎲', label:'Quiz surprise', questions: [] };
+  return QUIZ_CATEGORIES.find(c=>c.key===key);
+}
+function startQuizCategory(key){
+  let questions;
+  if(key === 'melange'){
+    const pool = QUIZ_CATEGORIES.flatMap(c=>c.questions);
+    questions = [...pool].sort(()=>Math.random()-0.5).slice(0, 10);
+  } else {
+    const cat = quizCategoryByKey(key);
+    questions = cat ? cat.questions : [];
+  }
+  QUIZ_STATE = {
+    catKey: key, questions,
+    idx:0, score:0, answered:false, selected:null, combo:0,
+    order: [...Array(questions.length).keys()].sort(()=>Math.random()-0.5)
+  };
+  render();
+}
+function quizHubHTML(){
+  const level = quizLevelFor(QUIZ_XP);
+  const next = quizNextLevel(QUIZ_XP);
+  const toNext = next ? `encore ${next.min - QUIZ_XP} pt${(next.min-QUIZ_XP)>1?'s':''} pour devenir ${next.icon} ${next.title}` : 'niveau maximum atteint !';
+  return `<h2 class="section-title">❓ Quiz & Connaissances</h2>
+    <p class="section-desc">Apprenez la foi catholique en vous amusant, thème par thème — comme un petit catéchisme ludique.</p>
+    <div class="card" style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:32px; flex-shrink:0;">${level.icon}</span>
+      <div style="min-width:0;">
+        <p style="margin:0; font-family:'Fraunces',serif; font-weight:700; font-size:15px; color:var(--wine-dark);">${level.title} — ${QUIZ_XP} pt${QUIZ_XP>1?'s':''} de sagesse</p>
+        <p class="section-desc" style="margin:2px 0 0;">${toNext}</p>
+      </div>
+    </div>
+    <div class="card" data-quiz-cat="melange" style="cursor:pointer; display:flex; align-items:center; gap:12px;">
+      <span style="font-size:28px; flex-shrink:0;">🎲</span>
+      <div>
+        <p class="day-title" style="font-size:15px; margin:0 0 2px;">Quiz surprise</p>
+        <p class="section-desc" style="margin:0;">10 questions tirées au hasard dans tous les thèmes — jamais deux fois pareil.</p>
+      </div>
+    </div>
+    <p class="sumry-section-label">Par thème</p>
+    <div class="badge-grid">
+      ${QUIZ_CATEGORIES.map(cat=>{
+        const best = QUIZ_CATEGORY_BEST[cat.key] || 0;
+        const total = cat.questions.length;
+        const perfect = best >= total;
+        return `<div class="card badge-card ${perfect?'badge-unlocked':''}" data-quiz-cat="${cat.key}" style="cursor:pointer;">
+          <span class="badge-icon">${perfect ? '🏆' : cat.icon}</span>
+          <p class="badge-title">${cat.label}</p>
+          <p class="badge-desc">${best}/${total} ${perfect?'✓':''}</p>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+function quizResultHTML(){
+  const total = QUIZ_STATE.order.length;
+  const score = QUIZ_STATE.score;
+  const xpEarned = score*10 + (score===total ? 20 : 0);
+  let line;
+  if(score===total) line = 'Score parfait ✦ Vous connaissez ce thème sur le bout des doigts !';
+  else if(score >= total*0.6) line = 'Bien joué ! Encore un peu et le score sera parfait.';
+  else line = "Continuez à explorer l'application pour apprendre encore — chaque essai compte.";
+  return `<h2 class="section-title">❓ Quiz terminé</h2>
+    <div class="card" style="text-align:center;">
+      <p class="quiz-score">${score} / ${total}</p>
+      <p class="entry-detail-text">${line}</p>
+      <p class="section-desc" style="margin-top:6px;">+ ${xpEarned} points de sagesse</p>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" id="quiz-hub-btn">← Changer de thème</button>
+        <button class="btn btn-primary btn-sm" id="quiz-restart">Rejouer ce thème</button>
+      </div>
+    </div>`;
+}
 function renderQuiz(){
-  if(!QUIZ_STATE){ QUIZ_STATE = { idx:0, score:0, answered:false, selected:null, order: [...Array(QUIZ_QUESTIONS.length).keys()].sort(()=>Math.random()-0.5) }; }
-  if(QUIZ_STATE.idx >= QUIZ_STATE.order.length){
-    document.getElementById('screen').innerHTML = `<h2 class="section-title">❓ Quiz terminé</h2>
-      <div class="card" style="text-align:center;">
-        <p class="quiz-score">${QUIZ_STATE.score} / ${QUIZ_STATE.order.length}</p>
-        <p class="entry-detail-text">${QUIZ_STATE.score===QUIZ_STATE.order.length ? 'Score parfait ✦' : QUIZ_STATE.score >= QUIZ_STATE.order.length*0.6 ? 'Bien joué !' : "Continuez à explorer l'application pour apprendre encore."}</p>
-        <button class="btn btn-primary btn-sm" id="quiz-restart">Recommencer</button>
-      </div>`;
-    document.getElementById('quiz-restart').onclick = ()=>{ QUIZ_STATE=null; render(); };
+  if(!QUIZ_STATE){
+    document.getElementById('screen').innerHTML = quizHubHTML();
+    document.querySelectorAll('[data-quiz-cat]').forEach(card=>{
+      card.onclick = ()=> startQuizCategory(card.dataset.quizCat);
+    });
     return;
   }
-  const q = QUIZ_QUESTIONS[QUIZ_STATE.order[QUIZ_STATE.idx]];
-  let html = `<h2 class="section-title">❓ Quiz de connaissances</h2>
-    <p class="section-desc">Question ${QUIZ_STATE.idx+1} / ${QUIZ_STATE.order.length} — score actuel : ${QUIZ_STATE.score}</p>
+  if(QUIZ_STATE.idx >= QUIZ_STATE.order.length){
+    document.getElementById('screen').innerHTML = quizResultHTML();
+    document.getElementById('quiz-hub-btn').onclick = ()=>{ QUIZ_STATE=null; render(); };
+    document.getElementById('quiz-restart').onclick = ()=>{ startQuizCategory(QUIZ_STATE.catKey); };
+    return;
+  }
+  const cat = quizCategoryByKey(QUIZ_STATE.catKey);
+  const q = QUIZ_STATE.questions[QUIZ_STATE.order[QUIZ_STATE.idx]];
+  let html = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+      <h2 class="section-title" style="margin:0;">${cat ? cat.icon : '❓'} ${cat ? cat.label : 'Quiz'}</h2>
+      <button class="btn btn-ghost btn-sm" id="quiz-abandon-btn">← Thèmes</button>
+    </div>
+    <p class="section-desc">Question ${QUIZ_STATE.idx+1} / ${QUIZ_STATE.order.length} — score actuel : ${QUIZ_STATE.score}${QUIZ_STATE.combo>=2 ? ` · 🔥 série de ${QUIZ_STATE.combo}` : ''}</p>
     <div class="card">
       <p class="day-title" style="font-size:16px;">${q.q}</p>
       ${q.options.map((opt,i)=>{
@@ -12095,21 +12279,37 @@ function renderQuiz(){
         }
         return `<button class="${cls}" data-i="${i}" ${QUIZ_STATE.answered?'disabled':''}>${opt}</button>`;
       }).join('')}
-      ${QUIZ_STATE.answered ? `<p class="section-desc" style="margin-top:8px;">${q.explain}</p><div style="text-align:center;"><button class="btn btn-primary btn-sm" id="quiz-next">Question suivante →</button></div>` : ''}
+      ${QUIZ_STATE.answered ? `<p class="section-desc" style="margin-top:8px;">${q.explain}</p><div style="text-align:center;"><button class="btn btn-primary btn-sm" id="quiz-next">${QUIZ_STATE.idx+1 >= QUIZ_STATE.order.length ? 'Voir mon score →' : 'Question suivante →'}</button></div>` : ''}
     </div>`;
   document.getElementById('screen').innerHTML = html;
+  document.getElementById('quiz-abandon-btn').onclick = ()=>{ QUIZ_STATE=null; render(); };
   if(!QUIZ_STATE.answered){
     document.querySelectorAll('.quiz-option').forEach(btn=>{
-      btn.onclick = ()=>{
+      btn.onclick = async ()=>{
         const i = parseInt(btn.dataset.i,10);
         QUIZ_STATE.selected = i;
         QUIZ_STATE.answered = true;
-        if(i===q.correct) QUIZ_STATE.score++;
+        if(i===q.correct){ QUIZ_STATE.score++; QUIZ_STATE.combo++; } else { QUIZ_STATE.combo = 0; }
         render();
       };
     });
   } else {
-    document.getElementById('quiz-next').onclick = ()=>{ QUIZ_STATE.idx++; QUIZ_STATE.answered=false; QUIZ_STATE.selected=null; render(); };
+    document.getElementById('quiz-next').onclick = async ()=>{
+      QUIZ_STATE.idx++;
+      QUIZ_STATE.answered=false; QUIZ_STATE.selected=null;
+      if(QUIZ_STATE.idx >= QUIZ_STATE.order.length){
+        const total = QUIZ_STATE.order.length;
+        const perfect = QUIZ_STATE.score === total;
+        QUIZ_XP += QUIZ_STATE.score*10 + (perfect ? 20 : 0);
+        if(QUIZ_STATE.catKey !== 'melange'){
+          QUIZ_CATEGORY_BEST[QUIZ_STATE.catKey] = Math.max(QUIZ_CATEGORY_BEST[QUIZ_STATE.catKey]||0, QUIZ_STATE.score);
+        }
+        await savePrefs();
+        checkBadges();
+        if(perfect) fireCelebration();
+      }
+      render();
+    };
   }
 }
 
@@ -17123,6 +17323,8 @@ async function startApp(){
   SEEN_MILESTONES = prefs.seenMilestones || [];
   LAST_SUMMARY_SEEN = prefs.lastSummarySeen || '';
   LAST_WEEKLY_RECAP_SEEN = prefs.lastWeeklyRecapSeen || '';
+  QUIZ_XP = prefs.quizXp || 0;
+  QUIZ_CATEGORY_BEST = prefs.quizCategoryBest || {};
   USER_NAME = prefs.userName || (CURRENT_USER && CURRENT_USER.displayName ? CURRENT_USER.displayName.split(' ')[0] : '');
   const prevOpenDate = prefs.lastOpenDate || '';
   PREV_OPEN_DATE_FOR_RECAP = prevOpenDate;
