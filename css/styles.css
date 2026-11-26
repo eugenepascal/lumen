@@ -3658,3 +3658,11 @@
     color:var(--wine); font-family:'Inter',sans-serif; font-size:12.5px; font-weight:700;
   }
   @media (max-width:360px){ .hours-name{ font-size:10.5px; } .hours-at{ font-size:10px; } }
+
+  /* ═══ Mes prières : une prière par ligne, sur toute la largeur (26/11/2026) ═══ */
+  .mp-list{ display:flex; flex-direction:column; gap:14px; width:100%; margin-top:2px; }
+  .mp-list .mp-card{ width:100%; box-sizing:border-box; padding:20px 22px 16px; margin:0; }
+  .mp-list .mp-card .day-title{ font-size:18px !important; }
+  .mp-list .mp-card .entry-detail-text{ font-size:15.5px; line-height:1.75; margin:0; }
+  .mp-list .mp-card-image{ max-height:420px; object-fit:cover; border-radius:12px; margin-bottom:12px; }
+  @media (min-width:700px){ .mp-list .mp-card{ padding:24px 30px 18px; } }

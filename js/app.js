@@ -9880,7 +9880,10 @@ function renderMesPrieresFolder(catKey){
   if(!items.length){
     html += `<div class="card empty-state">Aucune prière dans ce thème pour l'instant.</div>`;
   } else {
-    html += `<div class="grid">${items.map(p=>`
+    /* Une prière par ligne, sur toute la largeur (26/11/2026) : dans la grille
+       générique (jusqu'à 4 colonnes sur ordinateur), les textes personnels
+       devenaient de longues colonnes étroites, pénibles à relire. */
+    html += `<div class="mp-list">${items.map(p=>`
       <div class="card mp-card" style="background:${cat.bg}; border-left:4px solid ${cat.color};">
         ${p.image ? `<img src="${p.image}" alt="" class="mp-card-image">` : ''}
         <p class="day-title" style="font-size:16px; margin:4px 0 8px;">${p.title || 'Sans titre'}</p>
