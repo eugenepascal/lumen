@@ -4987,11 +4987,16 @@ function goTo(primary, sub){
   render();
 }
 
+/* Sous-rubriques de Prier, en six familles courtes (26/11/2026) : l'ancien groupe
+   « Chaque jour » mélangeait treize entrées (textes, offices, Angélus, examen) et
+   prenait tout l'écran au-dessus du contenu. */
 const PRIER_SUBNAV_GROUPS = [
-  {label:'☀️ Chaque jour', keys:['textes-du-jour','versets-matin','versets-soir','office','laudes','tierce','midi','sexte','none','vepres','compline','angelus','examen']},
-  {label:'🕯️ Parcours & neuvaines', keys:['neuvaines','careme40','guides']},
-  {label:'🤝 Avec les autres', keys:['intentions','groupe','binome','selon-etat','carnet-familial']},
-  {label:'🪔 Pour varier', keys:['mes-prieres','autrement']}
+  {label:'📖 Textes & versets', keys:['textes-du-jour','versets-matin','versets-soir']},
+  {label:'🕯️ Liturgie des Heures', keys:['office','laudes','tierce','midi','sexte','none','vepres','compline']},
+  {label:'🔔 Rendez-vous du jour', keys:['angelus','examen']},
+  {label:'📿 Parcours & neuvaines', keys:['neuvaines','careme40','guides']},
+  {label:'🤝 Avec les autres', keys:['intentions','groupe','binome','carnet-familial']},
+  {label:'🪔 Pour moi', keys:['mes-prieres','selon-etat','autrement']}
 ];
 const DEVOTIONS_SUBNAV_GROUPS = [
   {label:'📿 Prières & dévotions', keys:['prieres','chapelet','misericorde','chemin-croix','lectio','confession','famille']},
@@ -5012,6 +5017,8 @@ const EGLISE_SUBNAV_GROUPS = [
 const SUBNAV_GROUPED_SECTIONS = { prier: PRIER_SUBNAV_GROUPS, devotions: DEVOTIONS_SUBNAV_GROUPS, espace: ESPACE_SUBNAV_GROUPS, eglise: EGLISE_SUBNAV_GROUPS };
 const HUB_SUBTAB_KEYS = {prier:'accueil-prier', ecritures:'accueil-ecritures', devotions:'accueil-devotions', eglise:'accueil-eglise', sagesse:'accueil-sagesse', espace:'accueil-espace'};
 let SUBNAV_GROUP_EXPANDED = {};
+let SUBNAV_ALL_OPEN = null; // section dont la liste complète des rubriques est dépliée
+const SUBNAV_SECTION_NAMES = {prier:'Prier', devotions:'Dévotions', espace:'Mon espace', eglise:'Église'};
 function renderSubnavHTML(){
   const subs = SUBNAV[PRIMARY];
   if(!subs) return '';
@@ -5022,35 +5029,51 @@ function renderSubnavHTML(){
   if(HUB_SUBTAB_KEYS[PRIMARY] && current === HUB_SUBTAB_KEYS[PRIMARY]) return '';
   const groupedDef = SUBNAV_GROUPED_SECTIONS[PRIMARY];
   if(groupedDef){
+    /* Navigation compacte (26/11/2026) : au lieu d'une pile d'accordéons qui
+       repoussait le contenu de plus d'un écran vers le bas, une ligne
+       « ‹ Prier · famille en cours · Tout voir », puis les rubriques sœurs en
+       pastilles qui défilent. « Tout voir » déplie toutes les familles. */
     const byKey = {}; subs.forEach(s=> byKey[s.key]=s);
-    return `<div class="subnav-grouped">${groupedDef.map((g,gi)=>{
-      const items = g.keys.filter(k=>byKey[k]);
-      const containsCurrent = items.includes(current);
-      const stateKey = PRIMARY+'|'+gi;
-      const expanded = SUBNAV_GROUP_EXPANDED[stateKey] !== undefined ? SUBNAV_GROUP_EXPANDED[stateKey] : containsCurrent;
-      const m = g.label.match(/^(\S+)\s*(.*)$/);
-      const icon = m ? m[1] : '🔸';
-      const title = m ? m[2] : g.label;
-      return `<div class="subnav-group ${expanded?'expanded':''}">
-        <button class="subnav-group-head" data-group-key="${stateKey}">
-          <span class="subnav-group-icon">${icon}</span>
-          <span class="subnav-group-title">${title}</span>
-          <span class="subnav-group-caret">${expanded?'▾':'▸'}</span>
-        </button>
-        <div class="subnav-list" ${expanded?'':'style="display:none;"'}>${items.map(k=>
-          `<button class="subnav-item ${current===k?'active':''}" data-sub="${k}"><span>${byKey[k].label}</span><span class="subnav-chevron">›</span></button>`
-        ).join('')}</div>
-      </div>`;
-    }).join('')}</div>`;
+    const split = (label)=>{ const m = label.match(/^(\S+)\s+(.*)$/); return m ? {icon:m[1], text:m[2]} : {icon:'', text:label}; };
+    const groups = groupedDef.map(g=>({...split(g.label), items:g.keys.filter(k=>byKey[k])}));
+    const curGroup = groups.find(g=>g.items.includes(current));
+    const hubKey = HUB_SUBTAB_KEYS[PRIMARY];
+    const sectionName = SUBNAV_SECTION_NAMES[PRIMARY] || '';
+    const chip = (k)=>{ const {icon, text} = split(byKey[k].label);
+      return `<button type="button" class="subnav-chip ${current===k?'active':''}" data-sub="${k}" ${current===k?'aria-current="page"':''}><span class="subnav-chip-ico" aria-hidden="true">${icon}</span>${text}</button>`; };
+    const allOpen = SUBNAV_ALL_OPEN === PRIMARY || !curGroup;
+    return `<nav class="subnav-compact" aria-label="Rubriques : ${sectionName}">
+      <div class="subnav-compact-top">
+        ${hubKey ? `<button type="button" class="subnav-hub-btn" data-sub="${hubKey}" title="Revenir à l'accueil : ${sectionName}"><span aria-hidden="true">‹</span> ${sectionName}</button>` : ''}
+        <span class="subnav-compact-group">${curGroup ? `<span aria-hidden="true">${curGroup.icon}</span> ${curGroup.text}` : ''}</span>
+        <button type="button" class="subnav-all-toggle" aria-expanded="${allOpen}">${allOpen ? 'Fermer' : 'Tout voir'}</button>
+      </div>
+      ${curGroup && curGroup.items.length > 1 ? `<div class="subnav-chips">${curGroup.items.map(chip).join('')}</div>` : ''}
+      ${allOpen ? `<div class="subnav-all">${groups.map(g=>`
+        <section class="subnav-all-group ${g===curGroup?'is-current':''}">
+          <h3 class="subnav-all-title"><span aria-hidden="true">${g.icon}</span> ${g.text}</h3>
+          <div class="subnav-all-chips">${g.items.map(chip).join('')}</div>
+        </section>`).join('')}</div>` : ''}
+    </nav>`;
   }
   return `<div class="subnav-row">${subs.map(s=>
     `<button class="subtab ${current===s.key?'active':''}" data-sub="${s.key}">${s.label}</button>`
   ).join('')}</div>`;
 }
 function wireSubnav(){
-  document.querySelectorAll('.subtab, .subnav-item').forEach(btn=>{
-    btn.onclick = ()=>{ SUBTAB[PRIMARY] = btn.dataset.sub; ENTRY_OPEN=null; OPEN_NOVENA=null; NOVENA_OPEN_DAY=null; render(); };
+  document.querySelectorAll('.subtab, .subnav-item, .subnav-chip, .subnav-hub-btn').forEach(btn=>{
+    if(!btn.dataset.sub) return;
+    btn.onclick = ()=>{ SUBTAB[PRIMARY] = btn.dataset.sub; SUBNAV_ALL_OPEN = null; ENTRY_OPEN=null; OPEN_NOVENA=null; NOVENA_OPEN_DAY=null; render(); };
   });
+  const allToggle = document.querySelector('.subnav-all-toggle');
+  if(allToggle) allToggle.onclick = ()=>{ SUBNAV_ALL_OPEN = SUBNAV_ALL_OPEN === PRIMARY ? null : PRIMARY; render(); };
+  // La pastille de la rubrique ouverte reste visible, même loin dans la ligne.
+  const chips = document.querySelector('.subnav-chips');
+  const active = chips && chips.querySelector('.subnav-chip.active');
+  if(active){
+    const a = active.getBoundingClientRect(), c = chips.getBoundingClientRect();
+    chips.scrollLeft = Math.max(0, chips.scrollLeft + (a.left - c.left) - (c.width - a.width) / 2);
+  }
   document.querySelectorAll('.subnav-group-head').forEach(btn=>{
     btn.onclick = ()=>{
       const key = btn.dataset.groupKey;
@@ -6100,9 +6123,10 @@ const HUB_HERO_POS = {
   ecritures: '35%'
 };
 const PRIER_HUB_CATEGORIES = [
-  {label:'Chaque jour', desc:'Textes du jour, offices, Laudes, Vêpres, Complies...', icon:'☀️', goto:'textes-du-jour', color:'#B8863B', group:'jour'},
+  {label:'Textes du jour', desc:'Le verset, le psaume et la lecture de la Bible proposés aujourd’hui', icon:'📖', goto:'textes-du-jour', color:'#B8863B', group:'jour'},
   {label:'Versets du matin', desc:'Sept versets à réciter chaque matin pour commencer la journée', icon:'🌅', goto:'versets-matin', color:'#C9A227', group:'jour'},
   {label:'Versets du soir', desc:'Sept versets à réciter chaque soir pour se recoucher en paix', icon:'🌙', goto:'versets-soir', color:'#4A3D6B', group:'jour'},
+  {label:'Angélus & examen du soir', desc:'L’Angélus du matin, de midi et du soir ; relire sa journée avant de dormir', icon:'🔔', goto:'angelus', color:'#8A4A1F', group:'jour'},
   {label:'Toutes les prières', desc:'Prières fondamentales, à Jésus, Marie et Joseph, aux saints, aux Archanges, de délivrance… cherchez par mot-clé', icon:'📿', goto:'prieres', cross:{primary:'devotions', sub:'prieres'}, color:'#6B2545', group:'classiques'},
   {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545', group:'classiques'},
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E', group:'classiques'},
@@ -6124,6 +6148,51 @@ const PRIER_HUB_GROUPS = [
   {key:'autres', icon:'🤝', label:'Avec les autres'},
   {key:'varier', icon:'🪔', label:'Pour varier et personnaliser'}
 ];
+/* La journée de prière (26/11/2026) : les six Heures de l'office sur une ligne
+   du temps, celle du moment mise en avant — on voit d'un coup d'œil « où on en
+   est » dans la journée, et on y entre d'un geste. Les horaires sont indicatifs :
+   chacun prie l'office quand il le peut. */
+const PRAYER_HOURS = [
+  {key:'laudes',   name:'Laudes',   of:'des Laudes',   at:'7 h',  from: 5*60,      desc:'La louange du matin'},
+  {key:'tierce',   name:'Tierce',   of:'de Tierce',    at:'9 h',  from: 9*60,      desc:'La prière du milieu de la matinée'},
+  {key:'sexte',    name:'Sexte',    of:'de Sexte',     at:'12 h', from: 11*60+30,  desc:'La prière de midi'},
+  {key:'none',     name:'None',     of:'de None',      at:'15 h', from: 14*60,     desc:'La prière du milieu de l’après-midi'},
+  {key:'vepres',   name:'Vêpres',   of:'des Vêpres',   at:'18 h', from: 17*60,     desc:'La prière du soir'},
+  {key:'compline', name:'Complies', of:'des Complies', at:'21 h', from: 20*60+30,  desc:'La prière avant le sommeil'}
+];
+function currentPrayerHourIndex(date = new Date()){
+  const min = date.getHours()*60 + date.getMinutes();
+  let idx = PRAYER_HOURS.length - 1; // avant 5 h : on est encore dans la nuit des Complies
+  PRAYER_HOURS.forEach((h, i)=>{ if(min >= h.from) idx = i; });
+  return idx;
+}
+function prayerHoursHTML(){
+  const now = new Date();
+  const cur = currentPrayerHourIndex(now);
+  const early = now.getHours() < 5;
+  const h = PRAYER_HOURS[cur];
+  const clock = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}).replace(':', ' h ');
+  return `<section class="hours-day" aria-label="La prière des Heures aujourd’hui">
+    <div class="hours-now">
+      <span class="hours-now-ico" aria-hidden="true">🕯️</span>
+      <div class="hours-now-text">
+        <p class="hours-now-kicker">Il est ${clock}</p>
+        <p class="hours-now-title">C’est l’heure ${h.of}</p>
+        <p class="hours-now-sub">${h.desc}</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm hours-now-btn" data-hours-go="${h.key}">Prier</button>
+    </div>
+    <ol class="hours-strip">${PRAYER_HOURS.map((x, i)=>{
+      const state = i === cur ? 'now' : (!early && i < cur ? 'past' : 'next');
+      return `<li class="hours-step is-${state}"><button type="button" data-hours-go="${x.key}" ${i===cur?'aria-current="time"':''}>
+        <span class="hours-dot" aria-hidden="true"></span>
+        <span class="hours-name">${x.name}</span>
+        <span class="hours-at">${x.at}</span>
+      </button></li>`;
+    }).join('')}</ol>
+    <button type="button" class="hours-all-link" data-hours-go="office">Comprendre la Liturgie des Heures ›</button>
+  </section>`;
+}
 function renderPrierHub(){
   maybeAutoOpenMiniTuto('prier-hub');
   const html = `
@@ -6135,6 +6204,7 @@ function renderPrierHub(){
       <button class="btn btn-ghost btn-sm" id="prier-hub-tuto-btn" title="À quoi correspond chaque rubrique ?" style="padding:6px 11px; border-radius:50%;">❓</button>
     </div>
     <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui — ou touchez le ❓ pour un petit guide des rubriques.</p>
+    ${prayerHoursHTML()}
     ${PRIER_HUB_GROUPS.map(g=>{
       const cats = PRIER_HUB_CATEGORIES.filter(c=>c.group===g.key);
       if(!cats.length) return '';
@@ -6163,6 +6233,9 @@ function renderPrierHub(){
       if(cat && cat.cross){ goTo(cat.cross.primary, cat.cross.sub); }
       else { SUBTAB.prier = card.dataset.hubGoto; render(); }
     };
+  });
+  document.querySelectorAll('[data-hours-go]').forEach(btn=>{
+    btn.onclick = ()=>{ SUBTAB.prier = btn.dataset.hoursGo; render(); };
   });
 }
 

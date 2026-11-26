@@ -3559,3 +3559,102 @@
   }
   .tcover--opening{ opacity:0; transform:scale(1.08); pointer-events:none; }
   .tcover--opening .tcover-icon-wrap{ animation:none; transform:scale(1.15); }
+
+  /* ═══ Prier : navigation compacte des sous-rubriques (26/11/2026) ═══════════
+     Une ligne « ‹ Prier · famille en cours · Tout voir », puis les rubriques
+     sœurs en pastilles qui défilent ; le contenu commence aussitôt dessous. */
+  .subnav-compact{ margin:-4px 0 16px; display:flex; flex-direction:column; gap:10px; }
+  .subnav-compact-top{ display:flex; align-items:center; gap:8px; min-height:36px; }
+  .subnav-hub-btn{
+    flex:none; display:inline-flex; align-items:center; gap:4px; padding:7px 12px 7px 9px; border-radius:999px;
+    border:1px solid var(--hairline); background:var(--vellum-light); color:var(--wine); cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:12.5px; font-weight:700;
+  }
+  .subnav-hub-btn span{ font-size:17px; line-height:1; margin-top:-2px; }
+  .subnav-compact-group{
+    flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:var(--ink);
+  }
+  .subnav-all-toggle{
+    flex:none; padding:7px 11px; border-radius:999px; border:none; cursor:pointer;
+    background:transparent; color:var(--ink-soft); font-family:'Inter',sans-serif; font-size:12px; font-weight:700;
+    text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--gold);
+  }
+  .subnav-chips{
+    display:flex; gap:7px; overflow-x:auto; scroll-snap-type:x proximity; padding:2px 2px 6px;
+    margin:0 -2px; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+    mask-image:linear-gradient(90deg, #000 88%, transparent); -webkit-mask-image:linear-gradient(90deg, #000 88%, transparent);
+  }
+  .subnav-chips::-webkit-scrollbar{ display:none; }
+  .subnav-chip{
+    flex:none; scroll-snap-align:start; display:inline-flex; align-items:center; gap:6px;
+    padding:8px 13px; border-radius:999px; border:1px solid var(--hairline); background:var(--vellum-light);
+    color:var(--ink); cursor:pointer; white-space:nowrap; font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+    transition:background .15s, border-color .15s;
+  }
+  .subnav-chip:hover{ border-color:var(--gold-light); }
+  .subnav-chip.active{ background:var(--wine); border-color:var(--wine); color:var(--vellum-light); box-shadow:0 4px 12px rgba(124,31,46,0.25); }
+  .subnav-chip-ico{ font-size:14px; line-height:1; }
+  .subnav-chip:focus-visible, .subnav-hub-btn:focus-visible, .subnav-all-toggle:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .subnav-all{
+    display:grid; grid-template-columns:1fr; gap:10px; padding:12px; border-radius:16px;
+    border:1px solid var(--hairline); background:var(--vellum-light); box-shadow:0 6px 18px rgba(60,30,50,0.08);
+  }
+  @media (min-width:700px){ .subnav-all{ grid-template-columns:1fr 1fr; } }
+  .subnav-all-group{ padding:4px 2px; }
+  .subnav-all-group.is-current .subnav-all-title{ color:var(--wine); }
+  .subnav-all-title{
+    display:flex; align-items:center; gap:7px; margin:0 0 8px;
+    font-family:'Inter',sans-serif; font-size:12px; font-weight:800; color:var(--ink-soft); letter-spacing:.2px;
+  }
+  .subnav-all-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .subnav-all-chips .subnav-chip{ padding:7px 11px; font-size:12.5px; }
+  #app.reading-mode .subnav-compact{ display:none !important; }
+
+  /* ═══ Prier : la journée de prière (Liturgie des Heures) ═════════════════ */
+  .hours-day{
+    margin:0 0 14px; padding:16px 16px 12px; border-radius:18px; border:1px solid var(--hairline);
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgba(201,162,39,0.16), transparent 60%),
+      var(--vellum-light);
+    box-shadow:0 4px 16px rgba(60,30,50,0.08);
+  }
+  .hours-now{ display:flex; align-items:center; gap:12px; }
+  .hours-now-ico{
+    flex:none; width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font-size:22px;
+    background:radial-gradient(circle at 40% 35%, var(--gold-light), var(--gold) 80%); box-shadow:var(--glow-gold);
+  }
+  .hours-now-text{ flex:1; min-width:0; }
+  .hours-now-kicker{ margin:0; font-family:'Inter',sans-serif; font-size:12px; font-weight:600; color:var(--ink-soft); }
+  .hours-now-title{ margin:1px 0 0; font-family:'Fraunces',serif; font-size:19px; font-weight:600; color:var(--ink); line-height:1.2; }
+  .hours-now-sub{ margin:2px 0 0; font-size:13px; color:var(--ink-soft); }
+  .hours-now-btn{ flex:none; }
+  .hours-strip{
+    list-style:none; margin:16px 0 4px; padding:0; display:grid; grid-template-columns:repeat(6, 1fr); position:relative;
+  }
+  .hours-strip::before{
+    content:""; position:absolute; left:8.3%; right:8.3%; top:9px; height:2px; border-radius:2px;
+    background:linear-gradient(90deg, var(--gold-pale), var(--gold), var(--wine));
+    opacity:.55;
+  }
+  .hours-step button{
+    width:100%; display:flex; flex-direction:column; align-items:center; gap:3px; padding:0 0 4px;
+    background:none; border:none; cursor:pointer; color:var(--ink); font:inherit; position:relative;
+  }
+  .hours-dot{
+    width:20px; height:20px; border-radius:50%; border:2px solid var(--gold); background:var(--vellum-light);
+    box-sizing:border-box; transition:transform .15s;
+  }
+  .hours-step.is-past .hours-dot{ background:var(--gold-pale); border-color:var(--gold-light); }
+  .hours-step.is-now .hours-dot{ background:var(--wine); border-color:var(--wine); box-shadow:0 0 0 4px rgba(124,31,46,0.16), var(--glow-gold); transform:scale(1.12); }
+  .hours-name{ font-family:'Inter',sans-serif; font-size:11.5px; font-weight:700; }
+  .hours-at{ font-size:11px; color:var(--ink-soft); }
+  .hours-step.is-past .hours-name{ color:var(--ink-soft); font-weight:600; }
+  .hours-step.is-now .hours-name{ color:var(--wine); }
+  .hours-step button:hover .hours-dot{ transform:scale(1.15); }
+  .hours-step button:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radius:10px; }
+  .hours-all-link{
+    display:block; margin:6px auto 0; padding:6px 8px; border:none; background:none; cursor:pointer;
+    color:var(--wine); font-family:'Inter',sans-serif; font-size:12.5px; font-weight:700;
+  }
+  @media (max-width:360px){ .hours-name{ font-size:10.5px; } .hours-at{ font-size:10px; } }
