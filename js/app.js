@@ -4612,7 +4612,7 @@ async function loadPrefsAndData(){
 async function savePrefs(){
   try{
     await window.storage.set('lumen-prefs', JSON.stringify({
-      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, welcomeDemoVersion: WELCOME_DEMO_LAST_SEEN_VERSION, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID, tutoSeen: TUTO_SEEN
+      favorites: FAVORITES, recent: RECENT, streak: STREAK, theme: THEME, themeMode: THEME_MODE, bgPattern: BG_PATTERN, bgWallpaper: BG_WALLPAPER, lang: LANG, fontSize: FONT_SIZE, onboardingSeen: ONBOARDING_SEEN, welcomeDemoVersion: WELCOME_DEMO_LAST_SEEN_VERSION, seenMilestones: SEEN_MILESTONES, lastSummarySeen: LAST_SUMMARY_SEEN, lastWeeklyRecapSeen: LAST_WEEKLY_RECAP_SEEN, userName: USER_NAME, dyslexicFont: DYSLEXIC_FONT, lastOpenDate: LAST_OPEN_DATE, brightness: BRIGHTNESS, customAccent: CUSTOM_ACCENT, userAvatar: USER_AVATAR, titleFont: TITLE_FONT, tabOrder: TAB_ORDER, recueillementMode: RECUEILLEMENT_MODE, comicMode: document.body.classList.contains('comic-mode'), familyCode: FAMILY_CODE, caremeCommunityCode: CAREME_COMMUNITY_CODE, caremeMemberId: CAREME_MEMBER_ID, tutoSeen: TUTO_SEEN
     }), false);
   }catch(e){}
 }
@@ -4652,6 +4652,8 @@ let MY_PRAYER_IMAGES = [];
 let LAST_CONFESSION = '';
 let PRAYED_DATES = [];
 let ACTIVITY_LOG = [];
+let LAST_WEEKLY_RECAP_SEEN = '';
+let PREV_OPEN_DATE_FOR_RECAP = '';
 let HOME_LAYOUT = null;
 /* Binôme de prière : un accompagnement à deux, plus intime qu'un groupe
    entier — un code à 6 caractères partagé entre deux personnes qui
@@ -16624,6 +16626,74 @@ async function closeDailySummary(){
   await savePrefs();
 }
 
+/* ================= récapitulatif hebdomadaire =================
+   Affiché une fois, à la première ouverture de l'appli dans une nouvelle
+   semaine (lundi), pour résumer la semaine qui vient de se terminer
+   (du lundi précédent au dimanche précédent). S'appuie sur ACTIVITY_LOG
+   (voir logActivity()) et sur JOURNAL pour les notes écrites. */
+function weeklyRecapShouldShow(){
+  if(!ONBOARDING_SEEN) return false; // jamais pendant la toute première découverte de l'appli
+  const thisMonday = isoFromDate(startOfWeekDate(new Date()));
+  if(LAST_WEEKLY_RECAP_SEEN === thisMonday) return false;
+  // On ne montre le récap que si l'appli a déjà été utilisée avant cette semaine-ci
+  // (sinon, sur une toute première semaine, il n'y a simplement rien à récapituler).
+  return !!(PREV_OPEN_DATE_FOR_RECAP && PREV_OPEN_DATE_FOR_RECAP < thisMonday);
+}
+function renderWeeklyRecap(){
+  const thisMonday = startOfWeekDate(new Date());
+  const start = new Date(thisMonday); start.setDate(start.getDate()-7);
+  const end = new Date(thisMonday); end.setDate(end.getDate()-1);
+  const fromKey = isoFromDate(start), toKey = isoFromDate(end);
+  const entries = activityEntriesInRange(fromKey, toKey);
+
+  const activeDays = new Set(entries.map(e=>e.date)).size;
+  const journalCount = (JOURNAL||[]).filter(j=>{
+    const k = isoFromDate(new Date(j.createdAt));
+    return k >= fromKey && k <= toKey;
+  }).length;
+
+  const dayDots = [];
+  for(let i=0;i<7;i++){
+    const dd = new Date(start); dd.setDate(dd.getDate()+i);
+    const k = isoFromDate(dd);
+    dayDots.push({ label: dd.toLocaleDateString('fr-FR',{weekday:'short'}).replace('.',''), on: entries.some(e=>e.date===k) });
+  }
+
+  let line;
+  if(activeDays >= 6) line = "Une semaine magnifique — vous avez prié presque tous les jours. 🙏";
+  else if(activeDays >= 3) line = "Une belle semaine de prière, continuez ainsi.";
+  else if(activeDays >= 1) line = "Chaque moment de prière compte, même bref.";
+  else line = "Pas de trace de prière cette semaine — la nouvelle semaine est une page blanche.";
+
+  const content = document.getElementById('weekly-recap-content');
+  content.innerHTML = `
+    <p class="sumry-hero-date" style="text-align:center; margin:0 0 2px;">✦ Semaine du ${start.toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} au ${end.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</p>
+    <p class="sumry-hero-saint" style="text-align:center; color:var(--wine-dark); margin:0 0 10px;">📅 Votre semaine en prière</p>
+
+    <div class="sumry-streak">${activeDays}/7 jour${activeDays>1?'s':''} actif${activeDays>1?'s':''} cette semaine ${STREAK.count>0 ? `— série en cours : 🔥 ${STREAK.count}` : ''}</div>
+
+    <div class="weekly-recap-days">
+      ${dayDots.map(d=>`<div class="weekly-recap-day ${d.on?'on':''}"><span>${d.label}</span><em></em></div>`).join('')}
+    </div>
+
+    <p class="sumry-section-label">Ce que vous avez fait</p>
+    ${activityBreakdownHTML(entries)}
+    ${journalCount>0 ? `<p class="studio-note" style="text-align:center; margin-top:8px;">✍️ ${journalCount} note${journalCount>1?'s':''} de journal écrite${journalCount>1?'s':''} cette semaine</p>` : ''}
+
+    <p class="sumry-fun-line">${line}</p>
+
+    <div style="text-align:center; margin-top:10px;">
+      <button class="btn btn-primary btn-sm" id="weekly-recap-close">Commencer la nouvelle semaine →</button>
+    </div>
+  `;
+  document.getElementById('weekly-recap-close').onclick = closeWeeklyRecap;
+}
+async function closeWeeklyRecap(){
+  document.getElementById('weekly-recap-overlay').classList.add('hidden');
+  LAST_WEEKLY_RECAP_SEEN = isoFromDate(startOfWeekDate(new Date()));
+  await savePrefs();
+}
+
 /* ================= breadcrumb ================= */
 function renderBreadcrumb(){
   const bar = document.getElementById('breadcrumb-bar');
@@ -17052,8 +17122,10 @@ async function startApp(){
   WELCOME_DEMO_LAST_SEEN_VERSION = prefs.welcomeDemoVersion || 0;
   SEEN_MILESTONES = prefs.seenMilestones || [];
   LAST_SUMMARY_SEEN = prefs.lastSummarySeen || '';
+  LAST_WEEKLY_RECAP_SEEN = prefs.lastWeeklyRecapSeen || '';
   USER_NAME = prefs.userName || (CURRENT_USER && CURRENT_USER.displayName ? CURRENT_USER.displayName.split(' ')[0] : '');
   const prevOpenDate = prefs.lastOpenDate || '';
+  PREV_OPEN_DATE_FOR_RECAP = prevOpenDate;
   if(prevOpenDate && prevOpenDate !== todayISO()){
     DAYS_SINCE_LAST_OPEN = Math.floor((new Date(todayISO()) - new Date(prevOpenDate)) / 86400000);
   }
@@ -17196,6 +17268,9 @@ async function startApp(){
     document.getElementById('onboarding-overlay').classList.remove('hidden');
     ONBOARD_IDX = 0;
     renderOnboarding();
+  } else if(weeklyRecapShouldShow()){
+    renderWeeklyRecap();
+    document.getElementById('weekly-recap-overlay').classList.remove('hidden');
   } else if(LAST_SUMMARY_SEEN !== todayISO()){
     renderDailySummary();
     document.getElementById('summary-overlay').classList.remove('hidden');

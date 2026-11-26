@@ -1427,6 +1427,14 @@
   .sumry-gauge-value{ font-family:'Fraunces',serif; font-weight:700; font-size:14px; color:var(--ink); margin:2px 0 0; }
   .sumry-gauge-card-label{ font-family:'Inter',sans-serif; font-size:8.5px; color:var(--ink-soft); margin:0; }
   .sumry-fun-line{ text-align:center; font-family:'Fraunces',serif; font-style:italic; font-size:13px; color:var(--wine-dark); margin:14px 0 0; }
+  .weekly-recap-days{ display:flex; justify-content:space-between; gap:4px; margin:12px 0 16px; }
+  .weekly-recap-day{ flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .weekly-recap-day span{ font-family:'Inter',sans-serif; font-size:10px; text-transform:capitalize; color:var(--ink-soft); }
+  .weekly-recap-day em{
+    width:20px; height:20px; border-radius:50%; font-style:normal; display:block;
+    background:var(--hairline); border:1px solid var(--hairline);
+  }
+  .weekly-recap-day.on em{ background:linear-gradient(145deg, var(--gold), var(--wine)); border-color:var(--wine); }
   .mag-section{ position:relative; padding:20px 4px 8px; margin:0 -4px 4px; border-top:1px solid var(--hairline); }
   .mag-section:first-child{ border-top:none; padding-top:4px; }
   .mag-tint-2{ background:linear-gradient(180deg, rgba(184,134,59,0.05), transparent); }
