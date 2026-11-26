@@ -584,6 +584,41 @@ function escapeHtml(str){
   if(str == null) return '';
   return String(str).replace(/[&<>"']/g, (c)=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+/* Un avatar peut être soit un emoji (texte), soit une photo choisie par la
+   personne (stockée en data URL) : cette fonction choisit le bon rendu
+   (une <img> ronde pour une photo, le texte échappé sinon) partout où un
+   avatar est affiché — le mien ou celui d'un membre de groupe/binôme. */
+function avatarGlyphHTML(avatar, fallback){
+  const val = (avatar && String(avatar).trim()) || fallback || '🕯️';
+  if(/^(data:image\/|https?:\/\/)/.test(val)){
+    return `<img src="${val.replace(/"/g,'&quot;')}" alt="" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;">`;
+  }
+  return escapeHtml(val);
+}
+/* Redimensionne et recadre en carré une photo choisie par l'utilisateur
+   (avatar), avant de la stocker en data URL — une miniature légère plutôt
+   que la photo originale, souvent bien plus lourde que nécessaire. */
+function resizeImageToDataURL(file, size){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onerror = ()=> reject(reader.error || new Error('lecture impossible'));
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = ()=> reject(new Error('image illisible'));
+      img.onload = ()=>{
+        const canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const side = Math.min(img.width, img.height);
+        const sx = (img.width - side)/2, sy = (img.height - side)/2;
+        ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 /* window.storage only exists inside Claude.ai artifacts. Once deployed standalone
    (e.g. GitHub Pages), it's undefined — this polyfill makes "guest mode" (sans compte)
@@ -1171,6 +1206,16 @@ function showOpenInSafariOption(providerLabel){
 
 function renderCompte(){
   let html = `<h2 class="section-title">👤 Mon compte</h2>
+    <div class="card" style="text-align:center;">
+      <label style="font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); display:block; margin-bottom:10px;">Votre avatar</label>
+      <div class="account-avatar-preview" id="account-avatar-preview">${avatarGlyphHTML(USER_AVATAR)}</div>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+        <button class="btn btn-gold btn-sm" id="avatar-photo-btn">🖼️ Choisir une photo</button>
+        ${USER_AVATAR && USER_AVATAR !== '🕯️' ? `<button class="btn btn-ghost btn-sm" id="avatar-reset-btn">Revenir à l'icône 🕯️</button>` : ''}
+      </div>
+      <input type="file" accept="image/*" id="avatar-file-input" style="display:none;">
+      <p class="section-desc" style="margin-top:10px;">Visible dans vos groupes de prière et votre binôme. Enregistrée sur votre compte Lumen (ou sur cet appareil seul, si vous n'êtes pas connecté·e).</p>
+    </div>
     <div class="card">
       <label style="font-family:'Inter',sans-serif; font-size:12px; color:var(--ink-soft); display:block; margin-bottom:4px;">Comment souhaitez-vous qu'on vous appelle ?</label>
       <div style="display:flex; gap:8px;">
@@ -1226,6 +1271,41 @@ function renderCompte(){
     await savePrefs();
     showToast('Prénom mis à jour ✦');
   };
+  const avatarPhotoBtn = document.getElementById('avatar-photo-btn');
+  const avatarFileInput = document.getElementById('avatar-file-input');
+  if(avatarPhotoBtn && avatarFileInput){
+    avatarPhotoBtn.onclick = ()=> avatarFileInput.click();
+    avatarFileInput.onchange = async ()=>{
+      const file = avatarFileInput.files && avatarFileInput.files[0];
+      if(!file) return;
+      if(!file.type || !file.type.startsWith('image/')){
+        showToast('Merci de choisir un fichier image.');
+        return;
+      }
+      avatarPhotoBtn.disabled = true;
+      avatarPhotoBtn.textContent = 'Un instant…';
+      try{
+        const dataUrl = await resizeImageToDataURL(file, 160);
+        USER_AVATAR = dataUrl;
+        await savePrefs();
+        showToast('Avatar mis à jour ✦');
+        renderCompte();
+      }catch(e){
+        avatarPhotoBtn.disabled = false;
+        avatarPhotoBtn.textContent = '🖼️ Choisir une photo';
+        showToast("Impossible de lire cette photo, merci d'en choisir une autre.");
+      }
+    };
+  }
+  const avatarResetBtn = document.getElementById('avatar-reset-btn');
+  if(avatarResetBtn){
+    avatarResetBtn.onclick = async ()=>{
+      USER_AVATAR = '🕯️';
+      await savePrefs();
+      showToast('Avatar réinitialisé ✦');
+      renderCompte();
+    };
+  }
   const logoutBtn = document.getElementById('logout-btn');
   if(logoutBtn) logoutBtn.onclick = async ()=>{ await fbAuth.signOut(); window.location.reload(); };
   const loginNowBtn = document.getElementById('login-now-btn');
@@ -8886,7 +8966,7 @@ function renderPrayerGroup(){
       <p class="day-title" style="font-size:22px; letter-spacing:3px;">${escapeHtml(PRAYER_GROUP_CODE)}</p>
       <p class="section-desc">Partagez ce code (ou le lien ci-dessous) à vos proches pour qu'ils rejoignent le même groupe.</p>
       ${memberTotal ? `<div class="group-avatar-row">
-        ${visibleMembers.map(m=>`<span class="group-member-avatar" title="${escapeHtml(m.name||'Anonyme')}">${escapeHtml(m.avatar||'🕯️')}</span>`).join('')}
+        ${visibleMembers.map(m=>`<span class="group-member-avatar" title="${escapeHtml(m.name||'Anonyme')}">${avatarGlyphHTML(m.avatar)}</span>`).join('')}
         ${extraMembers>0 ? `<span class="group-member-more">+${extraMembers}</span>` : ''}
       </div>
       <p class="group-member-count">👥 ${memberTotal} membre${memberTotal===1?'':'s'}</p>` : ''}
@@ -9041,7 +9121,7 @@ function renderPrayerGroup(){
       html += `<div class="card">${GROUP_MESSAGES.slice().sort((a,b)=>b.createdAt-a.createdAt).map(m=>`
         <div class="message-bubble" data-mid="${m.id}">
           <div class="message-bubble-head">
-            <span class="message-bubble-avatar">${escapeHtml(m.avatar||'🕯️')}</span>
+            <span class="message-bubble-avatar">${avatarGlyphHTML(m.avatar)}</span>
             <span class="intention-author" style="margin:0;">${escapeHtml(m.name||'Anonyme')}</span>
             <span class="message-bubble-time">${timeAgoShort(m.createdAt)}</span>
           </div>
@@ -14019,9 +14099,9 @@ function renderPrayerBuddy(){
 
   html += `<div class="buddy-hero">
       <div class="buddy-hero-avatars">
-        <span class="buddy-hero-avatar">${USER_AVATAR||'🕯️'}</span>
+        <span class="buddy-hero-avatar">${avatarGlyphHTML(USER_AVATAR)}</span>
         <span class="buddy-hero-link">🤝</span>
-        <span class="buddy-hero-avatar">${partner ? (partner.avatar||'🕯️') : '❔'}</span>
+        <span class="buddy-hero-avatar">${partner ? avatarGlyphHTML(partner.avatar) : '❔'}</span>
       </div>
       <p class="buddy-hero-title">${partner ? `Vous &amp; ${escapeHtml(partner.name||'votre binôme')}` : 'En attente de votre binôme…'}</p>
       ${partner ? `<p class="buddy-hero-sub">${daysLeft===null ? '' : daysLeft>0 ? `${daysLeft} jour${daysLeft>1?'s':''} restant${daysLeft>1?'s':''} sur votre semaine d'engagement` : "Votre semaine d'engagement est terminée"}</p>` : `<p class="buddy-hero-sub">Partagez le code ci-dessous pour que votre proche vous rejoigne.</p>`}
@@ -16152,7 +16232,10 @@ const BG_PATTERN_LIST = [
   {key:'motifs-africains', label:'Chevrons', icon:'🔶'},
   {key:'losanges', label:'Losanges', icon:'🔷'}
 ];
-let BG_PATTERN = 'croix';
+/* Fonctionnalité retirée (motif spirituel de fond / fond d'écran photo) :
+   on force 'aucun' partout, y compris pour les personnes qui en avaient
+   déjà choisi un — il n'y a plus de réglage pour le changer. */
+let BG_PATTERN = 'aucun';
 /* fonds d'écran photo — vraies images d'ambiance (flou artistique, bokeh, lumière douce),
    pensées pour servir de fond et non comme photo-sujet ; libres de droits (licence Pexels). */
 const WALLPAPER_LIST = [
@@ -16309,28 +16392,6 @@ function openThemePicker(){
     <p class="section-desc" style="margin-top:-6px;">Choisissez le mode qui vous convient le mieux.</p>
     <div class="grid">${THEMES_LIST.map(themeCardHTML).join('')}</div>
 
-    <h2 class="section-title" style="font-size:14px;">🕊️ Motif spirituel de fond</h2>
-    <p class="section-desc" style="margin-top:-6px;">Un discret motif en filigrane, visible derrière le contenu. S'applique aux thèmes de couleur (pas aux photos).</p>
-    <div class="grid">${BG_PATTERN_LIST.map(p=>`
-      <button class="card theme-swatch-btn ${BG_PATTERN===p.key?'theme-active':''}" data-pattern-key="${p.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding-top:10px;">
-        <span style="font-size:22px;">${p.icon}</span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 0; color:var(--ink);">${p.label}</p>
-      </button>`).join('')}</div>
-
-    <h2 class="section-title" style="font-size:14px;">🖼️ Fond d'écran (photo)</h2>
-    <p class="section-desc" style="margin-top:-6px;">Une image spirituelle discrète derrière le contenu, à la place du motif ci-dessus.</p>
-    <div class="grid wallpaper-picker-grid">
-      <button class="card theme-swatch-btn wallpaper-swatch-btn ${BG_WALLPAPER==='aucun'?'theme-active':''}" data-wallpaper-key="aucun" style="text-align:center; cursor:pointer; border:none; width:100%; padding-top:10px;">
-        <span style="font-size:22px;">◻️</span>
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 0; color:var(--ink);">Aucun</p>
-      </button>
-      ${WALLPAPER_LIST.map(w=>`
-      <button class="card theme-swatch-btn wallpaper-swatch-btn ${BG_WALLPAPER===w.key?'theme-active':''}" data-wallpaper-key="${w.key}" style="text-align:center; cursor:pointer; border:none; width:100%; padding:0; overflow:hidden;">
-        <img src="${w.img}" alt="" style="width:100%; height:56px; object-fit:cover; display:block;" onerror="this.style.display='none';">
-        <p style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; margin:4px 0 6px; color:var(--ink);">${w.label}</p>
-      </button>`).join('')}
-    </div>
-
     <h2 class="section-title" style="font-size:14px;">💡 Luminosité</h2>
     <div class="card">
       <input type="range" id="brightness-slider" min="70" max="130" value="${BRIGHTNESS}" style="width:100%;">
@@ -16365,24 +16426,6 @@ function openThemePicker(){
       applyThemeAndFont();
       await savePrefs();
       closeAmbiancePicker();
-    };
-  });
-  list.querySelectorAll('[data-pattern-key]').forEach(btn=>{
-    btn.onclick = async ()=>{
-      BG_PATTERN = btn.dataset.patternKey;
-      applyThemeAndFont();
-      await savePrefs();
-      showToast(`${BG_PATTERN_LIST.find(p=>p.key===BG_PATTERN).icon} Motif appliqué`);
-      openThemePicker();
-    };
-  });
-  list.querySelectorAll('[data-wallpaper-key]').forEach(btn=>{
-    btn.onclick = async ()=>{
-      BG_WALLPAPER = btn.dataset.wallpaperKey;
-      applyThemeAndFont();
-      await savePrefs();
-      showToast(BG_WALLPAPER === 'aucun' ? '◻️ Fond d’écran retiré' : `🖼️ Fond d’écran « ${WALLPAPER_LIST.find(w=>w.key===BG_WALLPAPER).label} » appliqué`);
-      openThemePicker();
     };
   });
   document.getElementById('brightness-slider').oninput = async (e)=>{
@@ -16983,8 +17026,10 @@ async function startApp(){
   STREAK = prefs.streak || {count:0,lastDate:null};
   THEME = prefs.theme || 'light';
   THEME_MODE = (prefs.themeMode === 'manual') ? 'manual' : 'auto';
-  BG_PATTERN = prefs.bgPattern || 'croix';
-  BG_WALLPAPER = prefs.bgWallpaper || 'aucun';
+  /* Motif / fond d'écran retirés : on ignore volontairement une éventuelle
+     valeur enregistrée auparavant. */
+  BG_PATTERN = 'aucun';
+  BG_WALLPAPER = 'aucun';
   /* Forcé en français tant que le sélecteur de langue est masqué (voir openThemePicker) :
      la traduction anglaise du contenu n'est pas encore terminée. */
   LANG = 'fr';
