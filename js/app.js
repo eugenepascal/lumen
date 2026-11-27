@@ -3667,7 +3667,7 @@ const GUIDE_SECTIONS = [
   {key:'prier', icon:'🙏', label:'Prier', desc:"Neuvaines, intentions, prières par heure"},
   {key:'ecritures', icon:'📖', label:'Écritures', desc:"Bible, psaumes, la vie de Jésus"},
   {key:'eglise', icon:'⛪', label:'Église', desc:"Saints, calendrier, sacrements"},
-  {key:'sagesse', icon:'💡', label:'Sagesse', desc:"Enseignements, méditations"},
+  {key:'sagesse', icon:'💡', label:'Sagesse', desc:"Enseignements, méditations, quiz à thèmes"},
   
   {key:'espace', icon:'👤', label:'Mon espace', desc:"Journal, favoris, réglages"}
 ];
@@ -5181,7 +5181,7 @@ const DEMO_PHASES = [
   {icon:'🏠', label:'Accueil', desc:"Votre verset du jour, votre série de prière 🔥, un résumé de votre journée spirituelle, et les actualités de l'Église — tout en un coup d'œil, sans rien chercher."},
   {icon:'🙏', label:'Prier', desc:"Les offices (Laudes, Vêpres, Complies...) avec les vrais textes du jour, un chapelet guidé perle par perle avec lecture vocale, plus de 20 neuvaines (saints, archanges, Carlo Acutis...), et des prières selon votre état du moment."},
   {icon:'📖', label:'Bible', desc:"L'Ancien et le Nouveau Testament, les psaumes, des méditations sur les Écritures, et un plan de lecture pour avancer jour après jour."},
-  {icon:'🧭', label:'Découvrir', desc:"La vie de Jésus et des apôtres, l'histoire de l'Église, les saints et le calendrier liturgique, les sacrements, un lexique, et des quiz pour tester vos connaissances."},
+  {icon:'🧭', label:'Découvrir', desc:"La vie de Jésus et des apôtres, l'histoire de l'Église, les saints et le calendrier liturgique, les sacrements, un lexique, et un quiz à thèmes avec niveaux et succès à débloquer."},
   {icon:'👤', label:'Mon espace', desc:"Votre journal, vos favoris ☆, votre série de prière, un groupe de prière à créer avec vos proches, et des réglages pour personnaliser l'application (thèmes, avatar, taille du texte)."}
 ];
 let DEMO_PHASE_IDX = 0;
@@ -5647,7 +5647,8 @@ function homePage2HTML(){
     {label:'Neuvaine à Notre-Dame', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lady%20of%20Guadalupe.jpg?width=300', novena:'marie-confiance'},
     {label:'Chemin de croix', icon:'✝️', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fabrizio%20Santafede%20-%20St.%20Stephen%20the%20Martyr.jpg?width=300', primary:'prier', sub:'chemin-croix'},
     {label:'Prier pour les malades', icon:'🙏', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Rembrandt%20De%20aartsengel%20verlaat%20Tobias%20en%20zijn%20gezin.%201637.jpg?width=300', novena:'sante'},
-    {label:'Apprendre sa foi', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Jerome%20Writing-Caravaggio%20%28c.%201607%29.jpg?width=300', primary:'sagesse', sub:'enseignements'}
+    {label:'Apprendre sa foi', img:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint%20Jerome%20Writing-Caravaggio%20%28c.%201607%29.jpg?width=300', primary:'sagesse', sub:'enseignements'},
+    {label:'Quiz : testez-vous !', icon:'❓', primary:'sagesse', sub:'quiz'}
   ];
 
   return `
@@ -6408,7 +6409,7 @@ const SAGESSE_HUB_CATEGORIES = [
   {label:'Enseignements', desc:"Doctrine, catéchisme, témoignages", icon:'🎓', goto:'enseignements', color:'#7C1F2E'},
   {label:'Sacrements', desc:'Les 7 sacrements expliqués simplement', icon:'✨', goto:'sacrements', color:'#B8863B'},
   {label:'Lexique', desc:'Les mots de la foi catholique expliqués', icon:'🔤', goto:'lexique', color:'#5C6E58'},
-  {label:'Quiz', desc:'Testez et approfondissez vos connaissances', icon:'❓', goto:'quiz', color:'#3F6B2E'},
+  {label:'Quiz', desc:'8 thèmes, niveaux à débloquer et quiz surprise', icon:'❓', goto:'quiz', color:'#3F6B2E'},
   {label:'Méditations audio', desc:'À écouter, les yeux fermés', icon:'🎧', goto:'meditations-audio', color:'#8A4A1F'}
 ];
 function renderSagesseHub(){
@@ -13192,7 +13193,7 @@ const APP_GUIDE_SECTIONS = [
   {icon:'📖', title:'Écritures', title2:'(Bible)', text:"La Bible complète, les psaumes classés par thème, le texte officiel AELF, et un plan de lecture sur un an."},
   {icon:'✝️', title:'Jésus', text:"La vie de Jésus, de Marie, de Joseph, et des méditations sur la Sainte Famille et le pardon."},
   {icon:'⛪', title:'Église', text:"Le calendrier des saints et un outil pour trouver votre saint patron, la vie liturgique (Avent, Carême, messe du dimanche), les actualités de l'Église, et des pèlerinages virtuels à Lourdes et Fatima."},
-  {icon:'🌿', title:'Sagesse', text:"Vie spirituelle, enseignements, sacrements expliqués, un lexique catholique, un quiz, et des méditations audio."},
+  {icon:'🌿', title:'Sagesse', text:"Vie spirituelle, enseignements, sacrements expliqués, un lexique catholique, des méditations audio, et un quiz façon petit catéchisme ludique : 8 thèmes (Bible, sacrements, saints, liturgie, prières, morale, vocabulaire...), un mode « Quiz surprise », des points de sagesse, des niveaux à débloquer jusqu'à « Maître du catéchisme », et des succès à collectionner — pensé pour apprendre en s'amusant, particulièrement apprécié des plus jeunes."},
   {icon:'👤', title:'Mon espace', text:"Votre compte et votre parcours, un journal intérieur (carnet de grâces, souvenirs), un espace de réconfort guidé et un mémorial où garder les prénoms de vos défunts pour prier pour eux, vos favoris, une playlist de louanges, vos statistiques, et tous les réglages de l'application. Si vous vous êtes connecté·e avec Google ou Facebook, Mon compte vous permet aussi de définir un mot de passe, pratique pour vous reconnecter directement depuis l'icône installée sur iPhone/iPad/Mac."},
   {icon:'📲', title:'Installer l\'application', text:"Ajoutez Lumen à votre écran d'accueil (ou votre Dock) pour l'utiliser comme une vraie application, en un geste, sans passer par le navigateur.", action:'install'},
   {icon:'🧭', title:'Le Guide', text:"Le bouton boussole en haut de l'écran : posez-vous la question « que voulez-vous faire ? » et laissez-vous guider."},
@@ -15796,7 +15797,7 @@ const GUIDE_TREE = {
       {label:'📅 Le calendrier liturgique', action:()=>goTo('eglise','calendrier')},
       {label:'✨ Les sacrements expliqués simplement', action:()=>goTo('sagesse','sacrements')},
       {label:'🔤 Le lexique des mots de la foi', action:()=>goTo('sagesse','lexique')},
-      {label:'❓ Tester mes connaissances (quiz)', action:()=>goTo('sagesse','quiz')},
+      {label:'❓ Jouer au quiz (8 thèmes, niveaux, succès)', action:()=>goTo('sagesse','quiz')},
       {label:'🎧 Méditations audio, les yeux fermés', action:()=>goTo('sagesse','meditations-audio')},
       {label:'← Retour', back:true}
     ]
@@ -15868,7 +15869,7 @@ const GUIDE_INTENTS = [
   {kw:['vie de jésus','vie de jesus','annonciation','assomption'], action:()=>{ PRIMARY='jesus'; GROUP_SEL['jesus:main']='vie-de-jesus'; }},
   {kw:['calendrier liturgique','avent','temps liturgique'], action:()=>goTo('eglise','calendrier')},
   {kw:['lexique','vocabulaire','mot de la foi'], action:()=>goTo('sagesse','lexique')},
-  {kw:['quiz','teste mes connaissances','connaissances'], action:()=>goTo('sagesse','quiz')},
+  {kw:['quiz','teste mes connaissances','connaissances','catéchisme','catechisme','jeu biblique','jeux','niveaux','points de sagesse'], action:()=>goTo('sagesse','quiz')},
   {kw:['méditation audio','meditation audio'], action:()=>goTo('sagesse','meditations-audio')},
   {kw:['statistique','mon parcours','objectif'], action:()=>goTo('espace','stats')},
   {kw:['favori'], action:()=>goTo('espace','favoris')},
@@ -17199,7 +17200,7 @@ const PAGE_HELP = {
   'eglise:pelerinages-virtuels': "Visitez virtuellement de grands lieux de pèlerinage (Lourdes, Fatima...) à travers leur histoire et leurs lieux clés.",
   'eglise:avent-careme': "Un accompagnement spécial pour les temps forts de l'Avent et du Carême.",
 
-  'sagesse:accueil-sagesse': "Des enseignements, un lexique des mots de la foi, les sacrements expliqués, et un quiz pour tester vos connaissances.",
+  'sagesse:accueil-sagesse': "Des enseignements, un lexique des mots de la foi, les sacrements expliqués, et un quiz à thèmes avec niveaux, points de sagesse et succès à débloquer.",
   'sagesse:spiritualite': "Des repères pour nourrir votre vie spirituelle au quotidien.",
   'sagesse:enseignements': "Les grands enseignements de l'Église, expliqués simplement.",
   'sagesse:sacrements': "Les sept sacrements expliqués : leur signe, leurs conditions et leur déroulement.",
