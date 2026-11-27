@@ -3666,3 +3666,28 @@
   .mp-list .mp-card .entry-detail-text{ font-size:15.5px; line-height:1.75; margin:0; }
   .mp-list .mp-card-image{ max-height:420px; object-fit:cover; border-radius:12px; margin-bottom:12px; }
   @media (min-width:700px){ .mp-list .mp-card{ padding:24px 30px 18px; } }
+
+  /* ═══ Prier : début et fin du mois (27/11/2026) ═══════════════════════════ */
+  .month-switch{ display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:5px; margin:4px 0 14px; border-radius:14px; background:var(--gold-pale); }
+  .month-switch-btn{ border:none; border-radius:10px; padding:10px 8px; background:transparent; cursor:pointer; color:var(--ink-soft);
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:700; }
+  .month-switch-btn.active{ background:var(--vellum-light); color:var(--wine); box-shadow:0 2px 8px rgba(60,30,50,0.12); }
+  .month-switch-btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .month-devotion{ display:flex; gap:14px; align-items:flex-start; border-left:4px solid var(--gold);
+    background:radial-gradient(120% 90% at 100% 0%, rgba(201,162,39,0.14), transparent 60%), var(--vellum-light); }
+  .month-devotion-ico{ flex:none; width:48px; height:48px; border-radius:50%; display:grid; place-items:center; font-size:22px;
+    background:radial-gradient(circle at 40% 35%, var(--gold-light), var(--gold) 80%); box-shadow:var(--glow-gold); }
+  .month-devotion-text{ flex:1; min-width:0; }
+  .month-devotion-kicker{ margin:0; font-family:'Inter',sans-serif; font-size:12px; font-weight:600; color:var(--ink-soft); }
+  .month-devotion-title{ margin:2px 0 6px; font-family:'Fraunces',serif; font-size:20px; font-weight:600; color:var(--wine); line-height:1.2; }
+  .month-prayer-title{ display:flex; align-items:center; gap:10px; }
+  .month-prayer-num{ flex:none; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-family:'Inter',sans-serif;
+    font-size:12.5px; font-weight:800; background:var(--wine); color:var(--vellum-light); }
+  .month-questions{ margin:8px 0 0; padding-left:22px; display:flex; flex-direction:column; gap:8px;
+    font-family:'Lora',serif; font-size:14.5px; line-height:1.6; color:var(--ink); }
+  .month-hub-banner{ width:100%; display:flex; align-items:center; gap:12px; margin:0 0 12px; padding:13px 16px; text-align:left; cursor:pointer;
+    border-radius:16px; border:1px solid var(--gold-light); background:linear-gradient(135deg, var(--gold-pale), var(--vellum-light)); color:var(--ink);
+    font-family:'Inter',sans-serif; font-size:13px; line-height:1.4; }
+  .month-hub-banner > span:first-child{ font-size:24px; }
+  .month-hub-banner > span:nth-child(2){ flex:1; }
+  .month-hub-banner > span:last-child{ color:var(--wine); font-size:20px; }

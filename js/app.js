@@ -4829,7 +4829,7 @@ let ROSARY_AUDIO_PLAYING = null;
 let EXAMEN_STATE = null;
 
 const SUBNAV = {
-  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'versets-soir', label:'🌙 Versets du soir'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'binome', label:'🤝 Binôme de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'carnet-familial', label:'👨‍👩‍👧‍👦 Carnet familial'}, {key:'autrement', label:'🪔 Prier autrement'} ],
+  prier: [ {key:'textes-du-jour', label:'📅 Textes du jour'}, {key:'versets-matin', label:'🌅 Versets du matin'}, {key:'versets-soir', label:'🌙 Versets du soir'}, {key:'office', label:'🕯️ Les Offices'}, {key:'laudes', label:'☀️ Laudes'}, {key:'tierce', label:'🕘 Tierce'}, {key:'midi', label:'🔔 Milieu du jour'}, {key:'sexte', label:'☀️ Sexte'}, {key:'none', label:'🕒 None'}, {key:'vepres', label:'🌆 Vêpres'}, {key:'compline', label:'🌌 Complies'}, {key:'angelus', label:'🔔 Angélus'}, {key:'examen', label:'🌙 Examen'}, {key:'mois', label:'🗓️ Début & fin du mois'}, {key:'mes-prieres', label:'✍️ Mes prières'}, {key:'neuvaines', label:'🕯️ Neuvaines'}, {key:'careme40', label:'✝️ Carême 40 jours'}, {key:'guides', label:'📖 Guides'}, {key:'intentions', label:'🙏 Intentions'}, {key:'groupe', label:'👥 Groupe de prière'}, {key:'binome', label:'🤝 Binôme de prière'}, {key:'selon-etat', label:'🧭 Selon mon état'}, {key:'carnet-familial', label:'👨‍👩‍👧‍👦 Carnet familial'}, {key:'autrement', label:'🪔 Prier autrement'} ],
   devotions: [ {key:'prieres', label:'📿 Prières'}, {key:'chapelet', label:'🔗 Chapelet'}, {key:'misericorde', label:'❤️ Miséricorde'}, {key:'chemin-croix', label:'✝️ Chemin de croix'}, {key:'lectio', label:'📕 Lectio Divina'}, {key:'confession', label:'🕊️ Confession'}, {key:'famille', label:'👨‍👩‍👧 En famille'}, {key:'armure', label:'🛡️ Armure de Dieu'}, {key:'prieres-combat', label:'⚔️ Prières de combat'}, {key:'temoins', label:'🕯️ Témoins qui ont tenu bon'}, {key:'meditations-combat', label:'💭 Méditations de combat'}, {key:'versets-armure', label:'🔥 Versets de force'} ],
   ecritures: [ {key:'psaumes', label:'📜 Psaumes'}, {key:'bible', label:'👑 Bible & Histoire'}, {key:'bible-lecture', label:'📗 Lire la Bible'}, {key:'recits', label:'🌍 Récits fondateurs'}, {key:'reperes', label:'📋 Repères'}, {key:'memoriser', label:'🧠 Mémoriser'} ],
   eglise: [ {key:'saints', label:'🕊️ Saints'}, {key:'patron', label:'🔍 Trouver un saint patron'}, {key:'messe-dimanche', label:'⛪ Messe du dimanche'}, {key:'calendrier', label:'📅 Calendrier'}, {key:'vie-eglise', label:"⛪ Vie de l'Église"}, {key:'actualites', label:'📰 Actualités'}, {key:'pelerinages', label:'🗺️ Pèlerinages'}, {key:'avent-careme', label:'🕯️ Avent/Carême'} ],
@@ -4993,7 +4993,7 @@ function goTo(primary, sub){
 const PRIER_SUBNAV_GROUPS = [
   {label:'📖 Textes & versets', keys:['textes-du-jour','versets-matin','versets-soir']},
   {label:'🕯️ Liturgie des Heures', keys:['office','laudes','tierce','midi','sexte','none','vepres','compline']},
-  {label:'🔔 Rendez-vous du jour', keys:['angelus','examen']},
+  {label:'🔔 Rendez-vous de prière', keys:['angelus','examen','mois']},
   {label:'📿 Parcours & neuvaines', keys:['neuvaines','careme40','guides']},
   {label:'🤝 Avec les autres', keys:['intentions','groupe','binome','carnet-familial']},
   {label:'🪔 Pour moi', keys:['mes-prieres','selon-etat','autrement']}
@@ -6128,6 +6128,7 @@ const PRIER_HUB_CATEGORIES = [
   {label:'Versets du matin', desc:'Sept versets à réciter chaque matin pour commencer la journée', icon:'🌅', goto:'versets-matin', color:'#C9A227', group:'jour'},
   {label:'Versets du soir', desc:'Sept versets à réciter chaque soir pour se recoucher en paix', icon:'🌙', goto:'versets-soir', color:'#4A3D6B', group:'jour'},
   {label:'Angélus & examen du soir', desc:'L’Angélus du matin, de midi et du soir ; relire sa journée avant de dormir', icon:'🔔', goto:'angelus', color:'#8A4A1F', group:'jour'},
+  {label:'Début et fin du mois', desc:'Confier le mois qui commence, rendre grâce pour celui qui s’achève, avec la dévotion du mois', icon:'🗓️', goto:'mois', color:'#5C6E58', group:'jour'},
   {label:'Toutes les prières', desc:'Prières fondamentales, à Jésus, Marie et Joseph, aux saints, aux Archanges, de délivrance… cherchez par mot-clé', icon:'📿', goto:'prieres', cross:{primary:'devotions', sub:'prieres'}, color:'#6B2545', group:'classiques'},
   {label:'Chapelet & Rosaire', desc:'Les mystères joyeux, douloureux, glorieux et lumineux, jour par jour', icon:'📿', goto:'chapelet', cross:{primary:'devotions', sub:'chapelet'}, color:'#6B2545', group:'classiques'},
   {label:'Parcours & neuvaines', desc:'Neuvaines, Carême 40 jours, guides de prière', icon:'🕯️', goto:'neuvaines', color:'#7C1F2E', group:'classiques'},
@@ -6205,6 +6206,7 @@ function renderPrierHub(){
       <button class="btn btn-ghost btn-sm" id="prier-hub-tuto-btn" title="À quoi correspond chaque rubrique ?" style="padding:6px 11px; border-radius:50%;">❓</button>
     </div>
     <p class="section-desc">Choisissez comment vous souhaitez prier aujourd'hui — ou touchez le ❓ pour un petit guide des rubriques.</p>
+    ${monthMomentHubHTML()}
     ${prayerHoursHTML()}
     ${PRIER_HUB_GROUPS.map(g=>{
       const cats = PRIER_HUB_CATEGORIES.filter(c=>c.group===g.key);
@@ -6237,6 +6239,9 @@ function renderPrierHub(){
   });
   document.querySelectorAll('[data-hours-go]').forEach(btn=>{
     btn.onclick = ()=>{ SUBTAB.prier = btn.dataset.hoursGo; render(); };
+  });
+  document.querySelectorAll('[data-hub-month]').forEach(btn=>{
+    btn.onclick = ()=>{ MONTH_PRAYER_VIEW = btn.dataset.hubMonth; SUBTAB.prier = 'mois'; render(); };
   });
 }
 
@@ -14876,6 +14881,177 @@ function renderAngelus(){
   document.getElementById('angelus-reminder-link').onclick = ()=> goTo('espace','reglages');
 }
 
+/* ================= début et fin du mois (27/11/2026) =================
+   Deux rendez-vous mensuels : confier le mois qui commence, rendre grâce
+   pour le mois qui s'achève. La page s'ouvre d'elle-même sur le bon moment
+   (les sept derniers jours : fin du mois ; sinon : début du mois) et rappelle
+   la dévotion traditionnellement attachée à chaque mois dans l'Église. */
+const MONTH_DEVOTIONS = [
+  {title:'le saint Nom de Jésus', icon:'✝️', note:'Janvier commence sous le nom de Jésus, « Dieu sauve » : le premier mot de l’année est le sien.',
+   prayer:'Jésus, ton nom est au-dessus de tout nom. Que je le prononce ce mois-ci avec respect et avec confiance, dans la joie comme dans la peine. Amen.'},
+  {title:'la Sainte Famille', icon:'👨‍👩‍👧', note:'Février est confié à Jésus, Marie et Joseph : une famille simple, éprouvée et fidèle.',
+   prayer:'Jésus, Marie et Joseph, entrez dans ma maison ce mois-ci. Apprenez-nous la patience, le pardon donné vite et la joie des choses simples. Amen.',
+   link:{label:'Prières en famille', primary:'devotions', sub:'famille'}},
+  {title:'saint Joseph', icon:'🔨', note:'Mars est le mois de saint Joseph, gardien silencieux de la Sainte Famille et patron des travailleurs.',
+   prayer:'Saint Joseph, toi qui as veillé sur Jésus et Marie sans bruit et sans relâche, veille sur mon travail, ma famille et mes soucis de ce mois. Amen.',
+   link:{label:'Neuvaines à saint Joseph', primary:'prier', sub:'neuvaines'}},
+  {title:'la sainte Eucharistie', icon:'🍞', note:'Avril, souvent au cœur du temps pascal, est dédié à l’Eucharistie, le Christ qui se donne.',
+   prayer:'Seigneur Jésus, présent dans le pain partagé, donne-moi faim de toi ce mois-ci. Que chaque messe me rende un peu plus capable de me donner à mon tour. Amen.'},
+  {title:'la Vierge Marie', icon:'🌹', note:'Mai est le mois de Marie : on fleurit ses statues, on prie le chapelet en famille ou en paroisse.',
+   prayer:'Marie, Mère de Dieu et notre mère, je te confie ce mois de mai. Prends mes journées dans tes mains et apprends-moi à dire oui comme toi. Amen.',
+   link:{label:'Prier le chapelet', primary:'devotions', sub:'chapelet'}},
+  {title:'le Sacré-Cœur de Jésus', icon:'❤️', note:'Juin est le mois du Sacré-Cœur : un cœur qui aime jusqu’au bout et ne se lasse pas de pardonner.',
+   prayer:'Cœur sacré de Jésus, j’ai confiance en toi. Rends mon cœur doux et humble comme le tien, ce mois-ci et toujours. Amen.',
+   link:{label:'Neuvaine au Sacré-Cœur', primary:'prier', sub:'neuvaines'}},
+  {title:'le Précieux Sang', icon:'🍷', note:'Juillet rappelle le sang du Christ versé par amour, signe de l’alliance nouvelle.',
+   prayer:'Seigneur Jésus, ton sang a été versé pour moi. Que ce mois-ci je n’oublie pas le prix que j’ai à tes yeux, ni celui des autres. Amen.'},
+  {title:'le Cœur immaculé de Marie', icon:'💗', note:'Août, autour de l’Assomption, est confié au Cœur immaculé de Marie.',
+   prayer:'Cœur immaculé de Marie, garde mon cœur pur et disponible. Pendant ce mois de repos ou de travail, que je reste près de ton Fils. Amen.'},
+  {title:'Notre-Dame des Douleurs', icon:'🕊️', note:'Septembre médite les douleurs de Marie, debout au pied de la croix : une fidélité qui ne s’enfuit pas.',
+   prayer:'Notre-Dame des Douleurs, toi qui es restée près de la croix, reste près de ceux qui souffrent ce mois-ci, et près de moi quand la rentrée pèse. Amen.'},
+  {title:'le saint Rosaire', icon:'📿', note:'Octobre est le mois du Rosaire : chaque dizaine est une scène de la vie du Christ contemplée avec Marie.',
+   prayer:'Marie, Reine du saint Rosaire, apprends-moi à prier le chapelet sans me presser, et à regarder la vie de ton Fils avec tes yeux. Amen.',
+   link:{label:'Prier le chapelet', primary:'devotions', sub:'chapelet'}},
+  {title:'les fidèles défunts', icon:'🕯️', note:'Novembre, ouvert par la Toussaint et le jour des morts, est le mois où l’on prie pour ceux qui nous ont quittés.',
+   prayer:'Seigneur, accueille dans ta lumière tous ceux que j’ai aimés et qui sont partis. Que ce mois soit pour moi un temps de souvenir paisible et d’espérance. Amen.',
+   link:{label:'Neuvaine pour les défunts', primary:'prier', sub:'neuvaines'}},
+  {title:'l’Immaculée Conception', icon:'⭐', note:'Décembre, temps de l’Avent, est confié à Marie immaculée, qui attend la naissance du Sauveur.',
+   prayer:'Marie immaculée, prépare mon cœur à accueillir Jésus à Noël. Que ce mois de décembre ne soit pas seulement chargé, mais habité. Amen.'}
+];
+const MONTH_START_PRAYERS = (m)=> [
+  {title:'Confier le mois qui commence', text:
+`Seigneur, voici un nouveau mois qui s’ouvre devant moi. Je ne sais pas tout ce qu’il contient, mais je sais que tu y seras.
+
+Je te confie les jours qui viennent : mon travail, mes rendez-vous, mes trajets, mes nuits. Je te confie les personnes que je vais rencontrer, celles que j’aime et celles qui me sont difficiles.
+
+Donne-moi la sagesse pour mes décisions, la patience pour ce qui sera long, le courage pour ce qui me fait peur. Et si ce mois apporte une épreuve, que je ne la traverse pas seul.
+
+Que ce mois de ${m} soit un temps où je grandis dans ta paix. Amen.`},
+  {title:'Bénir ses projets', text:
+`Seigneur, tu connais les projets que je porte pour ce mois : ce que je veux commencer, ce que je dois terminer, ce que je n’ose pas encore entreprendre.
+
+Bénis ce qui est selon ton cœur, corrige ce qui ne l’est pas, et donne-moi la liberté de lâcher ce qui ne dépend pas de moi.
+
+Que je travaille avec sérieux sans me laisser dévorer par l’inquiétude. Amen.`},
+  {title:'Pour ma famille et mes proches', text:
+`Père très bon, je place sous ta protection, pour ce mois, tous ceux qui me sont confiés : ma famille, mes amis, ceux qui sont loin, ceux qui sont malades, ceux qui cherchent du travail ou un chemin.
+
+Garde-les de tout mal, donne-leur ce dont ils ont besoin, et fais de moi pour eux un signe de ta bonté. Amen.`}
+];
+const MONTH_END_PRAYERS = (m, next)=> [
+  {title:'Rendre grâce pour le mois écoulé', text:
+`Merci, Seigneur, pour ce mois de ${m} qui s’achève.
+
+Merci pour les jours lumineux et pour les jours ordinaires, pour les visages croisés, pour le pain sur la table, pour les forces que tu m’as données quand je pensais ne plus en avoir.
+
+Merci aussi pour ce que je n’ai pas su voir sur le moment, et que tu as fait en silence.
+
+Tout ce qui a été bon vient de toi : je te le rends avec reconnaissance. Amen.`},
+  {title:'Demander pardon et déposer ce qui pèse', text:
+`Seigneur, tu connais aussi ce qui a été lourd ce mois-ci : mes fautes, mes impatiences, les paroles que j’aurais voulu retenir, le bien que je n’ai pas fait.
+
+Je te les remets sans me décourager. Pardonne-moi, et donne-moi la grâce de pardonner à mon tour à ceux qui m’ont blessé.
+
+Ce qui reste inachevé, je le dépose entre tes mains : tu sais en faire quelque chose. Amen.`},
+  {title:`Préparer le mois de ${next}`, text:
+`Seigneur, avant que le mois de ${next} commence, je me tourne vers toi.
+
+Garde en moi ce que ce mois m’a appris. Aide-moi à choisir une petite chose à changer, une seule, et à m’y tenir avec ta grâce.
+
+Que le mois qui vient me trouve plus confiant, plus attentif aux autres, plus proche de toi. Amen.`}
+];
+const MONTH_REVIEW_QUESTIONS = [
+  'Quel moment de ce mois me donne envie de dire merci ?',
+  'Où ai-je senti Dieu proche — dans une rencontre, une prière, une nouvelle ?',
+  'Qu’est-ce qui m’a éloigné de la paix, et que je voudrais confier ?',
+  'Qui ai-je blessé ou oublié, et à qui pourrais-je faire signe ?',
+  'Quelle petite résolution, une seule, je choisis pour le mois prochain ?'
+];
+const MONTH_RESOLUTIONS = [
+  'Prier cinq minutes chaque matin avant de prendre mon téléphone',
+  'Appeler chaque semaine un proche âgé ou isolé',
+  'Aller à la messe un jour de semaine',
+  'Dire un merci précis à quelqu’un chaque jour',
+  'Lire un passage d’Évangile chaque soir',
+  'Faire un geste concret pour quelqu’un dans le besoin'
+];
+let MONTH_PRAYER_VIEW = null; // 'debut' | 'fin' — choisi d'après la date à la première ouverture
+function monthMoment(date = new Date()){
+  const last = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
+  const day = date.getDate();
+  return {day, last, isStart: day <= 7, isEnd: day > last - 7, daysLeft: last - day};
+}
+function monthPrayerCardHTML(p, idx){
+  return `<div class="card month-prayer">
+    <p class="day-title month-prayer-title"><span class="month-prayer-num">${idx+1}</span>${p.title}</p>
+    ${carnetBoxesHTML(p.text, 'prayer')}
+    ${speakShareRowHTML(p.title, p.text)}
+  </div>`;
+}
+function renderMoisPrieres(){
+  const now = new Date();
+  const mm = monthMoment(now);
+  const mIdx = now.getMonth(), nIdx = (mIdx + 1) % 12;
+  const month = MONTH_NAMES_FR[mIdx], next = MONTH_NAMES_FR[nIdx];
+  if(!MONTH_PRAYER_VIEW) MONTH_PRAYER_VIEW = mm.isEnd ? 'fin' : 'debut';
+  const view = MONTH_PRAYER_VIEW;
+  // Fin du mois : on prépare déjà la dévotion du mois suivant.
+  const dev = MONTH_DEVOTIONS[view === 'fin' ? nIdx : mIdx];
+  const devMonth = view === 'fin' ? next : month;
+  const banner = mm.isStart
+    ? `🌱 Nous sommes au début du mois de ${month} : c’est le bon moment pour le confier à Dieu.`
+    : mm.isEnd
+      ? `🌾 ${mm.daysLeft === 0 ? 'Dernier jour' : `Plus que ${mm.daysLeft} jour${mm.daysLeft > 1 ? 's' : ''}`} avant la fin du mois de ${month} : prenez un moment pour rendre grâce.`
+      : '';
+  const prayers = view === 'fin' ? MONTH_END_PRAYERS(month, next) : MONTH_START_PRAYERS(month);
+  let html = `<h2 class="section-title">🗓️ Début et fin du mois</h2>
+    <p class="section-desc">Deux rendez-vous chaque mois : confier à Dieu le mois qui commence, et lui rendre grâce pour celui qui s’achève.</p>
+    ${banner ? `<div class="info-banner">${banner}</div>` : ''}
+    <div class="month-switch" role="tablist" aria-label="Moment du mois">
+      <button type="button" role="tab" class="month-switch-btn ${view==='debut'?'active':''}" aria-selected="${view==='debut'}" data-month-view="debut">🌱 Début du mois</button>
+      <button type="button" role="tab" class="month-switch-btn ${view==='fin'?'active':''}" aria-selected="${view==='fin'}" data-month-view="fin">🌾 Fin du mois</button>
+    </div>
+    <div class="card month-devotion">
+      <span class="month-devotion-ico" aria-hidden="true">${dev.icon}</span>
+      <div class="month-devotion-text">
+        <p class="month-devotion-kicker">${view === 'fin' ? `Le mois prochain, ${devMonth},` : `Le mois de ${devMonth}`} est traditionnellement dédié à</p>
+        <p class="month-devotion-title">${dev.title}</p>
+        <p class="entry-detail-text">${dev.note}</p>
+        ${carnetBoxesHTML(dev.prayer, 'prayer')}
+        ${dev.link ? `<button type="button" class="btn btn-ghost btn-sm" id="month-devotion-link">${dev.link.label} ›</button>` : ''}
+      </div>
+    </div>
+    ${prayers.map(monthPrayerCardHTML).join('')}`;
+  if(view === 'fin'){
+    html += `<div class="card">
+      <p class="day-title">Relire son mois en cinq questions</p>
+      <p class="entry-detail-text">Prenez quelques minutes au calme. Lisez une question, laissez venir la réponse sans vous juger, puis passez à la suivante.</p>
+      <ol class="month-questions">${MONTH_REVIEW_QUESTIONS.map(q=>`<li>${q}</li>`).join('')}</ol>
+    </div>`;
+  } else {
+    html += `<div class="card">
+      <p class="day-title">Une résolution pour le mois</p>
+      <p class="entry-detail-text">Une seule, simple et concrète, tient mieux que dix grandes. Quelques idées :</p>
+      <ul class="month-questions">${MONTH_RESOLUTIONS.map(r=>`<li>${r}</li>`).join('')}</ul>
+    </div>`;
+  }
+  document.getElementById('screen').innerHTML = html;
+  wireSpeakShare();
+  document.querySelectorAll('[data-month-view]').forEach(b=>{
+    b.onclick = ()=>{ MONTH_PRAYER_VIEW = b.dataset.monthView; render(); };
+  });
+  const link = document.getElementById('month-devotion-link');
+  if(link && dev.link) link.onclick = ()=> goTo(dev.link.primary, dev.link.sub);
+}
+/* Rappel discret sur l'accueil de Prier : les trois premiers et les trois derniers jours du mois. */
+function monthMomentHubHTML(){
+  const mm = monthMoment();
+  const month = MONTH_NAMES_FR[new Date().getMonth()];
+  if(mm.day <= 3) return `<button type="button" class="month-hub-banner" data-hub-month="debut"><span aria-hidden="true">🌱</span><span><b>Début du mois de ${month}</b><br>Confiez à Dieu le mois qui commence</span><span aria-hidden="true">›</span></button>`;
+  if(mm.daysLeft <= 2) return `<button type="button" class="month-hub-banner" data-hub-month="fin"><span aria-hidden="true">🌾</span><span><b>Fin du mois de ${month}</b><br>Rendez grâce pour le mois écoulé</span><span aria-hidden="true">›</span></button>`;
+  return '';
+}
+
 /* ================= objectifs personnels ================= */
 /* ================= parcours guidé sur 7 jours ================= */
 function renderParcours(){
@@ -17031,6 +17207,7 @@ function renderScreen(){
     if(sub === 'compline'){ AELF_OFFICE_VIEW = 'complies'; return renderAelfOfficeViewer(); }
     if(sub === 'angelus') return renderAngelus();
     if(sub === 'examen') return renderExamen();
+    if(sub === 'mois') return renderMoisPrieres();
     if(sub === 'guides') return renderGuides();
     if(sub === 'autrement') return renderPrierAutrement();
     if(sub === 'office-eclair') return renderOfficeDuJour();
@@ -17160,6 +17337,7 @@ const PAGE_HELP = {
   'prier:selon-etat': "Dites comment vous vous sentez en ce moment (anxieux, triste, reconnaissant...) pour recevoir une prière adaptée à cet état précis.",
   'prier:angelus': "La prière de l'Angélus, traditionnellement récitée le matin, à midi et le soir, en mémoire de l'Annonciation.",
   'prier:examen': "L'examen du soir : une relecture guidée de votre journée en présence de Dieu, pour repérer ce qui a été bon et ce qui mérite d'être confié à lui, avant de dormir en paix.",
+  'prier:mois': "Au début du mois, confiez-le à Dieu ; à la fin, rendez grâce et relisez-le. La page s'ouvre d'elle-même sur le bon moment, et rappelle la dévotion traditionnelle du mois.",
   'prier:guides': "Des fiches simples pour apprendre ou réviser les prières de base (Notre Père, Je vous salue Marie...) et les gestes de la foi.",
 
   'devotions:accueil-devotions': "D'autres façons de prier : le chapelet, la Divine Miséricorde, le chemin de croix, la lectio divina, la confession, l'armure de Dieu... Touchez une carte pour l'explorer.",
